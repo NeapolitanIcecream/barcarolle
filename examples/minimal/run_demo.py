@@ -85,7 +85,6 @@ def main(output_dir: Path = DEFAULT_OUTPUT_DIR) -> dict[str, object]:
     policy = RollingOriginPolicy(
         policy_digest="rolling-origin-fixture",
         as_of_cutoff_rule="origin_time",
-        embargo="P0D",
         cluster_constraints_digest="clusters-all",
         eligibility_mode="strict_history",
         holdout_overlap_policy="disjoint",
@@ -117,13 +116,17 @@ def main(output_dir: Path = DEFAULT_OUTPUT_DIR) -> dict[str, object]:
         budget,
         LeakagePolicy(feature_config.leakage_policy_digest, feature_config.allowed_leakage_classes, origin.as_of_cutoff),
     )
+    selector_parameters = {}
     selector = SelectorRecord(
         selector_id="selector-demo-recency",
         selector_family="recency",
         selector_version="1",
         training_source_digests=(task_pool.task_pool_digest, snapshot.feature_records_digest),
         allowed_feature_classes=feature_config.allowed_leakage_classes,
-        config_digest="selector-demo-recency-config",
+        parameters=selector_parameters,
+        config_digest=canonical_digest(
+            {"selector_family": "recency", "parameters": selector_parameters}
+        ),
         created_at="2026-01-05T00:00:00Z",
     )
     selection = select_with_selector(
@@ -356,7 +359,7 @@ def _fixture_result(
     outcome: str,
     result_available_at: str,
 ) -> ResultRecord:
-    identity = compute_result_cache_identity(task, check, agent, workspace_config, runtime_config, scoring_config)
+    identity = compute_result_cache_identity(task, check, agent, workspace_config, runtime_config)
     workspace_run = WorkspaceRunRecord(
         workspace_run_id=f"fixture-run-{task.source_ref}-{agent.agent_id}-{outcome}",
         task_id=task.task_id,

@@ -1,6 +1,6 @@
 # Barcarolle Internal Process Notes
 
-Last updated: 2026-06-28.
+Last updated: 2026-07-14.
 
 These notes are for repository-maintenance agents. They are not user
 documentation and they are not a source of truth for intended system behavior.
@@ -10,13 +10,15 @@ documents win.
 
 ## Current Mode
 
-The active implementation is aligned to the current design documents under
-`docs/design/`.
+The current maintenance direction is to close evidence-chain gaps found by the
+2026-07-14 implementation audit. `docs/design/` remains the intended boundary;
+`docs/implementation-status.md` records which effects the alpha implementation
+actually enforces.
 
-Background design inputs are:
-
-- `docs/architecture/v2-system-architecture-2026-06-25.md`
-- `docs/design-inputs/learned-selector-roadmap-gpt-5-5-pro-2026-06-25.md`
+The default runtime target is a cooperative Agent. Fresh workspaces, diff
+replay, and verifier-only hidden material are required benchmark behavior.
+Filesystem, network, process, CPU, and memory limits are optional adapter
+requirements for adversarial or shared-host execution.
 
 Archived material is historical reference. It is not an active implementation
 input and should not be imported without a specific review.
@@ -38,6 +40,11 @@ input and should not be imported without a specific review.
   effects, but not implementation bodies.
 - Later module documents may refine earlier system documents. Update the
   affected documents instead of leaving contradictions.
+- Core code serves only the latest schema. When a schema change affects
+  valuable paid results, prefer a small one-off migration tool; do not maintain
+  compatibility branches or grow a migration framework.
+- Design learned data and parameter contracts with a concrete algorithm. MAE is
+  the current primary prediction objective.
 
 ## Design Review Stop Line
 

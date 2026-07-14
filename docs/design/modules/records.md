@@ -1,6 +1,6 @@
 # Module Design: Records
 
-Status: draft, 2026-06-27.
+Status: draft, 2026-07-14.
 
 ## Responsibility
 
@@ -106,6 +106,12 @@ certification timestamps. It should not replace those source timestamps.
 - `network_policy_digest`
 - `adapter_digest`
 
+The current Workspace binder checks `harness_digest` against the bound command
+argv. It does not hash files named by that argv. For scoreable runs,
+`agent_manifest_digest` must therefore bind the executable or script contents,
+their behavior-changing configuration, and other harness inputs. Changing any
+of them requires a new Agent identity before Result reuse.
+
 ### WorkspaceConfig
 
 - `workspace_config_id`
@@ -134,10 +140,7 @@ run. If hardware can change scoreability or latency claims, it must be present.
 - `base_commit`
 - `submodule_state_digest`
 - `solver_material_digest`
-- `check_manifest_digest`
-- `hidden_check_bundle_digest`
-- `verifier_image_digest`
-- `verifier_deps_digest`
+- `check_digest`
 - `agent_manifest_digest`
 - `model_snapshot_id`
 - `harness_digest`
@@ -154,12 +157,19 @@ run. If hardware can change scoreability or latency claims, it must be present.
 - `workspace_config_digest`
 - `runtime_config_digest`
 - `hardware_profile_digest`
-- `scoring_config_digest`
 - `identity_digest`
 
 The structured fields and `identity_digest` are both stored. Cached results
 missing any required identity field are isolated from reuse and may only appear
 in audit reports.
+
+`check_digest` is derived from the behavior-changing Check fields:
+`check_type`, `check_manifest_digest`, `hidden_check_bundle_digest`,
+`verifier_image_digest`, `verifier_deps_digest`, `resource_limits`, and
+`oracle_source`. Availability and certification timestamps are excluded.
+
+Pricing and scoring do not belong to paid execution identity. Changing prices
+must not cause an Agent or Check to run again.
 
 ### WorkspaceRunRecord
 
@@ -195,6 +205,7 @@ Raw workspaces and transcripts are not stored in this record.
 - `invalid_owner`
 - `failure_label`
 - `cost`
+- `scoring_config_digest`
 - `pricing_version`
 - `usage`
 - `usage_coverage`
@@ -207,6 +218,9 @@ Raw workspaces and transcripts are not stored in this record.
 
 `invalid_owner` distinguishes Agent-attributable invalid outcomes from
 benchmark infrastructure failures.
+`cost.total_cost=null` means the total cost is unknown; it must not be replaced
+with zero. Usage is retained so cost can be recomputed under another pricing
+configuration without rerunning the Agent.
 
 ### FeatureRecord
 
@@ -245,6 +259,7 @@ linting.
 - `selector_version`
 - `training_source_digests`
 - `allowed_feature_classes`
+- `parameters`
 - `config_digest`
 - `created_at`
 
@@ -299,7 +314,6 @@ inventory digest, and generator/certification config digests.
 - `history_task_check_refs`
 - `future_holdout_task_check_refs`
 - `as_of_cutoff`
-- `embargo`
 - `cluster_constraints_digest`
 - `eligibility_mode`
 - `holdout_overlap_policy`
@@ -401,6 +415,14 @@ Metric dimension rules:
 - budget-sensitivity metrics must set `budget_digest`;
 - stratum metrics must set `stratum_ref`.
 
+## Serialization Rules
+
+Canonical JSON and every digest derived from it use strict JSON numbers.
+`NaN`, positive infinity, and negative infinity are invalid and must be rejected
+instead of being serialized as implementation-specific tokens.
+Mapping keys must be strings at every nesting level. Canonical serialization
+rejects non-string keys instead of coercing them and risking key collisions.
+
 ## System Boundary
 
 Input sources:
@@ -462,8 +484,12 @@ Output:
 
 Effect:
 
-- Validates task, check, and Agent linkage, diff digest, replay status, usage
-  fields, and failure attribution without reading raw workspaces.
+- Validates normalized terminal, replay, and Check outcome values, their state
+  transitions, usage shape, failure attribution, and timestamp order without
+  reading raw workspaces.
+- `passed` requires applied replay plus a passing Check; `failed` requires
+  applied replay plus a failing Check. A non-applied replay cannot carry a pass
+  or fail Check outcome.
 
 ### validate_result
 
@@ -480,6 +506,16 @@ Effect:
 - Validates cache identity fields, status fields, cost/latency fields, usage
   coverage, pricing version, result availability timestamp, failure labels, and
   `result_digest` against the canonical result record.
+- Accepts only normalized terminal states, scoreability states, outcomes, and
+  usage coverage values. Scoreable pass/fail results and Agent- or
+  benchmark-invalid results must have consistent terminal status, outcome, and
+  `invalid_owner` attribution.
+- Requires `latency.workspace_seconds` and every known cost/latency/usage value
+  to be numeric, finite, and nonnegative. `cost.total_cost` may be `null` only
+  to represent an unknown total.
+  `usage_coverage=reported` or `complete` requires at least one finite
+  nonnegative numeric usage measurement; empty usage remains valid only for
+  `unknown` or `unreported`.
 
 ### validate_result_cache_identity
 
@@ -541,6 +577,7 @@ Effect:
 - Validates cell-level Agent/Task/Check mapping, completeness, exclusions,
   result IDs and digests, matrix role, join policy, denominator policy,
   abstention metadata, and matrix digest.
+- Rejects duplicate Agent IDs and duplicate Task/Check denominator refs.
 
 ### validate_evaluation_cell_set
 
@@ -557,6 +594,9 @@ Effect:
 - Validates selected and future `Task + Check` refs, cell-level required cache
   identities, non-missing result ID and digest bindings, missing cells,
   exclusions, abstention metadata, and `cell_set_digest`.
+- Rejects duplicate refs within the selected and future sequences. It does not
+  infer an overlap policy between those sequences because the cell-set record
+  does not carry `holdout_overlap_policy`.
 
 ### validate_selector
 
@@ -571,7 +611,8 @@ Output:
 Effect:
 
 - Validates selector identity, version, training source digests, allowed feature
-  fields, and leakage boundary metadata.
+  fields, and strict-JSON parameters. `config_digest` must equal the canonical
+  digest of `selector_family` and `parameters`.
 
 ### validate_benchmark_selection
 
@@ -585,10 +626,14 @@ Output:
 
 Effect:
 
-- Validates frozen origin linkage, selected `Task + Check` refs, keyed weight
-  coverage, selector ID, selector input digest, eligible refs, task-pool
-  binding, origin, budget digest, feature snapshot linkage, and exposure
-  metadata, and `selection_digest`.
+- Performs local record validation: required fields, normalized exposure state,
+  finite positive keyed weights that exactly cover selected refs, timestamp
+  order, and `selection_digest`.
+- Rejects duplicate selected Task/Check refs before denominator weights are
+  interpreted.
+- Cross-record task-pool, origin, selector-input, and eligibility linkage is
+  validated by Selection, Runner, and Reporting where those records are
+  available together.
 
 ### validate_metric
 
@@ -602,8 +647,11 @@ Output:
 
 Effect:
 
-- Validates metric provenance digests, metric config digest, denominator
-  policy, completeness state, metric dimension rules, and `metric_digest`.
+- Performs local record validation: required provenance fields, finite numeric
+  value, normalized completeness/abstention state, timestamp shape, metric
+  dimension rules, and `metric_digest`.
+- Cross-record matrix, cell-set, Agent-set, and selection linkage is validated
+  by Selection and Reporting where those records are available together.
 
 ### make_task_id
 
@@ -637,6 +685,21 @@ Effect:
 
 - Builds a stable check identifier.
 
+### make_check_digest
+
+Input:
+
+- `check: CheckRecord`
+
+Output:
+
+- `check_digest: str`
+
+Effect:
+
+- Digests every Check field that can change execution or verification while
+  excluding material-availability and certification timestamps.
+
 ### make_result_cache_identity
 
 Input:
@@ -646,7 +709,6 @@ Input:
 - `agent: AgentRecord`
 - `workspace_config: WorkspaceConfig`
 - `runtime_config: RuntimeConfig`
-- `scoring_config_digest: str`
 
 Output:
 
@@ -655,8 +717,8 @@ Output:
 Effect:
 
 - Builds the structured identity for one reusable Agent-task result, including
-  repository, task, check, Agent, workspace, runtime, scoring, adapter, and
-  optional hardware fields.
+  repository, task, Check, Agent, workspace, runtime, adapter, and optional
+  hardware fields. It excludes post-execution pricing and scoring.
 
 ### make_result_cache_key
 

@@ -3,9 +3,9 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field, replace
-from datetime import UTC, datetime, timedelta
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any, Mapping, Sequence
+from typing import Mapping, Sequence
 
 from barcarolle import reporting as reporting_module
 from barcarolle import result_store as result_store_module
@@ -35,7 +35,6 @@ from barcarolle.records import (
     validate_benchmark_selection,
     validate_evaluation_cell_set,
     validate_metric,
-    validate_result,
     write_jsonl_records,
 )
 from barcarolle.task_pool import TimeRange
@@ -140,15 +139,6 @@ def select_benchmark(
     return selection
 
 
-def update_selector(
-    selector: SelectorRecord,
-    selection: BenchmarkSelectionRecord,
-    metrics: Sequence[MetricRecord],
-    feedback_config: selection_module.SelectorFeedbackConfig,
-) -> SelectorRecord:
-    return selection_module.update_selector(selector, selection, metrics, feedback_config)
-
-
 def evaluate_selector(
     selector: SelectorRecord,
     task_pool: TaskPoolRecord,
@@ -176,11 +166,11 @@ def evaluate_selector(
             task_pool,
             tasks,
             checks,
-            _origin_time(origin_id),
-            TimeRange(start=_datetime_to_iso(_origin_time(origin_id)), end=history_window.end),
+            _origin_time(origin_spec),
+            TimeRange(start=_datetime_to_iso(_origin_time(origin_spec)), end=history_window.end),
             rolling_policy,
         )
-        for origin_id in evaluation_config.origin_ids
+        for origin_spec in evaluation_config.origin_ids
     )
     selections: list[BenchmarkSelectionRecord] = []
     for origin in origins:
@@ -282,7 +272,6 @@ def run_agents(
                 agent,
                 workspace_config,
                 runtime_config,
-                scoring_config,
             )
             cells.append(_missing_cell(agent, task, check, identity.identity_digest))
     return _run_agent_cells(cells, tasks, checks, agents, workspace_config, runtime_config, scoring_config, result_store)
@@ -308,7 +297,6 @@ def fill_results(
         agents,
         workspace_config,
         runtime_config,
-        scoring_config,
         result_store,
         cache_config,
     )
@@ -338,45 +326,22 @@ def prepare_evaluation_cells(
         agents,
         workspace_config,
         runtime_config,
-        scoring_config,
         result_store,
         cache_config,
     )
     _run_agent_cells(missing, tasks, checks, agents, workspace_config, runtime_config, scoring_config, result_store)
-    stored_results = result_store_module.load_results(
-        result_store,
-        result_store_module.ResultQuery(scoring_config_digests=(scoring_config.scoring_config_digest,)),
+    cells = list(
+        result_store_module.resolve_result_cells(
+            requested_refs,
+            tasks,
+            checks,
+            agents,
+            workspace_config,
+            runtime_config,
+            result_store,
+            cache_config,
+        )
     )
-    cells: list[ResultCellRef] = []
-    for ref in requested_refs:
-        task = _task_for_ref(ref, tasks)
-        check = _check_for_ref(ref, task, checks)
-        for agent in agents:
-            identity = result_store_module.compute_result_cache_identity(
-                task,
-                check,
-                agent,
-                workspace_config,
-                runtime_config,
-                scoring_config,
-            )
-            result = _find_reusable_result(stored_results, identity.identity_digest, agent.agent_id, task.task_id, check.check_id, cache_config)
-            if result is None:
-                cells.append(_missing_cell(agent, task, check, identity.identity_digest))
-            else:
-                cells.append(
-                    ResultCellRef(
-                        agent_id=agent.agent_id,
-                        task_id=task.task_id,
-                        check_id=check.check_id,
-                        required_identity_digest=identity.identity_digest,
-                        result_id=result.result_id,
-                        result_digest=result.result_digest,
-                        cell_state="result",
-                        exclusion_reason=None,
-                        outcome=result.outcome,
-                    )
-                )
     cell_set = EvaluationCellSet(
         cell_set_id=f"cell_set_{canonical_digest((selection.selection_digest, origin.origin_id, join_config.join_policy_digest, tuple(_ref_key(ref) for ref in requested_refs), tuple(agent.agent_id for agent in agents)))}",
         origin_id=origin.origin_id,
@@ -569,7 +534,6 @@ def _run_agent_cells(
             agent,
             workspace_config,
             runtime_config,
-            scoring_config,
         )
         if identity.identity_digest != cell.required_identity_digest:
             raise ValueError("missing cell required identity does not match current run config")
@@ -604,7 +568,7 @@ def _load_training_results(
         origin.history_task_check_refs,
         agents,
         result_available_after=history_window.start,
-        result_available_before=_apply_embargo(history_window.end, rolling_policy.embargo),
+        result_available_before=history_window.end,
     )
 
 
@@ -692,25 +656,6 @@ def _selection_log_path(result_store: result_store_module.ResultStore) -> Path:
 
 def _metric_log_path(result_store: result_store_module.ResultStore) -> Path:
     return result_store.path.with_name("metrics.jsonl")
-
-
-def _find_reusable_result(
-    results: Sequence[ResultRecord],
-    identity_digest: str,
-    agent_id: str,
-    task_id: str,
-    check_id: str,
-    cache_config: result_store_module.ResultCacheConfig,
-) -> ResultRecord | None:
-    for result in results:
-        if result.agent_id != agent_id or result.task_id != task_id or result.check_id != check_id:
-            continue
-        if result.cache_identity.identity_digest != identity_digest:
-            continue
-        if cache_config.require_valid_result and not validate_result(result).ok:
-            continue
-        return result
-    return None
 
 
 def _results_bound_to_evaluation_cells(
@@ -825,7 +770,7 @@ def _origin_time(origin_id: str) -> datetime:
     try:
         value = _parse_datetime(origin_id)
     except ValueError as exc:
-        raise ValueError("Runner evaluate_selector origin_ids must be ISO datetime strings") from exc
+        raise ValueError("Runner evaluate_selector origin_ids entries must currently be ISO datetime strings") from exc
     return value
 
 
@@ -834,15 +779,6 @@ def _parse_datetime(value: str) -> datetime:
     if parsed.tzinfo is None:
         return parsed.replace(tzinfo=UTC)
     return parsed.astimezone(UTC)
-
-
-def _apply_embargo(value: str, embargo: str) -> str:
-    parsed = _parse_datetime(value)
-    if embargo in {"", "P0D", "PT0S"}:
-        return _datetime_to_iso(parsed)
-    if embargo.startswith("P") and embargo.endswith("D"):
-        return _datetime_to_iso(parsed - timedelta(days=int(embargo[1:-1])))
-    raise ValueError("Runner supports day-based embargo strings such as P0D or P1D")
 
 
 def _datetime_to_iso(value: datetime) -> str:

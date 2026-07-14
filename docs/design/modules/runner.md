@@ -1,6 +1,6 @@
 # Module Design: Runner
 
-Status: draft, 2026-06-27.
+Status: draft, 2026-07-14.
 
 ## Responsibility
 
@@ -64,8 +64,8 @@ Output:
 
 Effect:
 
-- Calls Task Pool to generate or import candidates, certify accepted tasks, and
-  freeze a task pool.
+- Calls Task Pool to generate or import candidates, run execution-based task
+  validation, and freeze accepted tasks.
 
 ### train_selector
 
@@ -112,25 +112,8 @@ Effect:
 
 - Resolves Task/Check records from the task pool, loads allowed pre-origin
   results, and calls Selection to produce a benchmark selection frozen before
-  future outcomes are opened.
-
-### update_selector
-
-Input:
-
-- `selector: SelectorRecord`
-- `selection: BenchmarkSelectionRecord`
-- `metrics: Sequence[MetricRecord]`
-- `feedback_config: SelectorFeedbackConfig`
-
-Output:
-
-- `SelectorRecord`
-
-Effect:
-
-- Calls Selection to update the persistent Selector or its trust metadata after
-  new metrics are available.
+  future outcomes are opened. A configured as-of cutoff later than the origin
+  is rejected before any Result query.
 
 ## Maintainer Entry Points
 
@@ -167,6 +150,8 @@ Effect:
   `freeze_evaluation_selections` to freeze `BenchmarkSelectionRecord`s, then
   calls `prepare_evaluation_cells` and `score_selection`. It returns frozen
   selections, cell sets, result matrices, and metrics.
+- MAE is the primary prediction metric. Supporting metrics remain available for
+  diagnosis and later algorithm decisions.
 
 ## Internal Steps
 
@@ -244,8 +229,10 @@ Effect:
 - Applies the same cache identity and denominator policy to selected benchmark
   `Task + Check` refs and future holdout `Task + Check` refs. It asks Result
   Store for missing cells using `cache_config`, runs allowed missing cells
-  through Workspace, stores new results, and returns completeness, exclusion,
-  and abstention metadata for scoring.
+  through Workspace, stores new results, then asks Result Store to resolve the
+  complete result-or-missing cell set. Runner does not implement a separate
+  cache lookup policy. It returns completeness, exclusion, and abstention
+  metadata for scoring.
 
 ### score_selection
 

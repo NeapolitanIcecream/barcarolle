@@ -40,6 +40,13 @@ def test_generate_history_candidates_filters_by_time_range_and_defaults_reposito
     assert candidates[0].source_ref == "issue-1"
 
 
+def test_time_range_compares_timezone_offsets_as_instants() -> None:
+    time_range = TimeRange("2026-01-01T10:00:00Z", "2026-01-01T12:00:00Z")
+
+    assert time_range.contains("2026-01-01T06:00:00-05:00")
+    assert not time_range.contains("2026-01-01T05:00:00-10:00")
+
+
 def test_import_task_pool_loads_json_and_applies_import_family(tmp_path: Path) -> None:
     source = tmp_path / "pool.json"
     payload = _candidate_payload()

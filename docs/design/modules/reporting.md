@@ -1,6 +1,6 @@
 # Module Design: Reporting
 
-Status: draft, 2026-06-27.
+Status: draft, 2026-07-14.
 
 ## Responsibility
 
@@ -55,8 +55,8 @@ Output:
 
 Effect:
 
-- Summarizes task count, check count, generator families, certification
-  coverage, and rejection reasons.
+- Summarizes task count, check count, generator families, execution-based task
+  validation coverage, and rejection reasons.
 
 ### build_result_report
 
@@ -73,6 +73,9 @@ Effect:
 
 - Summarizes pass/fail/invalid, cost, latency, scoreable rate, and cache
   coverage, including pricing version and usage coverage.
+- Counts `reported` or `complete` total cost as measured only because Result
+  Store requires every configured priced usage key; unknown and unreported
+  cost remain separate from measured zero cost.
 
 ### build_selector_report
 
@@ -91,6 +94,8 @@ Effect:
 
 - Summarizes selector performance by origin, Agent set, budget, metric, and
   benchmark exposure state using selections, cell sets, matrices, and metrics.
+- Rejects trace claims when a matrix cell changes the required identity,
+  result ID, result digest, or outcome frozen in its `EvaluationCellSet`.
 
 ### build_claim_boundary
 
@@ -110,7 +115,7 @@ Output:
 Effect:
 
 - Separates supported claims from unsupported claims using task-pool coverage,
-  rejection and certification evidence, cache completeness, abstentions,
+  rejection and task-validation evidence, cache completeness, abstentions,
   benchmark exposure state, and Agent/result identity drift.
 
 ### write_report
@@ -130,6 +135,9 @@ Effect:
 - Writes a report with source digests and artifact paths.
 - Emits artifact paths under the report root or configured artifact root as
   relative refs.
+- Replaces every absolute artifact path outside that root with a basename-only
+  reference, so reports do not expose host directory layouts.
+- Preserves caller-supplied relative artifact refs.
 - Reports unknown or unreported usage/cost separately from measured zero cost.
 
 ## Design Consistency Check

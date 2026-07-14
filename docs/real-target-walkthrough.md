@@ -23,6 +23,11 @@ records. Keep public task material in `TaskRecord.solver_material_refs`.
 Private check bundles belong only to `CheckRecord.hidden_check_bundle_digest`
 and verifier setup.
 
+Before freezing the pool, run execution-based task validation. The task check
+must fail at the base commit and, when a reference patch is available, pass
+after applying it. Repeat the check when repeatability needs evidence. For
+SWE-bench data, retain the standard `FAIL_TO_PASS` and `PASS_TO_PASS` labels.
+
 The hidden check bundle is injected only in the verifier workspace. It should
 not appear in solver material refs, solver artifacts, prompts, or checked-in
 records.
@@ -47,18 +52,22 @@ from barcarolle.workspace import bind_agent_harness
 bind_agent_harness(agent, ("./run-agent.sh",))
 ```
 
+The binder validates the command argv. When results will be reused, change the
+Agent identity whenever the harness or its behavior-changing configuration
+changes. The harness adapter decides how to compute that identity.
+
 For a concrete Codex CLI shell example, see
 `examples/harnesses/codex-cli/`. It is one harness option; Barcarolle does not
 require Codex CLI.
 
-For scoreable runs, the command should edit files in the provided solver
-worktree. Barcarolle captures the final `git diff`, replays it in a fresh
-verifier worktree, and runs the hidden check there.
+The command edits files in the provided solver worktree. Barcarolle captures
+the final `git diff`, replays it in a fresh verifier worktree, and runs the
+hidden check there.
 
 ## 4. Record Usage And Cost
 
-The harness owns usage extraction. Barcarolle accepts any harness-provided usage
-mapping and applies cost rates by matching numeric keys:
+The harness adapter owns usage extraction. Barcarolle accepts an adapter-provided
+usage mapping and applies cost rates by matching numeric keys:
 
 ```python
 from barcarolle.result_store import ScoringConfig
@@ -80,8 +89,11 @@ scoring_config = ScoringConfig(
 )
 ```
 
-If usage is not reported, set `usage_coverage` to `unknown` or `unreported`.
-Reports count those results separately from measured zero-cost results.
+The built-in shell workspace path does not yet parse a harness result envelope,
+so it produces an empty usage mapping. Use `usage_coverage="unknown"` or
+`"unreported"` for that path. A custom adapter may use `"reported"` only when
+it supplies at least one finite, non-negative numeric usage value. Reports count
+unknown usage separately from measured zero-cost results.
 
 ## 5. Preserve Run Artifacts
 
@@ -114,8 +126,9 @@ hidden check material.
 ## 6. Store Results
 
 Use `barcarolle.result_store` to compute cache identity, build a `ResultRecord`,
-and append it to a `ResultStore`. The cache identity includes scoring config, so
-changing pricing or usage semantics does not silently reuse stale scoring.
+and append it to a `ResultStore`. Preserve raw usage so pricing and derived cost
+can be recomputed without rerunning a paid Agent result. Unknown cost remains
+unknown rather than becoming zero.
 
 ## 7. Build Rolling-Origin Selection
 
@@ -134,9 +147,9 @@ refs, with digests preserved in the report sections.
 
 ## Harness Preflight Output
 
-Treat endpoint and authentication proof as a blocker for evidence-producing
-runs: if you cannot prove the harness is using the intended endpoint and auth
-boundary, stop before running paid solving work.
+Paid evidence-producing runs must use the endpoint and authentication required
+by `AGENTS.md`. Stop before paid solving work if the harness cannot establish
+that boundary.
 
 Treat noninteractive terminal or display warnings as harness UX warnings when
 the solving command itself succeeds, the endpoint/auth boundary is proven, and

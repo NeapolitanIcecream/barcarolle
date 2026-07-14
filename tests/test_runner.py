@@ -143,7 +143,7 @@ def test_train_selector_loads_only_allowed_history_results(tmp_path: Path, monke
         TimeRange("2026-01-01T00:00:00Z", "2026-01-05T00:00:00Z"),
         (),
         SelectorTrainingConfig("training"),
-        RollingOriginPolicy("policy", "origin_time", "P0D", "clusters", "recency", "disjoint", False),
+        RollingOriginPolicy("policy", "origin_time", "clusters", "recency", "disjoint", False),
         FeatureConfig("features", "leakage", ("task_count",), ("task_metadata",)),
         ResultStore(tmp_path / "results.jsonl"),
     )
@@ -152,35 +152,6 @@ def test_train_selector_loads_only_allowed_history_results(tmp_path: Path, monke
     assert queries[0].task_ids == ("task",)
     assert queries[0].check_ids == ("check",)
     assert queries[0].agent_ids == ("agent",)
-    assert queries[0].result_available_before.startswith("2026-01-05T00:00:00")
-
-
-@pytest.mark.parametrize("embargo", ("", "PT0S"))
-def test_train_selector_treats_zero_embargo_strings_consistently(tmp_path: Path, monkeypatch, embargo: str) -> None:
-    task = _task()
-    check = _check()
-    task_pool = _task_pool_with_refs(tmp_path, (task,), (check,))
-    agent = _agent()
-    queries = []
-
-    def fake_load_results(store, query):
-        queries.append(query)
-        return ()
-
-    monkeypatch.setattr(runner_module.result_store_module, "load_results", fake_load_results)
-
-    selector = train_selector(
-        task_pool,
-        (agent,),
-        TimeRange("2026-01-01T00:00:00Z", "2026-01-05T00:00:00Z"),
-        (),
-        SelectorTrainingConfig("training"),
-        RollingOriginPolicy("policy", "origin_time", embargo, "clusters", "recency", "disjoint", False),
-        FeatureConfig("features", "leakage", ("task_count",), ("task_metadata",)),
-        ResultStore(tmp_path / "results.jsonl"),
-    )
-
-    assert selector.selector_family == "recency"
     assert queries[0].result_available_before.startswith("2026-01-05T00:00:00")
 
 
@@ -213,7 +184,7 @@ def test_select_benchmark_loads_only_allowed_pre_origin_results_and_appends_sele
         SelectionBudget("budget", 1),
         _selector(),
         SelectionConfig("selection", "selector", "placeholder", "recency"),
-        RollingOriginPolicy("policy", "origin_time", "P0D", "clusters", "recency", "disjoint", False),
+        RollingOriginPolicy("policy", "origin_time", "clusters", "recency", "disjoint", False),
         FeatureConfig("features", "leakage", ("task_count",), ("task_metadata",)),
         ResultStore(tmp_path / "results.jsonl"),
     )
@@ -224,6 +195,37 @@ def test_select_benchmark_loads_only_allowed_pre_origin_results_and_appends_sele
     assert queries[0].agent_ids == ("agent",)
     assert queries[0].result_available_before.startswith("2026-01-05T00:00:00")
     assert logged == [selection]
+
+
+def test_select_benchmark_rejects_cutoff_after_origin_before_loading_results(tmp_path: Path, monkeypatch) -> None:
+    task = _task()
+    check = _check()
+    task_pool = _task_pool_with_refs(tmp_path, (task,), (check,))
+
+    def fail_if_results_are_loaded(*args, **kwargs):
+        raise AssertionError("future cutoff must be rejected before loading results")
+
+    monkeypatch.setattr(runner_module.result_store_module, "load_results", fail_if_results_are_loaded)
+
+    with pytest.raises(ValueError, match="must not be after origin_time"):
+        select_benchmark(
+            task_pool,
+            (_agent(),),
+            datetime(2026, 1, 5, tzinfo=UTC),
+            SelectionBudget("budget", 1),
+            _selector(),
+            SelectionConfig("selection", "selector", "placeholder", "recency"),
+            RollingOriginPolicy(
+                "policy",
+                "2026-01-06T00:00:00Z",
+                "clusters",
+                "recency",
+                "disjoint",
+                False,
+            ),
+            FeatureConfig("features", "leakage", ("task_count",), ("task_metadata",)),
+            ResultStore(tmp_path / "results.jsonl"),
+        )
 
 
 def test_prepare_evaluation_cells_and_score_selection_keep_selected_future_linkage(tmp_path: Path, monkeypatch) -> None:
@@ -438,7 +440,7 @@ def test_evaluate_selector_does_not_open_post_origin_results_before_freeze(tmp_p
                 SelectionConfig("selection", "selector", "placeholder", "recency"),
                 SelectionBudget("eval-budget", 7),
             ),
-            RollingOriginPolicy("policy", "origin_time", "P0D", "clusters", "recency", "disjoint", True),
+            RollingOriginPolicy("policy", "origin_time", "clusters", "recency", "disjoint", True),
             FeatureConfig("features", "leakage", ("task_count",), ("task_metadata",)),
             ResultStore(tmp_path / "results.jsonl"),
             _workspace_config(),
@@ -566,13 +568,17 @@ def _agent(agent_id: str = "agent", manifest: str = "agent-manifest") -> AgentRe
 
 
 def _selector() -> SelectorRecord:
+    parameters = {}
     return SelectorRecord(
         selector_id="selector",
         selector_family="recency",
         selector_version="1",
         training_source_digests=("training",),
         allowed_feature_classes=("task_metadata",),
-        config_digest="selector-config",
+        parameters=parameters,
+        config_digest=canonical_digest(
+            {"selector_family": "recency", "parameters": parameters}
+        ),
         created_at="2026-01-04T00:00:00Z",
     )
 
@@ -618,7 +624,7 @@ def _result(
     scoring_config: ScoringConfig,
     outcome: str = "pass",
 ):
-    identity = compute_result_cache_identity(task, check, agent, workspace_config, runtime_config, scoring_config)
+    identity = compute_result_cache_identity(task, check, agent, workspace_config, runtime_config)
     return build_result_record(task, check, agent, _workspace_run(task, check, agent, outcome), identity, scoring_config)
 
 
@@ -709,7 +715,6 @@ def _origin(task_pool: TaskPoolRecord, selected_ref: TaskCheckRef, future_ref: T
         history_task_check_refs=(selected_ref,),
         future_holdout_task_check_refs=(future_ref,),
         as_of_cutoff="2026-01-05T00:00:00Z",
-        embargo="P0D",
         cluster_constraints_digest="clusters",
         eligibility_mode="recency",
         holdout_overlap_policy="disjoint",

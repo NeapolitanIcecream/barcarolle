@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from itertools import combinations
+from math import fsum, isfinite
 from typing import Mapping, Sequence
 
 from barcarolle.records import (
@@ -20,23 +22,17 @@ from barcarolle.records import (
     validate_evaluation_cell_set,
     validate_metric,
     validate_result_matrix,
+    validate_selector,
 )
 
-from .origin import _instant_lte, _now
+from .algorithms import ensure_selector_executable
+from .origin import _now
 
 
 @dataclass(frozen=True)
 class MetricConfig:
     metric_config_digest: str
     budget_digest: str | None = None
-
-
-@dataclass(frozen=True)
-class ControllerConfig:
-    controller_config_digest: str
-    fallback_selector_id: str | None = None
-    selector_metric_selection_ids: Mapping[str, str] | None = None
-    allowed_prior_origin_ids: tuple[str, ...] = ()
 
 
 def evaluate_selection(
@@ -48,6 +44,8 @@ def evaluate_selection(
     metric_config: MetricConfig,
 ) -> Sequence[MetricRecord]:
     record_error = _record_validation_error(selection, origin, evaluation_cells, selected_matrix, future_matrix)
+    if not record_error and metric_config.budget_digest not in {None, selection.budget_digest}:
+        record_error = "metric_budget_mismatch"
     if record_error:
         return (
             _metric_record(
@@ -120,7 +118,15 @@ def evaluate_selection(
     mae = _mean_absolute_error(selected_rates, future_rates)
     coverage = _coverage(future_matrix)
     invalid_rate = _invalid_rate(future_matrix)
-    return (
+    metric_values = (
+        ("future_pass_rate_mae", mae),
+        ("future_coverage", coverage),
+        ("future_invalid_rate", invalid_rate),
+        ("pairwise_gap_mae", _pairwise_gap_mae(selected_rates, future_rates)),
+        ("rank_agreement", _rank_agreement(selected_rates, future_rates)),
+        ("recommendation_regret", _recommendation_regret(selected_rates, future_rates)),
+    )
+    return tuple(
         _metric_record(
             selection,
             origin,
@@ -129,88 +135,66 @@ def evaluate_selection(
             future_matrix,
             metric_config,
             metric_scope="aggregate",
-            metric_name="future_pass_rate_mae",
-            metric_value=mae,
+            metric_name=metric_name,
+            metric_value=metric_value,
             completeness_state=future_matrix.scoreable_state,
             abstention_reason=future_matrix.abstention_reason,
-        ),
-        _metric_record(
-            selection,
-            origin,
-            evaluation_cells,
-            selected_matrix,
-            future_matrix,
-            metric_config,
-            metric_scope="aggregate",
-            metric_name="future_coverage",
-            metric_value=coverage,
-            completeness_state=future_matrix.scoreable_state,
-            abstention_reason=future_matrix.abstention_reason,
-        ),
-        _metric_record(
-            selection,
-            origin,
-            evaluation_cells,
-            selected_matrix,
-            future_matrix,
-            metric_config,
-            metric_scope="aggregate",
-            metric_name="future_invalid_rate",
-            metric_value=invalid_rate,
-            completeness_state=future_matrix.scoreable_state,
-            abstention_reason=future_matrix.abstention_reason,
-        ),
+        )
+        for metric_name, metric_value in metric_values
     )
 
 
-def choose_selector_for_origin(
+def choose_selector_by_mean_mae(
     registered_selectors: Sequence[SelectorRecord],
-    prior_metrics: Sequence[MetricRecord],
-    origin: RollingOriginRecord,
-    controller_config: ControllerConfig,
+    mae_by_origin: Sequence[Mapping[str, float]],
+    fallback_selector_id: str,
 ) -> SelectorRecord:
     if not registered_selectors:
         raise ValueError("registered_selectors must not be empty")
+    for selector in registered_selectors:
+        validation = validate_selector(selector)
+        if not validation.ok:
+            raise ValueError(f"registered selector is invalid: {', '.join(validation.errors)}")
+        ensure_selector_executable(selector)
+    selector_ids = [selector.selector_id for selector in registered_selectors]
+    if len(selector_ids) != len(set(selector_ids)):
+        raise ValueError("registered selector IDs must be unique")
     selector_by_id = {selector.selector_id: selector for selector in registered_selectors}
-    metric_map = controller_config.selector_metric_selection_ids or {}
-    allowed_prior_origin_ids = set(controller_config.allowed_prior_origin_ids)
-    if not allowed_prior_origin_ids:
-        return _fallback_selector(registered_selectors, selector_by_id, controller_config)
-    best_selector: SelectorRecord | None = None
-    best_value: float | None = None
-    for selector_id, selection_id in metric_map.items():
-        selector = selector_by_id.get(selector_id)
-        if selector is None:
-            continue
-        selector_metrics = [
-            metric
-            for metric in prior_metrics
-            if metric.selection_id == selection_id
-            and metric.metric_name == "future_pass_rate_mae"
-            and validate_metric(metric).ok
-            and metric.origin_id in allowed_prior_origin_ids
-            and metric.origin_id != origin.origin_id
-            and _instant_lte(metric.computed_at, origin.as_of_cutoff)
-        ]
-        if not selector_metrics:
-            continue
-        value = selector_metrics[-1].metric_value
-        if best_value is None or value < best_value:
-            best_selector = selector
-            best_value = value
-    if best_selector is not None:
-        return best_selector
-    return _fallback_selector(registered_selectors, selector_by_id, controller_config)
-
-
-def _fallback_selector(
-    registered_selectors: Sequence[SelectorRecord],
-    selector_by_id: Mapping[str, SelectorRecord],
-    controller_config: ControllerConfig,
-) -> SelectorRecord:
-    if controller_config.fallback_selector_id and controller_config.fallback_selector_id in selector_by_id:
-        return selector_by_id[controller_config.fallback_selector_id]
-    return registered_selectors[0]
+    if fallback_selector_id not in selector_by_id:
+        raise ValueError("fallback_selector_id is not registered")
+    if not mae_by_origin:
+        return selector_by_id[fallback_selector_id]
+    expected_selector_ids = set(selector_by_id)
+    totals = {selector_id: [] for selector_id in selector_by_id}
+    for row in mae_by_origin:
+        if not isinstance(row, Mapping):
+            raise ValueError("each MAE row must map selector IDs to MAE values")
+        row_selector_ids = set(row)
+        if row_selector_ids != expected_selector_ids:
+            missing = sorted(expected_selector_ids - row_selector_ids)
+            extra = sorted(row_selector_ids - expected_selector_ids)
+            details = []
+            if missing:
+                details.append(f"missing {', '.join(missing)}")
+            if extra:
+                details.append(f"unknown {', '.join(map(str, sorted(extra, key=str)))}")
+            raise ValueError(f"each MAE row must cover every registered selector: {'; '.join(details)}")
+        for selector_id, value in row.items():
+            if isinstance(value, bool) or not isinstance(value, int | float):
+                raise ValueError("MAE values must be finite numbers between 0 and 1")
+            try:
+                normalized = float(value)
+            except OverflowError as exc:
+                raise ValueError("MAE values must be finite numbers between 0 and 1") from exc
+            if not isfinite(normalized) or not 0.0 <= normalized <= 1.0:
+                raise ValueError("MAE values must be finite numbers between 0 and 1")
+            totals[selector_id].append(normalized)
+    means = {
+        selector_id: fsum(values) / len(values)
+        for selector_id, values in totals.items()
+    }
+    best_selector_id = min(means, key=lambda selector_id: (means[selector_id], selector_id))
+    return selector_by_id[best_selector_id]
 
 
 def _matrix_alignment_error(
@@ -258,12 +242,22 @@ def _matrix_cells_match_cell_set(
 ) -> bool:
     allowed_refs = {(ref.task_id, ref.check_id) for ref in refs}
     expected = {
-        (cell.agent_id, cell.task_id, cell.check_id): cell.required_identity_digest
+        (cell.agent_id, cell.task_id, cell.check_id): (
+            cell.required_identity_digest,
+            cell.result_id,
+            cell.result_digest,
+            cell.outcome,
+        )
         for cell in evaluation_cells.cells
         if (cell.task_id, cell.check_id) in allowed_refs
     }
     actual = {
-        (cell.agent_id, cell.task_id, cell.check_id): cell.required_identity_digest
+        (cell.agent_id, cell.task_id, cell.check_id): (
+            cell.required_identity_digest,
+            cell.result_id,
+            cell.result_digest,
+            cell.outcome,
+        )
         for cell in matrix.cells
     }
     return actual == expected
@@ -335,6 +329,44 @@ def _mean_absolute_error(selected_rates: Mapping[str, float], future_rates: Mapp
     return sum(abs(selected_rates[agent_id] - future_rates[agent_id]) for agent_id in agent_ids) / len(agent_ids)
 
 
+def _pairwise_gap_mae(selected_rates: Mapping[str, float], future_rates: Mapping[str, float]) -> float:
+    agent_pairs = tuple(combinations(sorted(set(selected_rates) & set(future_rates)), 2))
+    if not agent_pairs:
+        return 0.0
+    errors = (
+        abs(
+            (selected_rates[left] - selected_rates[right])
+            - (future_rates[left] - future_rates[right])
+        )
+        for left, right in agent_pairs
+    )
+    return fsum(errors) / len(agent_pairs)
+
+
+def _rank_agreement(selected_rates: Mapping[str, float], future_rates: Mapping[str, float]) -> float:
+    agent_pairs = tuple(combinations(sorted(set(selected_rates) & set(future_rates)), 2))
+    if not agent_pairs:
+        return 1.0
+    agreements = sum(
+        _sign(selected_rates[left] - selected_rates[right])
+        == _sign(future_rates[left] - future_rates[right])
+        for left, right in agent_pairs
+    )
+    return agreements / len(agent_pairs)
+
+
+def _recommendation_regret(selected_rates: Mapping[str, float], future_rates: Mapping[str, float]) -> float:
+    agent_ids = sorted(set(selected_rates) & set(future_rates))
+    if not agent_ids:
+        return 0.0
+    recommended_agent = min(agent_ids, key=lambda agent_id: (-selected_rates[agent_id], agent_id))
+    return max(future_rates[agent_id] for agent_id in agent_ids) - future_rates[recommended_agent]
+
+
+def _sign(value: float) -> int:
+    return (value > 0.0) - (value < 0.0)
+
+
 def _coverage(matrix: ResultMatrix) -> float:
     if not matrix.cells:
         return 0.0
@@ -368,7 +400,7 @@ def _metric_record(
     abstention_reason: str | None,
 ) -> MetricRecord:
     metric = MetricRecord(
-        metric_id=f"metric_{canonical_digest((origin.origin_id, selection.selection_id, evaluation_cells.cell_set_digest, selected_matrix.matrix_digest, future_matrix.matrix_digest, selected_matrix.join_policy_digest, selected_matrix.denominator_policy_digest, metric_scope, metric_name, metric_config.metric_config_digest, None, None, 'all_agents'))}",
+        metric_id=f"metric_{canonical_digest((origin.origin_id, selection.selection_id, evaluation_cells.cell_set_digest, selected_matrix.matrix_digest, future_matrix.matrix_digest, selected_matrix.join_policy_digest, selected_matrix.denominator_policy_digest, metric_scope, metric_name, metric_config.metric_config_digest, selection.budget_digest, None, 'all_agents'))}",
         origin_id=origin.origin_id,
         selection_id=selection.selection_id,
         evaluation_cell_set_digest=evaluation_cells.cell_set_digest,
@@ -380,7 +412,7 @@ def _metric_record(
         agent_id=None,
         agent_pair=None,
         aggregation_level="all_agents",
-        budget_digest=metric_config.budget_digest,
+        budget_digest=selection.budget_digest,
         stratum_ref=None,
         metric_name=metric_name,
         metric_value=metric_value,

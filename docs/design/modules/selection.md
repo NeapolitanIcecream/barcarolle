@@ -1,12 +1,14 @@
 # Module Design: Selection
 
-Status: draft, 2026-06-27.
+Status: current behavior and planned boundaries, 2026-07-14.
 
 ## Responsibility
 
-Train Selectors from historical data, freeze benchmark selections for a
-specified Selector, score already-frozen selections, and update Selector choice
-from new evaluation feedback.
+Configure executable rule-based Selectors from historical inputs, freeze
+benchmark selections for a specified Selector, score already-frozen selections,
+and choose among evaluated Selectors from prepared historical MAE rows. Learned
+methods remain planned; their training contract will be defined with the first
+concrete algorithm.
 
 Selection is the core research module.
 
@@ -49,22 +51,51 @@ Output consumers:
 Functions below define module interfaces. Each function specifies input,
 output, and effect only; it does not prescribe implementation.
 
+## Capability Status
+
+- Implemented and executable: random, recency, coverage, and rule-mixture
+  selection.
+- Implemented evaluation metrics: future pass-rate MAE, future coverage, future
+  invalid rate, pairwise gap MAE, pairwise rank agreement, and recommendation
+  regret.
+- Implemented meta-controller baseline: mean-MAE comparison over complete,
+  paired rows prepared by the rolling-origin pipeline. It uses a rule-based
+  fallback only when no historical rows exist.
+- Planned: learned-mixture fitting and calibrated weighting. No training API or
+  data contract is reserved before a concrete algorithm is designed.
+
 ## Policy Records
 
 `RollingOriginPolicy` must define:
 
 - as-of cutoff rule;
-- embargo interval;
 - task cluster constraints;
 - eligibility mode, such as strict historical evaluation or explicit
   counterfactual replay;
 - holdout overlap rule;
 - whether future holdout `Task + Check` refs may be known before scoring.
 
+An explicit as-of cutoff may be earlier than the origin, but never later. The
+runtime rejects a later cutoff before constructing history or loading Result
+evidence.
+
 `BenchmarkSelectionRecord` is the frozen benchmark selection. Selection must
 write it append-only before future holdout outcomes are opened. Selection
 functions must not accept future-result paths, verifier workspaces, raw
 hidden-check material, or raw Agent transcripts.
+
+Rule-based `SelectorRecord.parameters` contains every value that changes
+selection behavior:
+
+- recency: `{}`;
+- random: `{"seed": int}`;
+- coverage: `{"group_by_ref_key": {task_check_ref_key: group}}`;
+- rule mixture: `{"expert_weights": {...}, "random_seed": int,
+  "group_by_ref_key": {...}}`.
+
+`SelectorRecord.config_digest` covers the family and these parameters.
+`SelectionConfig` contains per-freeze bindings and metadata; changing its digest
+does not change a Selector's algorithm.
 
 ## Selection Entry Points
 
@@ -91,9 +122,13 @@ Output:
 
 Effect:
 
-- Trains or chooses a persistent Selector using only historical data allowed by
-  the training config and rolling-origin policy. Rolling-origin splitting is
-  internal to this function.
+- Chooses a supplied executable Selector or creates a persistent rule-based
+  Selector using only historical data allowed by the training config and
+  rolling-origin policy.
+- Copies the rule parameters from `SelectorTrainingConfig` into the resulting
+  `SelectorRecord`, so the record is directly executable and replayable.
+- Rejects planned learned or calibrated families instead of creating a
+  `SelectorRecord` that `select_with_selector` cannot execute.
 
 ### freeze_evaluation_selections
 
@@ -146,24 +181,6 @@ Effect:
   opened. It does not run missing Agent-task-check cells; Runner handles lazy
   Agent execution after this record is produced.
 
-### update_selector
-
-Input:
-
-- `selector: SelectorRecord`
-- `selection: BenchmarkSelectionRecord`
-- `metrics: Sequence[MetricRecord]`
-- `feedback_config: SelectorFeedbackConfig`
-
-Output:
-
-- `SelectorRecord`
-
-Effect:
-
-- Updates the persistent Selector or its trust metadata after new evaluation
-  metrics are available. It does not inspect raw workspaces or hidden checks.
-
 ## Functions
 
 ### build_rolling_origin
@@ -185,8 +202,8 @@ Effect:
 
 - Defines history pool and future holdout without exposing future outcomes to
   selectors. It uses Task and Check timestamps to build eligible `Task + Check`
-  refs. The policy defines as-of cutoff, embargo, cluster constraints,
-  eligibility mode, and holdout overlap rules.
+  refs. The policy defines as-of cutoff, cluster constraints, eligibility mode,
+  and holdout overlap rules.
 
 ### build_feature_snapshot
 
@@ -278,7 +295,9 @@ Output:
 
 Effect:
 
-- Selects recent tasks under budget.
+- Selects the latest eligible task/check refs under budget. Rolling-origin
+  construction orders refs by their UTC known-at instant, then task ID and
+  check ID, so caller input order cannot change recency behavior.
 
 ### select_coverage
 
@@ -301,7 +320,7 @@ Effect:
 Input:
 
 - `selector_input: SelectorInput`
-- `expert_weights: Mapping[str, float]`
+- `selector_parameters: Mapping[str, JSONValue]`
 - `selection_config: SelectionConfig`
 
 Output:
@@ -310,43 +329,13 @@ Output:
 
 Effect:
 
-- Combines rule-based selector scores and solves for one common selected task
-  and check set.
-
-### fit_learned_mixture
-
-Input:
-
-- `training_origins: Sequence[RollingOriginRecord]`
-- `training_selector_inputs: Mapping[str, SelectorInput]`
-- `baseline_selectors: Sequence[SelectorRecord]`
-- `fit_config: FitConfig`
-
-Output:
-
-- `SelectorRecord`
-
-Effect:
-
-- Learns mixture weights over rule-based selectors using only leakage-checked,
-  out-of-origin selector inputs.
-
-### fit_calibrated_weighting
-
-Input:
-
-- `training_origins: Sequence[RollingOriginRecord]`
-- `training_selector_inputs: Mapping[str, SelectorInput]`
-- `selection_config: SelectionConfig`
-
-Output:
-
-- `SelectorRecord`
-
-Effect:
-
-- Fits a low-dimensional weighting layer for calibrated, constrained task
-  selection using leakage-checked selector inputs.
+- Combines normalized recency, deterministic-random, and coverage round-robin
+  ranks with nonnegative expert weights, then selects one common task and check
+  set.
+- Rejects unknown expert names and negative or non-finite weights instead of
+  silently changing their meaning.
+- Uses the persisted random seed and coverage groups from
+  `selector_parameters`; `SelectionConfig` does not supply algorithm parameters.
 
 ### select_with_selector
 
@@ -383,23 +372,33 @@ Output:
 
 Effect:
 
-- Computes future pass-rate MAE, pairwise gap error, rank agreement,
-  recommendation regret, invalid rate, cost, latency, and coverage by comparing
-  selected-benchmark estimates against future-holdout outcomes. It emits metric
-  records with selected/future matrix, cell-set, metric-config, and metric
-  digests, not a human-facing report. Before computing MAE, it verifies matrix
-  roles, origin, selection, Agent set, join policy, and denominator policy
-  alignment. If these checks fail, it emits abstention or invalid metric
-  records instead of scoring the comparison.
+- Computes future pass-rate MAE, future coverage, future invalid rate, pairwise
+  gap MAE, pairwise rank agreement, and recommendation regret by comparing
+  selected-benchmark estimates against future-holdout outcomes.
+- Pairwise rank agreement is the fraction of Agent pairs whose selected and
+  future signed ordering agrees, including tie state. With fewer than two Agents
+  it is `1.0`.
+- Recommendation regret is the future best pass rate minus the future pass rate
+  of the selected-benchmark recommendation. Selected-rate ties use the lowest
+  Agent ID.
+- Emits metric records with selected/future matrix, cell-set, metric-config, and
+  metric digests, not a human-facing report. Before computing metrics, it
+  verifies matrix roles, origin, selection, Agent set, join policy, and
+  denominator policy alignment. Matrix cells must preserve each frozen cell's
+  required identity, result ID, result digest, and outcome. If these checks
+  fail, it emits abstention or invalid metric records instead of scoring the
+  comparison.
+- Every emitted metric binds `budget_digest` to the frozen selection budget. A
+  non-null, conflicting `MetricConfig.budget_digest` produces an invalid metric
+  instead of a cross-budget comparison.
 
-### choose_selector_for_origin
+### choose_selector_by_mean_mae
 
 Input:
 
 - `registered_selectors: Sequence[SelectorRecord]`
-- `prior_metrics: Sequence[MetricRecord]`
-- `origin: RollingOriginRecord`
-- `controller_config: ControllerConfig`
+- `mae_by_origin: Sequence[Mapping[str, float]]`
+- `fallback_selector_id: str`
 
 Output:
 
@@ -407,12 +406,18 @@ Output:
 
 Effect:
 
-- Chooses a selector using only prior-origin evidence, with fallback to
-  rule-based selectors under uncertainty or drift.
+- Each row contains one already-validated, comparable MAE value for every
+  registered Selector at one prior origin. The rolling-origin pipeline owns
+  origin splitting, Metric validation, availability, deduplication, and
+  comparability checks before calling this function.
+- Averages each Selector's rows and returns the lowest mean MAE, breaking ties by
+  Selector ID.
+- Uses the registered fallback only when `mae_by_origin` is empty. Incomplete
+  rows and non-finite or out-of-range MAE values are input errors.
 
 ## Selector Development Order
 
-Initial order:
+Planned development order after the implemented rule baselines:
 
 1. random, recency, and coverage baselines;
 2. strong baseline envelope;
@@ -421,7 +426,9 @@ Initial order:
 5. future-stratum matching;
 6. outcome-aware selectors only under explicit available-before-origin rules;
 7. pairwise and hierarchical models only when data volume supports them;
-8. adaptive controller after selectors have enough prior-origin evidence.
+8. stronger learned or drift-aware adaptive control after selectors have enough
+   prior-origin evidence; the prepared-table mean-MAE comparator remains the
+   baseline.
 
 ## Design Consistency Check
 
@@ -433,6 +440,6 @@ Initial order:
 - Feature provenance is recorded before selector input is built.
 - Primary metric is future pass-rate MAE.
 - Learned selectors start with data-efficient methods.
-- Adaptive behavior is based on prior-origin metrics and later feedback
-  supplied through Metric records.
+- The rolling-origin pipeline prepares paired historical MAE rows before the
+  meta-controller compares Selectors.
 - Reporting, not Selection, owns human-readable reports.

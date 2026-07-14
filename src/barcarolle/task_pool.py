@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Sequence as SequenceABC
 from dataclasses import dataclass
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, Mapping, Sequence
 import json
@@ -27,7 +28,8 @@ class TimeRange:
     end: str
 
     def contains(self, value: str) -> bool:
-        return self.start <= value <= self.end
+        instant = _parse_timestamp_utc(value)
+        return _parse_timestamp_utc(self.start) <= instant <= _parse_timestamp_utc(self.end)
 
 
 @dataclass(frozen=True)
@@ -486,6 +488,13 @@ def _required_str(data: Mapping[str, Any], key: str) -> str:
     if value is None or value == "":
         raise ValueError(f"{key} is required")
     return str(value)
+
+
+def _parse_timestamp_utc(value: str) -> datetime:
+    parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=UTC)
+    return parsed.astimezone(UTC)
 
 
 def _require_metadata(metadata: Mapping[str, object], keys: Sequence[str]) -> None:

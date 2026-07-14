@@ -1,6 +1,6 @@
 # Module Design: Verification
 
-Status: draft, 2026-06-27.
+Status: draft, 2026-07-14.
 
 ## Responsibility
 
@@ -56,7 +56,9 @@ Output:
 Effect:
 
 - Injects hidden check material only into the verifier workspace and returns
-  that workspace reference.
+  that workspace reference. The low-level function confines the destination
+  to the verifier workspace; the Workspace module additionally reserves the
+  `.barcarolle` namespace for its bound hidden material.
 
 ### verify_diff
 
@@ -72,8 +74,9 @@ Output:
 
 Effect:
 
-- Executes the check against the applied candidate diff under bounded time and
-  resource limits.
+- Executes the check against the applied candidate diff within the configured
+  timeout. An execution adapter may add stronger process, network, filesystem,
+  or resource limits.
 
 ### normalize_outcome
 
@@ -99,6 +102,7 @@ Input:
 - `verifier_workspace_factory: Callable`
 - `repeat_count: int`
 - `runtime_config: RuntimeConfig`
+- `workspace_cleanup: Callable[[WorkspaceRef], None]`
 
 Output:
 
@@ -106,8 +110,10 @@ Output:
 
 Effect:
 
-- Runs the check multiple times when certification or flakiness analysis needs
-  stability evidence.
+- Runs the check multiple times when task validation or flakiness analysis
+  needs repeatability evidence.
+- Calls the required cleanup function after every attempt, including verifier
+  preparation or execution failure, so copied private material is not retained.
 
 ### summarize_evidence
 

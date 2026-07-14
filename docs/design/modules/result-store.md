@@ -1,6 +1,6 @@
 # Module Design: Result Store
 
-Status: draft, 2026-06-27.
+Status: draft, 2026-07-14.
 
 ## Responsibility
 
@@ -67,8 +67,16 @@ Effect:
 
 - Normalizes pass/fail/invalid, cost, latency, failure label, diff digest, and
   verifier metadata, and stores the exact cache identity used for reuse.
+- Treats `error` and `timeout` terminal states as Agent-attributable invalid
+  results even if a Check also reported `fail`; only terminal `failed` is a
+  scoreable failure.
 - Carries harness-provided usage mappings into the `ResultRecord` and computes
-  cost from matching numeric usage keys in `ScoringConfig.cost_rates`.
+  cost from numeric usage keys in `ScoringConfig.cost_rates`. `reported` and
+  `complete` coverage must include every priced key; `unknown` and
+  `unreported` may omit them. Present priced values must be finite and
+  nonnegative. An unknown total is stored as `null`, never zero.
+- Stores pricing provenance on the Result, outside `ResultCacheIdentity`, so a
+  new price table can reprice retained usage without rerunning paid work.
 
 ### compute_result_cache_identity
 
@@ -79,7 +87,6 @@ Input:
 - `agent: AgentRecord`
 - `workspace_config: WorkspaceConfig`
 - `runtime_config: RuntimeConfig`
-- `scoring_config: ScoringConfig`
 
 Output:
 
@@ -87,8 +94,26 @@ Output:
 
 Effect:
 
-- Produces the structured identity used to decide whether a cached result is
-  reusable.
+- Produces the structured identity used to decide whether a cached execution is
+  reusable. A single `check_digest` binds all behavior-changing Check fields.
+  Pricing and scoring are excluded.
+
+### compute_cost
+
+Input:
+
+- `usage: Mapping[str, JSONValue]`
+- `scoring_config: ScoringConfig`
+
+Output:
+
+- `Mapping[str, JSONValue]`
+
+Effect:
+
+- Computes a pricing view from retained usage without executing an Agent or a
+  Check. Returns `total_cost=null` when usage coverage is unknown or
+  unreported.
 
 ### compute_result_cache_key
 
@@ -134,7 +159,40 @@ Output:
 
 Effect:
 
-- Reads result records matching task, Agent, origin, cache, and config filters.
+- Reads result records matching task, check, Agent, result ID, exact cache
+  identity, scoring config, and result-availability time filters.
+- Compares availability bounds as UTC instants, so equivalent timestamps with
+  different offsets have the same ordering.
+
+### resolve_result_cells
+
+Input:
+
+- `task_check_refs: Sequence[TaskCheckRef]`
+- `tasks: Sequence[TaskRecord]`
+- `checks: Mapping[str, CheckRecord]`
+- `agents: Sequence[AgentRecord]`
+- `workspace_config: WorkspaceConfig`
+- `runtime_config: RuntimeConfig`
+- `store: ResultStore`
+- `cache_config: ResultCacheConfig`
+
+Output:
+
+- `Sequence[ResultCellRef]`
+
+Effect:
+
+- Returns one result-or-missing cell for every requested Agent-task-check cell.
+- Reuses only a valid, fully equal `ResultCacheIdentity` under
+  `exact_identity`; a digest match alone is insufficient.
+- Does not filter execution reuse by pricing or scoring configuration.
+- Under the default valid-result policy, does not reuse benchmark-invalid
+  infrastructure results. Agent-invalid results retain the existing reuse
+  policy.
+- If duplicate eligible records have the same exact identity, chooses the first
+  record in append order.
+- Loads and indexes matching stored results once per resolution operation.
 
 ### find_missing_results
 
@@ -146,7 +204,6 @@ Input:
 - `agents: Sequence[AgentRecord]`
 - `workspace_config: WorkspaceConfig`
 - `runtime_config: RuntimeConfig`
-- `scoring_config: ScoringConfig`
 - `store: ResultStore`
 - `cache_config: ResultCacheConfig`
 
@@ -156,10 +213,8 @@ Output:
 
 Effect:
 
-- Builds the required `ResultCacheIdentity` for each requested
-  Agent-task-check cell, isolates incomplete or stale cached results, and
-  returns missing cells as `ResultCellRef` records with `cell_state=missing`
-  for Runner to execute through Workspace.
+- Filters `resolve_result_cells` to return only `ResultCellRef` records with
+  `cell_state=missing` for Runner to execute through Workspace.
 
 ### build_result_matrix
 
@@ -187,6 +242,10 @@ Effect:
   benchmark or future holdout. The relevant `Task + Check` refs are derived
   from `evaluation_cells`; the `task_check_refs` input is a caller assertion
   that must exactly match the selected or future subset for `matrix_role`.
+- Resolves only the exact `result_id`, `result_digest`, required identity, and
+  outcome frozen in each `EvaluationCellSet` cell. A later result with the same
+  cache identity cannot replace the frozen result; an absent frozen binding is
+  handled as missing under the join policy.
 
 ## Join And Denominator Policy
 

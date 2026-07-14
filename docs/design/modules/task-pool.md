@@ -1,11 +1,11 @@
 # Module Design: Task Pool
 
-Status: draft, 2026-06-27.
+Status: draft, 2026-07-14.
 
 ## Responsibility
 
-Generate or import `Task + Check` candidates, certify them, and freeze them
-into a `Task Pool`.
+Generate or import `Task + Check` candidates, validate them by execution, and
+freeze accepted records into a `Task Pool`.
 
 Task Pool does not run Agents and does not select benchmarks.
 
@@ -15,7 +15,7 @@ Task Pool does not run Agents and does not select benchmarks.
 - generator config or user import path;
 - origin or time range;
 - check construction config;
-- certification config.
+- task-validation config.
 
 ## Outputs
 
@@ -23,7 +23,7 @@ Task Pool does not run Agents and does not select benchmarks.
 - accepted `TaskRecord` records;
 - accepted `CheckRecord` records;
 - rejected candidates;
-- certification evidence.
+- task-validation evidence.
 
 ## System Boundary
 
@@ -32,8 +32,8 @@ Input sources:
 - user config;
 - built-in generators;
 - user imports;
-- Workspace for checkout and replay validation during certification;
-- Verification for executable-check validation during certification.
+- Workspace for checkout and replay during task validation;
+- Verification for check execution during task validation.
 
 Output consumers:
 
@@ -46,6 +46,19 @@ Output consumers:
 
 Functions below define module interfaces. Each function specifies input,
 output, and effect only; it does not prescribe implementation.
+
+## Execution-Based Task Validation
+
+The generic validation contract uses observable transitions:
+
+- the task check fails at the base commit;
+- when a reference patch is supplied, the task check passes after applying it;
+- checks are repeated when repeatability or suspected flakiness needs evidence.
+
+SWE-bench adapters preserve the standard `FAIL_TO_PASS` and `PASS_TO_PASS`
+labels. `FAIL_TO_PASS` checks fail at the base and pass with the reference
+patch; `PASS_TO_PASS` regression checks pass in both states. The generic Task
+Pool does not introduce alternate names for them.
 
 ## Functions
 
@@ -128,9 +141,10 @@ Output:
 
 Effect:
 
-- Validates checkout, dependency restoration, check execution, solver-visible
-  boundary, hidden material separation, stability, and statement clarity. It may
-  call Workspace and Verification for certification, but it does not run Agents.
+- Validates checkout, dependency restoration, the base-fail and optional
+  reference-patch-pass transitions, solver-visible material, hidden material
+  separation, requested repeatability, and statement clarity. It may call
+  Workspace and Verification, but it does not run Agents.
 
 ### freeze_task_pool
 
@@ -148,7 +162,7 @@ Output:
 Effect:
 
 - Writes a frozen task pool with accepted Task/Check record references,
-  rejection summaries, certification evidence, and source-event inventory
+  rejection summaries, task-validation evidence, and source-event inventory
   digests.
 
 ### summarize_task_pool
@@ -163,7 +177,7 @@ Output:
 
 Effect:
 
-- Reports task counts, check types, generator families, certification coverage,
+- Reports task counts, check types, generator families, validation coverage,
   rejection reasons, and time coverage.
 
 ## Related-Work Mapping

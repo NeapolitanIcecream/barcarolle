@@ -12,6 +12,7 @@ from barcarolle.records import (
     BenchmarkSelectionRecord,
     EvaluationCellSet,
     MetricRecord,
+    ResultCellRef,
     ResultMatrix,
     ResultRecord,
     TaskPoolRecord,
@@ -470,15 +471,7 @@ def _sanitize_artifact_path(artifact_path: str, artifact_root: Path) -> str:
     try:
         return path.resolve().relative_to(artifact_root.resolve()).as_posix()
     except (OSError, ValueError):
-        pass
-    if _is_local_absolute_path(path):
-        return path.name
-    return artifact_path
-
-
-def _is_local_absolute_path(path: Path) -> bool:
-    parts = path.parts
-    return len(parts) > 1 and parts[0] == "/" and parts[1] in {"Users", "home"}
+        return path.name if path.name not in {"", ".", ".."} else "external-artifact"
 
 
 def _section_data(section: ReportSection) -> Mapping[str, Any]:
@@ -642,7 +635,7 @@ def _selector_trace_errors(
             errors.append(f"metric {metric.metric_id} selected matrix cells do not match evaluation cell set")
         if cell_set is not None and future_matrix is not None and not _matrix_cells_match_cell_set(future_matrix, cell_set):
             errors.append(f"metric {metric.metric_id} future matrix cells do not match evaluation cell set")
-        if metric.budget_digest is not None and metric.budget_digest != selection.budget_digest:
+        if metric.budget_digest != selection.budget_digest:
             errors.append(f"metric {metric.metric_id} budget digest does not match selection {selection.selection_id}")
         if metric.origin_id != selection.origin_id:
             errors.append(f"metric {metric.metric_id} origin does not match selection {selection.selection_id}")
@@ -718,6 +711,8 @@ def _result_measurement_errors(results: Sequence[ResultRecord]) -> tuple[str, ..
     for result in results:
         if "total_cost" not in result.cost:
             errors.append(f"result {result.result_id} cost.total_cost is missing")
+        elif result.cost["total_cost"] is None and result.usage_coverage in {"unknown", "unreported"}:
+            pass
         elif not _is_number(result.cost["total_cost"]):
             errors.append(f"result {result.result_id} cost.total_cost is non-numeric")
         if "workspace_seconds" not in result.latency:
@@ -728,7 +723,7 @@ def _result_measurement_errors(results: Sequence[ResultRecord]) -> tuple[str, ..
 
 
 def _has_unknown_usage_or_cost(result: ResultRecord) -> bool:
-    return result.usage_coverage in {"unknown", "unreported"}
+    return result.usage_coverage in {"unknown", "unreported"} or result.cost.get("total_cost") is None
 
 
 def _selection_claim_errors(selection_validations: Sequence[Any], selections_match_task_pool: bool) -> tuple[str, ...]:
@@ -742,12 +737,22 @@ def _matrix_cells_match_cell_set(matrix: ResultMatrix, cell_set: EvaluationCellS
     expected_refs = cell_set.selected_task_check_refs if matrix.matrix_role == "selected" else cell_set.future_task_check_refs
     expected_ref_keys = {(ref.task_id, ref.check_id) for ref in expected_refs}
     expected = {
-        (cell.agent_id, cell.task_id, cell.check_id): cell.required_identity_digest
+        (cell.agent_id, cell.task_id, cell.check_id): (
+            cell.required_identity_digest,
+            cell.result_id,
+            cell.result_digest,
+            cell.outcome,
+        )
         for cell in cell_set.cells
         if (cell.task_id, cell.check_id) in expected_ref_keys
     }
     actual = {
-        (cell.agent_id, cell.task_id, cell.check_id): cell.required_identity_digest
+        (cell.agent_id, cell.task_id, cell.check_id): (
+            cell.required_identity_digest,
+            cell.result_id,
+            cell.result_digest,
+            cell.outcome,
+        )
         for cell in matrix.cells
     }
     return actual == expected

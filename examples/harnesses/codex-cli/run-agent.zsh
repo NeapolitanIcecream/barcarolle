@@ -75,7 +75,8 @@ provider_config=(
 
 {
   print -- "You are running inside a Barcarolle solver workspace."
-  print -- "Read .barcarolle/TASK.md and make the requested code change in this repository."
+  print -- "The complete solver-visible task from .barcarolle/TASK.md is included below; do not reread that file."
+  print -- "Make the requested code change in this repository."
   print -- "Use only solver-visible task material. Do not look for verifier-only checks, hidden material, parent-run logs, or output directories."
   print -- "Keep the change focused. Run relevant local checks if practical, then stop."
   print -- ""

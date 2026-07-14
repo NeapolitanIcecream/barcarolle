@@ -7,6 +7,7 @@ import sys
 
 import pytest
 
+from barcarolle import workspace as workspace_module
 from barcarolle.records import (
     AgentRecord,
     CheckRecord,
@@ -25,6 +26,7 @@ from barcarolle.workspace import (
     bind_check_material,
     bind_repository_source,
     capture_diff,
+    cleanup_workspace,
     create_solver_workspace,
     create_verifier_workspace,
     invoke_agent,
@@ -34,13 +36,24 @@ from barcarolle.workspace import (
 )
 
 
-def test_create_solver_workspace_clones_base_commit_and_writes_only_solver_visible_material(tmp_path: Path) -> None:
+@pytest.fixture
+def managed_workspaces():
+    workspaces = []
+    yield workspaces
+    for workspace in reversed(workspaces):
+        cleanup_workspace(workspace)
+
+
+def test_create_solver_workspace_clones_base_commit_and_writes_only_solver_visible_material(
+    tmp_path: Path, managed_workspaces
+) -> None:
     repo, base_commit = _make_repo(tmp_path)
     task = _task(base_commit=base_commit)
     workspace_config = _workspace_config(repo)
     bind_repository_source(workspace_config, repo)
 
     workspace = create_solver_workspace(task, workspace_config)
+    managed_workspaces.append(workspace)
     material_dir = workspace.path / ".barcarolle"
     material = (material_dir / "solver-visible-task.json").read_text(encoding="utf-8")
     task_markdown = (material_dir / "TASK.md").read_text(encoding="utf-8")
@@ -58,7 +71,41 @@ def test_create_solver_workspace_clones_base_commit_and_writes_only_solver_visib
     assert "oracle" not in task_markdown.lower()
 
 
-def test_create_solver_workspace_does_not_dereference_solver_material_symlink(tmp_path: Path) -> None:
+def test_cleanup_workspace_rejects_unowned_path(tmp_path: Path) -> None:
+    marker = tmp_path / "keep.txt"
+    marker.write_text("keep", encoding="utf-8")
+    workspace = WorkspaceRef(tmp_path, "solver", "task", "commit", "workspace")
+
+    with pytest.raises(RuntimeError, match="cleanup failed"):
+        cleanup_workspace(workspace)
+
+    assert marker.read_text(encoding="utf-8") == "keep"
+
+
+def test_cleanup_workspace_rejects_replaced_owned_path(tmp_path: Path) -> None:
+    repo, base_commit = _make_repo(tmp_path)
+    task = _task(base_commit=base_commit)
+    workspace_config = _workspace_config(repo)
+    bind_repository_source(workspace_config, repo)
+    workspace = create_solver_workspace(task, workspace_config)
+    moved_workspace = workspace.path.with_name(f"{workspace.path.name}-moved")
+    workspace.path.rename(moved_workspace)
+    workspace.path.mkdir()
+    (workspace.path / "decoy.txt").write_text("keep", encoding="utf-8")
+
+    try:
+        with pytest.raises(RuntimeError, match="cleanup failed"):
+            cleanup_workspace(workspace)
+        assert (workspace.path / "decoy.txt").read_text(encoding="utf-8") == "keep"
+        assert moved_workspace.exists()
+    finally:
+        (workspace.path / "decoy.txt").unlink(missing_ok=True)
+        workspace.path.rmdir()
+        moved_workspace.rename(workspace.path)
+        cleanup_workspace(workspace)
+
+
+def test_create_solver_workspace_does_not_dereference_solver_material_symlink(tmp_path: Path, managed_workspaces) -> None:
     repo, _ = _make_repo(tmp_path)
     outside_material = tmp_path / "outside-private.txt"
     outside_material.write_text("private check content\n", encoding="utf-8")
@@ -72,13 +119,14 @@ def test_create_solver_workspace_does_not_dereference_solver_material_symlink(tm
     bind_repository_source(workspace_config, repo)
 
     workspace = create_solver_workspace(task, workspace_config)
+    managed_workspaces.append(workspace)
     task_markdown = (workspace.path / ".barcarolle" / "TASK.md").read_text(encoding="utf-8")
 
     assert "Reference uses a symlink and was not copied." in task_markdown
     assert "private check content" not in task_markdown
 
 
-def test_create_solver_workspace_reads_path_prefixed_solver_material_ref(tmp_path: Path) -> None:
+def test_create_solver_workspace_reads_path_prefixed_solver_material_ref(tmp_path: Path, managed_workspaces) -> None:
     repo, _ = _make_repo(tmp_path)
     (repo / "statement.md").write_text("Implement the parser fix.\n", encoding="utf-8")
     _git(repo, "add", "statement.md")
@@ -89,6 +137,7 @@ def test_create_solver_workspace_reads_path_prefixed_solver_material_ref(tmp_pat
     bind_repository_source(workspace_config, repo)
 
     workspace = create_solver_workspace(task, workspace_config)
+    managed_workspaces.append(workspace)
     task_markdown = (workspace.path / ".barcarolle" / "TASK.md").read_text(encoding="utf-8")
 
     assert "path:statement.md" in task_markdown
@@ -113,12 +162,22 @@ def test_bind_agent_harness_rejects_command_digest_mismatch() -> None:
         bind_agent_harness(_agent(), (sys.executable, "-c", "print('different harness')"))
 
 
-def test_capture_diff_reads_git_worktree_and_includes_untracked_files(tmp_path: Path) -> None:
+def test_bind_check_material_rejects_destination_outside_reserved_namespace(tmp_path: Path) -> None:
+    hidden = tmp_path / "hidden.txt"
+    hidden.write_text("private oracle", encoding="utf-8")
+    command = (sys.executable, "-c", "print('ok')")
+
+    with pytest.raises(ValueError, match="must stay under .barcarolle"):
+        bind_check_material(_check(command=command, hidden=hidden), command, hidden, Path("collision"))
+
+
+def test_capture_diff_reads_git_worktree_and_includes_untracked_files(tmp_path: Path, managed_workspaces) -> None:
     repo, base_commit = _make_repo(tmp_path)
     task = _task(base_commit=base_commit)
     workspace_config = _workspace_config(repo)
     bind_repository_source(workspace_config, repo)
     workspace = create_solver_workspace(task, workspace_config)
+    managed_workspaces.append(workspace)
     (workspace.path / "new.txt").write_text("new file\n", encoding="utf-8")
     (workspace.path / ".barcarolle/internal.txt").write_text("benchmark side data\n", encoding="utf-8")
 
@@ -130,20 +189,54 @@ def test_capture_diff_reads_git_worktree_and_includes_untracked_files(tmp_path: 
     assert diff.diff_digest == hashlib.sha256(diff.diff_text.encode("utf-8")).hexdigest()
 
 
-def test_apply_diff_replays_captured_diff_in_fresh_verifier_checkout(tmp_path: Path) -> None:
+def test_capture_diff_fails_closed_if_reserved_material_escapes_pathspec(
+    tmp_path: Path,
+    managed_workspaces,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo, base_commit = _make_repo(tmp_path)
+    task = _task(base_commit=base_commit)
+    workspace_config = _workspace_config(repo)
+    bind_repository_source(workspace_config, repo)
+    workspace = create_solver_workspace(task, workspace_config)
+    managed_workspaces.append(workspace)
+    monkeypatch.setattr(workspace_module, "_CAPTURE_PATHSPEC", (".",))
+
+    with pytest.raises(ValueError, match="reserved workspace material"):
+        capture_diff(workspace)
+
+
+def test_apply_diff_replays_captured_diff_in_fresh_verifier_checkout(tmp_path: Path, managed_workspaces) -> None:
     repo, base_commit = _make_repo(tmp_path)
     task = _task(base_commit=base_commit)
     workspace_config = _workspace_config(repo)
     bind_repository_source(workspace_config, repo)
     solver = create_solver_workspace(task, workspace_config)
+    managed_workspaces.append(solver)
     (solver.path / "new.txt").write_text("agent edit\n", encoding="utf-8")
     diff = capture_diff(solver)
     verifier = create_verifier_workspace(task, workspace_config)
+    managed_workspaces.append(verifier)
 
     replay = apply_diff(verifier, diff)
 
     assert replay.replay_status == "applied"
     assert (verifier.path / "new.txt").read_text(encoding="utf-8") == "agent edit\n"
+
+
+def test_apply_diff_normalizes_git_launch_error(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    (tmp_path / ".git").mkdir()
+    workspace = WorkspaceRef(tmp_path, "verifier", "task", "commit", "workspace")
+
+    def fail_to_launch(*args: object, **kwargs: object) -> None:
+        raise FileNotFoundError("git missing")
+
+    monkeypatch.setattr(workspace_module.subprocess, "run", fail_to_launch)
+
+    outcome = apply_diff(workspace, CapturedDiff("diff --git a/a b/a\n", "digest"))
+
+    assert outcome.replay_status == "invalid"
+    assert outcome.failure_label == "diff_replay_launch_error"
 
 
 def test_verify_agent_diff_delegates_to_verification_with_bound_material(tmp_path: Path) -> None:
@@ -158,6 +251,26 @@ def test_verify_agent_diff_delegates_to_verification_with_bound_material(tmp_pat
 
     assert outcome.outcome == "pass"
     assert (tmp_path / ".barcarolle/check_bundle").read_text(encoding="utf-8") == "private oracle"
+
+
+def test_verify_agent_diff_normalizes_hidden_material_copy_collision(tmp_path: Path) -> None:
+    hidden = tmp_path / "hidden"
+    hidden.mkdir()
+    oracle = hidden / "oracle.txt"
+    oracle.write_text("private oracle", encoding="utf-8")
+    hidden_digest = canonical_digest((("oracle.txt", hashlib.sha256(oracle.read_bytes()).hexdigest()),))
+    command = (sys.executable, "-c", "print('ok')")
+    check = replace(_check(command=command), hidden_check_bundle_digest=hidden_digest)
+    bind_check_material(check, command, hidden)
+    verifier = tmp_path / "verifier"
+    (verifier / ".barcarolle").mkdir(parents=True)
+    (verifier / ".barcarolle/check_bundle").write_text("collision", encoding="utf-8")
+    workspace = WorkspaceRef(verifier, "verifier", "task", "commit", "workspace")
+
+    outcome = verify_agent_diff(workspace, check, _runtime())
+
+    assert outcome.outcome == "invalid"
+    assert outcome.failure_label == "verifier_preparation_failed"
 
 
 def test_run_agent_on_task_executes_scoreable_workspace_path_and_returns_valid_record(tmp_path: Path) -> None:
@@ -195,6 +308,314 @@ def test_run_agent_on_task_executes_scoreable_workspace_path_and_returns_valid_r
     assert record.invalid_owner is None
     assert record.failure_label is None
     assert record.diff_digest != hashlib.sha256(b"").hexdigest()
+
+
+def test_run_agent_on_task_captures_changes_committed_by_agent_from_task_base(tmp_path: Path) -> None:
+    repo, base_commit = _make_repo(tmp_path)
+    task = _task(base_commit=base_commit)
+    workspace_config = _workspace_config(repo)
+    hidden = tmp_path / "hidden.txt"
+    hidden.write_text("private oracle", encoding="utf-8")
+    agent_command = (
+        sys.executable,
+        "-c",
+        "from pathlib import Path; import subprocess; "
+        "Path('new.txt').write_text('committed agent edit\\n', encoding='utf-8'); "
+        "subprocess.run(('git', 'add', 'new.txt'), check=True); "
+        "subprocess.run(('git', '-c', 'user.email=agent@example.invalid', '-c', 'user.name=Agent', "
+        "'commit', '-m', 'agent commit'), check=True)",
+    )
+    check_command = (
+        sys.executable,
+        "-c",
+        "from pathlib import Path; "
+        "assert Path('new.txt').read_text(encoding='utf-8') == 'committed agent edit\\n'",
+    )
+    agent = _agent(agent_command)
+    check = _check(command=check_command, hidden=hidden)
+    bind_repository_source(workspace_config, repo)
+    bind_agent_harness(agent, agent_command)
+    bind_check_material(check, check_command, hidden)
+
+    record = run_agent_on_task(task, check, agent, workspace_config, _runtime())
+
+    assert record.terminal_status == "passed"
+    assert record.replay_status == "applied"
+    assert record.check_outcome == "pass"
+
+
+def test_run_agent_on_task_excludes_reserved_material_after_agent_clears_git_exclude(tmp_path: Path) -> None:
+    repo, base_commit = _make_repo(tmp_path)
+    task = _task(base_commit=base_commit)
+    workspace_config = _workspace_config(repo)
+    hidden = tmp_path / "hidden.txt"
+    hidden.write_text("private oracle", encoding="utf-8")
+    agent_command = (
+        sys.executable,
+        "-c",
+        "from pathlib import Path; "
+        "Path('.git/info/exclude').write_text('', encoding='utf-8'); "
+        "Path('.barcarolle/agent-only.txt').write_text('must not cross boundary\\n', encoding='utf-8'); "
+        "Path('new.txt').write_text('agent edit\\n', encoding='utf-8')",
+    )
+    check_command = (
+        sys.executable,
+        "-c",
+        "from pathlib import Path; "
+        "assert Path('new.txt').read_text(encoding='utf-8') == 'agent edit\\n'; "
+        "assert not Path('.barcarolle/agent-only.txt').exists()",
+    )
+    agent = _agent(agent_command)
+    check = _check(command=check_command, hidden=hidden)
+    bind_repository_source(workspace_config, repo)
+    bind_agent_harness(agent, agent_command)
+    bind_check_material(check, check_command, hidden)
+    artifact_config = WorkspaceArtifactConfig(output_root=tmp_path / "artifacts")
+
+    result = run_agent_on_task_with_artifacts(task, check, agent, workspace_config, _runtime(), artifact_config)
+
+    assert result.run.terminal_status == "passed"
+    assert result.artifacts is not None
+    diff_ref = next(ref for ref in result.artifacts.artifact_refs if ref.kind == "final_diff")
+    diff_text = (artifact_config.output_root / diff_ref.ref).read_text(encoding="utf-8")
+    assert "diff --git a/new.txt b/new.txt" in diff_text
+    assert ".barcarolle" not in diff_text
+
+
+def test_run_agent_on_task_disables_agent_configured_textconv_during_capture(tmp_path: Path) -> None:
+    repo, base_commit = _make_repo(tmp_path)
+    task = _task(base_commit=base_commit)
+    workspace_config = _workspace_config(repo)
+    hidden = tmp_path / "hidden.txt"
+    hidden.write_text("private oracle", encoding="utf-8")
+    agent_command = (
+        sys.executable,
+        "-c",
+        "from pathlib import Path; import subprocess; "
+        "Path('.gitattributes').write_text('README.md diff=evil\\n', encoding='utf-8'); "
+        "subprocess.run(('git', 'config', 'diff.evil.textconv', 'sed s/base/fake/'), check=True); "
+        "Path('README.md').write_text('solution\\n', encoding='utf-8')",
+    )
+    check_command = (
+        sys.executable,
+        "-c",
+        "from pathlib import Path; assert Path('README.md').read_text(encoding='utf-8') == 'solution\\n'",
+    )
+    agent = _agent(agent_command)
+    check = _check(command=check_command, hidden=hidden)
+    bind_repository_source(workspace_config, repo)
+    bind_agent_harness(agent, agent_command)
+    bind_check_material(check, check_command, hidden)
+
+    record = run_agent_on_task(task, check, agent, workspace_config, _runtime())
+
+    assert record.terminal_status == "passed"
+    assert record.replay_status == "applied"
+    assert record.check_outcome == "pass"
+
+
+def test_run_agent_on_task_removes_solver_and_verifier_workspaces_after_success(tmp_path: Path) -> None:
+    repo, base_commit = _make_repo(tmp_path)
+    task = _task(base_commit=base_commit)
+    workspace_config = _workspace_config(repo)
+    hidden = tmp_path / "hidden.txt"
+    hidden.write_text("private oracle", encoding="utf-8")
+    solver_path_record = tmp_path / "solver-path.txt"
+    verifier_path_record = tmp_path / "verifier-path.txt"
+    agent_command = (
+        sys.executable,
+        "-c",
+        "from pathlib import Path; "
+        f"Path({str(solver_path_record)!r}).write_text(str(Path.cwd()), encoding='utf-8'); "
+        "Path('new.txt').write_text('agent edit\\n', encoding='utf-8')",
+    )
+    check_command = (
+        sys.executable,
+        "-c",
+        "from pathlib import Path; "
+        f"Path({str(verifier_path_record)!r}).write_text(str(Path.cwd()), encoding='utf-8')",
+    )
+    agent = _agent(agent_command)
+    check = _check(command=check_command, hidden=hidden)
+    bind_repository_source(workspace_config, repo)
+    bind_agent_harness(agent, agent_command)
+    bind_check_material(check, check_command, hidden)
+
+    record = run_agent_on_task(task, check, agent, workspace_config, _runtime())
+
+    assert record.terminal_status == "passed"
+    assert not Path(solver_path_record.read_text(encoding="utf-8")).exists()
+    assert not Path(verifier_path_record.read_text(encoding="utf-8")).exists()
+
+
+def test_run_agent_on_task_rejects_noop_when_the_base_checkout_passes_the_check(tmp_path: Path) -> None:
+    repo, base_commit = _make_repo(tmp_path)
+    task = _task(base_commit=base_commit)
+    workspace_config = _workspace_config(repo)
+    hidden = tmp_path / "hidden.txt"
+    hidden.write_text("private oracle", encoding="utf-8")
+    agent_command = (sys.executable, "-c", "print('no edit')")
+    check_command = (sys.executable, "-c", "raise SystemExit(0)")
+    agent = _agent(agent_command)
+    check = _check(command=check_command, hidden=hidden)
+    bind_repository_source(workspace_config, repo)
+    bind_agent_harness(agent, agent_command)
+    bind_check_material(check, check_command, hidden)
+
+    record = run_agent_on_task(task, check, agent, workspace_config, _runtime())
+
+    assert record.terminal_status == "invalid"
+    assert record.check_outcome == "invalid"
+    assert record.invalid_owner == "benchmark"
+    assert record.failure_label == "baseline_check_passed_without_diff"
+
+
+def test_baseline_pass_takes_priority_over_nonzero_agent_exit(tmp_path: Path) -> None:
+    repo, base_commit = _make_repo(tmp_path)
+    task = _task(base_commit=base_commit)
+    workspace_config = _workspace_config(repo)
+    hidden = tmp_path / "hidden.txt"
+    hidden.write_text("private oracle", encoding="utf-8")
+    agent_command = (sys.executable, "-c", "raise SystemExit(1)")
+    check_command = (sys.executable, "-c", "raise SystemExit(0)")
+    agent = _agent(agent_command)
+    check = _check(command=check_command, hidden=hidden)
+    bind_repository_source(workspace_config, repo)
+    bind_agent_harness(agent, agent_command)
+    bind_check_material(check, check_command, hidden)
+
+    record = run_agent_on_task(task, check, agent, workspace_config, _runtime())
+
+    assert record.terminal_status == "invalid"
+    assert record.check_outcome == "invalid"
+    assert record.invalid_owner == "benchmark"
+    assert record.failure_label == "baseline_check_passed_without_diff"
+
+
+def test_benchmark_verifier_failure_takes_priority_over_nonzero_agent_exit(tmp_path: Path) -> None:
+    repo, base_commit = _make_repo(tmp_path)
+    task = _task(base_commit=base_commit)
+    workspace_config = _workspace_config(repo)
+    agent_command = (
+        sys.executable,
+        "-c",
+        "from pathlib import Path; Path('new.txt').write_text('edit'); raise SystemExit(1)",
+    )
+    agent = _agent(agent_command)
+    bind_repository_source(workspace_config, repo)
+    bind_agent_harness(agent, agent_command)
+
+    record = run_agent_on_task(task, _check(), agent, workspace_config, _runtime())
+
+    assert record.terminal_status == "invalid"
+    assert record.check_outcome == "invalid"
+    assert record.invalid_owner == "benchmark"
+    assert record.failure_label == "missing_verification_material"
+
+
+def test_verifier_preparation_collision_remains_benchmark_owned(tmp_path: Path) -> None:
+    repo, _ = _make_repo(tmp_path)
+    reserved_material = repo / ".barcarolle" / "check_bundle"
+    reserved_material.parent.mkdir()
+    reserved_material.write_text("repository collision", encoding="utf-8")
+    _git(repo, "add", ".barcarolle/check_bundle")
+    _git(repo, "commit", "-m", "add verifier material collision")
+    base_commit = _git(repo, "rev-parse", "HEAD").stdout.strip()
+    task = _task(base_commit=base_commit)
+    workspace_config = _workspace_config(repo)
+    hidden = tmp_path / "hidden"
+    hidden.mkdir()
+    oracle = hidden / "oracle.txt"
+    oracle.write_text("private oracle", encoding="utf-8")
+    hidden_digest = canonical_digest((("oracle.txt", hashlib.sha256(oracle.read_bytes()).hexdigest()),))
+    agent_command = (sys.executable, "-c", "from pathlib import Path; Path('new.txt').write_text('edit')")
+    check_command = (sys.executable, "-c", "raise SystemExit(0)")
+    agent = _agent(agent_command)
+    check = replace(_check(command=check_command), hidden_check_bundle_digest=hidden_digest)
+    bind_repository_source(workspace_config, repo)
+    bind_agent_harness(agent, agent_command)
+    bind_check_material(check, check_command, hidden)
+
+    record = run_agent_on_task(task, check, agent, workspace_config, _runtime())
+
+    assert validate_workspace_run(record).ok
+    assert record.terminal_status == "invalid"
+    assert record.replay_status == "applied"
+    assert record.check_outcome == "invalid"
+    assert record.invalid_owner == "benchmark"
+    assert record.failure_label == "verifier_preparation_failed"
+
+
+def test_post_diff_check_timeout_is_agent_invalid_to_prevent_denominator_removal(tmp_path: Path) -> None:
+    repo, base_commit = _make_repo(tmp_path)
+    task = _task(base_commit=base_commit)
+    workspace_config = _workspace_config(repo)
+    hidden = tmp_path / "hidden.txt"
+    hidden.write_text("private oracle", encoding="utf-8")
+    agent_command = (sys.executable, "-c", "from pathlib import Path; Path('new.txt').write_text('edit')")
+    check_command = (sys.executable, "-c", "import time; time.sleep(2)")
+    agent = _agent(agent_command)
+    check = replace(_check(command=check_command, hidden=hidden), resource_limits={"timeout_seconds": 1})
+    bind_repository_source(workspace_config, repo)
+    bind_agent_harness(agent, agent_command)
+    bind_check_material(check, check_command, hidden)
+
+    record = run_agent_on_task(task, check, agent, workspace_config, _runtime())
+
+    assert record.terminal_status == "invalid"
+    assert record.invalid_owner == "agent"
+    assert record.failure_label == "timeout"
+
+
+def test_post_diff_check_launch_error_caused_by_agent_is_agent_invalid(tmp_path: Path) -> None:
+    repo, _ = _make_repo(tmp_path)
+    check_script = repo / "check.sh"
+    check_script.write_text("#!/bin/sh\nexit 0\n", encoding="utf-8")
+    check_script.chmod(0o755)
+    _git(repo, "add", "check.sh")
+    _git(repo, "commit", "-m", "add check script")
+    base_commit = _git(repo, "rev-parse", "HEAD").stdout.strip()
+    task = _task(base_commit=base_commit)
+    workspace_config = _workspace_config(repo)
+    hidden = tmp_path / "hidden.txt"
+    hidden.write_text("private oracle", encoding="utf-8")
+    agent_command = (sys.executable, "-c", "from pathlib import Path; Path('check.sh').unlink()")
+    check_command = ("./check.sh",)
+    agent = _agent(agent_command)
+    check = _check(command=check_command, hidden=hidden)
+    bind_repository_source(workspace_config, repo)
+    bind_agent_harness(agent, agent_command)
+    bind_check_material(check, check_command, hidden)
+
+    record = run_agent_on_task(task, check, agent, workspace_config, _runtime())
+
+    assert validate_workspace_run(record).ok
+    assert record.terminal_status == "invalid"
+    assert record.replay_status == "applied"
+    assert record.check_outcome == "invalid"
+    assert record.invalid_owner == "agent"
+    assert record.failure_label == "check_launch_error"
+
+
+def test_run_agent_on_task_counts_noop_as_failure_when_the_check_fails(tmp_path: Path) -> None:
+    repo, base_commit = _make_repo(tmp_path)
+    task = _task(base_commit=base_commit)
+    workspace_config = _workspace_config(repo)
+    hidden = tmp_path / "hidden.txt"
+    hidden.write_text("private oracle", encoding="utf-8")
+    agent_command = (sys.executable, "-c", "print('no edit')")
+    check_command = (sys.executable, "-c", "raise SystemExit(1)")
+    agent = _agent(agent_command)
+    check = _check(command=check_command, hidden=hidden)
+    bind_repository_source(workspace_config, repo)
+    bind_agent_harness(agent, agent_command)
+    bind_check_material(check, check_command, hidden)
+
+    record = run_agent_on_task(task, check, agent, workspace_config, _runtime())
+
+    assert record.terminal_status == "failed"
+    assert record.check_outcome == "fail"
+    assert record.invalid_owner is None
 
 
 def test_run_agent_on_task_with_artifacts_preserves_relative_run_outputs(tmp_path: Path) -> None:
@@ -287,14 +708,17 @@ def test_run_agent_on_task_replays_and_verifies_diff_after_nonzero_agent_exit(tm
     assert record.failure_label == "agent_failed"
 
 
-def test_run_agent_on_task_normalizes_diff_capture_failure(tmp_path: Path) -> None:
+def test_run_agent_on_task_attributes_agent_deletion_of_git_metadata_to_agent(tmp_path: Path) -> None:
     repo, base_commit = _make_repo(tmp_path)
     task = _task(base_commit=base_commit)
     workspace_config = _workspace_config(repo)
+    solver_path_record = tmp_path / "failed-solver-path.txt"
     agent_command = (
         sys.executable,
         "-c",
-        "from pathlib import Path; import shutil; shutil.rmtree('.git'); Path('new.txt').write_text('agent edit\\n')",
+        "from pathlib import Path; import shutil; "
+        f"Path({str(solver_path_record)!r}).write_text(str(Path.cwd()), encoding='utf-8'); "
+        "shutil.rmtree('.git'); Path('new.txt').write_text('agent edit\\n')",
     )
     agent = _agent(agent_command)
     bind_repository_source(workspace_config, repo)
@@ -304,9 +728,92 @@ def test_run_agent_on_task_normalizes_diff_capture_failure(tmp_path: Path) -> No
 
     assert validate_workspace_run(record).ok
     assert record.terminal_status == "invalid"
-    assert record.invalid_owner == "benchmark"
-    assert record.failure_label == "diff_capture_failed"
+    assert record.invalid_owner == "agent"
+    assert record.failure_label == "agent_workspace_corrupted"
     assert record.replay_status == "skipped"
+    assert not Path(solver_path_record.read_text(encoding="utf-8")).exists()
+
+
+def test_run_agent_on_task_attributes_agent_corruption_of_git_config_to_agent(tmp_path: Path) -> None:
+    repo, base_commit = _make_repo(tmp_path)
+    task = _task(base_commit=base_commit)
+    workspace_config = _workspace_config(repo)
+    agent_command = (
+        sys.executable,
+        "-c",
+        "from pathlib import Path; "
+        "Path('.git/config').write_text('[broken\\n', encoding='utf-8'); "
+        "Path('new.txt').write_text('agent edit\\n', encoding='utf-8')",
+    )
+    agent = _agent(agent_command)
+    bind_repository_source(workspace_config, repo)
+    bind_agent_harness(agent, agent_command)
+
+    record = run_agent_on_task(task, _check(), agent, workspace_config, _runtime())
+
+    assert validate_workspace_run(record).ok
+    assert record.terminal_status == "invalid"
+    assert record.invalid_owner == "agent"
+    assert record.failure_label == "agent_workspace_corrupted"
+    assert record.replay_status == "skipped"
+
+
+def test_run_agent_on_task_attributes_unappliable_captured_diff_to_agent(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo, base_commit = _make_repo(tmp_path)
+    task = _task(base_commit=base_commit)
+    workspace_config = _workspace_config(repo)
+    agent_command = (sys.executable, "-c", "print('agent finished')")
+    agent = _agent(agent_command)
+    bind_repository_source(workspace_config, repo)
+    bind_agent_harness(agent, agent_command)
+    diff_text = (
+        "diff --git a/README.md b/README.md\n"
+        "--- a/README.md\n"
+        "+++ b/README.md\n"
+        "@@ -1 +1 @@\n"
+        "-not-the-base\n"
+        "+solution\n"
+    )
+    monkeypatch.setattr(
+        workspace_module,
+        "capture_diff",
+        lambda workspace: CapturedDiff(diff_text, hashlib.sha256(diff_text.encode("utf-8")).hexdigest()),
+    )
+
+    record = run_agent_on_task(task, _check(), agent, workspace_config, _runtime())
+
+    assert validate_workspace_run(record).ok
+    assert record.terminal_status == "invalid"
+    assert record.replay_status == "failed"
+    assert record.invalid_owner == "agent"
+    assert record.failure_label == "diff_replay_failed"
+
+
+def test_run_agent_on_task_keeps_invalid_replay_infrastructure_benchmark_owned(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo, base_commit = _make_repo(tmp_path)
+    task = _task(base_commit=base_commit)
+    workspace_config = _workspace_config(repo)
+    agent_command = (sys.executable, "-c", "from pathlib import Path; Path('new.txt').write_text('edit')")
+    agent = _agent(agent_command)
+    bind_repository_source(workspace_config, repo)
+    bind_agent_harness(agent, agent_command)
+    monkeypatch.setattr(
+        workspace_module,
+        "apply_diff",
+        lambda workspace, diff: workspace_module.DiffReplayOutcome("invalid", "diff_replay_launch_error", ""),
+    )
+
+    record = run_agent_on_task(task, _check(), agent, workspace_config, _runtime())
+
+    assert validate_workspace_run(record).ok
+    assert record.terminal_status == "invalid"
+    assert record.replay_status == "invalid"
+    assert record.invalid_owner == "benchmark"
+    assert record.failure_label == "diff_replay_launch_error"
 
 
 def test_run_agent_on_task_rejects_task_check_mismatch_before_agent_runs(tmp_path: Path) -> None:

@@ -6,10 +6,12 @@ from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
 from tempfile import mkdtemp
+from threading import Lock
 from time import monotonic
 from typing import Any, Mapping, Sequence
 import hashlib
 import json
+import shutil
 import subprocess
 
 from barcarolle.records import (
@@ -103,7 +105,27 @@ class _CheckMaterialBinding:
 _REPOSITORY_SOURCES: dict[str, Path] = {}
 _AGENT_HARNESSES: dict[tuple[str, str, str], tuple[str, ...]] = {}
 _CHECK_MATERIALS: dict[tuple[str, str, str], _CheckMaterialBinding] = {}
+_OWNED_WORKSPACES: dict[Path, tuple[int, int]] = {}
+_OWNED_WORKSPACE_LOCK = Lock()
 _EMPTY_DIFF_DIGEST = hashlib.sha256(b"").hexdigest()
+_CAPTURE_PATHSPEC = (
+    ".",
+    ":(top,exclude).barcarolle",
+    ":(top,exclude).barcarolle/**",
+)
+_BENCHMARK_CHECK_FAILURE_LABELS = frozenset(
+    {
+        "baseline_check_passed_without_diff",
+        "check_command_mismatch",
+        "check_workspace_mismatch",
+        "hidden_material_mismatch",
+        "invalid_hidden_material_destination",
+        "missing_check_command",
+        "missing_verification_material",
+        "not_verifier_workspace",
+        "verifier_preparation_failed",
+    }
+)
 
 
 def bind_repository_source(workspace_config: WorkspaceConfig, repository_path: Path) -> None:
@@ -128,6 +150,8 @@ def bind_check_material(
     hidden_material_source: Path,
     hidden_material_destination: Path = Path(".barcarolle/check_bundle"),
 ) -> None:
+    if not _is_reserved_hidden_material_destination(hidden_material_destination):
+        raise ValueError("hidden material destination must stay under .barcarolle")
     normalized_command = tuple(check_command)
     if _check_command_digest(normalized_command) != check.check_manifest_digest:
         raise ValueError("check command digest does not match check manifest")
@@ -148,15 +172,19 @@ def create_solver_workspace(task: TaskRecord, workspace_config: WorkspaceConfig)
     if not validation.ok:
         raise ValueError(f"task is invalid: {', '.join(validation.errors)}")
     path = _checkout_repository(task, workspace_config, prefix="barcarolle-solver-")
-    _exclude_benchmark_material(path)
-    _write_solver_visible_task_material(path, task)
-    return WorkspaceRef(
-        path=path,
-        role="solver",
-        task_id=task.task_id,
-        base_commit=task.base_commit,
-        workspace_digest=_workspace_digest(path, task, workspace_config, "solver"),
-    )
+    try:
+        _exclude_benchmark_material(path)
+        _write_solver_visible_task_material(path, task)
+        return WorkspaceRef(
+            path=path,
+            role="solver",
+            task_id=task.task_id,
+            base_commit=task.base_commit,
+            workspace_digest=_workspace_digest(path, task, workspace_config, "solver"),
+        )
+    except BaseException:
+        _discard_owned_workspace_path(path)
+        raise
 
 
 def invoke_agent(
@@ -212,21 +240,46 @@ def capture_diff(solver_workspace: WorkspaceRef) -> CapturedDiff:
         raise ValueError("diff capture requires a solver workspace")
     if not _is_git_checkout(solver_workspace.path):
         raise ValueError("solver workspace must be a git checkout")
-    _run_git(solver_workspace.path, ("add", "--intent-to-add", "--", "."))
-    diff_text = _run_git(solver_workspace.path, ("diff", "--binary", "--no-ext-diff", "HEAD", "--")).stdout
+    _run_git(solver_workspace.path, ("add", "--intent-to-add", "--force", "--", *_CAPTURE_PATHSPEC))
+    diff_text = _run_git(
+        solver_workspace.path,
+        (
+            "diff",
+            "--binary",
+            "--no-color",
+            "--no-ext-diff",
+            "--no-textconv",
+            "--no-renames",
+            "--src-prefix=a/",
+            "--dst-prefix=b/",
+            solver_workspace.base_commit,
+            "--",
+            *_CAPTURE_PATHSPEC,
+        ),
+    ).stdout
+    _validate_captured_diff_paths(diff_text)
     return CapturedDiff(diff_text=diff_text, diff_digest=hashlib.sha256(diff_text.encode("utf-8")).hexdigest())
 
 
 def create_verifier_workspace(task: TaskRecord, workspace_config: WorkspaceConfig) -> WorkspaceRef:
     path = _checkout_repository(task, workspace_config, prefix="barcarolle-verifier-")
-    _exclude_benchmark_material(path)
-    return WorkspaceRef(
-        path=path,
-        role="verifier",
-        task_id=task.task_id,
-        base_commit=task.base_commit,
-        workspace_digest=_workspace_digest(path, task, workspace_config, "verifier"),
-    )
+    try:
+        _exclude_benchmark_material(path)
+        return WorkspaceRef(
+            path=path,
+            role="verifier",
+            task_id=task.task_id,
+            base_commit=task.base_commit,
+            workspace_digest=_workspace_digest(path, task, workspace_config, "verifier"),
+        )
+    except BaseException:
+        _discard_owned_workspace_path(path)
+        raise
+
+
+def cleanup_workspace(workspace: WorkspaceRef) -> None:
+    """Remove a workspace returned by a low-level create function."""
+    _cleanup_workspaces(workspace)
 
 
 def apply_diff(verifier_workspace: WorkspaceRef, diff: CapturedDiff) -> DiffReplayOutcome:
@@ -236,15 +289,18 @@ def apply_diff(verifier_workspace: WorkspaceRef, diff: CapturedDiff) -> DiffRepl
         return DiffReplayOutcome("invalid", "missing_git_checkout", "")
     if not diff.diff_text:
         return DiffReplayOutcome("applied", None, "")
-    completed = subprocess.run(
-        ("git", "apply", "--whitespace=nowarn", "-"),
-        cwd=verifier_workspace.path,
-        input=diff.diff_text,
-        text=True,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        check=False,
-    )
+    try:
+        completed = subprocess.run(
+            ("git", "apply", "--whitespace=nowarn", "-"),
+            cwd=verifier_workspace.path,
+            input=diff.diff_text,
+            text=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            check=False,
+        )
+    except OSError:
+        return DiffReplayOutcome("invalid", "diff_replay_launch_error", "")
     return DiffReplayOutcome(
         replay_status="applied" if completed.returncode == 0 else "failed",
         failure_label=None if completed.returncode == 0 else "diff_replay_failed",
@@ -264,6 +320,8 @@ def verify_agent_diff(
     binding = _material_binding(check, verifier_workspace)
     if binding is None:
         return CheckOutcome("invalid", "missing_verification_material", None, False, 0.0, "")
+    if not _is_reserved_hidden_material_destination(binding.hidden_material_destination):
+        return CheckOutcome("invalid", "invalid_hidden_material_destination", None, False, 0.0, "")
     verifier_ref = VerifierWorkspaceRef(
         path=verifier_workspace.path,
         check_command=binding.check_command,
@@ -275,7 +333,7 @@ def verify_agent_diff(
     )
     try:
         prepared = prepare_verifier(check, verifier_ref)
-    except ValueError as exc:
+    except (OSError, ValueError, shutil.Error) as exc:
         return CheckOutcome("invalid", _preparation_failure_label(str(exc)), None, False, 0.0, "")
     return verify_diff(check, prepared, runtime_config)
 
@@ -309,44 +367,75 @@ def run_agent_on_task_with_artifacts(
             invalid_owner="benchmark",
         )
         return _workspace_run_result(run, artifact_config, None, None, None, None)
+    solver_workspace: WorkspaceRef | None = None
+    verifier_workspace: WorkspaceRef | None = None
     try:
-        solver_workspace = create_solver_workspace(task, workspace_config)
-    except (OSError, RuntimeError, ValueError) as exc:
-        run = _invalid_run_record(
-            task=task,
-            check=check,
-            agent=agent,
-            started_at=started_at,
-            failure_label=_workspace_failure_label(str(exc)),
-            invalid_owner="benchmark",
-        )
-        return _workspace_run_result(run, artifact_config, None, None, None, None)
-    agent_outcome = invoke_agent(solver_workspace, task, agent, runtime_config)
-    try:
-        diff = capture_diff(solver_workspace)
-    except (OSError, RuntimeError, ValueError):
-        run = _invalid_run_record(
-            task=task,
-            check=check,
-            agent=agent,
-            started_at=started_at,
-            failure_label="diff_capture_failed",
-            invalid_owner="benchmark",
-            solver_workspace_digest=solver_workspace.workspace_digest,
-            usage=agent_outcome.usage,
-        )
-        return _workspace_run_result(run, artifact_config, None, agent_outcome, solver_workspace, None)
-    try:
-        verifier_workspace = create_verifier_workspace(task, workspace_config)
-    except (OSError, RuntimeError, ValueError) as exc:
-        replay = DiffReplayOutcome("invalid", _workspace_failure_label(str(exc)), "")
-        check_outcome = CheckOutcome("invalid", replay.failure_label, None, False, 0.0, "")
+        try:
+            solver_workspace = create_solver_workspace(task, workspace_config)
+        except (OSError, RuntimeError, ValueError) as exc:
+            run = _invalid_run_record(
+                task=task,
+                check=check,
+                agent=agent,
+                started_at=started_at,
+                failure_label=_workspace_failure_label(str(exc)),
+                invalid_owner="benchmark",
+            )
+            return _workspace_run_result(run, artifact_config, None, None, None, None)
+        agent_outcome = invoke_agent(solver_workspace, task, agent, runtime_config)
+        try:
+            diff = capture_diff(solver_workspace)
+        except (OSError, RuntimeError, ValueError):
+            run = _invalid_run_record(
+                task=task,
+                check=check,
+                agent=agent,
+                started_at=started_at,
+                failure_label="agent_workspace_corrupted",
+                invalid_owner="agent",
+                solver_workspace_digest=solver_workspace.workspace_digest,
+                usage=agent_outcome.usage,
+            )
+            return _workspace_run_result(run, artifact_config, None, agent_outcome, solver_workspace, None)
+        try:
+            verifier_workspace = create_verifier_workspace(task, workspace_config)
+        except (OSError, RuntimeError, ValueError) as exc:
+            replay = DiffReplayOutcome("invalid", _workspace_failure_label(str(exc)), "")
+            check_outcome = CheckOutcome("invalid", replay.failure_label, None, False, 0.0, "")
+            run = _workspace_run_record(
+                task=task,
+                check=check,
+                agent=agent,
+                solver_workspace_digest=solver_workspace.workspace_digest,
+                verifier_workspace_digest=_synthetic_workspace_digest(task, "verifier", replay.failure_label or "verifier_workspace_error"),
+                agent_outcome=agent_outcome,
+                diff=diff,
+                replay=replay,
+                check_outcome=check_outcome,
+                started_at=started_at,
+                finished_at=_now(),
+            )
+            return _workspace_run_result(run, artifact_config, diff, agent_outcome, solver_workspace, None)
+        replay = apply_diff(verifier_workspace, diff)
+        if replay.replay_status == "applied":
+            check_outcome = verify_agent_diff(verifier_workspace, check, runtime_config)
+            if not diff.diff_text and check_outcome.outcome == "pass":
+                check_outcome = CheckOutcome(
+                    outcome="invalid",
+                    failure_label="baseline_check_passed_without_diff",
+                    exit_code=check_outcome.exit_code,
+                    timed_out=check_outcome.timed_out,
+                    duration_seconds=check_outcome.duration_seconds,
+                    evidence_excerpt=check_outcome.evidence_excerpt,
+                )
+        else:
+            check_outcome = CheckOutcome("invalid", replay.failure_label, None, False, 0.0, "")
         run = _workspace_run_record(
             task=task,
             check=check,
             agent=agent,
             solver_workspace_digest=solver_workspace.workspace_digest,
-            verifier_workspace_digest=_synthetic_workspace_digest(task, "verifier", replay.failure_label or "verifier_workspace_error"),
+            verifier_workspace_digest=verifier_workspace.workspace_digest,
             agent_outcome=agent_outcome,
             diff=diff,
             replay=replay,
@@ -354,26 +443,9 @@ def run_agent_on_task_with_artifacts(
             started_at=started_at,
             finished_at=_now(),
         )
-        return _workspace_run_result(run, artifact_config, diff, agent_outcome, solver_workspace, None)
-    replay = apply_diff(verifier_workspace, diff)
-    if replay.replay_status == "applied":
-        check_outcome = verify_agent_diff(verifier_workspace, check, runtime_config)
-    else:
-        check_outcome = CheckOutcome("invalid", replay.failure_label, None, False, 0.0, "")
-    run = _workspace_run_record(
-        task=task,
-        check=check,
-        agent=agent,
-        solver_workspace_digest=solver_workspace.workspace_digest,
-        verifier_workspace_digest=verifier_workspace.workspace_digest,
-        agent_outcome=agent_outcome,
-        diff=diff,
-        replay=replay,
-        check_outcome=check_outcome,
-        started_at=started_at,
-        finished_at=_now(),
-    )
-    return _workspace_run_result(run, artifact_config, diff, agent_outcome, solver_workspace, verifier_workspace)
+        return _workspace_run_result(run, artifact_config, diff, agent_outcome, solver_workspace, verifier_workspace)
+    finally:
+        _cleanup_workspaces(verifier_workspace, solver_workspace)
 
 
 def _workspace_run_result(
@@ -510,9 +582,70 @@ def _checkout_repository(task: TaskRecord, workspace_config: WorkspaceConfig, *,
     if source is None:
         raise ValueError("repository source is not bound for workspace config")
     path = Path(mkdtemp(prefix=prefix))
-    _run(("git", "clone", "--quiet", str(source), str(path)))
-    _run_git(path, ("checkout", "--quiet", task.base_commit))
-    return path
+    _register_owned_workspace_path(path)
+    try:
+        _run(("git", "clone", "--quiet", str(source), str(path)))
+        _run_git(path, ("checkout", "--quiet", task.base_commit))
+        return path
+    except BaseException:
+        _discard_owned_workspace_path(path)
+        raise
+
+
+def _cleanup_workspaces(*workspaces: WorkspaceRef | None) -> None:
+    failures: list[str] = []
+    for workspace in workspaces:
+        if workspace is None:
+            continue
+        try:
+            _remove_owned_workspace_path(workspace.path)
+        except (OSError, ValueError) as exc:
+            failures.append(f"{workspace.role}:{type(exc).__name__}")
+    if failures:
+        raise RuntimeError(f"workspace cleanup failed ({', '.join(failures)})")
+
+
+def _register_owned_workspace_path(path: Path) -> None:
+    resolved = path.resolve(strict=True)
+    stat = resolved.stat()
+    with _OWNED_WORKSPACE_LOCK:
+        _OWNED_WORKSPACES[resolved] = (stat.st_dev, stat.st_ino)
+
+
+def _remove_owned_workspace_path(path: Path) -> None:
+    resolved = path.resolve()
+    with _OWNED_WORKSPACE_LOCK:
+        expected_identity = _OWNED_WORKSPACES.get(resolved)
+        if expected_identity is None:
+            raise ValueError("workspace path is not owned by Barcarolle")
+    try:
+        stat = path.stat()
+    except FileNotFoundError as exc:
+        raise ValueError("owned workspace path is missing") from exc
+    if (stat.st_dev, stat.st_ino) != expected_identity:
+        raise ValueError("owned workspace path was replaced")
+    with _OWNED_WORKSPACE_LOCK:
+        _OWNED_WORKSPACES.pop(resolved, None)
+    try:
+        shutil.rmtree(path)
+    except OSError:
+        with _OWNED_WORKSPACE_LOCK:
+            _OWNED_WORKSPACES[resolved] = expected_identity
+        raise
+
+
+def _discard_owned_workspace_path(path: Path) -> None:
+    resolved = path.resolve()
+    with _OWNED_WORKSPACE_LOCK:
+        owned = resolved in _OWNED_WORKSPACES
+    if not owned:
+        return
+    try:
+        _remove_owned_workspace_path(path)
+    except OSError:
+        shutil.rmtree(path, ignore_errors=True)
+        with _OWNED_WORKSPACE_LOCK:
+            _OWNED_WORKSPACES.pop(resolved, None)
 
 
 def _write_solver_visible_task_material(path: Path, task: TaskRecord) -> None:
@@ -710,10 +843,10 @@ def _terminal_status(
     replay: DiffReplayOutcome,
     check_outcome: CheckOutcome,
 ) -> str:
+    if replay.replay_status != "applied" or check_outcome.outcome == "invalid":
+        return "invalid"
     if agent_outcome.terminal_status != "completed":
         return agent_outcome.terminal_status
-    if replay.replay_status != "applied":
-        return "invalid"
     if check_outcome.outcome == "pass":
         return "passed"
     if check_outcome.outcome == "fail":
@@ -729,12 +862,14 @@ def _invalid_owner(
 ) -> str | None:
     if terminal_status != "invalid":
         return None
-    if agent_outcome.terminal_status == "invalid":
+    if replay.replay_status == "failed":
         return "agent"
-    if replay.replay_status != "applied":
+    if replay.replay_status == "invalid":
         return "benchmark"
     if check_outcome.outcome == "invalid":
-        return "benchmark"
+        return "benchmark" if check_outcome.failure_label in _BENCHMARK_CHECK_FAILURE_LABELS else "agent"
+    if agent_outcome.terminal_status == "invalid":
+        return "agent"
     return "benchmark"
 
 
@@ -743,10 +878,12 @@ def _failure_label(
     replay: DiffReplayOutcome,
     check_outcome: CheckOutcome,
 ) -> str | None:
-    if agent_outcome.terminal_status != "completed":
-        return agent_outcome.failure_label
     if replay.replay_status != "applied":
         return replay.failure_label
+    if check_outcome.outcome == "invalid":
+        return check_outcome.failure_label
+    if agent_outcome.terminal_status != "completed":
+        return agent_outcome.failure_label
     return check_outcome.failure_label
 
 
@@ -772,6 +909,57 @@ def _preparation_failure_label(message: str) -> str:
     if "inside verifier workspace" in lowered:
         return "invalid_hidden_material_destination"
     return "verifier_preparation_failed"
+
+
+def _is_reserved_hidden_material_destination(destination: Path) -> bool:
+    return (
+        not destination.is_absolute()
+        and bool(destination.parts)
+        and destination.parts[0] == ".barcarolle"
+        and ".." not in destination.parts
+    )
+
+
+def _validate_captured_diff_paths(diff_text: str) -> None:
+    if not diff_text:
+        return
+    paths = _captured_diff_paths(diff_text)
+    if not paths:
+        raise ValueError("captured diff has no parseable paths")
+    if any(path == ".barcarolle" or path.startswith(".barcarolle/") for path in paths):
+        raise ValueError("captured diff contains reserved workspace material")
+
+
+def _captured_diff_paths(diff_text: str) -> tuple[str, ...]:
+    try:
+        completed = subprocess.run(
+            ("git", "apply", "--numstat", "-z", "-"),
+            input=diff_text,
+            text=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            check=False,
+        )
+    except OSError as exc:
+        raise RuntimeError("captured diff path inspection failed") from exc
+    if completed.returncode != 0:
+        raise RuntimeError("captured diff path inspection failed")
+    paths: list[str] = []
+    entries = completed.stdout.split("\0")
+    index = 0
+    while index < len(entries) - 1:
+        fields = entries[index].split("\t", 2)
+        if len(fields) != 3:
+            raise ValueError("captured diff path inspection returned malformed output")
+        if fields[2]:
+            paths.append(fields[2])
+            index += 1
+            continue
+        if index + 2 >= len(entries) - 1:
+            raise ValueError("captured diff path inspection returned malformed rename output")
+        paths.extend((entries[index + 1], entries[index + 2]))
+        index += 3
+    return tuple(paths)
 
 
 def _synthetic_workspace_digest(task: TaskRecord, role: str, reason: str) -> str:

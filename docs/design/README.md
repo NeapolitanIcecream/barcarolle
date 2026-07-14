@@ -1,10 +1,19 @@
 # Barcarolle Design Reference
 
-Status: current behavior and data-contract reference, 2026-06-28.
+Status: active design authority, 2026-07-14.
 
-These documents describe the current Barcarolle module boundaries, data
+These documents describe the intended Barcarolle module boundaries, data
 contracts, and cross-module behavior. Use them when implementation details need
-the intended benchmark boundary rather than an incidental code path.
+the benchmark boundary rather than an incidental code path.
+
+The design assumes cooperative Agents unless an execution adapter states a
+stronger threat model. Fresh solver/verifier workspaces and hidden-check
+separation are core behavior; host-level isolation is optional.
+
+The core follows only the latest schema. Small one-off migrations may preserve
+valuable paid results after a schema change, but compatibility layers are not a
+design goal. See [Implementation status](../implementation-status.md) for gaps
+between these documents and the alpha runtime.
 
 ## Documents
 

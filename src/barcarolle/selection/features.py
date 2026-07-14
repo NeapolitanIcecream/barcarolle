@@ -16,6 +16,7 @@ from barcarolle.records import (
     TaskRecord,
     ValidationResult,
     canonical_digest,
+    make_check_digest,
     validate_feature_snapshot,
     validate_result,
 )
@@ -259,10 +260,7 @@ def _ensure_result_identity_matches_current_records(
             identity.repository_id != task.repository_id
             or identity.base_commit != task.base_commit
             or identity.solver_material_digest != task.solver_material_digest
-            or identity.check_manifest_digest != check.check_manifest_digest
-            or identity.hidden_check_bundle_digest != check.hidden_check_bundle_digest
-            or identity.verifier_image_digest != check.verifier_image_digest
-            or identity.verifier_deps_digest != check.verifier_deps_digest
+            or identity.check_digest != make_check_digest(check)
         ):
             raise ValueError("results include cache identity that does not match current Task/Check records")
     if agents is not None:

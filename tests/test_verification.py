@@ -1,4 +1,5 @@
 from pathlib import Path
+from shutil import rmtree
 import hashlib
 
 import pytest
@@ -302,10 +303,40 @@ def test_repeat_verification_uses_fresh_prepared_workspaces(tmp_path: Path) -> N
             hidden_material_destination=Path(".barcarolle/check_bundle.txt"),
         )
 
-    outcomes = repeat_verification(_check(), factory, 2, _runtime(timeout_seconds=5))
+    outcomes = repeat_verification(
+        _check(),
+        factory,
+        2,
+        _runtime(timeout_seconds=5),
+        lambda workspace: rmtree(workspace.path),
+    )
 
     assert calls == 2
     assert [outcome.outcome for outcome in outcomes] == ["pass", "pass"]
+    assert not tuple(tmp_path.glob("workspace-*"))
+
+
+def test_repeat_verification_cleans_workspace_when_preparation_fails(tmp_path: Path) -> None:
+    workspace_path = tmp_path / "workspace"
+    workspace_path.mkdir()
+    hidden = tmp_path / "wrong-hidden.txt"
+    hidden.write_text("wrong", encoding="utf-8")
+
+    with pytest.raises(ValueError, match="hidden material digest"):
+        repeat_verification(
+            _check(),
+            lambda: _workspace_ref(
+                path=workspace_path,
+                check_command=("python", "-c", "print('ok')"),
+                hidden_material_source=hidden,
+                hidden_material_destination=Path(".barcarolle/check_bundle.txt"),
+            ),
+            1,
+            _runtime(timeout_seconds=5),
+            lambda workspace: rmtree(workspace.path),
+        )
+
+    assert not workspace_path.exists()
 
 
 def _check(command: tuple[str, ...] = ("python", "-c", "print('ok')")) -> CheckRecord:

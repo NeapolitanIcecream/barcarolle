@@ -184,13 +184,18 @@ def repeat_verification(
     verifier_workspace_factory: Callable[[], WorkspaceRef],
     repeat_count: int,
     runtime_config: RuntimeConfig,
+    workspace_cleanup: Callable[[WorkspaceRef], None],
 ) -> Sequence[CheckOutcome]:
     if repeat_count < 1:
         raise ValueError("repeat_count must be at least 1")
     outcomes: list[CheckOutcome] = []
     for _ in range(repeat_count):
-        workspace = prepare_verifier(check, verifier_workspace_factory())
-        outcomes.append(verify_diff(check, workspace, runtime_config))
+        workspace = verifier_workspace_factory()
+        try:
+            prepared_workspace = prepare_verifier(check, workspace)
+            outcomes.append(verify_diff(check, prepared_workspace, runtime_config))
+        finally:
+            workspace_cleanup(workspace)
     return tuple(outcomes)
 
 

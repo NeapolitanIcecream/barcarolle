@@ -1,6 +1,8 @@
 import json
 from dataclasses import replace
 
+import pytest
+
 from barcarolle.records import (
     AgentRecord,
     BenchmarkSelectionRecord,
@@ -85,7 +87,7 @@ def test_result_report_distinguishes_unknown_cost_from_measured_zero() -> None:
     measured_zero = _result(result_id="result-zero", total_cost=0.0)
     unknown = record_with_digest(
         replace(
-            _result(result_id="result-unknown", total_cost=0.0),
+            _result(result_id="result-unknown", total_cost=None),
             usage={},
             usage_coverage="unknown",
             result_digest="",
@@ -101,6 +103,7 @@ def test_result_report_distinguishes_unknown_cost_from_measured_zero() -> None:
         "unknown_result_count": 1,
     }
     assert section.summary["usage_coverage"] == {"reported": 1, "unknown": 1}
+    assert section.unsupported_claims == ()
 
 
 def test_selector_report_preserves_matrix_cell_set_and_metric_traceability() -> None:
@@ -127,6 +130,22 @@ def test_selector_report_preserves_matrix_cell_set_and_metric_traceability() -> 
     assert metric.metric_digest in section.source_digests["metric_digests"]
     assert selected_matrix.matrix_digest in section.source_digests["matrix_digests"]
     assert cell_set.cell_set_digest in section.source_digests["cell_set_digests"]
+
+
+def test_selector_report_rejects_metric_without_selection_budget_binding() -> None:
+    task_pool = _task_pool()
+    result = _result()
+    selection = _selection(task_pool)
+    cell_set = _cell_set(selection, result.cache_identity.identity_digest, result)
+    selected_matrix = _matrix(selection, cell_set, role="selected")
+    future_matrix = _matrix(selection, cell_set, role="future_holdout")
+    metric = record_with_digest(
+        replace(_metric(selection, cell_set, selected_matrix, future_matrix), budget_digest=None, metric_digest="")
+    )
+
+    section = build_selector_report((selection,), (cell_set,), (selected_matrix, future_matrix), (metric,))
+
+    assert any("budget digest does not match" in claim for claim in section.unsupported_claims)
 
 
 def test_selector_report_does_not_support_empty_evidence() -> None:
@@ -337,6 +356,32 @@ def test_selector_and_claim_reports_reject_matrix_cell_identity_mismatch() -> No
     selected_matrix = _matrix(selection, cell_set, role="selected")
     future_matrix = _matrix(selection, cell_set, role="future_holdout")
     bad_cell = replace(selected_matrix.cells[0], required_identity_digest="different-identity")
+    bad_selected_matrix = record_with_digest(replace(selected_matrix, cells=(bad_cell,), matrix_digest=""))
+    metric = _metric(selection, cell_set, bad_selected_matrix, future_matrix)
+
+    selector_section = build_selector_report((selection,), (cell_set,), (bad_selected_matrix, future_matrix), (metric,))
+    claim_section = build_claim_boundary(
+        task_pool,
+        (selection,),
+        (cell_set,),
+        (bad_selected_matrix, future_matrix),
+        (metric,),
+        ClaimConfig("claims"),
+        results=(result,),
+    )
+
+    assert any("selected matrix cells do not match" in claim for claim in selector_section.unsupported_claims)
+    assert any(claim.startswith("selector_metrics:") for claim in claim_section.unsupported_claims)
+
+
+def test_selector_and_claim_reports_reject_matrix_result_binding_mismatch() -> None:
+    task_pool = _task_pool()
+    result = _result()
+    selection = _selection(task_pool)
+    cell_set = _cell_set(selection, result.cache_identity.identity_digest, result)
+    selected_matrix = _matrix(selection, cell_set, role="selected")
+    future_matrix = _matrix(selection, cell_set, role="future_holdout")
+    bad_cell = replace(selected_matrix.cells[0], result_digest="different-result-digest")
     bad_selected_matrix = record_with_digest(replace(selected_matrix, cells=(bad_cell,), matrix_digest=""))
     metric = _metric(selection, cell_set, bad_selected_matrix, future_matrix)
 
@@ -645,6 +690,38 @@ def test_write_report_sanitizes_local_absolute_artifact_paths(tmp_path) -> None:
     assert payload[0]["artifact_paths"] == ["runs/workspace-run/stdout.txt"]
 
 
+@pytest.mark.parametrize(
+    ("artifact_path", "safe_ref"),
+    (
+        ("/tmp/barcarolle-user/workspaces/run/stdout.txt", "stdout.txt"),
+        ("/private/var/folders/ab/private-run/verifier/stderr.txt", "stderr.txt"),
+    ),
+)
+def test_write_report_hides_external_absolute_artifact_directories(
+    tmp_path,
+    artifact_path: str,
+    safe_ref: str,
+) -> None:
+    section = ReportSection(
+        section_id="artifacts",
+        heading="Artifacts",
+        summary={"artifact_ref": artifact_path},
+        source_digests={"artifact_digest": "digest"},
+        artifact_paths=(artifact_path,),
+    )
+    markdown_path = tmp_path / "report.md"
+    json_path = tmp_path / "report.json"
+
+    write_report((section,), markdown_path, artifact_root=tmp_path / "artifacts")
+    write_report((section,), json_path, artifact_root=tmp_path / "artifacts")
+
+    markdown = markdown_path.read_text(encoding="utf-8")
+    payload = json.loads(json_path.read_text(encoding="utf-8"))
+    assert artifact_path not in markdown
+    assert payload[0]["summary"]["artifact_ref"] == safe_ref
+    assert payload[0]["artifact_paths"] == [safe_ref]
+
+
 def _task_pool() -> TaskPoolRecord:
     record = TaskPoolRecord(
         task_pool_id="task-pool",
@@ -691,10 +768,7 @@ def _identity() -> ResultCacheIdentity:
         base_commit="commit",
         submodule_state_digest="submodules",
         solver_material_digest="solver",
-        check_manifest_digest="check-manifest",
-        hidden_check_bundle_digest="hidden-bundle",
-        verifier_image_digest="image",
-        verifier_deps_digest="deps",
+        check_digest="check",
         agent_manifest_digest="agent-manifest",
         model_snapshot_id="model",
         harness_digest="harness",
@@ -711,7 +785,6 @@ def _identity() -> ResultCacheIdentity:
         workspace_config_digest="workspace",
         runtime_config_digest="runtime",
         hardware_profile_digest=None,
-        scoring_config_digest="scoring",
         identity_digest="",
     )
     return record_with_digest(identity)
@@ -721,7 +794,7 @@ def _result(
     result_id: str = "result",
     outcome: str = "pass",
     terminal_status: str = "passed",
-    total_cost: float = 0.5,
+    total_cost: float | None = 0.5,
     workspace_seconds: float = 2.0,
 ) -> ResultRecord:
     result = ResultRecord(
@@ -737,6 +810,7 @@ def _result(
         invalid_owner=None,
         failure_label=None,
         cost={"total_cost": total_cost},
+        scoring_config_digest="scoring",
         pricing_version="test",
         usage={"total_tokens": 10},
         usage_coverage="reported",
