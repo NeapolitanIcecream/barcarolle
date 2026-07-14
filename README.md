@@ -69,9 +69,38 @@ uv run pytest tests/test_runner.py
 uv run pytest tests/test_result_store.py
 ```
 
+## Offline Report Command
+
+`barcarolle report` rebuilds a report from existing latest-schema JSONL
+records. It does not run Agents or make paid calls.
+
+```bash
+uv run barcarolle report path/to/report-config.json
+```
+
+Paths are resolved relative to the config file:
+
+```json
+{
+  "task_pool": "records/task_pool.jsonl",
+  "agents": "records/agents.jsonl",
+  "selections": "records/selections.jsonl",
+  "results": "records/results.jsonl",
+  "evaluation_cell_sets": "records/evaluation_cell_sets.jsonl",
+  "result_matrices": "records/result_matrices.jsonl",
+  "metrics": "records/metrics.jsonl",
+  "output_dir": "report"
+}
+```
+
+The task-pool file must contain one `TaskPoolRecord`. `task_pool` and
+`output_dir` are required; omit a record file when that evidence is absent.
+Included record files contain zero or more records of the type named by the
+key. The command writes `report.md` and `report.json` under `output_dir`.
+
 ## Python Interface
 
-Barcarolle is currently a Python library. Start with these modules:
+The Python API runs benchmark workflows. Start with these modules:
 
 - `barcarolle.task_pool` builds and freezes candidate `Task + Check` pools.
 - `barcarolle.workspace` creates solver and verifier workspaces.

@@ -44,7 +44,7 @@ class SelectorTrainingConfig:
 @dataclass(frozen=True)
 class SelectorEvaluationConfig:
     evaluation_config_digest: str
-    origin_ids: tuple[str, ...]
+    origin_times: tuple[str, ...]
     selection_config: SelectionConfig
     budget: SelectionBudget
 
@@ -100,20 +100,15 @@ def freeze_evaluation_selections(
     task_pool: TaskPoolRecord,
     tasks: Sequence[TaskRecord],
     checks: Mapping[str, CheckRecord],
-    selector_inputs: Mapping[str, SelectorInput],
+    selector_inputs: Sequence[SelectorInput],
     agents: Sequence[AgentRecord],
     history_window: TimeRange,
-    evaluation_config: SelectorEvaluationConfig,
+    selection_config: SelectionConfig,
     rolling_policy: RollingOriginPolicy,
 ) -> Sequence[BenchmarkSelectionRecord]:
     _ensure_time_range_order(history_window)
     selections = []
-    for origin_id in evaluation_config.origin_ids:
-        selector_input = selector_inputs.get(origin_id)
-        if selector_input is None:
-            raise ValueError(f"selector_input is missing for origin {origin_id}")
-        if selector_input.origin_id != origin_id:
-            raise ValueError("selector_input origin_id does not match requested origin")
+    for selector_input in selector_inputs:
         _ensure_selector_input_matches_history(
             selector_input,
             task_pool,
@@ -123,7 +118,7 @@ def freeze_evaluation_selections(
             history_window,
             rolling_policy,
         )
-        selection = select_with_selector(selector_input, selector, evaluation_config.selection_config)
+        selection = select_with_selector(selector_input, selector, selection_config)
         selections.append(selection)
     return tuple(selections)
 

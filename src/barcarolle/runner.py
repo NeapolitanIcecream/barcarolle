@@ -43,6 +43,9 @@ from barcarolle.task_pool import TimeRange
 @dataclass(frozen=True)
 class TaskPoolConfig:
     repository_url_or_path: str
+    workspace_config: WorkspaceConfig
+    runtime_config: RuntimeConfig
+    reference_patches: Mapping[str, workspace_module.CapturedDiff]
     time_range: TimeRange | None = None
     task_source_config: task_pool_module.TaskSourceConfig | None = None
     import_path: Path | None = None
@@ -64,7 +67,21 @@ class ReportConfig:
 
 def build_task_pool(config: TaskPoolConfig) -> TaskPoolRecord:
     candidates = _task_candidates(config)
-    certified = tuple(task_pool_module.certify_task_candidate(candidate, config.certification_config) for candidate in candidates)
+    missing_patches = tuple(
+        candidate.candidate_id for candidate in candidates if candidate.candidate_id not in config.reference_patches
+    )
+    if missing_patches:
+        raise ValueError("reference patch is missing for candidates: " + ", ".join(missing_patches))
+    certified = tuple(
+        task_pool_module.certify_task_candidate(
+            candidate,
+            config.certification_config,
+            config.workspace_config,
+            config.runtime_config,
+            config.reference_patches[candidate.candidate_id],
+        )
+        for candidate in candidates
+    )
     accepted_tasks = tuple(result.task for result in certified if result.accepted and result.task is not None)
     accepted_checks = tuple(result.check for result in certified if result.accepted and result.check is not None)
     rejected = tuple(result for result in certified if not result.accepted)
@@ -161,16 +178,20 @@ def evaluate_selector(
     tuple[MetricRecord, ...],
 ]:
     tasks, checks = _load_task_pool_records(task_pool)
+    try:
+        origin_times = tuple(_parse_datetime(value) for value in evaluation_config.origin_times)
+    except ValueError as exc:
+        raise ValueError("evaluation origin_times entries must be ISO datetime strings") from exc
     origins = tuple(
         selection_module.build_rolling_origin(
             task_pool,
             tasks,
             checks,
-            _origin_time(origin_spec),
-            TimeRange(start=_datetime_to_iso(_origin_time(origin_spec)), end=history_window.end),
+            origin_time,
+            TimeRange(start=_datetime_to_iso(origin_time), end=history_window.end),
             rolling_policy,
         )
-        for origin_spec in evaluation_config.origin_ids
+        for origin_time in origin_times
     )
     selections: list[BenchmarkSelectionRecord] = []
     for origin in origins:
@@ -194,17 +215,16 @@ def evaluate_selector(
             selector_id=evaluation_config.selection_config.selector_id or selector.selector_id,
             feature_snapshot_id=selector_input.feature_snapshot_id,
         )
-        effective_config = replace(evaluation_config, origin_ids=(origin.origin_id,), selection_config=selection_config)
         frozen = tuple(
             selection_module.freeze_evaluation_selections(
                 selector,
                 task_pool,
                 tasks,
                 checks,
-                {origin.origin_id: selector_input},
+                (selector_input,),
                 agents,
                 history_window,
-                effective_config,
+                selection_config,
                 rolling_policy,
             )
         )
@@ -764,14 +784,6 @@ def _unique_refs(refs: Sequence[TaskCheckRef]) -> tuple[TaskCheckRef, ...]:
 
 def _ref_key(ref: TaskCheckRef) -> tuple[str, str]:
     return (ref.task_id, ref.check_id)
-
-
-def _origin_time(origin_id: str) -> datetime:
-    try:
-        value = _parse_datetime(origin_id)
-    except ValueError as exc:
-        raise ValueError("Runner evaluate_selector origin_ids entries must currently be ISO datetime strings") from exc
-    return value
 
 
 def _parse_datetime(value: str) -> datetime:

@@ -57,6 +57,9 @@ output, and effect only; it does not prescribe implementation.
 Input:
 
 - `config: TaskPoolConfig`
+  - the existing `WorkspaceConfig` and `RuntimeConfig` used to execute checks;
+  - a direct `candidate_id -> CapturedDiff` mapping of trusted reference
+    patches.
 
 Output:
 
@@ -145,13 +148,34 @@ Output:
 
 Effect:
 
-- For each origin defined by the evaluation config and rolling-origin policy,
+- `evaluation_config.origin_times` contains ISO timestamps. For each timestamp,
   resolves Task/Check records, builds pre-origin selector input, calls Selection
   `freeze_evaluation_selections` to freeze `BenchmarkSelectionRecord`s, then
   calls `prepare_evaluation_cells` and `score_selection`. It returns frozen
   selections, cell sets, result matrices, and metrics.
+- `origin_id` is produced by `build_rolling_origin`; it is not an input config
+  value.
 - MAE is the primary prediction metric. Supporting metrics remain available for
   diagnosis and later algorithm decisions.
+
+### `barcarolle report`
+
+Input:
+
+- a JSON config containing paths to one `TaskPoolRecord` JSONL file and the
+  Agent, Result, Benchmark Selection, Evaluation Cell Set, Result Matrix, and
+  Metric JSONL files;
+- an output directory.
+
+Output:
+
+- `report.md`;
+- `report.json`.
+
+Effect:
+
+- Loads existing records and calls `write_report`. It does not build tasks or
+  run Agents.
 
 ## Internal Steps
 

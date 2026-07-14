@@ -3,10 +3,12 @@ from __future__ import annotations
 from dataclasses import replace
 from datetime import UTC, datetime
 from pathlib import Path
+import hashlib
 
 import pytest
 
 from barcarolle import runner as runner_module
+from barcarolle.cli import main as cli_main
 from barcarolle.records import (
     AgentRecord,
     BenchmarkSelectionRecord,
@@ -21,6 +23,7 @@ from barcarolle.records import (
     WorkspaceConfig,
     WorkspaceRunRecord,
     canonical_digest,
+    canonical_json,
     load_jsonl_records,
     record_with_digest,
     task_check_ref_key,
@@ -59,13 +62,31 @@ from barcarolle.selection import (
     SelectorTrainingConfig,
 )
 from barcarolle.task_pool import TaskSourceConfig, TimeRange
+from barcarolle.verification import CheckOutcome
+from barcarolle.workspace import CapturedDiff
 
 
-def test_build_task_pool_writes_resolvable_task_and_check_refs(tmp_path: Path) -> None:
+def test_build_task_pool_writes_resolvable_task_and_check_refs(tmp_path: Path, monkeypatch) -> None:
     task_ref = tmp_path / "tasks.jsonl"
     check_ref = tmp_path / "checks.jsonl"
+    monkeypatch.setattr(
+        runner_module.task_pool_module,
+        "_run_task_check",
+        lambda task, check, workspace_config, runtime_config, reference_patch: CheckOutcome(
+            "pass" if reference_patch is not None else "fail",
+            None,
+            0,
+            False,
+            0.0,
+            "",
+        ),
+    )
+    reference_patch = CapturedDiff("", hashlib.sha256(b"").hexdigest())
     config = TaskPoolConfig(
         repository_url_or_path="repo",
+        workspace_config=_workspace_config(),
+        runtime_config=_runtime_config(),
+        reference_patches={"candidate": reference_patch},
         time_range=TimeRange("2026-01-01T00:00:00Z", "2026-01-31T00:00:00Z"),
         task_source_config=TaskSourceConfig("user_import", (_candidate_event(),)),
         metadata={
@@ -404,10 +425,10 @@ def test_evaluate_selector_does_not_open_post_origin_results_before_freeze(tmp_p
             return (pre_origin_result,)
         return ()
 
-    def fake_freeze(selector, task_pool_arg, tasks, checks, selector_inputs, agents, history_window, evaluation_config, rolling_policy):
+    def fake_freeze(selector, task_pool_arg, tasks, checks, selector_inputs, agents, history_window, selection_config, rolling_policy):
         nonlocal freeze_called
         freeze_called = True
-        selector_input = next(iter(selector_inputs.values()))
+        selector_input = selector_inputs[0]
         captured_selector_inputs.append(selector_input)
         return (
             _selection_for_origin(
@@ -435,10 +456,10 @@ def test_evaluate_selector_does_not_open_post_origin_results_before_freeze(tmp_p
             (agent,),
             TimeRange("2026-01-01T00:00:00Z", "2026-01-10T00:00:00Z"),
             SelectorEvaluationConfig(
-                "evaluation",
-                ("2026-01-05T00:00:00Z",),
-                SelectionConfig("selection", "selector", "placeholder", "recency"),
-                SelectionBudget("eval-budget", 7),
+                evaluation_config_digest="evaluation",
+                origin_times=("2026-01-05T00:00:00Z",),
+                selection_config=SelectionConfig("selection", "selector", "placeholder", "recency"),
+                budget=SelectionBudget("eval-budget", 7),
             ),
             RollingOriginPolicy("policy", "origin_time", "clusters", "recency", "disjoint", True),
             FeatureConfig("features", "leakage", ("task_count",), ("task_metadata",)),
@@ -485,16 +506,31 @@ def test_write_report_writes_human_and_machine_summaries(tmp_path: Path) -> None
     assert "task_pool_digest" in markdown_path.read_text(encoding="utf-8")
 
 
-def _candidate_event() -> dict[str, object]:
-    evidence_keys = (
-        "checkout_valid",
-        "dependencies_restored",
-        "check_executable",
-        "oracle_stable",
-        "solver_visible_boundary",
-        "hidden_material_separated",
-        "statement_clear",
+def test_report_cli_reads_relative_jsonl_paths_and_writes_reports(tmp_path: Path, capsys) -> None:
+    task = _task()
+    check = _check()
+    task_pool = _task_pool((task,), (check,))
+    records = tmp_path / "records"
+    write_jsonl_records(records / "task_pool.jsonl", (task_pool,))
+    config_path = tmp_path / "report.json"
+    config_path.write_text(
+        canonical_json(
+            {
+                "task_pool": "records/task_pool.jsonl",
+                "output_dir": "published",
+            }
+        ),
+        encoding="utf-8",
     )
+
+    assert cli_main(("report", str(config_path))) == 0
+
+    assert (tmp_path / "published" / "report.md").exists()
+    assert (tmp_path / "published" / "report.json").exists()
+    assert '"section_ids"' in capsys.readouterr().out
+
+
+def _candidate_event() -> dict[str, object]:
     return {
         "candidate_id": "candidate",
         "repository_id": "repo",
@@ -514,7 +550,6 @@ def _candidate_event() -> dict[str, object]:
         "resource_limits": {"timeout_seconds": 30},
         "oracle_source": "private",
         "check_type": "tests",
-        "certification_evidence": {key: True for key in evidence_keys},
     }
 
 
@@ -592,7 +627,7 @@ def _runtime_config() -> RuntimeConfig:
 
 
 def _scoring_config() -> ScoringConfig:
-    return ScoringConfig("scoring", "test", "reported", {"input_tokens": 0.01})
+    return ScoringConfig("scoring", "test", {"input_tokens": 0.01})
 
 
 def _workspace_run(task: TaskRecord, check: CheckRecord, agent: AgentRecord, outcome: str = "pass") -> WorkspaceRunRecord:
