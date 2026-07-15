@@ -580,7 +580,7 @@ def _agents(
                 }
             ),
             network_policy_digest=provider_digest,
-            adapter_digest="barcarolle-worktree-diff-v1",
+            adapter_digest="barcarolle-worktree-diff-v2-python-cache-excluded",
         )
         agents.append(agent)
         commands[agent_id] = command

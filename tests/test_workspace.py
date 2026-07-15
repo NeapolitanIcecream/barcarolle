@@ -286,6 +286,28 @@ def test_capture_diff_reads_git_worktree_and_includes_untracked_files(tmp_path: 
     assert diff.diff_digest == hashlib.sha256(diff.diff_text.encode("utf-8")).hexdigest()
 
 
+def test_capture_diff_excludes_python_runtime_caches(tmp_path: Path, managed_workspaces) -> None:
+    repo, base_commit = _make_repo(tmp_path)
+    task = _task(base_commit=base_commit)
+    workspace_config = _workspace_config(repo)
+    bind_repository_source(workspace_config, repo)
+    workspace = create_solver_workspace(task, workspace_config)
+    managed_workspaces.append(workspace)
+    (workspace.path / "changed.py").write_text("value = 1\n", encoding="utf-8")
+    pytest_cache = workspace.path / ".pytest_cache" / "v" / "cache"
+    pytest_cache.mkdir(parents=True)
+    (pytest_cache / "nodeids").write_text("[]\n", encoding="utf-8")
+    bytecode_cache = workspace.path / "package" / "__pycache__"
+    bytecode_cache.mkdir(parents=True)
+    (bytecode_cache / "module.cpython-314.pyc").write_bytes(b"generated")
+
+    diff = capture_diff(workspace)
+
+    assert "diff --git a/changed.py b/changed.py" in diff.diff_text
+    assert ".pytest_cache" not in diff.diff_text
+    assert "__pycache__" not in diff.diff_text
+
+
 def test_capture_diff_fails_closed_if_reserved_material_escapes_pathspec(
     tmp_path: Path,
     managed_workspaces,

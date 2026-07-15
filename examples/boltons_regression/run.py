@@ -313,7 +313,7 @@ def _scripted_agent(command: tuple[str, ...]) -> AgentRecord:
         retrieval_digest="none",
         skills_digest="none",
         network_policy_digest="offline",
-        adapter_digest="barcarolle-worktree-diff-v1",
+        adapter_digest="barcarolle-worktree-diff-v2-python-cache-excluded",
     )
 
 

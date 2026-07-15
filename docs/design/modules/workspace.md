@@ -165,6 +165,8 @@ Effect:
 - Captures a replayable final diff against the task base commit, including
   committed, staged, unstaged, and untracked Agent edits.
 - Excludes Barcarolle's reserved `.barcarolle` material from the patch.
+- Excludes generated Python `.pytest_cache` and `__pycache__` files; these are
+  runtime byproducts rather than Agent edits to replay.
 
 ### create_verifier_workspace
 

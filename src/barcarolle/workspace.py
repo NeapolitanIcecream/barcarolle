@@ -113,6 +113,8 @@ _CAPTURE_PATHSPEC = (
     ".",
     ":(top,exclude).barcarolle",
     ":(top,exclude).barcarolle/**",
+    ":(top,glob,exclude)**/.pytest_cache/**",
+    ":(top,glob,exclude)**/__pycache__/**",
 )
 _USAGE_FILE = Path(".barcarolle/usage.json")
 _BENCHMARK_CHECK_FAILURE_LABELS = frozenset(
