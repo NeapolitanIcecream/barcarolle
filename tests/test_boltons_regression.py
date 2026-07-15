@@ -84,6 +84,9 @@ def test_boltons_real_target_certification_and_scripted_results(tmp_path: Path) 
     target_repo = Path(configured_target)
 
     output_dir = tmp_path / "boltons-regression"
+    stale_task_pool = output_dir / "records/task-pool.jsonl"
+    stale_task_pool.parent.mkdir(parents=True)
+    stale_task_pool.write_text("stale\n", encoding="utf-8")
     subprocess.run(
         [
             sys.executable,
@@ -127,3 +130,4 @@ def test_boltons_real_target_certification_and_scripted_results(tmp_path: Path) 
     )
     assert all(record["outcome"] == "pass" for record in results)
     assert all(record["cost"]["total_cost"] is None for record in results)
+    assert not stale_task_pool.exists()

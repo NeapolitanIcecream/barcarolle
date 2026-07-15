@@ -360,6 +360,7 @@ def _clear_previous_records(records_dir: Path) -> None:
         "certification-evidence.jsonl",
         "tasks.jsonl",
         "checks.jsonl",
+        "task-pool.jsonl",
         "task_pool.jsonl",
         "results.jsonl",
     ):
