@@ -48,7 +48,9 @@ evaluation stages only read exact Results and cannot invoke the Agent.
 
 This remains a mechanism experiment over five hand-authored tasks with
 controlled availability times. Its report must not be presented as evidence
-of real-world predictive validity.
+of real-world predictive validity. See the
+[sanitized mechanism report](../../docs/boltons-paired-mae-mechanism.md) for the
+completed 2026-07-15 run.
 
 To run the same path as an opt-in integration test, set
 `BARCAROLLE_BOLTONS_REPO` to that checkout before running

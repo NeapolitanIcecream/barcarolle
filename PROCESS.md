@@ -97,12 +97,21 @@ The ignored protocol and exact resource ledger are under
 `outputs/user-journeys/2026-07-15-openai-paired-rolling-origin/`. Estimate cost
 with current OpenAI standard API prices, as explicitly approved by the user;
 label it as an estimate because the gateway does not publish billing rates.
-The plan is at most ten no-retry calls: five certified boltons Task/Check cells
-for each of the `gpt-5.4-mini` low- and high-reasoning Agent configurations.
-Using one model keeps the Result matrix on one valid price table. Run one
-low-reasoning canary first, then scale only when endpoint identity, measured
-usage, cost, diff replay, and hidden Check are valid. Before the canary, no paid
-inference call has run.
+The ten-call, no-retry boltons mechanism experiment is complete: five certified
+Task/Check cells for each of the `gpt-5.4-mini` low- and high-reasoning Agent
+configurations. All ten Results were scoreable; nine passed and one failed.
+Official-price estimated cost was USD 0.35245695. The held-out origin 2 rule
+mixture MAE was 0.00, tying coverage and random and beating recency at 0.25.
+This is mechanism evidence only because the five tasks and availability times
+are controlled. The sanitized report is
+`docs/boltons-paired-mae-mechanism.md`.
+
+The v1 paid diffs retained generated Python caches. Preserve those Results
+unchanged. Commit `c052addc` excludes `.pytest_cache` and `__pycache__` from
+future captured diffs and binds examples to adapter v2. The next predictive
+experiment needs a larger Task Pool with real availability times and multiple
+future tasks per origin; do not infer that requirement into another paid run
+without explicit scope and budget.
 
 Repository-maintenance Codex sessions used to implement, review, or coordinate
 work are outside this paid-call boundary. Reviewer Codex CLI sessions should
