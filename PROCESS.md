@@ -98,9 +98,11 @@ The ignored protocol and exact resource ledger are under
 with current OpenAI standard API prices, as explicitly approved by the user;
 label it as an estimate because the gateway does not publish billing rates.
 The plan is at most ten no-retry calls: five certified boltons Task/Check cells
-for each of `gpt-5.4-mini` and `gpt-5.4`. Run one mini canary first, then scale
-only when endpoint identity, measured usage, cost, diff replay, and hidden Check
-are valid. At this handoff point no paid inference call has run.
+for each of the `gpt-5.4-mini` low- and high-reasoning Agent configurations.
+Using one model keeps the Result matrix on one valid price table. Run one
+low-reasoning canary first, then scale only when endpoint identity, measured
+usage, cost, diff replay, and hidden Check are valid. Before the canary, no paid
+inference call has run.
 
 Repository-maintenance Codex sessions used to implement, review, or coordinate
 work are outside this paid-call boundary. Reviewer Codex CLI sessions should

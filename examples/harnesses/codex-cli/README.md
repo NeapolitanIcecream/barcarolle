@@ -19,6 +19,8 @@ Set these variables before running benchmark or evidence-producing Codex calls:
 - `BARCAROLLE_CODEX_MODEL`: optional model name. If unset, the example uses
   `gpt-5.4`. Evidence-producing runs should set it explicitly and bind the same
   value into the Agent identity.
+- `BARCAROLLE_CODEX_REASONING_EFFORT`: optional `none`, `low`, `medium`, `high`,
+  or `xhigh`. Evidence-producing runs must also bind it into Agent identity.
 
 The harness sources `~/.zshrc` only if `OPENAI_BASE_URL` or `OPENAI_API_KEY` is
 missing. It then refuses to run if either variable is still absent.
@@ -33,6 +35,8 @@ auth. This harness sets `CODEX_HOME` to `BARCAROLLE_CODEX_HOME`, runs Codex with
 - `base_url` comes from `OPENAI_BASE_URL`.
 - `env_key` is `OPENAI_API_KEY`.
 - `wire_api` is `responses`.
+- request and stream retries are both zero; the benchmark driver owns any
+  decision to spend another call.
 
 Before invoking Codex, the harness disables Codex plugins, uses an ephemeral
 session, excludes `OPENAI_API_KEY` and `OPENAI_BASE_URL` from Agent-launched
@@ -41,6 +45,8 @@ subprocesses, and unsets alternate ambient provider credentials: `LLM_API_KEY`,
 `GOOGLE_API_KEY`, and `GEMINI_API_KEY`.
 It ignores and unsets `OPENAI_MODEL`; only `BARCAROLLE_CODEX_MODEL` or the fixed
 default controls the explicit Codex model argument.
+The reasoning-effort environment value is converted to an explicit Codex
+configuration argument and then removed from the Codex process environment.
 
 ## Bind The Harness
 

@@ -84,6 +84,7 @@ def test_codex_harness_writes_usage_for_workspace_runner(tmp_path: Path) -> None
         "LLM_BASE_URL": "https://ambient.invalid/v1",
         "LLM_API_KEY": "ambient-only",
         "BARCAROLLE_CODEX_MODEL": "test-model",
+        "BARCAROLLE_CODEX_REASONING_EFFORT": "low",
         "BARCAROLLE_CODEX_HOME": str(tmp_path / "codex-home"),
     }
 
@@ -113,7 +114,10 @@ def test_codex_harness_writes_usage_for_workspace_runner(tmp_path: Path) -> None
     assert 'model_providers.barcarolle_openai.base_url="https://example.invalid/v1"' in argv
     assert 'model_providers.barcarolle_openai.env_key="OPENAI_API_KEY"' in argv
     assert 'model_providers.barcarolle_openai.wire_api="responses"' in argv
+    assert "model_providers.barcarolle_openai.request_max_retries=0" in argv
+    assert "model_providers.barcarolle_openai.stream_max_retries=0" in argv
     assert 'shell_environment_policy.exclude=["OPENAI_API_KEY","OPENAI_BASE_URL"]' in argv
+    assert 'model_reasoning_effort="low"' in argv
     argv_lines = argv.splitlines()
     assert "--ignore-user-config" in argv_lines
     assert "--strict-config" in argv_lines
@@ -207,6 +211,32 @@ def test_codex_harness_restores_isolated_home_after_sourcing_zshrc(tmp_path: Pat
     assert (reserved / "test-codex-home.txt").read_text(encoding="utf-8") == (
         f"{isolated_home}\n"
     )
+
+
+def test_codex_harness_rejects_unknown_reasoning_effort(tmp_path: Path) -> None:
+    reserved = tmp_path / ".barcarolle"
+    reserved.mkdir()
+    (reserved / "TASK.md").write_text("Fix the parser.\n", encoding="utf-8")
+    env = {
+        **os.environ,
+        "OPENAI_BASE_URL": "https://example.invalid/v1",
+        "OPENAI_API_KEY": "test-only",
+        "BARCAROLLE_CODEX_HOME": str(tmp_path / "codex-home"),
+        "BARCAROLLE_CODEX_REASONING_EFFORT": "maximum",
+    }
+
+    completed = subprocess.run(
+        [str(HARNESS)],
+        cwd=tmp_path,
+        env=env,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=False,
+    )
+
+    assert completed.returncode == 64
+    assert "must be none, low, medium, high, or xhigh" in completed.stderr
 
 
 def _run_helper(stdin: str) -> subprocess.CompletedProcess[str]:

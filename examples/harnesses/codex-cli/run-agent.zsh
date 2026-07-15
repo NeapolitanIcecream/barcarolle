@@ -55,6 +55,10 @@ fi
 if [[ -z "${BARCAROLLE_CODEX_MODEL:-}" ]]; then
   BARCAROLLE_CODEX_MODEL="gpt-5.4"
 fi
+reasoning_effort="${BARCAROLLE_CODEX_REASONING_EFFORT:-}"
+if [[ -n "$reasoning_effort" && "$reasoning_effort" != (none|low|medium|high|xhigh) ]]; then
+  fail "BARCAROLLE_CODEX_REASONING_EFFORT must be none, low, medium, high, or xhigh" 64
+fi
 
 export CODEX_HOME="$isolated_codex_home"
 export OPENAI_BASE_URL
@@ -62,6 +66,7 @@ export OPENAI_API_KEY
 export BARCAROLLE_CODEX_MODEL
 
 unset OPENAI_MODEL
+unset BARCAROLLE_CODEX_REASONING_EFFORT
 unset LLM_API_KEY
 unset LLM_BASE_URL
 unset OPENROUTER_API_KEY
@@ -76,8 +81,13 @@ provider_config=(
   -c "model_providers.barcarolle_openai.base_url=$(toml_string "$OPENAI_BASE_URL")"
   -c 'model_providers.barcarolle_openai.env_key="OPENAI_API_KEY"'
   -c 'model_providers.barcarolle_openai.wire_api="responses"'
+  -c 'model_providers.barcarolle_openai.request_max_retries=0'
+  -c 'model_providers.barcarolle_openai.stream_max_retries=0'
   -c 'shell_environment_policy.exclude=["OPENAI_API_KEY","OPENAI_BASE_URL"]'
 )
+if [[ -n "$reasoning_effort" ]]; then
+  provider_config+=( -c "model_reasoning_effort=$(toml_string "$reasoning_effort")" )
+fi
 
 rm -f "$events_file" "$usage_file"
 
