@@ -616,7 +616,11 @@ def test_score_selection_uses_result_ids_frozen_in_evaluation_cells(tmp_path: Pa
         ((), "must not be empty"),
         (
             ("2026-01-05T00:00:00Z", "2026-01-04T19:00:00-05:00"),
-            "must be unique UTC instants",
+            "must be strictly increasing UTC instants",
+        ),
+        (
+            ("2026-01-06T00:00:00Z", "2026-01-05T00:00:00Z"),
+            "must be strictly increasing UTC instants",
         ),
     ),
 )
@@ -661,6 +665,72 @@ def test_evaluate_selector_rejects_invalid_origin_schedule_before_writes(
     assert not (tmp_path / "selections.jsonl").exists()
     assert not (tmp_path / "metrics.jsonl").exists()
     assert not result_store.path.exists()
+
+
+def test_evaluate_selector_assigns_each_future_task_to_one_origin(tmp_path: Path, monkeypatch) -> None:
+    history_task = _task("history-task", "history-check", available_at="2026-01-02T00:00:00Z")
+    first_future_task = _task("first-future-task", "first-future-check", available_at="2026-01-06T00:00:00Z")
+    boundary_task = _task("boundary-task", "boundary-check", available_at="2026-01-07T00:00:00Z")
+    second_future_task = _task("second-future-task", "second-future-check", available_at="2026-01-08T00:00:00Z")
+    history_check = _check("history-check", "history-task", available_at="2026-01-02T00:00:00Z")
+    first_future_check = _check(
+        "first-future-check",
+        "first-future-task",
+        available_at="2026-01-06T00:00:00Z",
+    )
+    boundary_check = _check(
+        "boundary-check",
+        "boundary-task",
+        available_at="2026-01-07T00:00:00Z",
+    )
+    second_future_check = _check(
+        "second-future-check",
+        "second-future-task",
+        available_at="2026-01-08T00:00:00Z",
+    )
+    task_pool = _task_pool_with_refs(
+        tmp_path,
+        (history_task, first_future_task, boundary_task, second_future_task),
+        (history_check, first_future_check, boundary_check, second_future_check),
+    )
+
+    monkeypatch.setattr(
+        runner_module.workspace_module,
+        "run_agent_on_task",
+        lambda task, check, agent, workspace_config, runtime_config: _workspace_run(task, check, agent),
+    )
+
+    selections, cell_sets, _, _ = evaluate_selector(
+        _selector(),
+        task_pool,
+        (_agent(),),
+        TimeRange("2026-01-01T00:00:00Z", "2026-01-10T00:00:00Z"),
+        SelectorEvaluationConfig(
+            origin_times=("2026-01-05T00:00:00Z", "2026-01-07T00:00:00Z"),
+            selection_config=SelectionConfig("selection", "selector", "placeholder", "recency"),
+            budget=SelectionBudget("eval-budget", 1),
+        ),
+        RollingOriginPolicy("policy", "origin_time", "clusters", "recency", "disjoint", True),
+        FeatureConfig("features", "leakage", ("task_count",), ("task_metadata",)),
+        ResultStore(tmp_path / "results.jsonl"),
+        _workspace_config(),
+        _runtime_config(),
+        _scoring_config(),
+        ResultCacheConfig(),
+        ResultJoinConfig("join", "denominator"),
+        MetricConfig("metric", "evaluation"),
+    )
+
+    assert tuple(cell_set.future_task_check_refs for cell_set in cell_sets) == (
+        (
+            TaskCheckRef("first-future-task", "first-future-check"),
+            TaskCheckRef("boundary-task", "boundary-check"),
+        ),
+        (TaskCheckRef("second-future-task", "second-future-check"),),
+    )
+    assert selections[1].selected_task_check_refs == (
+        TaskCheckRef("boundary-task", "boundary-check"),
+    )
 
 
 def test_evaluate_selector_does_not_open_post_origin_results_before_freeze(tmp_path: Path, monkeypatch) -> None:

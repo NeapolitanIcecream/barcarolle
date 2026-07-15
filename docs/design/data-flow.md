@@ -146,8 +146,13 @@ Input:
 Steps:
 
 1. Runner loads historical results from Result Store.
-2. Runner parses `evaluation_config.origin_times` and asks Selection to build a
+2. Runner parses the strictly increasing UTC instants in
+   `evaluation_config.origin_times` and asks Selection to build a
    `RollingOriginRecord` for each timestamp under the rolling-origin policy.
+   Each future window ends at the next origin; the last ends at the historical
+   window boundary. A Task/Check known exactly at the next origin is in the
+   preceding future holdout and in the next origin's history, never in both
+   future holdouts.
 3. Selection builds leakage-safe feature snapshots.
 4. Selection freezes `Benchmark Selection` records for those origins and does
    not score them.

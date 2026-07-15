@@ -218,19 +218,20 @@ def evaluate_selector(
         raise ValueError("evaluation origin_times entries must be ISO datetime strings") from exc
     if not origin_times:
         raise ValueError("evaluation origin_times must not be empty")
-    if len(set(origin_times)) != len(origin_times):
-        raise ValueError("evaluation origin_times must be unique UTC instants")
+    if any(current >= following for current, following in zip(origin_times, origin_times[1:], strict=False)):
+        raise ValueError("evaluation origin_times must be strictly increasing UTC instants")
     tasks, checks = _load_task_pool_records(task_pool)
+    future_window_ends = (*(_datetime_to_iso(value) for value in origin_times[1:]), history_window.end)
     origins = tuple(
         selection_module.build_rolling_origin(
             task_pool,
             tasks,
             checks,
             origin_time,
-            TimeRange(start=_datetime_to_iso(origin_time), end=history_window.end),
+            TimeRange(start=_datetime_to_iso(origin_time), end=future_window_end),
             rolling_policy,
         )
-        for origin_time in origin_times
+        for origin_time, future_window_end in zip(origin_times, future_window_ends, strict=True)
     )
     selections: list[BenchmarkSelectionRecord] = []
     for origin in origins:

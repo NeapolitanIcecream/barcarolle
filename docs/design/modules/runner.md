@@ -169,7 +169,11 @@ Output:
 
 Effect:
 
-- `evaluation_config.origin_times` contains ISO timestamps. For each timestamp,
+- `evaluation_config.origin_times` contains ISO timestamps in strictly
+  increasing UTC order. Each origin's future window ends at the next origin;
+  the final future window ends at `history_window.end`. A Task/Check known at
+  an origin boundary is in the preceding future holdout and the following
+  history. For each timestamp,
   resolves Task/Check records, builds pre-origin selector input, calls Selection
   `freeze_evaluation_selections` to freeze `BenchmarkSelectionRecord`s, then
   calls `prepare_evaluation_cells` and `score_selection`. It returns frozen
