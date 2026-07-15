@@ -38,9 +38,9 @@ auth. This harness sets `CODEX_HOME` to `BARCAROLLE_CODEX_HOME`, runs Codex with
 - request and stream retries are both zero; the benchmark driver owns any
   decision to spend another call.
 
-Before invoking Codex, the harness disables Codex plugins, uses an ephemeral
-session, excludes `OPENAI_API_KEY` and `OPENAI_BASE_URL` from Agent-launched
-subprocesses, and unsets alternate ambient provider credentials: `LLM_API_KEY`,
+Before invoking Codex, the harness disables Codex plugins and subagents, uses
+an ephemeral session, excludes `OPENAI_API_KEY` and `OPENAI_BASE_URL` from
+Agent-launched subprocesses, and unsets alternate ambient provider credentials: `LLM_API_KEY`,
 `LLM_BASE_URL`, `OPENROUTER_API_KEY`, `ANTHROPIC_API_KEY`,
 `GOOGLE_API_KEY`, and `GEMINI_API_KEY`.
 It ignores and unsets `OPENAI_MODEL`; only `BARCAROLLE_CODEX_MODEL` or the fixed

@@ -122,6 +122,8 @@ def test_codex_harness_writes_usage_for_workspace_runner(tmp_path: Path) -> None
     assert "--ignore-user-config" in argv_lines
     assert "--strict-config" in argv_lines
     assert "--ephemeral" in argv_lines
+    assert argv_lines[argv_lines.index("--disable") + 1] == "plugins"
+    assert argv_lines[argv_lines.index("--disable", argv_lines.index("--disable") + 1) + 1] == "multi_agent"
     assert argv_lines[argv_lines.index("--model") + 1] == "test-model"
     assert "ambient-model" not in argv
     assert "test-only" not in argv

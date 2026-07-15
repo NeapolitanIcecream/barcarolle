@@ -109,6 +109,7 @@ set +e
   --ephemeral \
   --json \
   --disable plugins \
+  --disable multi_agent \
   --ignore-user-config \
   --ignore-rules \
   --cd "$PWD" \
