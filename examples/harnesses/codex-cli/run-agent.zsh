@@ -33,10 +33,10 @@ if [[ "$BARCAROLLE_CODEX_HOME" != /* ]]; then
   fail "BARCAROLLE_CODEX_HOME must be an absolute path" 64
 fi
 
-mkdir -p "$BARCAROLLE_CODEX_HOME"
-export CODEX_HOME="$BARCAROLLE_CODEX_HOME"
+isolated_codex_home="$BARCAROLLE_CODEX_HOME"
+mkdir -p "$isolated_codex_home"
 
-if [[ -z "${LLM_BASE_URL:-}" || -z "${LLM_API_KEY:-}" ]]; then
+if [[ -z "${OPENAI_BASE_URL:-}" || -z "${OPENAI_API_KEY:-}" ]]; then
   if [[ -f "$HOME/.zshrc" ]]; then
     set +u
     source "$HOME/.zshrc"
@@ -44,24 +44,26 @@ if [[ -z "${LLM_BASE_URL:-}" || -z "${LLM_API_KEY:-}" ]]; then
   fi
 fi
 
-if [[ -z "${LLM_BASE_URL:-}" ]]; then
-  fail "LLM_BASE_URL is required for benchmark Codex calls" 65
+if [[ -z "${OPENAI_BASE_URL:-}" ]]; then
+  fail "OPENAI_BASE_URL is required for benchmark Codex calls" 65
 fi
 
-if [[ -z "${LLM_API_KEY:-}" ]]; then
-  fail "LLM_API_KEY is required for benchmark Codex calls" 65
+if [[ -z "${OPENAI_API_KEY:-}" ]]; then
+  fail "OPENAI_API_KEY is required for benchmark Codex calls" 65
 fi
 
 if [[ -z "${BARCAROLLE_CODEX_MODEL:-}" ]]; then
   BARCAROLLE_CODEX_MODEL="gpt-5.4"
 fi
 
-export LLM_BASE_URL
-export LLM_API_KEY
+export CODEX_HOME="$isolated_codex_home"
+export OPENAI_BASE_URL
+export OPENAI_API_KEY
 export BARCAROLLE_CODEX_MODEL
 
-unset OPENAI_API_KEY
-unset OPENAI_BASE_URL
+unset OPENAI_MODEL
+unset LLM_API_KEY
+unset LLM_BASE_URL
 unset OPENROUTER_API_KEY
 unset ANTHROPIC_API_KEY
 unset GOOGLE_API_KEY
@@ -69,11 +71,12 @@ unset GEMINI_API_KEY
 
 typeset -a provider_config
 provider_config=(
-  -c 'model_provider="barcarolle_llm"'
-  -c 'model_providers.barcarolle_llm.name="Barcarolle LLM"'
-  -c "model_providers.barcarolle_llm.base_url=$(toml_string "$LLM_BASE_URL")"
-  -c 'model_providers.barcarolle_llm.env_key="LLM_API_KEY"'
-  -c 'model_providers.barcarolle_llm.wire_api="responses"'
+  -c 'model_provider="barcarolle_openai"'
+  -c 'model_providers.barcarolle_openai.name="Barcarolle OpenAI endpoint"'
+  -c "model_providers.barcarolle_openai.base_url=$(toml_string "$OPENAI_BASE_URL")"
+  -c 'model_providers.barcarolle_openai.env_key="OPENAI_API_KEY"'
+  -c 'model_providers.barcarolle_openai.wire_api="responses"'
+  -c 'shell_environment_policy.exclude=["OPENAI_API_KEY","OPENAI_BASE_URL"]'
 )
 
 rm -f "$events_file" "$usage_file"
@@ -92,6 +95,8 @@ set +e
 } | codex \
   --ask-for-approval never \
   exec \
+  --strict-config \
+  --ephemeral \
   --json \
   --disable plugins \
   --ignore-user-config \

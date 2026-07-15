@@ -12,30 +12,35 @@ Codex JSON events go to stdout. Diagnostics go to stderr.
 
 Set these variables before running benchmark or evidence-producing Codex calls:
 
-- `LLM_BASE_URL`: endpoint base URL for the benchmark LLM provider.
-- `LLM_API_KEY`: API key for that endpoint.
+- `OPENAI_BASE_URL`: endpoint base URL for the benchmark LLM provider.
+- `OPENAI_API_KEY`: API key for that endpoint.
 - `BARCAROLLE_CODEX_HOME`: dedicated Codex home for this run. Use a fresh path
   under an ignored output directory.
 - `BARCAROLLE_CODEX_MODEL`: optional model name. If unset, the example uses
-  `gpt-5.4`; set this to a model supported by your endpoint.
+  `gpt-5.4`. Evidence-producing runs should set it explicitly and bind the same
+  value into the Agent identity.
 
-The harness sources `~/.zshrc` only if `LLM_BASE_URL` or `LLM_API_KEY` is
+The harness sources `~/.zshrc` only if `OPENAI_BASE_URL` or `OPENAI_API_KEY` is
 missing. It then refuses to run if either variable is still absent.
 
 ## Endpoint And Authentication
 
 Benchmark and evidence-producing runs must not use local Codex subscription
 auth. This harness sets `CODEX_HOME` to `BARCAROLLE_CODEX_HOME`, runs Codex with
-`--ignore-user-config`, and passes a custom provider named `barcarolle_llm`:
+`--ignore-user-config`, and passes a custom provider named
+`barcarolle_openai`:
 
-- `base_url` comes from `LLM_BASE_URL`.
-- `env_key` is `LLM_API_KEY`.
+- `base_url` comes from `OPENAI_BASE_URL`.
+- `env_key` is `OPENAI_API_KEY`.
 - `wire_api` is `responses`.
 
-Before invoking Codex, the harness disables Codex plugins for the example run
-and unsets common ambient provider credentials: `OPENAI_API_KEY`,
-`OPENAI_BASE_URL`, `OPENROUTER_API_KEY`, `ANTHROPIC_API_KEY`,
+Before invoking Codex, the harness disables Codex plugins, uses an ephemeral
+session, excludes `OPENAI_API_KEY` and `OPENAI_BASE_URL` from Agent-launched
+subprocesses, and unsets alternate ambient provider credentials: `LLM_API_KEY`,
+`LLM_BASE_URL`, `OPENROUTER_API_KEY`, `ANTHROPIC_API_KEY`,
 `GOOGLE_API_KEY`, and `GEMINI_API_KEY`.
+It ignores and unsets `OPENAI_MODEL`; only `BARCAROLLE_CODEX_MODEL` or the fixed
+default controls the explicit Codex model argument.
 
 ## Bind The Harness
 

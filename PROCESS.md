@@ -1,6 +1,6 @@
 # Barcarolle Internal Process Notes
 
-Last updated: 2026-07-14.
+Last updated: 2026-07-15.
 
 These notes are for repository-maintenance agents. They are not user
 documentation and they are not a source of truth for intended system behavior.
@@ -85,22 +85,24 @@ that actually need them.
 
 ## Paid Calls
 
-No paid benchmark or evidence-producing LLM or Agent call was made during the
-current implementation and documentation work. The branch therefore supports
-mechanism claims from tests, not an empirical MAE-improvement claim.
-
-When a task explicitly requires benchmark/evidence-producing paid calls, use
-only:
+The user authorized up to USD 300 for the current paired rolling-origin
+experiment. Use only:
 
 ```text
-LLM_BASE_URL
-LLM_API_KEY
+OPENAI_BASE_URL
+OPENAI_API_KEY
 ```
 
-Record a protocol before running paid calls that affect evidence, benchmark
-results, selector training, or research claims.
+The ignored protocol and exact resource ledger are under
+`outputs/user-journeys/2026-07-15-openai-paired-rolling-origin/`. Estimate cost
+with current OpenAI standard API prices, as explicitly approved by the user;
+label it as an estimate because the gateway does not publish billing rates.
+The plan is at most ten no-retry calls: five certified boltons Task/Check cells
+for each of `gpt-5.4-mini` and `gpt-5.4`. Run one mini canary first, then scale
+only when endpoint identity, measured usage, cost, diff replay, and hidden Check
+are valid. At this handoff point no paid inference call has run.
 
 Repository-maintenance Codex sessions used to implement, review, or coordinate
-work are outside this paid-call boundary. Reviewer Codex CLI sessions should use
-the user's local Codex CLI authentication/subscription unless the user
+work are outside this paid-call boundary. Reviewer Codex CLI sessions should
+use the user's local Codex CLI authentication/subscription unless the user
 explicitly requests a different reviewer execution mode.

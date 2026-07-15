@@ -24,7 +24,7 @@ enforces it.
 
 For benchmark or research evidence:
 
-- the paid-call harness uses `LLM_BASE_URL` and `LLM_API_KEY` as required by
+- the paid-call harness uses `OPENAI_BASE_URL` and `OPENAI_API_KEY` as required by
   `AGENTS.md`;
 - solver-visible material excludes hidden checks, which are added only after
   diff capture in a fresh verifier workspace;
