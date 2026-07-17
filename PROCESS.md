@@ -41,7 +41,9 @@ and selection metrics abstain if exclusions leave any Agent without results.
 Post-diff Check launch and invalid-exit failures are Agent-owned only when the
 captured diff changed a workspace-relative path named by the Check command.
 Runner rejects invalid Result cache identities and scoring configuration before
-invoking an Agent.
+invoking an Agent. Workspace rejects invalid artifact configuration before the
+same boundary; post-execution artifact I/O failures warn without replacing the
+completed run record.
 
 The default runtime target is a cooperative Agent. Fresh workspaces, diff
 replay, and verifier-only hidden material are required benchmark behavior.

@@ -943,6 +943,61 @@ def test_run_agent_on_task_counts_noop_as_failure_when_the_check_fails(tmp_path:
     assert record.invalid_owner is None
 
 
+def test_run_agent_on_task_with_artifacts_rejects_invalid_config_before_agent_invocation(tmp_path: Path) -> None:
+    repo, base_commit = _make_repo(tmp_path)
+    task = _task(base_commit=base_commit)
+    workspace_config = _workspace_config(repo)
+    hidden = tmp_path / "hidden.txt"
+    hidden.write_text("private oracle", encoding="utf-8")
+    agent_started = tmp_path / "agent-started.txt"
+    agent_command = (
+        sys.executable,
+        "-c",
+        "from pathlib import Path; "
+        f"Path({str(agent_started)!r}).write_text('started', encoding='utf-8'); "
+        "Path('new.txt').write_text('agent edit\\n', encoding='utf-8')",
+    )
+    agent = _agent(agent_command)
+    check_command = (sys.executable, "-c", "raise SystemExit(0)")
+    check = _check(command=check_command, hidden=hidden)
+    bind_repository_source(workspace_config, repo)
+    bind_agent_harness(agent, agent_command)
+    bind_check_material(check, check_command, hidden)
+    artifact_config = WorkspaceArtifactConfig(output_root=tmp_path / "artifacts", path_mode="absolute")
+
+    with pytest.raises(ValueError, match="path_mode"):
+        run_agent_on_task_with_artifacts(task, check, agent, workspace_config, _runtime(), artifact_config)
+
+    assert not agent_started.exists()
+
+
+def test_run_agent_on_task_with_artifacts_returns_completed_run_when_artifact_persistence_fails(
+    tmp_path: Path,
+) -> None:
+    repo, base_commit = _make_repo(tmp_path)
+    task = _task(base_commit=base_commit)
+    workspace_config = _workspace_config(repo)
+    hidden = tmp_path / "hidden.txt"
+    hidden.write_text("private oracle", encoding="utf-8")
+    agent_command = (sys.executable, "-c", "from pathlib import Path; Path('new.txt').write_text('agent edit')")
+    agent = _agent(agent_command)
+    check_command = (sys.executable, "-c", "raise SystemExit(0)")
+    check = _check(command=check_command, hidden=hidden)
+    bind_repository_source(workspace_config, repo)
+    bind_agent_harness(agent, agent_command)
+    bind_check_material(check, check_command, hidden)
+    artifact_output = tmp_path / "artifacts"
+    artifact_output.write_text("not a directory", encoding="utf-8")
+    artifact_config = WorkspaceArtifactConfig(output_root=artifact_output)
+
+    with pytest.warns(RuntimeWarning, match="artifact preservation failed"):
+        result = run_agent_on_task_with_artifacts(task, check, agent, workspace_config, _runtime(), artifact_config)
+
+    assert result.run.terminal_status == "passed"
+    assert result.run.check_outcome == "pass"
+    assert result.artifacts is None
+
+
 def test_run_agent_on_task_with_artifacts_preserves_relative_run_outputs(tmp_path: Path) -> None:
     repo, base_commit = _make_repo(tmp_path)
     task = _task(base_commit=base_commit)

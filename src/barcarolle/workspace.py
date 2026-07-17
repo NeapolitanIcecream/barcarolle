@@ -401,6 +401,8 @@ def run_agent_on_task_with_artifacts(
     runtime_config: RuntimeConfig,
     artifact_config: WorkspaceArtifactConfig | None = None,
 ) -> WorkspaceRunResult:
+    if artifact_config is not None:
+        _validate_artifact_config(artifact_config)
     started_at = _now()
     if check.task_id != task.task_id or check.check_id not in task.check_ids:
         run = _invalid_run_record(
@@ -511,17 +513,23 @@ def _workspace_run_result(
 ) -> WorkspaceRunResult:
     if artifact_config is None:
         return WorkspaceRunResult(run=run)
-    return WorkspaceRunResult(
-        run=run,
-        artifacts=_preserve_run_artifacts(
+    try:
+        artifacts = _preserve_run_artifacts(
             artifact_config,
             run,
             diff,
             agent_outcome,
             solver_workspace,
             verifier_workspace,
-        ),
-    )
+        )
+    except OSError as exc:
+        warnings.warn(
+            f"workspace artifact preservation failed ({type(exc).__name__})",
+            RuntimeWarning,
+            stacklevel=2,
+        )
+        return WorkspaceRunResult(run=run)
+    return WorkspaceRunResult(run=run, artifacts=artifacts)
 
 
 def _preserve_run_artifacts(
@@ -532,7 +540,6 @@ def _preserve_run_artifacts(
     solver_workspace: WorkspaceRef | None,
     verifier_workspace: WorkspaceRef | None,
 ) -> WorkspaceArtifactManifest:
-    _validate_artifact_config(config)
     artifact_refs: list[WorkspaceArtifactRef] = []
     run_ref = run.workspace_run_id
     if config.preserve_final_diff and diff is not None:

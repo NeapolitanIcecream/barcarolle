@@ -291,10 +291,13 @@ Output:
 Effect:
 
 - Runs the same benchmark boundary as `run_agent_on_task`.
+- Rejects invalid static artifact configuration before invoking the Agent.
 - When configured, preserves final diff, Agent stdout/stderr, and optional
   workspace summaries under an output root.
 - Removes the live solver and verifier workspaces on success, normalized
   failure, or artifact-preservation error.
+- If artifact persistence fails after execution, emits a bounded runtime
+  warning and returns the completed `run` with `artifacts=null`.
 - Returns artifact refs relative to the output root.
 - Marks verifier workspace summaries as private artifacts.
 

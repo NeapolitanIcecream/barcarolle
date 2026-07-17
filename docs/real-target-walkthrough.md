@@ -198,7 +198,9 @@ result = run_agent_on_task_with_artifacts(
 The returned artifact refs are relative to `output_root`. Final diffs and
 stdout/stderr stay separate from normalized `ResultRecord` data. Verifier
 workspace summaries are marked private because verifier workspaces may contain
-hidden check material.
+hidden check material. Invalid artifact modes fail before Agent execution. If
+artifact I/O fails after execution, the call emits a runtime warning and still
+returns the completed run with `artifacts=None` so paid evidence can be stored.
 
 ## 8. Store Results
 
