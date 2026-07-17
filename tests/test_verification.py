@@ -10,7 +10,6 @@ from barcarolle.verification import (
     WorkspaceRef,
     normalize_outcome,
     prepare_verifier,
-    repeat_verification,
     summarize_evidence,
     verify_diff,
 )
@@ -120,6 +119,7 @@ def test_prepare_verifier_rejects_check_command_digest_mismatch(tmp_path: Path) 
             _workspace_ref(
                 path=workspace,
                 check_command=("python", "-c", "print('different check')"),
+                check_command_digest=_check().check_manifest_digest,
                 check_manifest_digest=_check().check_manifest_digest,
                 hidden_material_source=hidden,
                 hidden_material_destination=Path(".barcarolle/check_bundle.txt"),
@@ -150,6 +150,29 @@ def test_verify_diff_executes_prepared_check_and_normalizes_pass(tmp_path: Path)
     assert outcome.evidence_excerpt == "[verifier output omitted]"
 
 
+def test_verify_diff_treats_exit_two_as_invalid(tmp_path: Path) -> None:
+    workspace = tmp_path / "workspace"
+    workspace.mkdir()
+    hidden = tmp_path / "hidden.txt"
+    hidden.write_text("private oracle", encoding="utf-8")
+    command = ("python", "-c", "raise SystemExit(2)")
+    check = _check(command=command)
+    prepared = prepare_verifier(
+        check,
+        _workspace_ref(
+            path=workspace,
+            check_command=command,
+            hidden_material_source=hidden,
+            hidden_material_destination=Path(".barcarolle/check_bundle.txt"),
+        ),
+    )
+
+    outcome = verify_diff(check, prepared, _runtime(timeout_seconds=5))
+
+    assert outcome.outcome == "invalid"
+    assert outcome.failure_label == "check_invalid"
+
+
 def test_verify_diff_returns_invalid_for_check_workspace_mismatch(tmp_path: Path) -> None:
     workspace = tmp_path / "workspace"
     workspace.mkdir()
@@ -174,6 +197,7 @@ def test_verify_diff_rechecks_command_digest_before_execution(tmp_path: Path) ->
     prepared = _workspace_ref(
         path=workspace,
         check_command=("python", "-c", "from pathlib import Path; Path('should-not-exist.txt').write_text('ran')"),
+        check_command_digest=check.check_manifest_digest,
         check_manifest_digest=check.check_manifest_digest,
         hidden_material_source=None,
         hidden_material_destination=None,
@@ -285,29 +309,6 @@ def test_summarize_evidence_omits_explicit_text_normalization_path_when_not_know
     assert summary.evidence_excerpt == "[verifier output omitted]"
 
 
-def test_repeat_verification_uses_fresh_prepared_workspaces(tmp_path: Path) -> None:
-    calls = 0
-
-    def factory() -> WorkspaceRef:
-        nonlocal calls
-        calls += 1
-        workspace = tmp_path / f"workspace-{calls}"
-        workspace.mkdir()
-        hidden = tmp_path / f"hidden-{calls}.txt"
-        hidden.write_text("private oracle", encoding="utf-8")
-        return _workspace_ref(
-            path=workspace,
-            check_command=("python", "-c", "print('ok')"),
-            hidden_material_source=hidden,
-            hidden_material_destination=Path(".barcarolle/check_bundle.txt"),
-        )
-
-    outcomes = repeat_verification(_check(), factory, 2, _runtime(timeout_seconds=5))
-
-    assert calls == 2
-    assert [outcome.outcome for outcome in outcomes] == ["pass", "pass"]
-
-
 def _check(command: tuple[str, ...] = ("python", "-c", "print('ok')")) -> CheckRecord:
     return CheckRecord(
         check_id="check",
@@ -315,12 +316,9 @@ def _check(command: tuple[str, ...] = ("python", "-c", "print('ok')")) -> CheckR
         check_type="pytest",
         check_manifest_digest=_command_digest(command),
         hidden_check_bundle_digest=_hidden_digest(),
-        verifier_image_digest="image",
-        verifier_deps_digest="deps",
         resource_limits={"timeout_seconds": 5},
         oracle_source="private_tests",
         check_material_available_at="2026-01-01T00:00:00Z",
-        certified_at="2026-01-02T00:00:00Z",
     )
 
 
@@ -339,6 +337,7 @@ def _workspace_ref(
     path: Path,
     check_command: tuple[str, ...],
     *,
+    check_command_digest: str | None = None,
     check_id: str = "check",
     check_manifest_digest: str | None = None,
     hidden_check_bundle_digest: str | None = None,
@@ -349,6 +348,7 @@ def _workspace_ref(
     return WorkspaceRef(
         path=path,
         check_command=check_command,
+        check_command_digest=check_command_digest or _command_digest(check_command),
         check_id=check_id,
         check_manifest_digest=check_manifest_digest or _command_digest(check_command),
         hidden_check_bundle_digest=hidden_check_bundle_digest or _hidden_digest(),

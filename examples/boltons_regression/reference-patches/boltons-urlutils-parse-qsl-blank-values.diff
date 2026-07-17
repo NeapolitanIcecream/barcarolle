@@ -1,0 +1,24 @@
+diff --git a/boltons/urlutils.py b/boltons/urlutils.py
+index 712e5a1..e7e9f99 100644
+--- a/boltons/urlutils.py
++++ b/boltons/urlutils.py
+@@ -958,14 +958,16 @@ def parse_qsl(qs, keep_blank_values=True, encoding=DEFAULT_ENCODING):
+     for pair in pairs:
+         if not pair:
+             continue
+-        key, _, value = pair.partition('=')
+-        if not value:
++        key, sep, value = pair.partition('=')
++        if not sep:
+             if keep_blank_values:
+                 value = None
+             else:
+                 continue
++        elif value == '' and not keep_blank_values:
++            continue
+         key = unquote(key.replace('+', ' '))
+-        if value:
++        if value is not None:
+             value = unquote(value.replace('+', ' '))
+         ret.append((key, value))
+     return ret

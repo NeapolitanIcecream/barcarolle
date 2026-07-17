@@ -2,8 +2,9 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import UTC, datetime
+from math import isfinite
 from pathlib import Path
 from typing import Any, Mapping, Sequence
 
@@ -23,6 +24,7 @@ from barcarolle.records import (
     canonical_digest,
     canonical_json,
     load_jsonl_records,
+    make_check_digest,
     make_result_cache_identity,
     make_result_cache_key,
     record_with_digest,
@@ -36,10 +38,17 @@ from barcarolle.records import (
 
 @dataclass(frozen=True)
 class ScoringConfig:
-    scoring_config_digest: str
     pricing_version: str
-    usage_coverage: str
     cost_rates: Mapping[str, float]
+
+    @property
+    def scoring_config_digest(self) -> str:
+        return canonical_digest(
+            {
+                "pricing_version": self.pricing_version,
+                "cost_rates": self.cost_rates,
+            }
+        )
 
 
 @dataclass(frozen=True)
@@ -62,7 +71,7 @@ class ResultQuery:
 @dataclass(frozen=True)
 class ResultCacheConfig:
     reuse_policy: str = "exact_identity"
-    require_valid_result: bool = True
+    reuse_benchmark_invalid: bool = False
 
 
 @dataclass(frozen=True)
@@ -73,6 +82,19 @@ class ResultJoinConfig:
     agent_invalid_policy: str = "count_as_failure"
     benchmark_invalid_policy: str = "exclude_task_check"
     abstention_policy: str = "abstain_on_missing"
+
+    def __post_init__(self) -> None:
+        supported = {
+            "missing_cell_policy": {"error", "mark_missing"},
+            "agent_invalid_policy": {"count_as_failure", "exclude"},
+            "benchmark_invalid_policy": {"exclude_task_check"},
+            "abstention_policy": {"abstain_on_missing"},
+        }
+        for field_name, allowed_values in supported.items():
+            value = getattr(self, field_name)
+            if value not in allowed_values:
+                allowed = ", ".join(sorted(allowed_values))
+                raise ValueError(f"{field_name} must be one of: {allowed}")
 
 
 def build_result_record(
@@ -87,10 +109,10 @@ def build_result_record(
     validation = validate_workspace_run(workspace_run)
     if not validation.ok:
         raise ValueError(f"workspace_run is invalid: {', '.join(validation.errors)}")
-    _validate_cache_identity_inputs(task, check, agent, cache_identity, scoring_config)
+    _validate_cache_identity_inputs(task, check, agent, cache_identity)
     scoreable_state, outcome, invalid_owner = _normalize_result_state(workspace_run)
     result = ResultRecord(
-        result_id=f"result_{canonical_digest((cache_identity.identity_digest, workspace_run.workspace_run_id, scoring_config.scoring_config_digest))}",
+        result_id="",
         result_digest="",
         cache_identity=cache_identity,
         agent_id=agent.agent_id,
@@ -101,17 +123,18 @@ def build_result_record(
         outcome=outcome,
         invalid_owner=invalid_owner,
         failure_label=workspace_run.failure_label,
-        cost=_cost_from_usage(workspace_run.usage, scoring_config),
+        cost=compute_cost(workspace_run.usage, scoring_config),
+        scoring_config_digest=scoring_config.scoring_config_digest,
         pricing_version=scoring_config.pricing_version,
         usage=workspace_run.usage,
-        usage_coverage=scoring_config.usage_coverage,
         latency=_latency_from_workspace_run(workspace_run),
         diff_digest=workspace_run.diff_digest,
         verifier_metadata_digest=_verifier_metadata_digest(workspace_run),
         started_at=workspace_run.started_at,
         finished_at=workspace_run.finished_at,
-        result_available_at=max(_now(), workspace_run.finished_at),
+        result_available_at=_latest_timestamp_utc(_now(), workspace_run.finished_at),
     )
+    result = replace(result, result_id=_result_id(result))
     result = record_with_digest(result)
     result_validation = validate_result(result)
     if not result_validation.ok:
@@ -125,18 +148,18 @@ def compute_result_cache_identity(
     agent: AgentRecord,
     workspace_config: WorkspaceConfig,
     runtime_config: RuntimeConfig,
-    scoring_config: ScoringConfig,
 ) -> ResultCacheIdentity:
-    if not scoring_config.scoring_config_digest:
-        raise ValueError("scoring_config_digest is required")
-    return make_result_cache_identity(
+    identity = make_result_cache_identity(
         task,
         check,
         agent,
         workspace_config,
         runtime_config,
-        scoring_config.scoring_config_digest,
     )
+    validation = validate_result_cache_identity(identity)
+    if not validation.ok:
+        raise ValueError(f"result cache identity is invalid: {', '.join(validation.errors)}")
+    return identity
 
 
 def compute_result_cache_key(identity: ResultCacheIdentity) -> str:
@@ -163,7 +186,18 @@ def load_results(store: ResultStore, query: ResultQuery) -> Sequence[ResultRecor
     if not store.path.exists():
         return ()
     results = tuple(load_jsonl_records(store.path, ResultRecord))
-    return tuple(result for result in results if _matches_query(result, query))
+    available_after = _parse_timestamp_utc(query.result_available_after) if query.result_available_after else None
+    available_before = _parse_timestamp_utc(query.result_available_before) if query.result_available_before else None
+    return tuple(
+        result
+        for result in results
+        if _matches_query(
+            result,
+            query,
+            available_after=available_after,
+            available_before=available_before,
+        )
+    )
 
 
 def find_missing_results(
@@ -173,36 +207,132 @@ def find_missing_results(
     agents: Sequence[AgentRecord],
     workspace_config: WorkspaceConfig,
     runtime_config: RuntimeConfig,
-    scoring_config: ScoringConfig,
     store: ResultStore,
     cache_config: ResultCacheConfig,
 ) -> Sequence[ResultCellRef]:
+    return tuple(
+        cell
+        for cell in resolve_result_cells(
+            task_check_refs,
+            tasks,
+            checks,
+            agents,
+            workspace_config,
+            runtime_config,
+            store,
+            cache_config,
+        )
+        if cell.cell_state == "missing"
+    )
+
+
+def resolve_result_cells(
+    task_check_refs: Sequence[TaskCheckRef],
+    tasks: Sequence[TaskRecord],
+    checks: Mapping[str, CheckRecord],
+    agents: Sequence[AgentRecord],
+    workspace_config: WorkspaceConfig,
+    runtime_config: RuntimeConfig,
+    store: ResultStore,
+    cache_config: ResultCacheConfig,
+    scoring_config: ScoringConfig | None = None,
+) -> Sequence[ResultCellRef]:
+    """Resolve each requested Agent/Task/Check cell against exact cached identity.
+
+    When duplicate eligible results have the same exact identity, the first
+    record in append order is reused. This preserves the existing JSONL lookup
+    semantics while indexing the result set once per operation.
+    """
     if cache_config.reuse_policy != "exact_identity":
         raise ValueError("Result Store only supports exact_identity cache reuse")
     task_by_id = {task.task_id: task for task in tasks}
-    stored_results = load_results(store, ResultQuery(scoring_config_digests=(scoring_config.scoring_config_digest,)))
-    missing: list[ResultCellRef] = []
+    stored_results = load_results(store, ResultQuery())
+    reusable_results = _index_reusable_results(
+        stored_results,
+        cache_config,
+        scoring_config.scoring_config_digest if scoring_config is not None else None,
+    )
+    cells: list[ResultCellRef] = []
     for ref in task_check_refs:
         task = _task_for_ref(ref, task_by_id)
         check = _check_for_ref(ref, task, checks)
         for agent in agents:
-            identity = compute_result_cache_identity(task, check, agent, workspace_config, runtime_config, scoring_config)
-            reusable = _find_reusable_result(stored_results, identity, cache_config, agent.agent_id, task.task_id, check.check_id)
-            if reusable is None:
-                missing.append(
-                    ResultCellRef(
-                        agent_id=agent.agent_id,
-                        task_id=task.task_id,
-                        check_id=check.check_id,
-                        required_identity_digest=identity.identity_digest,
-                        result_id=None,
-                        result_digest=None,
-                        cell_state="missing",
-                        exclusion_reason=None,
-                        outcome=None,
-                    )
-                )
-    return tuple(missing)
+            identity = compute_result_cache_identity(task, check, agent, workspace_config, runtime_config)
+            reusable = reusable_results.get((agent.agent_id, task.task_id, check.check_id, identity))
+            cells.append(_resolved_result_cell(agent, task, check, identity, reusable))
+    return tuple(cells)
+
+
+def reprice_cached_results(
+    task_check_refs: Sequence[TaskCheckRef],
+    tasks: Sequence[TaskRecord],
+    checks: Mapping[str, CheckRecord],
+    agents: Sequence[AgentRecord],
+    workspace_config: WorkspaceConfig,
+    runtime_config: RuntimeConfig,
+    store: ResultStore,
+    cache_config: ResultCacheConfig,
+    scoring_config: ScoringConfig,
+) -> Sequence[ResultRecord]:
+    """Append the current pricing view for reusable paid executions.
+
+    Execution reuse is still decided solely by exact ``ResultCacheIdentity``.
+    If that execution has no Result under the requested pricing, retained usage
+    and outcome evidence are repriced without invoking an Agent or Check.
+    """
+    current_cells = resolve_result_cells(
+        task_check_refs,
+        tasks,
+        checks,
+        agents,
+        workspace_config,
+        runtime_config,
+        store,
+        cache_config,
+        scoring_config,
+    )
+    current_keys = {
+        (cell.agent_id, cell.task_id, cell.check_id)
+        for cell in current_cells
+        if cell.cell_state == "result"
+    }
+    if all(cell.cell_state == "result" for cell in current_cells):
+        return ()
+
+    execution_cells = resolve_result_cells(
+        task_check_refs,
+        tasks,
+        checks,
+        agents,
+        workspace_config,
+        runtime_config,
+        store,
+        cache_config,
+    )
+    source_bindings = {
+        (cell.result_id, cell.result_digest)
+        for cell in execution_cells
+        if cell.result_id is not None and cell.result_digest is not None
+    }
+    if not source_bindings:
+        return ()
+    source_results = {
+        (result.result_id, result.result_digest): result
+        for result in load_results(
+            store,
+            ResultQuery(result_ids=tuple(result_id for result_id, _ in source_bindings)),
+        )
+    }
+    repriced: list[ResultRecord] = []
+    for cell in execution_cells:
+        cell_key = (cell.agent_id, cell.task_id, cell.check_id)
+        if cell_key in current_keys or cell.result_id is None or cell.result_digest is None:
+            continue
+        source = source_results.get((cell.result_id, cell.result_digest))
+        if source is None:
+            raise ValueError(f"cached result binding is missing for result_id {cell.result_id}")
+        repriced.append(store_result(_reprice_result(source, scoring_config), store))
+    return tuple(repriced)
 
 
 def build_result_matrix(
@@ -226,16 +356,21 @@ def build_result_matrix(
     for ref in requested_refs:
         task = _task_for_ref(ref, task_by_id)
         _check_for_ref(ref, task, checks)
-    result_by_cell = _results_by_cell(results)
+    result_by_binding = _results_by_binding(results)
     required_cells = _required_cells_by_key(evaluation_cells.cells, requested_refs, agents)
-    task_exclusions = _task_check_exclusions(required_cells, result_by_cell, join_config)
+    resolved_results = {
+        cell_key: result
+        for cell_key, required in required_cells.items()
+        if (result := _result_for_required_cell(required, result_by_binding)) is not None
+    }
+    task_exclusions = _task_check_exclusions(required_cells, resolved_results, join_config)
     matrix_cells: list[ResultCellRef] = []
     for agent in agents:
         for ref in requested_refs:
             required = required_cells.get((agent.agent_id, ref.task_id, ref.check_id))
             if required is None:
                 raise ValueError("evaluation_cells must include every matrix Agent/Task/Check cell")
-            result = result_by_cell.get((required.agent_id, required.task_id, required.check_id, required.required_identity_digest))
+            result = resolved_results.get((required.agent_id, required.task_id, required.check_id))
             exclusion_reason = task_exclusions.get((ref.task_id, ref.check_id))
             matrix_cells.append(_matrix_cell(required, result, join_config, exclusion_reason))
     abstention_reason = _abstention_reason(matrix_cells, join_config)
@@ -279,7 +414,6 @@ def _validate_cache_identity_inputs(
     check: CheckRecord,
     agent: AgentRecord,
     identity: ResultCacheIdentity,
-    scoring_config: ScoringConfig,
 ) -> None:
     validation = validate_result_cache_identity(identity)
     if not validation.ok:
@@ -290,10 +424,7 @@ def _validate_cache_identity_inputs(
         "repository_id": task.repository_id,
         "base_commit": task.base_commit,
         "solver_material_digest": task.solver_material_digest,
-        "check_manifest_digest": check.check_manifest_digest,
-        "hidden_check_bundle_digest": check.hidden_check_bundle_digest,
-        "verifier_image_digest": check.verifier_image_digest,
-        "verifier_deps_digest": check.verifier_deps_digest,
+        "check_digest": make_check_digest(check),
         "agent_manifest_digest": agent.agent_manifest_digest,
         "model_snapshot_id": agent.model_snapshot_id,
         "harness_digest": agent.harness_digest,
@@ -304,7 +435,6 @@ def _validate_cache_identity_inputs(
         "skills_digest": agent.skills_digest,
         "network_policy_digest": agent.network_policy_digest,
         "adapter_digest": agent.adapter_digest,
-        "scoring_config_digest": scoring_config.scoring_config_digest,
     }
     mismatched = [field for field, expected in expected_fields.items() if getattr(identity, field) != expected]
     if mismatched:
@@ -314,7 +444,7 @@ def _validate_cache_identity_inputs(
 def _normalize_result_state(workspace_run: WorkspaceRunRecord) -> tuple[str, str, str | None]:
     if workspace_run.terminal_status == "passed" and workspace_run.check_outcome == "pass":
         return ("scoreable", "pass", None)
-    if workspace_run.terminal_status == "failed" or workspace_run.check_outcome == "fail":
+    if workspace_run.terminal_status == "failed":
         return ("scoreable", "fail", None)
     invalid_owner = workspace_run.invalid_owner
     if workspace_run.terminal_status in {"error", "timeout"}:
@@ -324,16 +454,48 @@ def _normalize_result_state(workspace_run: WorkspaceRunRecord) -> tuple[str, str
     return ("benchmark_invalid", "invalid", invalid_owner or "benchmark")
 
 
-def _cost_from_usage(usage: Mapping[str, Any], scoring_config: ScoringConfig) -> Mapping[str, Any]:
+def validate_scoring_config(scoring_config: ScoringConfig) -> None:
+    """Reject scoring inputs that cannot produce a durable Result."""
+    if not isinstance(scoring_config.pricing_version, str) or not scoring_config.pricing_version:
+        raise ValueError("pricing_version is required")
+    if not isinstance(scoring_config.cost_rates, Mapping):
+        raise ValueError("cost_rates must be a mapping")
+    for key, rate in scoring_config.cost_rates.items():
+        if not isinstance(key, str):
+            raise ValueError("cost rate keys must be strings")
+        if isinstance(rate, bool) or not isinstance(rate, int | float):
+            raise ValueError(f"cost rate for {key} must be a finite and nonnegative number")
+        try:
+            numeric_rate = float(rate)
+        except (OverflowError, TypeError, ValueError) as exc:
+            raise ValueError(f"cost rate for {key} must be a finite and nonnegative number") from exc
+        if not isfinite(numeric_rate) or numeric_rate < 0.0:
+            raise ValueError(f"cost rate for {key} must be a finite and nonnegative number")
+
+
+def compute_cost(usage: Mapping[str, Any], scoring_config: ScoringConfig) -> Mapping[str, Any]:
+    """Price recorded usage without affecting the paid execution identity."""
+    validate_scoring_config(scoring_config)
+    missing_keys = [key for key in scoring_config.cost_rates if key not in usage]
     costs: dict[str, Any] = {}
     total = 0.0
     for key, rate in scoring_config.cost_rates.items():
-        value = usage.get(key)
-        if isinstance(value, int | float) and not isinstance(value, bool):
-            amount = float(value) * float(rate)
-            costs[f"{key}_cost"] = amount
-            total += amount
-    costs["total_cost"] = total
+        if key not in usage:
+            continue
+        value = usage[key]
+        if isinstance(value, bool) or not isinstance(value, int | float):
+            raise ValueError(f"usage and cost rate for {key} must be finite and nonnegative numbers")
+        try:
+            numeric_value = float(value)
+            numeric_rate = float(rate)
+            amount = numeric_value * numeric_rate
+        except (OverflowError, TypeError, ValueError) as exc:
+            raise ValueError(f"usage and cost rate for {key} must be finite and nonnegative numbers") from exc
+        if not all(isfinite(number) and number >= 0.0 for number in (numeric_value, numeric_rate, amount)):
+            raise ValueError(f"usage and cost rate for {key} must be finite and nonnegative numbers")
+        costs[f"{key}_cost"] = amount
+        total += amount
+    costs["total_cost"] = total if usage and scoring_config.cost_rates and not missing_keys else None
     return costs
 
 
@@ -342,9 +504,21 @@ def _latency_from_workspace_run(workspace_run: WorkspaceRunRecord) -> Mapping[st
 
 
 def _timestamp_delta_seconds(started_at: str, finished_at: str) -> float:
-    started = datetime.fromisoformat(started_at.replace("Z", "+00:00"))
-    finished = datetime.fromisoformat(finished_at.replace("Z", "+00:00"))
+    started = _parse_timestamp_utc(started_at)
+    finished = _parse_timestamp_utc(finished_at)
     return max(0.0, (finished - started).total_seconds())
+
+
+def _parse_timestamp_utc(value: str) -> datetime:
+    parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=UTC)
+    return parsed.astimezone(UTC)
+
+
+def _latest_timestamp_utc(*values: str) -> str:
+    latest = max(_parse_timestamp_utc(value) for value in values)
+    return latest.isoformat(timespec="microseconds").replace("+00:00", "Z")
 
 
 def _verifier_metadata_digest(workspace_run: WorkspaceRunRecord) -> str:
@@ -359,7 +533,57 @@ def _verifier_metadata_digest(workspace_run: WorkspaceRunRecord) -> str:
     )
 
 
-def _matches_query(result: ResultRecord, query: ResultQuery) -> bool:
+def result_execution_digest(result: ResultRecord) -> str:
+    """Digest one paid execution independently of its pricing views."""
+    return canonical_digest(
+        {
+            "cache_identity": result.cache_identity,
+            "agent_id": result.agent_id,
+            "task_id": result.task_id,
+            "check_id": result.check_id,
+            "terminal_status": result.terminal_status,
+            "scoreable_state": result.scoreable_state,
+            "outcome": result.outcome,
+            "invalid_owner": result.invalid_owner,
+            "failure_label": result.failure_label,
+            "usage": result.usage,
+            "latency": result.latency,
+            "diff_digest": result.diff_digest,
+            "verifier_metadata_digest": result.verifier_metadata_digest,
+            "started_at": result.started_at,
+            "finished_at": result.finished_at,
+        }
+    )
+
+
+def _result_id(result: ResultRecord) -> str:
+    return f"result_{canonical_digest((result_execution_digest(result), result.scoring_config_digest))}"
+
+
+def _reprice_result(result: ResultRecord, scoring_config: ScoringConfig) -> ResultRecord:
+    repriced = replace(
+        result,
+        result_id="",
+        result_digest="",
+        cost=compute_cost(result.usage, scoring_config),
+        scoring_config_digest=scoring_config.scoring_config_digest,
+        pricing_version=scoring_config.pricing_version,
+    )
+    repriced = replace(repriced, result_id=_result_id(repriced))
+    repriced = record_with_digest(repriced)
+    validation = validate_result(repriced)
+    if not validation.ok:
+        raise ValueError(f"repriced result record is invalid: {', '.join(validation.errors)}")
+    return repriced
+
+
+def _matches_query(
+    result: ResultRecord,
+    query: ResultQuery,
+    *,
+    available_after: datetime | None,
+    available_before: datetime | None,
+) -> bool:
     if query.task_ids and result.task_id not in query.task_ids:
         return False
     if query.check_ids and result.check_id not in query.check_ids:
@@ -370,35 +594,65 @@ def _matches_query(result: ResultRecord, query: ResultQuery) -> bool:
         return False
     if query.cache_identity_digests and result.cache_identity.identity_digest not in query.cache_identity_digests:
         return False
-    if query.scoring_config_digests and result.cache_identity.scoring_config_digest not in query.scoring_config_digests:
+    if query.scoring_config_digests and result.scoring_config_digest not in query.scoring_config_digests:
         return False
-    if query.result_available_after and result.result_available_at < query.result_available_after:
-        return False
-    if query.result_available_before and result.result_available_at > query.result_available_before:
-        return False
+    if available_after is not None or available_before is not None:
+        result_available_at = _parse_timestamp_utc(result.result_available_at)
+        if available_after is not None and result_available_at < available_after:
+            return False
+        if available_before is not None and result_available_at > available_before:
+            return False
     return True
 
 
-def _find_reusable_result(
+def _index_reusable_results(
     results: Sequence[ResultRecord],
-    identity: ResultCacheIdentity,
     cache_config: ResultCacheConfig,
-    agent_id: str,
-    task_id: str,
-    check_id: str,
-) -> ResultRecord | None:
-    identity_validation = validate_result_cache_identity(identity)
-    if not identity_validation.ok:
-        return None
+    scoring_config_digest: str | None = None,
+) -> Mapping[tuple[str, str, str, ResultCacheIdentity], ResultRecord]:
+    reusable: dict[tuple[str, str, str, ResultCacheIdentity], ResultRecord] = {}
     for result in results:
-        if result.agent_id != agent_id or result.task_id != task_id or result.check_id != check_id:
+        if scoring_config_digest is not None and result.scoring_config_digest != scoring_config_digest:
             continue
-        if result.cache_identity != identity:
+        if not validate_result(result).ok:
             continue
-        if cache_config.require_valid_result and not validate_result(result).ok:
+        if result.scoreable_state == "benchmark_invalid" and not cache_config.reuse_benchmark_invalid:
             continue
-        return result
-    return None
+        key = (result.agent_id, result.task_id, result.check_id, result.cache_identity)
+        reusable.setdefault(key, result)
+    return reusable
+
+
+def _resolved_result_cell(
+    agent: AgentRecord,
+    task: TaskRecord,
+    check: CheckRecord,
+    identity: ResultCacheIdentity,
+    result: ResultRecord | None,
+) -> ResultCellRef:
+    if result is None:
+        return ResultCellRef(
+            agent_id=agent.agent_id,
+            task_id=task.task_id,
+            check_id=check.check_id,
+            required_identity_digest=identity.identity_digest,
+            result_id=None,
+            result_digest=None,
+            cell_state="missing",
+            exclusion_reason=None,
+            outcome=None,
+        )
+    return ResultCellRef(
+        agent_id=agent.agent_id,
+        task_id=task.task_id,
+        check_id=check.check_id,
+        required_identity_digest=identity.identity_digest,
+        result_id=result.result_id,
+        result_digest=result.result_digest,
+        cell_state="result",
+        exclusion_reason=None,
+        outcome=result.outcome,
+    )
 
 
 def _task_for_ref(ref: TaskCheckRef, tasks: Mapping[str, TaskRecord]) -> TaskRecord:
@@ -425,14 +679,34 @@ def _matrix_refs(evaluation_cells: EvaluationCellSet, matrix_role: str) -> tuple
     raise ValueError("matrix_role is not normalized")
 
 
-def _results_by_cell(results: Sequence[ResultRecord]) -> Mapping[tuple[str, str, str, str], ResultRecord]:
-    by_cell: dict[tuple[str, str, str, str], ResultRecord] = {}
+def _results_by_binding(results: Sequence[ResultRecord]) -> Mapping[tuple[str, str], ResultRecord]:
+    by_binding: dict[tuple[str, str], ResultRecord] = {}
     for result in results:
         validation = validate_result(result)
         if not validation.ok:
             continue
-        by_cell[(result.agent_id, result.task_id, result.check_id, result.cache_identity.identity_digest)] = result
-    return by_cell
+        by_binding.setdefault((result.result_id, result.result_digest), result)
+    return by_binding
+
+
+def _result_for_required_cell(
+    required: ResultCellRef,
+    results: Mapping[tuple[str, str], ResultRecord],
+) -> ResultRecord | None:
+    if required.result_id is None or required.result_digest is None:
+        return None
+    result = results.get((required.result_id, required.result_digest))
+    if result is None:
+        return None
+    if (
+        result.agent_id != required.agent_id
+        or result.task_id != required.task_id
+        or result.check_id != required.check_id
+        or result.cache_identity.identity_digest != required.required_identity_digest
+        or result.outcome != required.outcome
+    ):
+        return None
+    return result
 
 
 def _required_cells_by_key(
@@ -451,14 +725,14 @@ def _required_cells_by_key(
 
 def _task_check_exclusions(
     required_cells: Mapping[tuple[str, str, str], ResultCellRef],
-    result_by_cell: Mapping[tuple[str, str, str, str], ResultRecord],
+    result_by_cell: Mapping[tuple[str, str, str], ResultRecord],
     join_config: ResultJoinConfig,
 ) -> Mapping[tuple[str, str], str]:
     if join_config.benchmark_invalid_policy != "exclude_task_check":
         return {}
     exclusions: dict[tuple[str, str], str] = {}
     for required in required_cells.values():
-        result = result_by_cell.get((required.agent_id, required.task_id, required.check_id, required.required_identity_digest))
+        result = result_by_cell.get((required.agent_id, required.task_id, required.check_id))
         if result is None or result.invalid_owner != "benchmark":
             continue
         reason = result.failure_label or "benchmark_invalid"

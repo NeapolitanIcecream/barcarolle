@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from datetime import UTC, datetime, timedelta
+from datetime import UTC, datetime
 from typing import Mapping, Sequence
 
 from barcarolle.records import CheckRecord, RollingOriginRecord, TaskCheckRef, TaskPoolRecord, TaskRecord, canonical_digest
@@ -14,7 +14,6 @@ from barcarolle.task_pool import TimeRange
 class RollingOriginPolicy:
     policy_digest: str
     as_of_cutoff_rule: str
-    embargo: str
     cluster_constraints_digest: str
     eligibility_mode: str
     holdout_overlap_policy: str
@@ -29,13 +28,23 @@ def build_rolling_origin(
     origin_time: datetime,
     future_window: TimeRange,
     policy: RollingOriginPolicy,
+    *,
+    history_window: TimeRange | None = None,
 ) -> RollingOriginRecord:
     _ensure_time_range_order(future_window)
     origin_time_iso = _datetime_to_iso(origin_time)
     as_of_cutoff = origin_time_iso if policy.as_of_cutoff_rule == "origin_time" else policy.as_of_cutoff_rule
-    history_cutoff = _apply_embargo(as_of_cutoff, policy.embargo)
-    history_refs: list[TaskCheckRef] = []
-    future_refs: list[TaskCheckRef] = []
+    if _instant_gt(as_of_cutoff, origin_time_iso):
+        raise ValueError("as_of_cutoff must not be after origin_time")
+    as_of_cutoff = _datetime_to_iso(_parse_timestamp_utc(as_of_cutoff))
+    effective_history_window: TimeRange | None = None
+    if history_window is not None:
+        _ensure_time_range_order(history_window)
+        if not _time_range_contains(history_window, as_of_cutoff):
+            raise ValueError("as_of_cutoff must be inside history_window")
+        effective_history_window = TimeRange(history_window.start, as_of_cutoff)
+    history_refs: list[tuple[datetime, TaskCheckRef]] = []
+    future_refs: list[tuple[datetime, TaskCheckRef]] = []
     for task in tasks:
         if task.task_id not in task_pool.task_ids:
             continue
@@ -49,22 +58,38 @@ def build_rolling_origin(
                 continue
             known_at = _task_check_known_at(task, check)
             ref = TaskCheckRef(task.task_id, check.check_id)
-            if _instant_lte(known_at, history_cutoff):
-                history_refs.append(ref)
+            if _instant_lte(known_at, as_of_cutoff) and (
+                effective_history_window is None
+                or _time_range_contains(effective_history_window, known_at)
+            ):
+                history_refs.append((_parse_timestamp_utc(known_at), ref))
             elif policy.future_holdout_known and _instant_gt(known_at, as_of_cutoff) and _time_range_contains(future_window, known_at):
-                if policy.holdout_overlap_policy == "disjoint" and ref in history_refs:
-                    continue
-                future_refs.append(ref)
+                future_refs.append((_parse_timestamp_utc(known_at), ref))
+    ordered_history_refs = _chronological_refs(history_refs)
+    ordered_future_refs = _chronological_refs(future_refs)
+    origin_identity = {
+        "task_pool_id": task_pool.task_pool_id,
+        "task_pool_digest": task_pool.task_pool_digest,
+        "origin_time": origin_time_iso,
+        "as_of_cutoff": as_of_cutoff,
+        "future_window": {
+            "start": _datetime_to_iso(_parse_timestamp_utc(future_window.start)),
+            "end": _datetime_to_iso(_parse_timestamp_utc(future_window.end)),
+        },
+        "policy": policy,
+        "history_task_check_refs": ordered_history_refs,
+        "future_holdout_task_check_refs": ordered_future_refs,
+    }
+    origin_id = f"origin_{canonical_digest(origin_identity)}"
     return RollingOriginRecord(
-        origin_id=f"origin_{canonical_digest((task_pool.task_pool_id, origin_time_iso, policy.policy_digest))}",
+        origin_id=origin_id,
         task_pool_id=task_pool.task_pool_id,
         task_pool_digest=task_pool.task_pool_digest,
         origin_time=origin_time_iso,
         policy_digest=policy.policy_digest,
-        history_task_check_refs=tuple(history_refs),
-        future_holdout_task_check_refs=tuple(future_refs),
+        history_task_check_refs=ordered_history_refs,
+        future_holdout_task_check_refs=ordered_future_refs,
         as_of_cutoff=as_of_cutoff,
-        embargo=policy.embargo,
         cluster_constraints_digest=policy.cluster_constraints_digest,
         eligibility_mode=policy.eligibility_mode,
         holdout_overlap_policy=policy.holdout_overlap_policy,
@@ -72,11 +97,11 @@ def build_rolling_origin(
 
 
 def _task_known_at(task: TaskRecord) -> str:
-    return _max_timestamp(task.source_resolved_at, task.task_material_available_at, task.certified_at)
+    return _max_timestamp(task.source_resolved_at, task.task_material_available_at)
 
 
 def _task_check_known_at(task: TaskRecord, check: CheckRecord) -> str:
-    return _max_timestamp(_task_known_at(task), check.check_material_available_at, check.certified_at)
+    return _max_timestamp(_task_known_at(task), check.check_material_available_at)
 
 
 def _training_history_refs(
@@ -87,9 +112,7 @@ def _training_history_refs(
     rolling_policy: RollingOriginPolicy,
 ) -> tuple[TaskCheckRef, ...]:
     _ensure_time_range_order(history_window)
-    history_cutoff = _apply_embargo(history_window.end, rolling_policy.embargo)
-    allowed_window = TimeRange(history_window.start, history_cutoff)
-    refs: list[TaskCheckRef] = []
+    refs: list[tuple[datetime, TaskCheckRef]] = []
     for task in tasks:
         if task.task_id not in task_pool.task_ids:
             continue
@@ -101,9 +124,20 @@ def _training_history_refs(
             check = checks.get(check_id)
             if check is None or check.task_id != task.task_id:
                 continue
-            if _time_range_contains(allowed_window, _task_check_known_at(task, check)):
-                refs.append(TaskCheckRef(task.task_id, check.check_id))
-    return tuple(refs)
+            known_at = _task_check_known_at(task, check)
+            if _time_range_contains(history_window, known_at):
+                refs.append((_parse_timestamp_utc(known_at), TaskCheckRef(task.task_id, check.check_id)))
+    return _chronological_refs(refs)
+
+
+def _chronological_refs(entries: Sequence[tuple[datetime, TaskCheckRef]]) -> tuple[TaskCheckRef, ...]:
+    return tuple(
+        ref
+        for _, ref in sorted(
+            entries,
+            key=lambda entry: (entry[0], entry[1].task_id, entry[1].check_id),
+        )
+    )
 
 
 def _ensure_time_range_order(time_range: TimeRange) -> None:
@@ -111,20 +145,10 @@ def _ensure_time_range_order(time_range: TimeRange) -> None:
         raise ValueError("time range start must be before end")
 
 
-def _apply_embargo(as_of_cutoff: str, embargo: str) -> str:
-    if embargo in {"", "P0D", "PT0S"}:
-        return _datetime_to_iso(_parse_timestamp_utc(as_of_cutoff))
-    if embargo.startswith("P") and embargo.endswith("D"):
-        days = int(embargo[1:-1])
-        cutoff = _parse_timestamp_utc(as_of_cutoff) - timedelta(days=days)
-        return _datetime_to_iso(cutoff)
-    raise ValueError("only day-based embargo intervals are supported")
-
-
 def _datetime_to_iso(value: datetime) -> str:
     if value.tzinfo is None:
         value = value.replace(tzinfo=UTC)
-    return value.astimezone(UTC).isoformat(timespec="seconds").replace("+00:00", "Z")
+    return value.astimezone(UTC).isoformat(timespec="microseconds").replace("+00:00", "Z")
 
 
 def _parse_timestamp_utc(value: str) -> datetime:

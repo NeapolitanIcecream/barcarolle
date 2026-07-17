@@ -69,13 +69,13 @@ benchmark evidence or research evidence.
 Those calls must use:
 
 ```text
-LLM_BASE_URL
-LLM_API_KEY
+OPENAI_BASE_URL
+OPENAI_API_KEY
 ```
 
 If either variable is missing, source `~/.zshrc` and check again before making
 the benchmark/evidence-producing call. Do not use subscription auth,
-`OPENAI_API_KEY`, OpenRouter variables, or provider-specific variables for those
+`LLM_BASE_URL`, `LLM_API_KEY`, OpenRouter variables, or provider-specific variables for those
 benchmark/evidence-producing calls unless the user explicitly changes this rule.
 
 If a harness cannot be proven to use the required endpoint, stop before paid
@@ -84,7 +84,7 @@ task-solving calls and write a blocker report.
 This rule does not apply to repository-maintenance Codex sessions used to
 implement, review, or coordinate work in this repository. Runbook Reviewer Codex
 CLI sessions should use the user's local Codex CLI authentication/subscription,
-not `LLM_BASE_URL` or `LLM_API_KEY`, unless the user explicitly requests a
+not `OPENAI_BASE_URL` or `OPENAI_API_KEY`, unless the user explicitly requests a
 different reviewer execution mode.
 
 ## Artifact Hygiene

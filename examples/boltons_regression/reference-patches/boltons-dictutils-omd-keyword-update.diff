@@ -1,0 +1,13 @@
+diff --git a/boltons/dictutils.py b/boltons/dictutils.py
+index d4dd1db..4005b14 100644
+--- a/boltons/dictutils.py
++++ b/boltons/dictutils.py
+@@ -273,7 +273,7 @@ class OrderedMultiDict(dict):
+         """
+         return cls([(k, default) for k in keys])
+ 
+-    def update(self, E, **F):
++    def update(self, E=(), **F):
+         """Add items from a dictionary or iterable (and/or keyword arguments),
+         overwriting values under an existing key. See
+         :meth:`dict.update` for more details.

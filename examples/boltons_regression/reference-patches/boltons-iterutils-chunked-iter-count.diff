@@ -1,0 +1,39 @@
+diff --git a/boltons/iterutils.py b/boltons/iterutils.py
+index 4e7a37f..05695f5 100644
+--- a/boltons/iterutils.py
++++ b/boltons/iterutils.py
+@@ -326,10 +326,14 @@ def chunked_iter(src, size, **kw):
+ 
+     Note that ``fill=None`` in fact uses ``None`` as the fill value.
+     """
+-    # TODO: add count kwarg?
+     if not is_iterable(src):
+         raise TypeError('expected an iterable')
+     size = _validate_positive_int(size, 'chunk size')
++    count = kw.pop('count', None)
++    if count is not None:
++        count = _validate_positive_int(count, 'chunk count', strictly_positive=False)
++        if count == 0:
++            return
+     do_fill = True
+     try:
+         fill_val = kw.pop('fill')
+@@ -340,6 +344,7 @@ def chunked_iter(src, size, **kw):
+         raise ValueError('got unexpected keyword arguments: %r' % kw.keys())
+     if not src:
+         return
++    chunks_yielded = 0
+ 
+     def postprocess(chk): return chk
+     if isinstance(src, (str, bytes)):
+@@ -355,6 +360,10 @@ def chunked_iter(src, size, **kw):
+         if lc < size and do_fill:
+             cur_chunk[lc:] = [fill_val] * (size - lc)
+         yield postprocess(cur_chunk)
++        if count is not None:
++            chunks_yielded += 1
++            if chunks_yielded >= count:
++                break
+     return
+ 
+ 

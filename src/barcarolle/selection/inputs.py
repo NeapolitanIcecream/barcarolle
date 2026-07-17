@@ -12,6 +12,7 @@ from barcarolle.records import (
     ResultRecord,
     RollingOriginRecord,
     SelectorInput,
+    TaskCheckRef,
     TaskPoolRecord,
     TaskRecord,
     canonical_digest,
@@ -25,13 +26,12 @@ from barcarolle.task_pool import TimeRange
 from .features import (
     LeakagePolicy,
     _ensure_feature_records_match_origin,
-    _ensure_result_identity_matches_agents,
     _ensure_result_identity_matches_current_records,
     _ensure_result_records_valid,
     _ensure_results_allowed,
     lint_feature_snapshot,
 )
-from .origin import RollingOriginPolicy, _apply_embargo, _instant_gt, _task_check_known_at, _time_range_contains, _training_history_refs
+from .origin import RollingOriginPolicy, _instant_gt, _task_check_known_at, _time_range_contains, _training_history_refs
 
 
 @dataclass(frozen=True)
@@ -116,7 +116,6 @@ def _ensure_selector_input_matches_history(
     if not _time_range_contains(history_window, selector_input.origin_as_of_cutoff):
         raise ValueError("selector input origin cutoff is outside history window")
     origin_history_window = TimeRange(history_window.start, selector_input.origin_as_of_cutoff)
-    history_cutoff = _apply_embargo(selector_input.origin_as_of_cutoff, rolling_policy.embargo)
     for ref in selector_input.eligible_task_check_refs:
         if ref.task_id not in task_pool.task_ids or ref.check_id not in task_pool.check_ids:
             raise ValueError("selector input includes refs outside task_pool")
@@ -127,31 +126,19 @@ def _ensure_selector_input_matches_history(
         if rolling_policy.allowed_cluster_ids and task.cluster_id not in rolling_policy.allowed_cluster_ids:
             raise ValueError("selector input includes refs outside cluster constraints")
         known_at = _task_check_known_at(task, check)
-        if not _time_range_contains(origin_history_window, known_at) or _instant_gt(known_at, history_cutoff):
+        if not _time_range_contains(origin_history_window, known_at):
             raise ValueError("selector input includes refs outside history window")
-
-
-def _validated_training_selector_inputs(
-    training_origins: Sequence[RollingOriginRecord],
-    training_selector_inputs: Mapping[str, SelectorInput],
-) -> tuple[SelectorInput, ...]:
-    origin_ids = tuple(origin.origin_id for origin in training_origins)
-    if set(training_selector_inputs) != set(origin_ids):
-        raise ValueError("training selector input origin keys must match training origins")
-    ordered_inputs = []
-    for origin in training_origins:
-        selector_input = training_selector_inputs[origin.origin_id]
-        _ensure_selector_input_valid(selector_input)
-        if selector_input.origin_id != origin.origin_id:
-            raise ValueError("training selector input origin_id does not match origin")
-        if selector_input.task_pool_id != origin.task_pool_id or selector_input.task_pool_digest != origin.task_pool_digest:
-            raise ValueError("training selector input task pool binding does not match origin")
-        if selector_input.origin_as_of_cutoff != origin.as_of_cutoff:
-            raise ValueError("training selector input origin cutoff does not match origin")
-        if selector_input.eligible_task_check_refs != origin.history_task_check_refs:
-            raise ValueError("training selector input eligible refs do not match origin history")
-        ordered_inputs.append(selector_input)
-    return tuple(ordered_inputs)
+    expected_refs = _training_history_refs(
+        task_pool,
+        tasks,
+        checks,
+        origin_history_window,
+        rolling_policy,
+    )
+    if selector_input.eligible_task_check_refs != expected_refs:
+        raise ValueError(
+            "selector input eligible refs do not match complete chronological history"
+        )
 
 
 def _ensure_training_results_allowed(
@@ -168,8 +155,7 @@ def _ensure_training_results_allowed(
     history_refs = _training_history_refs(task_pool, tasks, checks, history_window, rolling_policy)
     history_ref_keys = {(ref.task_id, ref.check_id) for ref in history_refs}
     allowed_agents = {agent.agent_id for agent in agents}
-    history_cutoff = _apply_embargo(history_window.end, rolling_policy.embargo)
-    leaked = [result.result_id for result in results if _instant_gt(result.result_available_at, history_cutoff)]
+    leaked = [result.result_id for result in results if _instant_gt(result.result_available_at, history_window.end)]
     if leaked:
         raise ValueError("training results include results after the origin cutoff")
     for result in results:

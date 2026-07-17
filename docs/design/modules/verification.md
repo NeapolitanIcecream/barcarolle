@@ -1,6 +1,6 @@
 # Module Design: Verification
 
-Status: draft, 2026-06-27.
+Status: draft, 2026-07-14.
 
 ## Responsibility
 
@@ -56,7 +56,12 @@ Output:
 Effect:
 
 - Injects hidden check material only into the verifier workspace and returns
-  that workspace reference.
+  that workspace reference. The low-level function confines the destination
+  to the verifier workspace; the Workspace module additionally reserves the
+  `.barcarolle` namespace for its bound hidden material.
+- Rechecks the bound command digest before material injection. This transient
+  execution check is separate from the semantic Check manifest stored in
+  `CheckRecord`.
 
 ### verify_diff
 
@@ -72,8 +77,16 @@ Output:
 
 Effect:
 
-- Executes the check against the applied candidate diff under bounded time and
-  resource limits.
+- Executes the check against the applied candidate diff within the configured
+  timeout. `RuntimeConfig.timeout_seconds` is the default. A positive
+  `CheckRecord.resource_limits["timeout_seconds"]` narrows it; an empty mapping
+  uses the runtime default.
+- Other resource-limit entries have effect only when the active execution
+  adapter implements them. The built-in subprocess path does not claim
+  filesystem, network, process, CPU, or memory isolation.
+- Rechecks the bound command digest immediately before execution.
+- Treats exit code 2 as an invalid Check execution rather than an ordinary test
+  failure; adapters use it for verifier or harness infrastructure errors.
 
 ### normalize_outcome
 
@@ -90,24 +103,6 @@ Effect:
 
 - Converts framework-specific outputs into pass, fail, or invalid with a
   failure label.
-
-### repeat_verification
-
-Input:
-
-- `check: CheckRecord`
-- `verifier_workspace_factory: Callable`
-- `repeat_count: int`
-- `runtime_config: RuntimeConfig`
-
-Output:
-
-- `Sequence[CheckOutcome]`
-
-Effect:
-
-- Runs the check multiple times when certification or flakiness analysis needs
-  stability evidence.
 
 ### summarize_evidence
 

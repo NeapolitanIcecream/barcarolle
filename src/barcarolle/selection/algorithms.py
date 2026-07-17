@@ -2,13 +2,15 @@
 
 from __future__ import annotations
 
+from collections import deque
 from dataclasses import dataclass
+from math import isfinite
 from random import Random
 from typing import Mapping, Sequence
 
 from barcarolle.records import (
     BenchmarkSelectionRecord,
-    RollingOriginRecord,
+    JSONValue,
     SelectorInput,
     SelectorRecord,
     TaskCheckRef,
@@ -19,8 +21,11 @@ from barcarolle.records import (
     validate_selector,
 )
 
-from .inputs import _ensure_selector_input_valid, _validated_training_selector_inputs
+from .inputs import _ensure_selector_input_valid
 from .origin import _now
+
+
+EXECUTABLE_SELECTOR_FAMILIES = frozenset({"coverage", "random", "recency", "rule_mixture"})
 
 
 @dataclass(frozen=True)
@@ -38,16 +43,9 @@ class CoverageConfig:
     group_by_ref_key: Mapping[str, str]
 
 
-@dataclass(frozen=True)
-class FitConfig:
-    fit_config_digest: str
-    selector_family: str = "learned_mixture"
-
-
 def select_random(selector_input: SelectorInput, seed: int) -> BenchmarkSelectionRecord:
     _ensure_selector_input_valid(selector_input)
-    refs = list(selector_input.eligible_task_check_refs)
-    Random(seed).shuffle(refs)
+    refs = _random_order(selector_input.eligible_task_check_refs, seed)
     return _selection_from_refs(
         selector_input,
         refs[: _selection_count(selector_input)],
@@ -86,22 +84,33 @@ def select_coverage(selector_input: SelectorInput, coverage_config: CoverageConf
 
 def select_rule_mixture(
     selector_input: SelectorInput,
-    expert_weights: Mapping[str, float],
+    selector_parameters: Mapping[str, JSONValue],
     selection_config: SelectionConfig,
 ) -> BenchmarkSelectionRecord:
     _ensure_selector_input_valid(selector_input)
     if selection_config.feature_snapshot_id != selector_input.feature_snapshot_id:
         raise ValueError("selection_config feature_snapshot_id must match selector_input")
+    expert_weights, random_seed, group_by_ref_key = _rule_mixture_parameters(selector_parameters)
     scored = []
-    total_weight = sum(max(0.0, weight) for weight in expert_weights.values()) or 1.0
     refs = selector_input.eligible_task_check_refs
+    total_weight = sum(expert_weights.values())
+    coverage_config = CoverageConfig(canonical_digest(group_by_ref_key), group_by_ref_key)
+    coverage_order = _coverage_order(refs, coverage_config)
+    coverage_scores = {
+        ref: (len(coverage_order) - rank) / max(1, len(coverage_order))
+        for rank, ref in enumerate(coverage_order)
+    }
+    random_order = _random_order(refs, random_seed)
+    random_scores = {
+        ref: (len(random_order) - rank) / max(1, len(random_order))
+        for rank, ref in enumerate(random_order)
+    }
     for index, ref in enumerate(refs):
         recency = (index + 1) / max(1, len(refs))
-        randomish = int(canonical_digest((selection_config.selection_config_digest, task_check_ref_key(ref)))[:8], 16) / 0xFFFFFFFF
         score = (
             expert_weights.get("recency", 0.0) * recency
-            + expert_weights.get("random", 0.0) * randomish
-            + expert_weights.get("coverage", 0.0)
+            + expert_weights.get("random", 0.0) * random_scores[ref]
+            + expert_weights.get("coverage", 0.0) * coverage_scores[ref]
         ) / total_weight
         scored.append((score, ref))
     ordered_refs = tuple(ref for _, ref in sorted(scored, key=lambda item: (-item[0], item[1].task_id, item[1].check_id)))
@@ -112,48 +121,6 @@ def select_rule_mixture(
         feature_snapshot_id=selection_config.feature_snapshot_id,
         eligibility_mode=selection_config.eligibility_mode,
         exposure_scope_digest=selection_config.exposure_scope_digest,
-    )
-
-
-def fit_learned_mixture(
-    training_origins: Sequence[RollingOriginRecord],
-    training_selector_inputs: Mapping[str, SelectorInput],
-    baseline_selectors: Sequence[SelectorRecord],
-    fit_config: FitConfig,
-) -> SelectorRecord:
-    ordered_inputs = _validated_training_selector_inputs(training_origins, training_selector_inputs)
-    source_digests = (
-        fit_config.fit_config_digest,
-        canonical_digest(tuple(origin.origin_id for origin in training_origins)),
-        canonical_digest(tuple(selector_input.selector_input_digest for selector_input in ordered_inputs)),
-        canonical_digest(tuple(selector.config_digest for selector in baseline_selectors)),
-    )
-    return _selector_record(
-        selector_family=fit_config.selector_family,
-        selector_version="1",
-        training_source_digests=source_digests,
-        allowed_feature_classes=("task_metadata", "pre_origin_result"),
-        config_digest=canonical_digest(source_digests),
-    )
-
-
-def fit_calibrated_weighting(
-    training_origins: Sequence[RollingOriginRecord],
-    training_selector_inputs: Mapping[str, SelectorInput],
-    selection_config: SelectionConfig,
-) -> SelectorRecord:
-    ordered_inputs = _validated_training_selector_inputs(training_origins, training_selector_inputs)
-    source_digests = (
-        selection_config.selection_config_digest,
-        canonical_digest(tuple(origin.origin_id for origin in training_origins)),
-        canonical_digest(tuple(selector_input.selector_input_digest for selector_input in ordered_inputs)),
-    )
-    return _selector_record(
-        selector_family="calibrated_weighting",
-        selector_version="1",
-        training_source_digests=source_digests,
-        allowed_feature_classes=("task_metadata", "pre_origin_result"),
-        config_digest=canonical_digest(source_digests),
     )
 
 
@@ -170,9 +137,10 @@ def select_with_selector(
         raise ValueError("selection_config selector_id must match selector")
     if selection_config.feature_snapshot_id != selector_input.feature_snapshot_id:
         raise ValueError("selection_config feature_snapshot_id must match selector_input")
+    ensure_selector_executable(selector)
     if selector.selector_family == "random":
-        refs = list(selector_input.eligible_task_check_refs)
-        Random(int(canonical_digest(selection_config.selection_config_digest)[:8], 16)).shuffle(refs)
+        seed = _random_parameters(selector.parameters)
+        refs = _random_order(selector_input.eligible_task_check_refs, seed)
         return _selection_from_refs(
             selector_input,
             refs[: _selection_count(selector_input)],
@@ -182,7 +150,9 @@ def select_with_selector(
             exposure_scope_digest=selection_config.exposure_scope_digest,
         )
     if selector.selector_family == "coverage":
-        refs = _coverage_order(selector_input.eligible_task_check_refs, CoverageConfig(selection_config.selection_config_digest, {}))
+        group_by_ref_key = _coverage_parameters(selector.parameters)
+        coverage_config = CoverageConfig(canonical_digest(group_by_ref_key), group_by_ref_key)
+        refs = _coverage_order(selector_input.eligible_task_check_refs, coverage_config)
         return _selection_from_refs(
             selector_input,
             refs[: _selection_count(selector_input)],
@@ -192,8 +162,9 @@ def select_with_selector(
             exposure_scope_digest=selection_config.exposure_scope_digest,
         )
     if selector.selector_family == "rule_mixture":
-        return select_rule_mixture(selector_input, {"recency": 1.0, "coverage": 1.0}, selection_config)
+        return select_rule_mixture(selector_input, selector.parameters, selection_config)
     if selector.selector_family == "recency":
+        _recency_parameters(selector.parameters)
         refs = tuple(reversed(selector_input.eligible_task_check_refs))
         return _selection_from_refs(
             selector_input,
@@ -206,19 +177,34 @@ def select_with_selector(
     raise ValueError(f"unsupported selector family for selection: {selector.selector_family}")
 
 
+def ensure_selector_family_executable(selector_family: str) -> None:
+    if selector_family not in EXECUTABLE_SELECTOR_FAMILIES:
+        raise ValueError(f"unsupported selector family: {selector_family}")
+
+
+def ensure_selector_executable(selector: SelectorRecord) -> None:
+    ensure_selector_family_executable(selector.selector_family)
+    _validate_rule_parameters(selector.selector_family, selector.parameters)
+
+
 def _selector_record(
     selector_family: str,
     selector_version: str,
     training_source_digests: tuple[str, ...],
     allowed_feature_classes: tuple[str, ...],
-    config_digest: str,
+    parameters: Mapping[str, JSONValue],
 ) -> SelectorRecord:
+    _validate_rule_parameters(selector_family, parameters)
+    config_digest = canonical_digest(
+        {"selector_family": selector_family, "parameters": parameters}
+    )
     selector = SelectorRecord(
-        selector_id=f"selector_{canonical_digest((selector_family, selector_version, config_digest))}",
+        selector_id=f"selector_{canonical_digest((selector_family, selector_version, training_source_digests, config_digest))}",
         selector_family=selector_family,
         selector_version=selector_version,
         training_source_digests=training_source_digests,
         allowed_feature_classes=allowed_feature_classes,
+        parameters=parameters,
         config_digest=config_digest,
         created_at=_now(),
     )
@@ -283,13 +269,116 @@ def _selection_count(selector_input: SelectorInput) -> int:
 
 
 def _coverage_order(refs: Sequence[TaskCheckRef], coverage_config: CoverageConfig) -> tuple[TaskCheckRef, ...]:
-    grouped: dict[str, list[TaskCheckRef]] = {}
+    grouped: dict[str, deque[TaskCheckRef]] = {}
     for ref in refs:
         group = coverage_config.group_by_ref_key.get(task_check_ref_key(ref), ref.check_id)
-        grouped.setdefault(group, []).append(ref)
+        grouped.setdefault(group, deque()).append(ref)
+    active_groups = deque(sorted(grouped))
     ordered: list[TaskCheckRef] = []
-    while any(grouped.values()):
-        for group in sorted(grouped):
-            if grouped[group]:
-                ordered.append(grouped[group].pop(0))
+    while active_groups:
+        group = active_groups.popleft()
+        ordered.append(grouped[group].popleft())
+        if grouped[group]:
+            active_groups.append(group)
     return tuple(ordered)
+
+
+def _random_order(refs: Sequence[TaskCheckRef], seed: int) -> tuple[TaskCheckRef, ...]:
+    ordered = list(refs)
+    Random(seed).shuffle(ordered)
+    return tuple(ordered)
+
+
+def _normalized_nonnegative_weight(value: object) -> float | None:
+    if isinstance(value, bool) or not isinstance(value, int | float):
+        return None
+    try:
+        normalized = float(value)
+    except OverflowError:
+        return None
+    return normalized if isfinite(normalized) and normalized >= 0.0 else None
+
+
+def _validate_rule_parameters(
+    selector_family: str,
+    parameters: Mapping[str, JSONValue],
+) -> None:
+    if selector_family == "recency":
+        _recency_parameters(parameters)
+    elif selector_family == "random":
+        _random_parameters(parameters)
+    elif selector_family == "coverage":
+        _coverage_parameters(parameters)
+    elif selector_family == "rule_mixture":
+        _rule_mixture_parameters(parameters)
+
+
+def _recency_parameters(parameters: Mapping[str, JSONValue]) -> None:
+    if parameters:
+        raise ValueError("recency selector parameters must be empty")
+
+
+def _random_parameters(parameters: Mapping[str, JSONValue]) -> int:
+    _require_parameter_keys(parameters, {"seed"}, "random")
+    seed = parameters["seed"]
+    if isinstance(seed, bool) or not isinstance(seed, int):
+        raise ValueError("random selector seed must be an integer")
+    return seed
+
+
+def _coverage_parameters(parameters: Mapping[str, JSONValue]) -> Mapping[str, str]:
+    _require_parameter_keys(parameters, {"group_by_ref_key"}, "coverage")
+    return _string_mapping(parameters["group_by_ref_key"], "coverage group_by_ref_key")
+
+
+def _rule_mixture_parameters(
+    parameters: Mapping[str, JSONValue],
+) -> tuple[Mapping[str, float], int, Mapping[str, str]]:
+    _require_parameter_keys(
+        parameters,
+        {"expert_weights", "random_seed", "group_by_ref_key"},
+        "rule_mixture",
+    )
+    raw_weights = parameters["expert_weights"]
+    if not isinstance(raw_weights, Mapping):
+        raise ValueError("rule_mixture expert_weights must be a mapping")
+    if any(not isinstance(name, str) for name in raw_weights):
+        raise ValueError("rule_mixture expert_weights keys must be strings")
+    supported_experts = {"coverage", "random", "recency"}
+    unsupported_experts = sorted(set(raw_weights) - supported_experts)
+    if unsupported_experts:
+        raise ValueError(f"unsupported rule-mixture experts: {', '.join(unsupported_experts)}")
+    expert_weights: dict[str, float] = {}
+    for name, weight in raw_weights.items():
+        normalized_weight = _normalized_nonnegative_weight(weight)
+        if normalized_weight is None:
+            raise ValueError("expert_weights must be finite nonnegative numbers")
+        expert_weights[name] = normalized_weight
+    total_weight = sum(expert_weights.values())
+    if not isfinite(total_weight) or total_weight <= 0.0:
+        raise ValueError("expert_weights must include a positive coverage, random, or recency weight")
+    random_seed = parameters["random_seed"]
+    if isinstance(random_seed, bool) or not isinstance(random_seed, int):
+        raise ValueError("rule_mixture random_seed must be an integer")
+    groups = _string_mapping(parameters["group_by_ref_key"], "rule_mixture group_by_ref_key")
+    return expert_weights, random_seed, groups
+
+
+def _require_parameter_keys(
+    parameters: Mapping[str, JSONValue],
+    expected: set[str],
+    selector_family: str,
+) -> None:
+    if set(parameters) != expected:
+        raise ValueError(
+            f"{selector_family} selector parameters must contain exactly: {', '.join(sorted(expected)) or 'no keys'}"
+        )
+
+
+def _string_mapping(value: JSONValue, label: str) -> Mapping[str, str]:
+    if not isinstance(value, Mapping) or any(
+        not isinstance(key, str) or not isinstance(item, str)
+        for key, item in value.items()
+    ):
+        raise ValueError(f"{label} must map strings to strings")
+    return dict(value)

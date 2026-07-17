@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 from collections import Counter
 from dataclasses import dataclass, replace
 from pathlib import Path
@@ -10,19 +11,25 @@ from typing import Any, Mapping, Sequence
 from barcarolle.records import (
     AgentRecord,
     BenchmarkSelectionRecord,
+    CheckRecord,
     EvaluationCellSet,
     MetricRecord,
+    ResultCellRef,
     ResultMatrix,
     ResultRecord,
     TaskPoolRecord,
+    TaskRecord,
     canonical_digest,
     canonical_json,
+    load_jsonl_records,
     validate_benchmark_selection,
     validate_evaluation_cell_set,
     validate_metric,
     validate_result,
     validate_result_matrix,
 )
+from barcarolle.selection.evaluation import compute_selection_metric_values
+from barcarolle.task_pool import validate_task_pool_artifacts
 
 
 @dataclass(frozen=True)
@@ -52,8 +59,11 @@ class ClaimConfig:
     require_valid_metrics: bool = True
 
 
-def build_task_pool_report(task_pool: TaskPoolRecord) -> ReportSection:
-    validation_errors = _task_pool_validation_errors(task_pool)
+def build_task_pool_report(
+    task_pool: TaskPoolRecord,
+    artifact_root: Path | None = None,
+) -> ReportSection:
+    validation_errors = _task_pool_validation_errors(task_pool, artifact_root)
     supported_claims = () if validation_errors else ("task_pool_counts",)
     limitations = tuple(validation_errors)
     summary = {
@@ -64,6 +74,7 @@ def build_task_pool_report(task_pool: TaskPoolRecord) -> ReportSection:
         "rejected_candidate_count": len(task_pool.rejected_candidate_ids),
         "task_records_ref": task_pool.task_records_ref,
         "check_records_ref": task_pool.check_records_ref,
+        "certification_evidence_ref": task_pool.certification_evidence_ref,
         "certification_evidence_digest": task_pool.certification_evidence_digest,
         "rejection_summary_digest": task_pool.rejection_summary_digest,
         "generator_config_digest": task_pool.generator_config_digest,
@@ -79,7 +90,11 @@ def build_task_pool_report(task_pool: TaskPoolRecord) -> ReportSection:
             "check_records_digest": task_pool.check_records_digest,
             "source_event_inventory_digest": task_pool.source_event_inventory_digest,
         },
-        artifact_paths=(task_pool.task_records_ref, task_pool.check_records_ref),
+        artifact_paths=(
+            task_pool.task_records_ref,
+            task_pool.check_records_ref,
+            task_pool.certification_evidence_ref,
+        ),
         supported_claims=supported_claims,
         unsupported_claims=tuple(f"task_pool_counts: {error}" for error in validation_errors),
         limitations=limitations,
@@ -129,7 +144,6 @@ def build_result_report(results: Sequence[ResultRecord], agents: Sequence[AgentR
             "mean_workspace_seconds": sum(latency_seconds) / len(latency_seconds) if latency_seconds else 0.0,
         },
         "pricing_versions": tuple(sorted({result.pricing_version for result in results})),
-        "usage_coverage": dict(sorted(Counter(result.usage_coverage for result in results).items())),
         "cache_coverage": {
             "result_count": len(results),
             "unique_cache_identity_count": len(set(cache_identity_digests)),
@@ -282,10 +296,11 @@ def build_claim_boundary(
     metrics: Sequence[MetricRecord],
     claim_config: ClaimConfig,
     results: Sequence[ResultRecord] = (),
+    artifact_root: Path | None = None,
 ) -> ReportSection:
     supported: list[str] = []
     unsupported: list[str] = []
-    task_pool_errors = _task_pool_validation_errors(task_pool)
+    task_pool_errors = _task_pool_validation_errors(task_pool, artifact_root)
     _claim(supported, unsupported, "task_pool_coverage", not task_pool_errors, "; ".join(task_pool_errors))
     selections_present = bool(selections)
     selection_validations = [validate_benchmark_selection(selection) for selection in selections]
@@ -398,7 +413,11 @@ def build_claim_boundary(
             "metric_digests": tuple(sorted(metric.metric_digest for metric in metrics)),
             "result_digests": tuple(sorted(result.result_digest for result in results)),
         },
-        artifact_paths=(task_pool.task_records_ref, task_pool.check_records_ref),
+        artifact_paths=(
+            task_pool.task_records_ref,
+            task_pool.check_records_ref,
+            task_pool.certification_evidence_ref,
+        ),
         supported_claims=supported_tuple,
         unsupported_claims=unsupported_tuple,
         limitations=unsupported_tuple,
@@ -470,15 +489,7 @@ def _sanitize_artifact_path(artifact_path: str, artifact_root: Path) -> str:
     try:
         return path.resolve().relative_to(artifact_root.resolve()).as_posix()
     except (OSError, ValueError):
-        pass
-    if _is_local_absolute_path(path):
-        return path.name
-    return artifact_path
-
-
-def _is_local_absolute_path(path: Path) -> bool:
-    parts = path.parts
-    return len(parts) > 1 and parts[0] == "/" and parts[1] in {"Users", "home"}
+        return path.name if path.name not in {"", ".", ".."} else "external-artifact"
 
 
 def _section_data(section: ReportSection) -> Mapping[str, Any]:
@@ -494,7 +505,10 @@ def _section_data(section: ReportSection) -> Mapping[str, Any]:
     }
 
 
-def _task_pool_validation_errors(task_pool: TaskPoolRecord) -> tuple[str, ...]:
+def _task_pool_validation_errors(
+    task_pool: TaskPoolRecord,
+    artifact_root: Path | None = None,
+) -> tuple[str, ...]:
     errors: list[str] = []
     if task_pool.task_pool_digest != canonical_digest(task_pool, exclude_self_digest=True):
         errors.append("task_pool_digest does not match canonical task pool")
@@ -505,6 +519,7 @@ def _task_pool_validation_errors(task_pool: TaskPoolRecord) -> tuple[str, ...]:
     for field in (
         "task_records_ref",
         "check_records_ref",
+        "certification_evidence_ref",
         "task_records_digest",
         "check_records_digest",
         "rejection_summary_digest",
@@ -516,7 +531,94 @@ def _task_pool_validation_errors(task_pool: TaskPoolRecord) -> tuple[str, ...]:
             errors.append(f"{field} is missing")
     if not task_pool.certification_evidence_digest:
         errors.append("certification_evidence_digest is missing")
+    errors.extend(_task_pool_artifact_errors(task_pool, artifact_root))
     return tuple(errors)
+
+
+def _task_pool_artifact_errors(
+    task_pool: TaskPoolRecord,
+    artifact_root: Path | None,
+) -> tuple[str, ...]:
+    errors: list[str] = []
+    root = artifact_root or Path.cwd()
+    tasks = _load_task_pool_records(
+        task_pool.task_records_ref,
+        root,
+        TaskRecord,
+        "task records",
+        errors,
+    )
+    checks = _load_task_pool_records(
+        task_pool.check_records_ref,
+        root,
+        CheckRecord,
+        "check records",
+        errors,
+    )
+    evidence = _load_certification_evidence(
+        task_pool.certification_evidence_ref,
+        root,
+        errors,
+    )
+
+    if tasks is not None and checks is not None and evidence is not None:
+        validation = validate_task_pool_artifacts(
+            task_pool,
+            tasks,
+            checks,
+            evidence,
+        )
+        errors.extend(validation.errors)
+    return tuple(errors)
+
+
+def _load_task_pool_records(
+    ref: str,
+    root: Path,
+    record_type: type,
+    label: str,
+    errors: list[str],
+) -> tuple[Any, ...] | None:
+    if not ref:
+        return None
+    try:
+        return tuple(load_jsonl_records(_artifact_ref_path(ref, root), record_type))
+    except (KeyError, OSError, TypeError, ValueError):
+        errors.append(f"{label} are unavailable or invalid")
+        return None
+
+
+def _load_certification_evidence(
+    ref: str,
+    root: Path,
+    errors: list[str],
+) -> tuple[Mapping[str, Any], ...] | None:
+    if not ref:
+        return None
+    try:
+        records: list[Mapping[str, Any]] = []
+        with _artifact_ref_path(ref, root).open("r", encoding="utf-8") as handle:
+            for line in handle:
+                if not line.strip():
+                    continue
+                value = json.loads(line, parse_constant=_reject_json_constant)
+                if not isinstance(value, Mapping):
+                    raise ValueError("certification evidence must contain objects")
+                records.append(value)
+        return tuple(records)
+    except (OSError, TypeError, ValueError):
+        errors.append("certification evidence is unavailable or invalid")
+        return None
+
+
+def _artifact_ref_path(ref: str, root: Path) -> Path:
+    normalized = ref[5:] if ref.startswith("path:") else ref
+    path = Path(normalized)
+    return path if path.is_absolute() else root / path
+
+
+def _reject_json_constant(value: str) -> None:
+    raise ValueError(f"non-finite JSON number is not allowed: {value}")
 
 
 def _validation_errors(label: str, records: Sequence[Any], validate: Any) -> tuple[str, ...]:
@@ -642,10 +744,37 @@ def _selector_trace_errors(
             errors.append(f"metric {metric.metric_id} selected matrix cells do not match evaluation cell set")
         if cell_set is not None and future_matrix is not None and not _matrix_cells_match_cell_set(future_matrix, cell_set):
             errors.append(f"metric {metric.metric_id} future matrix cells do not match evaluation cell set")
-        if metric.budget_digest is not None and metric.budget_digest != selection.budget_digest:
+        if metric.budget_digest != selection.budget_digest:
             errors.append(f"metric {metric.metric_id} budget digest does not match selection {selection.selection_id}")
         if metric.origin_id != selection.origin_id:
             errors.append(f"metric {metric.metric_id} origin does not match selection {selection.selection_id}")
+        if selected_matrix is None or future_matrix is None:
+            continue
+        if (
+            metric.metric_scope != "aggregate"
+            or metric.aggregation_level != "all_agents"
+            or metric.agent_id is not None
+            or metric.agent_pair is not None
+            or metric.stratum_ref is not None
+        ):
+            errors.append(f"metric {metric.metric_id} is not a recomputable aggregate all-Agents metric")
+            continue
+        try:
+            expected_values = compute_selection_metric_values(
+                selection,
+                selected_matrix,
+                future_matrix,
+            )
+        except (OverflowError, TypeError, ValueError, ZeroDivisionError) as exc:
+            errors.append(f"metric {metric.metric_id} cannot be recomputed: {exc}")
+            continue
+        expected_value = expected_values.get(metric.metric_name)
+        if expected_value is None:
+            errors.append(f"metric {metric.metric_id} has an unsupported metric name: {metric.metric_name}")
+        elif metric.metric_value != expected_value:
+            errors.append(
+                f"metric {metric.metric_id} value {metric.metric_value} does not match recomputed value {expected_value}"
+            )
     return tuple(errors)
 
 
@@ -718,6 +847,8 @@ def _result_measurement_errors(results: Sequence[ResultRecord]) -> tuple[str, ..
     for result in results:
         if "total_cost" not in result.cost:
             errors.append(f"result {result.result_id} cost.total_cost is missing")
+        elif result.cost["total_cost"] is None:
+            pass
         elif not _is_number(result.cost["total_cost"]):
             errors.append(f"result {result.result_id} cost.total_cost is non-numeric")
         if "workspace_seconds" not in result.latency:
@@ -728,7 +859,7 @@ def _result_measurement_errors(results: Sequence[ResultRecord]) -> tuple[str, ..
 
 
 def _has_unknown_usage_or_cost(result: ResultRecord) -> bool:
-    return result.usage_coverage in {"unknown", "unreported"}
+    return result.cost.get("total_cost") is None
 
 
 def _selection_claim_errors(selection_validations: Sequence[Any], selections_match_task_pool: bool) -> tuple[str, ...]:
@@ -742,12 +873,22 @@ def _matrix_cells_match_cell_set(matrix: ResultMatrix, cell_set: EvaluationCellS
     expected_refs = cell_set.selected_task_check_refs if matrix.matrix_role == "selected" else cell_set.future_task_check_refs
     expected_ref_keys = {(ref.task_id, ref.check_id) for ref in expected_refs}
     expected = {
-        (cell.agent_id, cell.task_id, cell.check_id): cell.required_identity_digest
+        (cell.agent_id, cell.task_id, cell.check_id): (
+            cell.required_identity_digest,
+            cell.result_id,
+            cell.result_digest,
+            cell.outcome,
+        )
         for cell in cell_set.cells
         if (cell.task_id, cell.check_id) in expected_ref_keys
     }
     actual = {
-        (cell.agent_id, cell.task_id, cell.check_id): cell.required_identity_digest
+        (cell.agent_id, cell.task_id, cell.check_id): (
+            cell.required_identity_digest,
+            cell.result_id,
+            cell.result_digest,
+            cell.outcome,
+        )
         for cell in matrix.cells
     }
     return actual == expected

@@ -1,0 +1,11 @@
+diff --git a/boltons/iterutils.py b/boltons/iterutils.py
+--- a/boltons/iterutils.py
++++ b/boltons/iterutils.py
+@@ -490,6 +490,7 @@ def windowed_iter(src, size, fill=_UNSET):
+     This way, *fill* values can be useful to signal the end of the iterable.
+     For infinite iterators, setting *fill* has no effect.
+     """
++    size = _validate_positive_int(size, 'window size')
+     tees = itertools.tee(src, size)
+     if fill is _UNSET:
+         try:

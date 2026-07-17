@@ -1,6 +1,6 @@
 # Design Consistency Check
 
-Status: draft, 2026-06-27.
+Status: draft, 2026-07-14.
 
 ## Vocabulary
 
@@ -26,8 +26,10 @@ runtime.
 
 The tested Agent owns its model, harness, prompts, tools, retrieval, edit loop,
 retry policy, public-test policy, and runtime budget. Barcarolle owns task
-supply and certification, workspace isolation, hidden-oracle verification,
+validation, fresh solver/verifier workspace separation, hidden-oracle verification,
 normalized result storage, rolling-origin selection, and report traceability.
+The built-in Workspace path assumes a cooperative Agent and does not claim
+host-level resource isolation.
 
 ## Asset Decoupling
 
@@ -52,15 +54,18 @@ The Selection module keeps these constraints:
   timestamps and leakage classes;
 - selector inputs that bind origin, task pool, feature snapshot, Agent set,
   budget, and pre-origin result view;
-- rolling-origin policy with as-of cutoff, embargo, cluster constraints,
+- rolling-origin policy with as-of cutoff, cluster constraints,
   eligibility mode, and holdout overlap rules;
 - benchmark selections frozen before future outcomes are opened;
-- adaptive selector behavior based only on prior-origin metrics and later
-  feedback available before the current origin.
+- mean-MAE Selector choice over complete, comparable metrics from earlier
+  rolling origins; the choice does not reinterpret whether a recorded MAE is
+  available.
 
 ## Cache And Scoring Boundary
 
 Result reuse depends on exact `ResultCacheIdentity`, not broad runtime names.
+Pricing is stored on `Result` and excluded from execution identity, so a price
+change cannot trigger another Agent run.
 Result matrices carry cell-level Agent/Task/Check mappings, completeness,
 exclusion, abstention, join policy, and denominator metadata so Agent
 comparisons cannot silently reuse stale or partial cells.
@@ -71,8 +76,9 @@ Frozen selector inputs, selections, cell sets, matrices, and metrics reference
 Result records by ID and digest. Evidence-bearing records are append-only.
 
 Rolling-origin evaluation freezes `Task + Check` refs before future outcomes
-are opened, and records source, task material, check material, certification,
-and result availability timestamps separately.
+are opened. Historical `known_at` uses only source, task-material, and
+check-material availability. Certification evidence is stored separately and
+does not move that historical availability time.
 
 ## Reporting Boundary
 

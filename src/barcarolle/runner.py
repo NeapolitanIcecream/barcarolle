@@ -3,9 +3,9 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field, replace
-from datetime import UTC, datetime, timedelta
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any, Mapping, Sequence
+from typing import Mapping, Sequence
 
 from barcarolle import reporting as reporting_module
 from barcarolle import result_store as result_store_module
@@ -35,7 +35,6 @@ from barcarolle.records import (
     validate_benchmark_selection,
     validate_evaluation_cell_set,
     validate_metric,
-    validate_result,
     write_jsonl_records,
 )
 from barcarolle.task_pool import TimeRange
@@ -43,7 +42,14 @@ from barcarolle.task_pool import TimeRange
 
 @dataclass(frozen=True)
 class TaskPoolConfig:
-    repository_url_or_path: str
+    repository_id: str
+    repository_path: Path
+    workspace_config: WorkspaceConfig
+    runtime_config: RuntimeConfig
+    reference_patches: Mapping[str, workspace_module.CapturedDiff]
+    check_commands: Mapping[str, tuple[str, ...]]
+    hidden_material_paths: Mapping[str, Path]
+    check_manifests: Mapping[str, Mapping[str, object]] = field(default_factory=dict)
     time_range: TimeRange | None = None
     task_source_config: task_pool_module.TaskSourceConfig | None = None
     import_path: Path | None = None
@@ -56,6 +62,7 @@ class TaskPoolConfig:
 class ReportConfig:
     output_dir: Path
     agents: tuple[AgentRecord, ...] = ()
+    artifact_root: Path | None = None
     markdown_filename: str = "report.md"
     json_filename: str = "report.json"
     claim_config: reporting_module.ClaimConfig = field(
@@ -64,8 +71,51 @@ class ReportConfig:
 
 
 def build_task_pool(config: TaskPoolConfig) -> TaskPoolRecord:
+    if not config.repository_id:
+        raise ValueError("repository_id must not be empty")
     candidates = _task_candidates(config)
-    certified = tuple(task_pool_module.certify_task_candidate(candidate, config.certification_config) for candidate in candidates)
+    mismatched_repositories = tuple(
+        candidate.candidate_id for candidate in candidates if candidate.repository_id != config.repository_id
+    )
+    if mismatched_repositories:
+        raise ValueError(
+            "candidate repository_id does not match TaskPoolConfig for: "
+            + ", ".join(mismatched_repositories)
+        )
+    missing_patches = tuple(
+        candidate.candidate_id for candidate in candidates if candidate.candidate_id not in config.reference_patches
+    )
+    if missing_patches:
+        raise ValueError("reference patch is missing for candidates: " + ", ".join(missing_patches))
+    missing_check_commands = tuple(
+        candidate.candidate_id for candidate in candidates if candidate.candidate_id not in config.check_commands
+    )
+    if missing_check_commands:
+        raise ValueError("check command is missing for candidates: " + ", ".join(missing_check_commands))
+    missing_hidden_material = tuple(
+        candidate.candidate_id for candidate in candidates if candidate.candidate_id not in config.hidden_material_paths
+    )
+    if missing_hidden_material:
+        raise ValueError("hidden check material is missing for candidates: " + ", ".join(missing_hidden_material))
+
+    workspace_module.bind_repository_source(config.workspace_config, config.repository_path)
+    for candidate in candidates:
+        workspace_module.bind_check_material(
+            task_pool_module.build_check_candidate(candidate),
+            config.check_commands[candidate.candidate_id],
+            config.hidden_material_paths[candidate.candidate_id],
+            check_manifest=config.check_manifests.get(candidate.candidate_id),
+        )
+    certified = tuple(
+        task_pool_module.certify_task_candidate(
+            candidate,
+            config.certification_config,
+            config.workspace_config,
+            config.runtime_config,
+            config.reference_patches[candidate.candidate_id],
+        )
+        for candidate in candidates
+    )
     accepted_tasks = tuple(result.task for result in certified if result.accepted and result.task is not None)
     accepted_checks = tuple(result.check for result in certified if result.accepted and result.check is not None)
     rejected = tuple(result for result in certified if not result.accepted)
@@ -73,6 +123,10 @@ def build_task_pool(config: TaskPoolConfig) -> TaskPoolRecord:
     task_pool = task_pool_module.freeze_task_pool(accepted_tasks, accepted_checks, rejected, metadata)
     write_jsonl_records(_ref_path(task_pool.task_records_ref), accepted_tasks)
     write_jsonl_records(_ref_path(task_pool.check_records_ref), accepted_checks)
+    write_jsonl_records(
+        _ref_path(task_pool.certification_evidence_ref),
+        task_pool_module.certification_evidence_records(certified),
+    )
     return task_pool
 
 
@@ -140,15 +194,6 @@ def select_benchmark(
     return selection
 
 
-def update_selector(
-    selector: SelectorRecord,
-    selection: BenchmarkSelectionRecord,
-    metrics: Sequence[MetricRecord],
-    feedback_config: selection_module.SelectorFeedbackConfig,
-) -> SelectorRecord:
-    return selection_module.update_selector(selector, selection, metrics, feedback_config)
-
-
 def evaluate_selector(
     selector: SelectorRecord,
     task_pool: TaskPoolRecord,
@@ -170,17 +215,27 @@ def evaluate_selector(
     tuple[ResultMatrix, ...],
     tuple[MetricRecord, ...],
 ]:
+    try:
+        origin_times = tuple(_parse_datetime(value) for value in evaluation_config.origin_times)
+    except ValueError as exc:
+        raise ValueError("evaluation origin_times entries must be ISO datetime strings") from exc
+    if not origin_times:
+        raise ValueError("evaluation origin_times must not be empty")
+    if any(current >= following for current, following in zip(origin_times, origin_times[1:], strict=False)):
+        raise ValueError("evaluation origin_times must be strictly increasing UTC instants")
     tasks, checks = _load_task_pool_records(task_pool)
+    future_window_ends = (*(_datetime_to_iso(value) for value in origin_times[1:]), history_window.end)
     origins = tuple(
         selection_module.build_rolling_origin(
             task_pool,
             tasks,
             checks,
-            _origin_time(origin_id),
-            TimeRange(start=_datetime_to_iso(_origin_time(origin_id)), end=history_window.end),
+            origin_time,
+            TimeRange(start=_datetime_to_iso(origin_time), end=future_window_end),
             rolling_policy,
+            history_window=history_window,
         )
-        for origin_id in evaluation_config.origin_ids
+        for origin_time, future_window_end in zip(origin_times, future_window_ends, strict=True)
     )
     selections: list[BenchmarkSelectionRecord] = []
     for origin in origins:
@@ -204,17 +259,16 @@ def evaluate_selector(
             selector_id=evaluation_config.selection_config.selector_id or selector.selector_id,
             feature_snapshot_id=selector_input.feature_snapshot_id,
         )
-        effective_config = replace(evaluation_config, origin_ids=(origin.origin_id,), selection_config=selection_config)
         frozen = tuple(
             selection_module.freeze_evaluation_selections(
                 selector,
                 task_pool,
                 tasks,
                 checks,
-                {origin.origin_id: selector_input},
+                (selector_input,),
                 agents,
                 history_window,
-                effective_config,
+                selection_config,
                 rolling_policy,
             )
         )
@@ -282,7 +336,6 @@ def run_agents(
                 agent,
                 workspace_config,
                 runtime_config,
-                scoring_config,
             )
             cells.append(_missing_cell(agent, task, check, identity.identity_digest))
     return _run_agent_cells(cells, tasks, checks, agents, workspace_config, runtime_config, scoring_config, result_store)
@@ -308,11 +361,31 @@ def fill_results(
         agents,
         workspace_config,
         runtime_config,
-        scoring_config,
         result_store,
         cache_config,
     )
-    return _run_agent_cells(missing, tasks, checks, agents, workspace_config, runtime_config, scoring_config, result_store)
+    executed = _run_agent_cells(
+        missing,
+        tasks,
+        checks,
+        agents,
+        workspace_config,
+        runtime_config,
+        scoring_config,
+        result_store,
+    )
+    repriced = result_store_module.reprice_cached_results(
+        selection.selected_task_check_refs,
+        tasks,
+        checks,
+        agents,
+        workspace_config,
+        runtime_config,
+        result_store,
+        cache_config,
+        scoring_config,
+    )
+    return (*executed, *repriced)
 
 
 def prepare_evaluation_cells(
@@ -338,45 +411,34 @@ def prepare_evaluation_cells(
         agents,
         workspace_config,
         runtime_config,
-        scoring_config,
         result_store,
         cache_config,
     )
     _run_agent_cells(missing, tasks, checks, agents, workspace_config, runtime_config, scoring_config, result_store)
-    stored_results = result_store_module.load_results(
+    result_store_module.reprice_cached_results(
+        requested_refs,
+        tasks,
+        checks,
+        agents,
+        workspace_config,
+        runtime_config,
         result_store,
-        result_store_module.ResultQuery(scoring_config_digests=(scoring_config.scoring_config_digest,)),
+        cache_config,
+        scoring_config,
     )
-    cells: list[ResultCellRef] = []
-    for ref in requested_refs:
-        task = _task_for_ref(ref, tasks)
-        check = _check_for_ref(ref, task, checks)
-        for agent in agents:
-            identity = result_store_module.compute_result_cache_identity(
-                task,
-                check,
-                agent,
-                workspace_config,
-                runtime_config,
-                scoring_config,
-            )
-            result = _find_reusable_result(stored_results, identity.identity_digest, agent.agent_id, task.task_id, check.check_id, cache_config)
-            if result is None:
-                cells.append(_missing_cell(agent, task, check, identity.identity_digest))
-            else:
-                cells.append(
-                    ResultCellRef(
-                        agent_id=agent.agent_id,
-                        task_id=task.task_id,
-                        check_id=check.check_id,
-                        required_identity_digest=identity.identity_digest,
-                        result_id=result.result_id,
-                        result_digest=result.result_digest,
-                        cell_state="result",
-                        exclusion_reason=None,
-                        outcome=result.outcome,
-                    )
-                )
+    cells = list(
+        result_store_module.resolve_result_cells(
+            requested_refs,
+            tasks,
+            checks,
+            agents,
+            workspace_config,
+            runtime_config,
+            result_store,
+            cache_config,
+            scoring_config,
+        )
+    )
     cell_set = EvaluationCellSet(
         cell_set_id=f"cell_set_{canonical_digest((selection.selection_digest, origin.origin_id, join_config.join_policy_digest, tuple(_ref_key(ref) for ref in requested_refs), tuple(agent.agent_id for agent in agents)))}",
         origin_id=origin.origin_id,
@@ -452,7 +514,10 @@ def write_report(
     report_config: ReportConfig,
 ) -> Mapping[str, object]:
     sections = (
-        reporting_module.build_task_pool_report(task_pool),
+        reporting_module.build_task_pool_report(
+            task_pool,
+            artifact_root=report_config.artifact_root,
+        ),
         reporting_module.build_result_report(results, report_config.agents),
         reporting_module.build_selector_report(selections, cell_sets, result_matrices, metrics),
         reporting_module.build_claim_boundary(
@@ -463,12 +528,21 @@ def write_report(
             metrics,
             report_config.claim_config,
             results=results,
+            artifact_root=report_config.artifact_root,
         ),
     )
     markdown_path = report_config.output_dir / report_config.markdown_filename
     json_path = report_config.output_dir / report_config.json_filename
-    reporting_module.write_report(sections, markdown_path)
-    reporting_module.write_report(sections, json_path)
+    reporting_module.write_report(
+        sections,
+        markdown_path,
+        artifact_root=report_config.artifact_root,
+    )
+    reporting_module.write_report(
+        sections,
+        json_path,
+        artifact_root=report_config.artifact_root,
+    )
     return {
         "report_paths": {"markdown": str(markdown_path), "json": str(json_path)},
         "section_ids": tuple(section.section_id for section in sections),
@@ -477,13 +551,15 @@ def write_report(
 
 
 def _task_candidates(config: TaskPoolConfig) -> tuple[task_pool_module.TaskCandidate, ...]:
+    if config.import_path is not None and (config.time_range is not None or config.task_source_config is not None):
+        raise ValueError("TaskPoolConfig import_path and history generation inputs are mutually exclusive")
     if config.import_path is not None:
         return tuple(task_pool_module.import_task_pool(config.import_path, config.import_config))
     if config.time_range is None or config.task_source_config is None:
         raise ValueError("TaskPoolConfig requires either import_path or time_range with task_source_config")
     return tuple(
         task_pool_module.generate_history_candidates(
-            config.repository_url_or_path,
+            config.repository_id,
             config.time_range,
             config.task_source_config,
         )
@@ -496,21 +572,16 @@ def _task_pool_metadata(
     certified: Sequence[task_pool_module.CertificationResult],
 ) -> Mapping[str, object]:
     metadata = dict(config.metadata)
-    metadata.setdefault("repository_id", _repository_id(config, candidates))
-    metadata.setdefault("accepted_certification_results", tuple(result for result in certified if result.accepted))
+    metadata["repository_id"] = config.repository_id
+    metadata["accepted_certification_results"] = tuple(result for result in certified if result.accepted)
     metadata.setdefault("task_records_ref", "records/tasks.jsonl")
     metadata.setdefault("check_records_ref", "records/checks.jsonl")
-    metadata.setdefault("source_event_inventory_digest", canonical_digest(tuple(candidate.source_ref for candidate in candidates)))
-    metadata.setdefault("generator_config_digest", _generator_config_digest(config))
-    metadata.setdefault("certification_config_digest", canonical_digest(config.certification_config))
+    metadata.setdefault("certification_evidence_ref", "records/certification-evidence.jsonl")
+    metadata["source_event_inventory_digest"] = canonical_digest(tuple(candidate.source_ref for candidate in candidates))
+    metadata["generator_config_digest"] = _generator_config_digest(config)
+    metadata["certification_config_digest"] = canonical_digest(config.certification_config)
     metadata.setdefault("created_at", _now())
     return metadata
-
-
-def _repository_id(config: TaskPoolConfig, candidates: Sequence[task_pool_module.TaskCandidate]) -> str:
-    if candidates:
-        return candidates[0].repository_id
-    return config.repository_url_or_path
 
 
 def _generator_config_digest(config: TaskPoolConfig) -> str:
@@ -553,6 +624,7 @@ def _run_agent_cells(
     scoring_config: result_store_module.ScoringConfig,
     result_store: result_store_module.ResultStore,
 ) -> tuple[ResultRecord, ...]:
+    result_store_module.validate_scoring_config(scoring_config)
     if not cells:
         return ()
     agent_by_id = {agent.agent_id: agent for agent in agents}
@@ -569,7 +641,6 @@ def _run_agent_cells(
             agent,
             workspace_config,
             runtime_config,
-            scoring_config,
         )
         if identity.identity_digest != cell.required_identity_digest:
             raise ValueError("missing cell required identity does not match current run config")
@@ -595,6 +666,7 @@ def _load_training_results(
         _parse_datetime(history_window.end),
         history_window,
         rolling_policy,
+        history_window=history_window,
     )
     task_ids, check_ids = _refs_query_parts(origin.history_task_check_refs)
     if not task_ids or not agents:
@@ -604,7 +676,7 @@ def _load_training_results(
         origin.history_task_check_refs,
         agents,
         result_available_after=history_window.start,
-        result_available_before=_apply_embargo(history_window.end, rolling_policy.embargo),
+        result_available_before=history_window.end,
     )
 
 
@@ -630,7 +702,17 @@ def _load_results_for_refs(
             result_available_before=result_available_before,
         )
     )
-    return tuple(result for result in loaded if (result.task_id, result.check_id) in allowed_refs)
+    distinct_executions: list[ResultRecord] = []
+    seen_execution_digests: set[str] = set()
+    for result in loaded:
+        if (result.task_id, result.check_id) not in allowed_refs:
+            continue
+        execution_digest = result_store_module.result_execution_digest(result)
+        if execution_digest in seen_execution_digests:
+            continue
+        seen_execution_digests.add(execution_digest)
+        distinct_executions.append(result)
+    return tuple(distinct_executions)
 
 
 def _load_pre_origin_results(
@@ -692,25 +774,6 @@ def _selection_log_path(result_store: result_store_module.ResultStore) -> Path:
 
 def _metric_log_path(result_store: result_store_module.ResultStore) -> Path:
     return result_store.path.with_name("metrics.jsonl")
-
-
-def _find_reusable_result(
-    results: Sequence[ResultRecord],
-    identity_digest: str,
-    agent_id: str,
-    task_id: str,
-    check_id: str,
-    cache_config: result_store_module.ResultCacheConfig,
-) -> ResultRecord | None:
-    for result in results:
-        if result.agent_id != agent_id or result.task_id != task_id or result.check_id != check_id:
-            continue
-        if result.cache_identity.identity_digest != identity_digest:
-            continue
-        if cache_config.require_valid_result and not validate_result(result).ok:
-            continue
-        return result
-    return None
 
 
 def _results_bound_to_evaluation_cells(
@@ -821,28 +884,11 @@ def _ref_key(ref: TaskCheckRef) -> tuple[str, str]:
     return (ref.task_id, ref.check_id)
 
 
-def _origin_time(origin_id: str) -> datetime:
-    try:
-        value = _parse_datetime(origin_id)
-    except ValueError as exc:
-        raise ValueError("Runner evaluate_selector origin_ids must be ISO datetime strings") from exc
-    return value
-
-
 def _parse_datetime(value: str) -> datetime:
     parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
     if parsed.tzinfo is None:
         return parsed.replace(tzinfo=UTC)
     return parsed.astimezone(UTC)
-
-
-def _apply_embargo(value: str, embargo: str) -> str:
-    parsed = _parse_datetime(value)
-    if embargo in {"", "P0D", "PT0S"}:
-        return _datetime_to_iso(parsed)
-    if embargo.startswith("P") and embargo.endswith("D"):
-        return _datetime_to_iso(parsed - timedelta(days=int(embargo[1:-1])))
-    raise ValueError("Runner supports day-based embargo strings such as P0D or P1D")
 
 
 def _datetime_to_iso(value: datetime) -> str:

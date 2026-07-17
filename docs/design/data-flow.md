@@ -1,6 +1,6 @@
 # Barcarolle Data Flow
 
-Status: draft, 2026-06-27.
+Status: draft, 2026-07-14.
 
 ## Overview
 
@@ -27,24 +27,31 @@ Task Pool + Agent Results + origin + budget
 
 Input:
 
-- target repository reference;
+- stable target `repository_id` and local `repository_path`;
 - task generator or user import;
-- check construction method;
-- certification config.
+- per-candidate check command, hidden material path, and reference patch;
+- Workspace, Runtime, and certification config.
 
 Steps:
 
 1. Task Pool calls a generator or importer.
-2. Generator emits candidate `Task + Check`.
-3. Certification validates checkout, check executability, oracle stability,
-   solver-visible boundary, and metadata.
-4. Task Pool freezes accepted `Task + Check` records and rejection summaries.
+2. Generator emits `TaskCandidate` records with direct task text and Check
+   fields.
+3. Runner binds the local repository and each candidate's check command and
+   hidden material.
+4. Execution-based task validation confirms that one aggregate Check fails at
+   the base commit and passes after its reference patch. It may repeat the
+   patched Check in fresh verifier Workspaces.
+5. Task Pool constructs the frozen pool record without writing files.
+6. Runner writes the exact accepted Task records, accepted Check records, and
+   ordered sanitized certification evidence referenced and digested by that
+   pool record.
 
 Output:
 
 - frozen `Task Pool`.
-- accepted Task/Check record references, rejection summaries, certification
-  evidence, and source-event inventory digests.
+- accepted Task/Check record references and digests, rejection summaries,
+  certification evidence ref and digest, and source-event inventory digest.
 
 Runner entrypoint:
 
@@ -53,7 +60,8 @@ Runner entrypoint:
 Downstream:
 
 - Workspace receives Task and Check records to run Agents.
-- Selection receives Task metadata and certification metadata.
+- Selection receives Task and Check metadata, not certification outcomes or
+  raw validation artifacts.
 - Reporting receives accepted and rejected counts.
 
 ## Flow 2: Run Agents And Store Results
@@ -102,11 +110,13 @@ Input:
 
 Steps:
 
-1. Runner loads historical results from Result Store.
-2. Selection builds the origins required by the training config and
-   rolling-origin policy.
-3. Selection builds leakage-safe feature snapshots.
-4. Selection trains or chooses a persistent `Selector`.
+1. Runner builds the rolling-origin history boundary at the end of the window
+   and loads only matching historical results from Result Store.
+2. Selection validates the Task, Check, Agent, and time bindings and records
+   the training-source digests.
+3. Selection validates a supplied executable rule Selector or creates one from
+   its persisted rule parameters. A learned method will define its own training
+   data and fitted parameters with its concrete algorithm.
 
 Output:
 
@@ -130,13 +140,20 @@ Input:
 - historical `Task Pool` subset allowed by the protocol;
 - historical `Agent Results` allowed by the protocol;
 - candidate Agent set;
-- evaluation config.
+- evaluation config containing ISO `origin_times`, selection config, and
+  budget.
 
 Steps:
 
 1. Runner loads historical results from Result Store.
-2. Selection builds the origins required by the evaluation config and
-   rolling-origin policy.
+2. Runner parses the strictly increasing UTC instants in
+   `evaluation_config.origin_times` and asks Selection to build a
+   `RollingOriginRecord` for each timestamp under the rolling-origin policy.
+   Each future window ends at the next origin; the last ends at the historical
+   window boundary. A Task/Check known exactly at the next origin is in the
+   preceding future holdout and in the next origin's history, never in both
+   future holdouts. Task/Check refs before the historical window start are not
+   included in any origin's history.
 3. Selection builds leakage-safe feature snapshots.
 4. Selection freezes `Benchmark Selection` records for those origins and does
    not score them.
@@ -216,8 +233,8 @@ Steps:
    matrix with explicit matrix roles.
 4. Compute selected-benchmark pass-rate estimates per Agent.
 5. Compute future holdout pass rates per Agent.
-6. Compute prediction error, rank agreement, regret, invalid rate, cost, and
-   coverage.
+6. Compute MAE as the primary prediction metric, plus pairwise gap MAE, rank
+   agreement, recommendation regret, invalid rate, and coverage.
 7. Store metrics keyed by origin, selector version, cell-set digest,
    selected/future matrix digests, join policy, and denominator policy.
 
@@ -233,34 +250,9 @@ Runner entrypoint:
 
 Downstream:
 
-- Selection uses metrics to evaluate or update Selectors.
+- Maintainers use metrics to evaluate Selector algorithms and decide what to
+  develop next.
 - Reporting distinguishes evidence from claim.
-
-## Flow 7: Update A Selector
-
-Input:
-
-- `Selector`;
-- `Benchmark Selection`;
-- metrics;
-- feedback config.
-
-Steps:
-
-1. Runner passes recorded metrics to Selection.
-2. Selection updates the persistent Selector or its trust metadata.
-
-Output:
-
-- updated `Selector`.
-
-Runner entrypoint:
-
-- `update_selector`
-
-Downstream:
-
-- Runner can use the updated Selector for later benchmark selection.
 
 ## Design Consistency Check
 

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Mapping, Sequence
 
@@ -10,7 +10,7 @@ from barcarolle.records import (
     AgentRecord,
     BenchmarkSelectionRecord,
     CheckRecord,
-    MetricRecord,
+    JSONValue,
     ResultRecord,
     SelectorInput,
     SelectorRecord,
@@ -22,7 +22,13 @@ from barcarolle.records import (
 )
 from barcarolle.task_pool import TimeRange
 
-from .algorithms import SelectionConfig, _selector_record, select_with_selector
+from .algorithms import (
+    SelectionConfig,
+    _selector_record,
+    ensure_selector_executable,
+    ensure_selector_family_executable,
+    select_with_selector,
+)
 from .features import FeatureConfig, LeakagePolicy, build_feature_snapshot
 from .inputs import SelectionBudget, _ensure_selector_input_matches_history, _ensure_training_results_allowed, build_selector_input
 from .origin import RollingOriginPolicy, _datetime_to_iso, _ensure_time_range_order, build_rolling_origin
@@ -32,20 +38,14 @@ from .origin import RollingOriginPolicy, _datetime_to_iso, _ensure_time_range_or
 class SelectorTrainingConfig:
     training_config_digest: str
     selector_family: str = "recency"
+    parameters: Mapping[str, JSONValue] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)
 class SelectorEvaluationConfig:
-    evaluation_config_digest: str
-    origin_ids: tuple[str, ...]
+    origin_times: tuple[str, ...]
     selection_config: SelectionConfig
     budget: SelectionBudget
-
-
-@dataclass(frozen=True)
-class SelectorFeedbackConfig:
-    feedback_config_digest: str
-    selector_family: str = "adaptive_controller"
 
 
 def train_selector(
@@ -74,7 +74,9 @@ def train_selector(
         validation = validate_selector(selector)
         if not validation.ok:
             raise ValueError(f"candidate selector is invalid: {', '.join(validation.errors)}")
+        ensure_selector_executable(selector)
         return selector
+    ensure_selector_family_executable(training_config.selector_family)
     training_source_digests = (
         task_pool.task_pool_digest,
         canonical_digest(tuple(task_check_ref_key(ref) for ref in training_refs)),
@@ -88,7 +90,7 @@ def train_selector(
         selector_version="1",
         training_source_digests=training_source_digests,
         allowed_feature_classes=feature_config.allowed_leakage_classes,
-        config_digest=canonical_digest(training_source_digests),
+        parameters=training_config.parameters,
     )
 
 
@@ -97,20 +99,15 @@ def freeze_evaluation_selections(
     task_pool: TaskPoolRecord,
     tasks: Sequence[TaskRecord],
     checks: Mapping[str, CheckRecord],
-    selector_inputs: Mapping[str, SelectorInput],
+    selector_inputs: Sequence[SelectorInput],
     agents: Sequence[AgentRecord],
     history_window: TimeRange,
-    evaluation_config: SelectorEvaluationConfig,
+    selection_config: SelectionConfig,
     rolling_policy: RollingOriginPolicy,
 ) -> Sequence[BenchmarkSelectionRecord]:
     _ensure_time_range_order(history_window)
     selections = []
-    for origin_id in evaluation_config.origin_ids:
-        selector_input = selector_inputs.get(origin_id)
-        if selector_input is None:
-            raise ValueError(f"selector_input is missing for origin {origin_id}")
-        if selector_input.origin_id != origin_id:
-            raise ValueError("selector_input origin_id does not match requested origin")
+    for selector_input in selector_inputs:
         _ensure_selector_input_matches_history(
             selector_input,
             task_pool,
@@ -120,7 +117,7 @@ def freeze_evaluation_selections(
             history_window,
             rolling_policy,
         )
-        selection = select_with_selector(selector_input, selector, evaluation_config.selection_config)
+        selection = select_with_selector(selector_input, selector, selection_config)
         selections.append(selection)
     return tuple(selections)
 
@@ -164,27 +161,3 @@ def select_benchmark(
         exposure_scope_digest=selection_config.exposure_scope_digest,
     )
     return select_with_selector(selector_input, selector, config)
-
-
-def update_selector(
-    selector: SelectorRecord,
-    selection: BenchmarkSelectionRecord,
-    metrics: Sequence[MetricRecord],
-    feedback_config: SelectorFeedbackConfig,
-) -> SelectorRecord:
-    metric_digests = tuple(sorted(metric.metric_digest for metric in metrics))
-    config_digest = canonical_digest(
-        {
-            "previous_selector": selector.selector_id,
-            "selection": selection.selection_digest,
-            "metrics": metric_digests,
-            "feedback_config": feedback_config.feedback_config_digest,
-        }
-    )
-    return _selector_record(
-        selector_family=feedback_config.selector_family,
-        selector_version=f"{selector.selector_version}+feedback",
-        training_source_digests=(selector.config_digest, selection.selection_digest, *metric_digests),
-        allowed_feature_classes=selector.allowed_feature_classes,
-        config_digest=config_digest,
-    )

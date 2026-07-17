@@ -1,21 +1,22 @@
 # Module Design: Task Pool
 
-Status: draft, 2026-06-27.
+Status: draft, 2026-07-14.
 
 ## Responsibility
 
-Generate or import `Task + Check` candidates, certify them, and freeze them
-into a `Task Pool`.
+Generate or import `Task + Check` candidates, validate them by execution, and
+freeze accepted records into a `Task Pool`.
 
 Task Pool does not run Agents and does not select benchmarks.
 
 ## Inputs
 
-- target repository reference;
-- generator config or user import path;
+- candidates carrying a stable target `repository_id`, or a generator config
+  or user import path that produces them;
 - origin or time range;
-- check construction config;
-- certification config.
+- per-candidate reference patch;
+- `WorkspaceConfig`, `RuntimeConfig`, certification config, and the repository
+  and Check material bindings already established by Runner.
 
 ## Outputs
 
@@ -23,7 +24,7 @@ Task Pool does not run Agents and does not select benchmarks.
 - accepted `TaskRecord` records;
 - accepted `CheckRecord` records;
 - rejected candidates;
-- certification evidence.
+- sanitized certification evidence.
 
 ## System Boundary
 
@@ -32,11 +33,12 @@ Input sources:
 - user config;
 - built-in generators;
 - user imports;
-- Workspace for checkout and replay validation during certification;
-- Verification for executable-check validation during certification.
+- Workspace for checkout and replay during task validation;
+- Verification for check execution during task validation.
 
 Output consumers:
 
+- Runner, which writes the referenced frozen files;
 - Workspace;
 - Result Store;
 - Selection;
@@ -47,13 +49,45 @@ Output consumers:
 Functions below define module interfaces. Each function specifies input,
 output, and effect only; it does not prescribe implementation.
 
+## Execution-Based Task Validation
+
+The generic validation contract uses observable transitions:
+
+- one aggregate Check fails at the base commit;
+- the same Check passes after the reference patch is applied in a fresh
+  verifier Workspace;
+- the patched Check may be repeated in fresh verifier Workspaces.
+
+This proves the aggregate fail-to-pass transition. It does not separately
+certify SWE-bench `FAIL_TO_PASS` and `PASS_TO_PASS` sets. A SWE-bench adapter
+that needs both must make its Check wrapper execute and distinguish both sets;
+the generic Task Pool does not add another outcome vocabulary.
+
+## Candidate Contract
+
+`TaskCandidate` carries the fields needed to construct one `TaskRecord` and one
+`CheckRecord`:
+
+- stable repository and source identity;
+- `base_commit` and source, task-material, and check-material availability
+  timestamps;
+- direct `task_text` plus optional `solver_material_refs` to files already in
+  the repository checkout;
+- optional `cluster_id`; an empty value means no cluster is recorded and is not
+  replaced by a default label;
+- Check type, command digest, hidden-material digest, optional
+  `resource_limits`, and oracle source.
+
+The candidate does not carry another representation of the task or a separate
+Check configuration object. `task_text` is the solver-visible instruction.
+
 ## Functions
 
 ### generate_history_candidates
 
 Input:
 
-- `repository_url_or_path: str`
+- `repository_id: str`
 - `time_range: TimeRange`
 - `task_source_config: TaskSourceConfig`
 
@@ -81,29 +115,11 @@ Effect:
 
 - Converts a user-provided pool into candidate `Task + Check` records.
 
-### build_task_statement
-
-Input:
-
-- `candidate: TaskCandidate`
-- `statement_config: StatementConfig`
-
-Output:
-
-- `task_text: str`
-
-Effect:
-
-- Builds solver-visible task text from allowed issue, PR, commit, release, or
-  user-provided material. If LLM assistance is later used, only sanitized
-  output and generation digest are stored.
-
 ### build_check_candidate
 
 Input:
 
 - `candidate: TaskCandidate`
-- `check_config: CheckConfig`
 
 Output:
 
@@ -111,9 +127,9 @@ Output:
 
 Effect:
 
-- Builds the acceptance method associated with the task. The check may be
-  tests, scripts, visual evaluation, user-provided commands, or a defined
-  review protocol.
+- Builds the Check directly from the candidate fields. The executable command
+  and hidden material are bound separately by Workspace and must match the
+  candidate digests.
 
 ### certify_task_candidate
 
@@ -121,6 +137,9 @@ Input:
 
 - `candidate: TaskCandidate`
 - `certification_config: CertificationConfig`
+- `workspace_config: WorkspaceConfig`
+- `runtime_config: RuntimeConfig`
+- `reference_patch: CapturedDiff`
 
 Output:
 
@@ -128,9 +147,35 @@ Output:
 
 Effect:
 
-- Validates checkout, dependency restoration, check execution, solver-visible
-  boundary, hidden material separation, stability, and statement clarity. It may
-  call Workspace and Verification for certification, but it does not run Agents.
+- Requires the already-bound aggregate Check to fail once at the base commit.
+- Applies the reference patch in a fresh verifier Workspace and requires the
+  same Check to pass. `repeat_count` repeats this patched Check in a new
+  verifier Workspace each time.
+- Validates the direct task text and optional repository-relative solver
+  material refs. It uses Workspace and Verification but does not run Agents.
+- Stores normalized outcomes and the reference-patch digest, not the patch,
+  workspace contents, or raw Check output.
+- Rejects a bad candidate transition. Missing repository or Check bindings,
+  verifier-workspace failures, check-launch failures, and unexpected
+  verification failures are run-setup errors because they prevent comparable
+  candidate evaluation; they stop certification instead of shrinking the
+  pool.
+
+### certification_evidence_records
+
+Input:
+
+- `results: Sequence[CertificationResult]`
+
+Output:
+
+- ordered sanitized evidence records
+
+Effect:
+
+- Orders evidence by candidate ID, rejects duplicates, and verifies each
+  evidence digest against its structured content. The canonical digest of this
+  exact sequence is stored in `TaskPoolRecord.certification_evidence_digest`.
 
 ### freeze_task_pool
 
@@ -139,7 +184,8 @@ Input:
 - `accepted_tasks: Sequence[TaskRecord]`
 - `accepted_checks: Sequence[CheckRecord]`
 - `rejected: Sequence[CertificationResult]`
-- `metadata: Mapping[str, object]`
+- `metadata: Mapping[str, object]`, including accepted certification results
+  and the Task, Check, and certification-evidence refs
 
 Output:
 
@@ -147,9 +193,34 @@ Output:
 
 Effect:
 
-- Writes a frozen task pool with accepted Task/Check record references,
-  rejection summaries, certification evidence, and source-event inventory
-  digests.
+- Constructs a frozen task-pool record with accepted Task/Check record refs and
+  digests, rejected candidate IDs, certification evidence ref and digest, and
+  source-event inventory digests.
+- Performs no file I/O. Runner writes the exact accepted Task records, accepted
+  Check records, and sanitized certification evidence referenced by the frozen
+  record.
+
+### validate_task_pool_artifacts
+
+Input:
+
+- `task_pool: TaskPoolRecord`
+- `tasks: Sequence[TaskRecord]`
+- `checks: Sequence[CheckRecord]`
+- `certification_evidence: Sequence[Mapping[str, object]]`
+
+Output:
+
+- `ValidationResult`
+
+Effect:
+
+- Reuses Task/Check validation and linkage rules for persisted artifacts.
+- Requires exact accepted Task/Check and rejected-candidate evidence coverage,
+  one failing base check and the configured passing reference-patch attempts for
+  every accepted pair, matching certification-config, evidence, and
+  rejection-summary digests.
+- Is used by freeze and Reporting; it does not execute Checks again.
 
 ### summarize_task_pool
 
@@ -163,7 +234,7 @@ Output:
 
 Effect:
 
-- Reports task counts, check types, generator families, certification coverage,
+- Reports task counts, check types, generator families, validation coverage,
   rejection reasons, and time coverage.
 
 ## Related-Work Mapping

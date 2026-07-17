@@ -1,6 +1,6 @@
 # Module Design: Runner
 
-Status: draft, 2026-06-27.
+Status: draft, 2026-07-14.
 
 ## Responsibility
 
@@ -12,7 +12,7 @@ reporting logic.
 
 ## Inputs
 
-- target repository reference;
+- stable target `repository_id` and local `repository_path`;
 - task-source config or existing `Task Pool`;
 - Agent set;
 - historical window, origin, and future window;
@@ -57,6 +57,15 @@ output, and effect only; it does not prescribe implementation.
 Input:
 
 - `config: TaskPoolConfig`
+  - stable `repository_id` stored in records;
+  - local Git `repository_path` used to create workspaces;
+  - the `WorkspaceConfig` and `RuntimeConfig` used to execute checks;
+  - a direct `candidate_id -> CapturedDiff` mapping of trusted reference
+    patches;
+  - direct `candidate_id -> check command` and `candidate_id -> hidden material
+    path` mappings, plus optional semantic Check manifests;
+  - either an import path or a time range with task-source config;
+  - certification config and output refs in metadata.
 
 Output:
 
@@ -64,8 +73,21 @@ Output:
 
 Effect:
 
-- Calls Task Pool to generate or import candidates, certify accepted tasks, and
-  freeze a task pool.
+- Generates or imports candidates and rejects repository IDs that differ from
+  `config.repository_id`; the local path is never used as record identity.
+- Binds `repository_path` to the Workspace config, builds each Check directly
+  from its candidate, then binds the matching check command and hidden
+  material before certification. When provided, the candidate's semantic Check
+  manifest is passed through without replacing it with the machine-local
+  command.
+- Requires one reference patch, check command, and hidden-material path for
+  every candidate. It runs executable base-fail/reference-patch-pass
+  certification and passes the accepted records and complete certification
+  results to `freeze_task_pool`.
+- After the frozen record is constructed, writes the exact accepted Task
+  sequence, accepted Check sequence, and ordered sanitized certification
+  evidence to their refs. Their canonical digests must match the digests stored
+  on `TaskPoolRecord`.
 
 ### train_selector
 
@@ -89,6 +111,8 @@ Effect:
 - Resolves Task/Check records from the task pool, loads historical results, and
   calls Selection to train or choose a persistent Selector under the requested
   rolling-origin and feature policies.
+- Treats append-only pricing views with the same `result_execution_digest` as
+  one pre-origin execution, preserving the first record in append order.
 
 ### select_benchmark
 
@@ -112,25 +136,10 @@ Effect:
 
 - Resolves Task/Check records from the task pool, loads allowed pre-origin
   results, and calls Selection to produce a benchmark selection frozen before
-  future outcomes are opened.
-
-### update_selector
-
-Input:
-
-- `selector: SelectorRecord`
-- `selection: BenchmarkSelectionRecord`
-- `metrics: Sequence[MetricRecord]`
-- `feedback_config: SelectorFeedbackConfig`
-
-Output:
-
-- `SelectorRecord`
-
-Effect:
-
-- Calls Selection to update the persistent Selector or its trust metadata after
-  new metrics are available.
+  future outcomes are opened. A configured as-of cutoff later than the origin
+  is rejected before any Result query.
+- Does not count repriced views as additional Agent executions; executions with
+  genuinely different verifier evidence remain distinct.
 
 ## Maintainer Entry Points
 
@@ -162,11 +171,39 @@ Output:
 
 Effect:
 
-- For each origin defined by the evaluation config and rolling-origin policy,
+- `evaluation_config.origin_times` contains ISO timestamps in strictly
+  increasing UTC order. Each origin's future window ends at the next origin;
+  the final future window ends at `history_window.end`. A Task/Check known at
+  an origin boundary is in the preceding future holdout and the following
+  history, while Task/Check refs before `history_window.start` are excluded.
+  For each timestamp,
   resolves Task/Check records, builds pre-origin selector input, calls Selection
   `freeze_evaluation_selections` to freeze `BenchmarkSelectionRecord`s, then
   calls `prepare_evaluation_cells` and `score_selection`. It returns frozen
   selections, cell sets, result matrices, and metrics.
+- `origin_id` is produced by `build_rolling_origin`; it is not an input config
+  value.
+- MAE is the primary prediction metric. Supporting metrics remain available for
+  diagnosis and later algorithm decisions.
+
+### `barcarolle report`
+
+Input:
+
+- a JSON config containing paths to one `TaskPoolRecord` JSONL file and the
+  Agent, Result, Benchmark Selection, Evaluation Cell Set, Result Matrix, and
+  Metric JSONL files;
+- an output directory.
+
+Output:
+
+- `report.md`;
+- `report.json`.
+
+Effect:
+
+- Loads existing records and calls `write_report`. It does not build tasks or
+  run Agents.
 
 ## Internal Steps
 
@@ -191,7 +228,8 @@ Output:
 Effect:
 
 - Calls Workspace for requested Agent-task-check cells and calls Result Store to
-  store the produced records.
+  store the produced records. Rejects invalid cache identities and scoring
+  configuration before invoking an Agent.
 
 ### fill_results
 
@@ -216,7 +254,10 @@ Effect:
 
 - Calls Result Store to find selected Agent-task-check cells that are not
   reusable from the cache, then calls Workspace and Result Store to execute and
-  store only those cells.
+  store only those cells. If an exact execution exists only under older
+  pricing, appends and returns the current pricing view without running the
+  Agent. An already-present current pricing view is not duplicated. Invalid
+  cache identities and scoring configuration fail before paid execution.
 
 ### prepare_evaluation_cells
 
@@ -244,8 +285,10 @@ Effect:
 - Applies the same cache identity and denominator policy to selected benchmark
   `Task + Check` refs and future holdout `Task + Check` refs. It asks Result
   Store for missing cells using `cache_config`, runs allowed missing cells
-  through Workspace, stores new results, and returns completeness, exclusion,
-  and abstention metadata for scoring.
+  through Workspace, stores new results, reprices reusable old-price
+  executions, then resolves cells against the exact current derived scoring
+  digest. Runner does not implement a separate cache lookup policy. It returns
+  completeness, exclusion, and abstention metadata for scoring.
 
 ### score_selection
 
@@ -299,6 +342,8 @@ Effect:
 
 - Calls Reporting to write human-readable and machine-readable summaries, then
   returns paths and record references.
+- Uses `ReportConfig.artifact_root` to resolve Task Pool artifact refs. The
+  offline command defaults it to the report-config directory.
 
 ## Design Consistency Check
 

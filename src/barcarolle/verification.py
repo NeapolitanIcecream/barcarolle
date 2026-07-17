@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 from shutil import copy2, copytree
@@ -18,6 +17,7 @@ from barcarolle.records import CheckRecord, RuntimeConfig, canonical_digest
 class WorkspaceRef:
     path: Path
     check_command: tuple[str, ...]
+    check_command_digest: str
     check_id: str
     check_manifest_digest: str
     hidden_check_bundle_digest: str
@@ -39,7 +39,7 @@ class CheckOutcome:
 @dataclass(frozen=True)
 class CheckNormalizationConfig:
     pass_exit_codes: tuple[int, ...] = (0,)
-    invalid_exit_codes: tuple[int, ...] = ()
+    invalid_exit_codes: tuple[int, ...] = (2,)
     timeout_failure_label: str = "timeout"
     fail_failure_label: str = "check_failed"
     invalid_failure_label: str = "check_invalid"
@@ -64,8 +64,8 @@ def prepare_verifier(check: CheckRecord, verifier_workspace: WorkspaceRef) -> Wo
         raise ValueError("hidden_material_source is required to prepare verifier workspace")
     if _path_digest(verifier_workspace.hidden_material_source) != check.hidden_check_bundle_digest:
         raise ValueError("hidden material digest does not match check")
-    if _check_command_digest(verifier_workspace.check_command) != check.check_manifest_digest:
-        raise ValueError("check command digest does not match check manifest")
+    if _check_command_digest(verifier_workspace.check_command) != verifier_workspace.check_command_digest:
+        raise ValueError("check command digest does not match bound command")
     if verifier_workspace.hidden_material_destination is None:
         raise ValueError("hidden_material_destination is required when hidden material is provided")
     destination = _resolve_under_workspace(verifier_workspace.path, verifier_workspace.hidden_material_destination)
@@ -94,7 +94,7 @@ def verify_diff(
             duration_seconds=0.0,
             evidence_excerpt="",
         )
-    if _check_command_digest(verifier_workspace.check_command) != check.check_manifest_digest:
+    if _check_command_digest(verifier_workspace.check_command) != verifier_workspace.check_command_digest:
         return CheckOutcome(
             outcome="invalid",
             failure_label="check_command_mismatch",
@@ -177,21 +177,6 @@ def normalize_outcome(raw_output: object, normalization_config: CheckNormalizati
     if exit_code in normalization_config.invalid_exit_codes:
         return CheckOutcome("invalid", normalization_config.invalid_failure_label, exit_code, False, duration, evidence_excerpt)
     return CheckOutcome("fail", normalization_config.fail_failure_label, exit_code, False, duration, evidence_excerpt)
-
-
-def repeat_verification(
-    check: CheckRecord,
-    verifier_workspace_factory: Callable[[], WorkspaceRef],
-    repeat_count: int,
-    runtime_config: RuntimeConfig,
-) -> Sequence[CheckOutcome]:
-    if repeat_count < 1:
-        raise ValueError("repeat_count must be at least 1")
-    outcomes: list[CheckOutcome] = []
-    for _ in range(repeat_count):
-        workspace = prepare_verifier(check, verifier_workspace_factory())
-        outcomes.append(verify_diff(check, workspace, runtime_config))
-    return tuple(outcomes)
 
 
 def summarize_evidence(outcome: CheckOutcome) -> EvidenceSummary:

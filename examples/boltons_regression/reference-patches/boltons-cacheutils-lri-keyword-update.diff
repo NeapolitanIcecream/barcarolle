@@ -1,0 +1,13 @@
+diff --git a/boltons/cacheutils.py b/boltons/cacheutils.py
+index 856bf19..229748b 100644
+--- a/boltons/cacheutils.py
++++ b/boltons/cacheutils.py
+@@ -293,7 +293,7 @@ class LRI(dict):
+                 self[key] = default
+                 return default
+ 
+-    def update(self, E, **F):
++    def update(self, E=(), **F):
+         # E and F are throwback names to the dict() __doc__
+         with self._lock:
+             if E is self:

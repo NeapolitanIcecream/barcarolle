@@ -1,9 +1,12 @@
 import json
 from dataclasses import replace
 
+import pytest
+
 from barcarolle.records import (
     AgentRecord,
     BenchmarkSelectionRecord,
+    CheckRecord,
     EvaluationCellSet,
     MetricRecord,
     ResultCacheIdentity,
@@ -12,8 +15,12 @@ from barcarolle.records import (
     ResultRecord,
     TaskCheckRef,
     TaskPoolRecord,
+    TaskRecord,
     canonical_digest,
+    load_jsonl_records,
+    make_solver_material_digest,
     record_with_digest,
+    write_jsonl_records,
 )
 from barcarolle.reporting import (
     ClaimConfig,
@@ -26,18 +33,22 @@ from barcarolle.reporting import (
 )
 
 
-def test_task_pool_and_result_reports_summarize_existing_records() -> None:
-    task_pool = _task_pool()
+def test_task_pool_and_result_reports_summarize_existing_records(tmp_path) -> None:
+    task_pool = _task_pool_with_artifacts(tmp_path)
     result_pass = _result(outcome="pass", terminal_status="passed", total_cost=1.25, workspace_seconds=3.0)
     result_fail = _result(result_id="result-fail", outcome="fail", terminal_status="failed", total_cost=0.75, workspace_seconds=5.0)
 
-    task_section = build_task_pool_report(task_pool)
+    task_section = build_task_pool_report(task_pool, artifact_root=tmp_path)
     result_section = build_result_report((result_pass, result_fail), (_agent(),))
 
     assert task_section.summary["task_count"] == 1
     assert task_section.summary["check_count"] == 1
     assert task_section.source_digests["task_pool_digest"] == task_pool.task_pool_digest
-    assert task_section.artifact_paths == ("tasks.jsonl", "checks.jsonl")
+    assert task_section.artifact_paths == (
+        "tasks.jsonl",
+        "checks.jsonl",
+        "certification-evidence.jsonl",
+    )
     assert task_section.unsupported_claims == ()
     assert result_section.summary["outcome_counts"] == {"fail": 1, "pass": 1}
     assert result_section.summary["scoreable_state_counts"] == {"scoreable": 2}
@@ -85,9 +96,8 @@ def test_result_report_distinguishes_unknown_cost_from_measured_zero() -> None:
     measured_zero = _result(result_id="result-zero", total_cost=0.0)
     unknown = record_with_digest(
         replace(
-            _result(result_id="result-unknown", total_cost=0.0),
+            _result(result_id="result-unknown", total_cost=None),
             usage={},
-            usage_coverage="unknown",
             result_digest="",
         )
     )
@@ -100,7 +110,8 @@ def test_result_report_distinguishes_unknown_cost_from_measured_zero() -> None:
         "measured_zero_cost_count": 1,
         "unknown_result_count": 1,
     }
-    assert section.summary["usage_coverage"] == {"reported": 1, "unknown": 1}
+    assert "usage_coverage" not in section.summary
+    assert section.unsupported_claims == ()
 
 
 def test_selector_report_preserves_matrix_cell_set_and_metric_traceability() -> None:
@@ -127,6 +138,22 @@ def test_selector_report_preserves_matrix_cell_set_and_metric_traceability() -> 
     assert metric.metric_digest in section.source_digests["metric_digests"]
     assert selected_matrix.matrix_digest in section.source_digests["matrix_digests"]
     assert cell_set.cell_set_digest in section.source_digests["cell_set_digests"]
+
+
+def test_selector_report_rejects_metric_without_selection_budget_binding() -> None:
+    task_pool = _task_pool()
+    result = _result()
+    selection = _selection(task_pool)
+    cell_set = _cell_set(selection, result.cache_identity.identity_digest, result)
+    selected_matrix = _matrix(selection, cell_set, role="selected")
+    future_matrix = _matrix(selection, cell_set, role="future_holdout")
+    metric = record_with_digest(
+        replace(_metric(selection, cell_set, selected_matrix, future_matrix), budget_digest=None, metric_digest="")
+    )
+
+    section = build_selector_report((selection,), (cell_set,), (selected_matrix, future_matrix), (metric,))
+
+    assert any("budget digest does not match" in claim for claim in section.unsupported_claims)
 
 
 def test_selector_report_does_not_support_empty_evidence() -> None:
@@ -245,6 +272,36 @@ def test_selector_and_claim_reports_reject_incomplete_metric_without_abstention(
     assert any(claim.startswith("selector_metrics:") for claim in claim_section.unsupported_claims)
 
 
+def test_selector_and_claim_reports_reject_recomputed_metric_value_mismatch() -> None:
+    task_pool = _task_pool()
+    result = _result()
+    selection = _selection(task_pool)
+    cell_set = _cell_set(selection, result.cache_identity.identity_digest, result)
+    selected_matrix = _matrix(selection, cell_set, role="selected")
+    future_matrix = _matrix(selection, cell_set, role="future_holdout")
+    metric = _metric(selection, cell_set, selected_matrix, future_matrix)
+    fabricated_metric = record_with_digest(replace(metric, metric_value=0.5, metric_digest=""))
+
+    selector_section = build_selector_report(
+        (selection,),
+        (cell_set,),
+        (selected_matrix, future_matrix),
+        (fabricated_metric,),
+    )
+    claim_section = build_claim_boundary(
+        task_pool,
+        (selection,),
+        (cell_set,),
+        (selected_matrix, future_matrix),
+        (fabricated_metric,),
+        ClaimConfig("claims"),
+        results=(result,),
+    )
+
+    assert any("does not match recomputed value" in claim for claim in selector_section.unsupported_claims)
+    assert any("does not match recomputed value" in claim for claim in claim_section.unsupported_claims)
+
+
 def test_selector_and_claim_reports_require_metrics_for_each_selection() -> None:
     task_pool = _task_pool()
     result = _result()
@@ -355,8 +412,34 @@ def test_selector_and_claim_reports_reject_matrix_cell_identity_mismatch() -> No
     assert any(claim.startswith("selector_metrics:") for claim in claim_section.unsupported_claims)
 
 
-def test_claim_boundary_separates_supported_and_unsupported_claims() -> None:
+def test_selector_and_claim_reports_reject_matrix_result_binding_mismatch() -> None:
     task_pool = _task_pool()
+    result = _result()
+    selection = _selection(task_pool)
+    cell_set = _cell_set(selection, result.cache_identity.identity_digest, result)
+    selected_matrix = _matrix(selection, cell_set, role="selected")
+    future_matrix = _matrix(selection, cell_set, role="future_holdout")
+    bad_cell = replace(selected_matrix.cells[0], result_digest="different-result-digest")
+    bad_selected_matrix = record_with_digest(replace(selected_matrix, cells=(bad_cell,), matrix_digest=""))
+    metric = _metric(selection, cell_set, bad_selected_matrix, future_matrix)
+
+    selector_section = build_selector_report((selection,), (cell_set,), (bad_selected_matrix, future_matrix), (metric,))
+    claim_section = build_claim_boundary(
+        task_pool,
+        (selection,),
+        (cell_set,),
+        (bad_selected_matrix, future_matrix),
+        (metric,),
+        ClaimConfig("claims"),
+        results=(result,),
+    )
+
+    assert any("selected matrix cells do not match" in claim for claim in selector_section.unsupported_claims)
+    assert any(claim.startswith("selector_metrics:") for claim in claim_section.unsupported_claims)
+
+
+def test_claim_boundary_separates_supported_and_unsupported_claims(tmp_path) -> None:
+    task_pool = _task_pool_with_artifacts(tmp_path)
     result = _result()
     selection = _selection(task_pool, exposure_state="draft")
     cell_set = _cell_set(selection, result.cache_identity.identity_digest, result)
@@ -380,6 +463,7 @@ def test_claim_boundary_separates_supported_and_unsupported_claims() -> None:
         (metric,),
         ClaimConfig("claims"),
         results=(mismatched_result,),
+        artifact_root=tmp_path,
     )
 
     assert "task_pool_coverage" in section.supported_claims
@@ -583,6 +667,253 @@ def test_task_pool_report_rejects_missing_audit_fields() -> None:
     assert any(claim.startswith("task_pool_coverage:") for claim in claim_section.unsupported_claims)
 
 
+@pytest.mark.parametrize(
+    ("filename", "error"),
+    (
+        ("tasks.jsonl", "task records are unavailable"),
+        ("checks.jsonl", "check records are unavailable"),
+        (
+            "certification-evidence.jsonl",
+            "certification evidence is unavailable",
+        ),
+    ),
+)
+def test_task_pool_claims_require_referenced_artifacts(
+    tmp_path,
+    filename: str,
+    error: str,
+) -> None:
+    task_pool = _task_pool_with_artifacts(tmp_path)
+    (tmp_path / filename).unlink()
+
+    section = build_task_pool_report(task_pool, artifact_root=tmp_path)
+    claim_section = build_claim_boundary(
+        task_pool,
+        (),
+        (),
+        (),
+        (),
+        ClaimConfig("claims"),
+        artifact_root=tmp_path,
+    )
+
+    assert any(error in claim for claim in section.unsupported_claims)
+    assert any(
+        error in claim
+        for claim in claim_section.unsupported_claims
+    )
+
+
+@pytest.mark.parametrize(
+    ("filename", "missing_field", "error"),
+    (
+        ("tasks.jsonl", "task_id", "task records are unavailable or invalid"),
+        ("checks.jsonl", "check_id", "check records are unavailable or invalid"),
+    ),
+)
+def test_task_pool_claims_treat_missing_artifact_fields_as_unsupported(
+    tmp_path,
+    filename: str,
+    missing_field: str,
+    error: str,
+) -> None:
+    task_pool = _task_pool_with_artifacts(tmp_path)
+    path = tmp_path / filename
+    record = json.loads(path.read_text(encoding="utf-8"))
+    record.pop(missing_field)
+    path.write_text(json.dumps(record) + "\n", encoding="utf-8")
+
+    section = build_task_pool_report(task_pool, artifact_root=tmp_path)
+    claim_section = build_claim_boundary(
+        task_pool,
+        (),
+        (),
+        (),
+        (),
+        ClaimConfig("claims"),
+        artifact_root=tmp_path,
+    )
+
+    assert any(error in claim for claim in section.unsupported_claims)
+    assert any(error in claim for claim in claim_section.unsupported_claims)
+
+
+@pytest.mark.parametrize(
+    ("filename", "field", "value", "record_type", "digest_field", "error"),
+    (
+        (
+            "tasks.jsonl",
+            "task_text",
+            "",
+            TaskRecord,
+            "task_records_digest",
+            "task_text must not be empty",
+        ),
+        (
+            "checks.jsonl",
+            "resource_limits",
+            {"timeout_seconds": None},
+            CheckRecord,
+            "check_records_digest",
+            "check check failed validation: resource_limits values must be bounded",
+        ),
+    ),
+)
+def test_task_pool_claims_reject_semantically_invalid_task_and_check_records(
+    tmp_path,
+    filename: str,
+    field: str,
+    value: object,
+    record_type: type,
+    digest_field: str,
+    error: str,
+) -> None:
+    task_pool = _task_pool_with_artifacts(tmp_path)
+    path = tmp_path / filename
+    record = json.loads(path.read_text(encoding="utf-8"))
+    record[field] = value
+    path.write_text(json.dumps(record) + "\n", encoding="utf-8")
+    records = tuple(load_jsonl_records(path, record_type))
+    task_pool = record_with_digest(
+        replace(
+            task_pool,
+            **{digest_field: canonical_digest(records), "task_pool_digest": ""},
+        )
+    )
+
+    section = build_task_pool_report(task_pool, artifact_root=tmp_path)
+    claim_section = build_claim_boundary(
+        task_pool,
+        (),
+        (),
+        (),
+        (),
+        ClaimConfig("claims"),
+        artifact_root=tmp_path,
+    )
+
+    assert any(error in claim for claim in section.unsupported_claims)
+    assert any(error in claim for claim in claim_section.unsupported_claims)
+
+
+def test_task_pool_claims_require_evidence_for_every_accepted_task_check(
+    tmp_path,
+) -> None:
+    task_pool = _task_pool_with_artifacts(tmp_path)
+    evidence: tuple[object, ...] = ()
+    write_jsonl_records(tmp_path / "certification-evidence.jsonl", evidence)
+    task_pool = record_with_digest(
+        replace(
+            task_pool,
+            certification_evidence_digest=canonical_digest(evidence),
+            task_pool_digest="",
+        )
+    )
+
+    section = build_task_pool_report(task_pool, artifact_root=tmp_path)
+
+    assert any(
+        "certification evidence does not exactly cover accepted Task/Check records"
+        in claim
+        for claim in section.unsupported_claims
+    )
+
+
+def test_task_pool_claims_require_evidence_for_every_rejected_candidate(
+    tmp_path,
+) -> None:
+    task_pool = _task_pool_with_artifacts(tmp_path)
+    task_pool = record_with_digest(
+        replace(
+            task_pool,
+            rejected_candidate_ids=("rejected-candidate",),
+            rejection_summary_digest=canonical_digest(
+                {"rejected_count": 1, "reasons": {"check failed": 1}}
+            ),
+            task_pool_digest="",
+        )
+    )
+
+    section = build_task_pool_report(task_pool, artifact_root=tmp_path)
+
+    assert any(
+        "certification evidence does not exactly cover rejected candidates"
+        in claim
+        for claim in section.unsupported_claims
+    )
+
+
+def test_task_pool_claims_require_base_fail_reference_patch_pass_evidence(
+    tmp_path,
+) -> None:
+    task_pool = _task_pool_with_artifacts(tmp_path)
+    path = tmp_path / "certification-evidence.jsonl"
+    evidence = json.loads(path.read_text(encoding="utf-8"))
+    evidence["base_check"][0]["outcome"] = "pass"
+    evidence["base_check"][0]["failure_label"] = None
+    records = (evidence,)
+    write_jsonl_records(path, records)
+    task_pool = record_with_digest(
+        replace(
+            task_pool,
+            certification_evidence_digest=canonical_digest(records),
+            task_pool_digest="",
+        )
+    )
+
+    section = build_task_pool_report(task_pool, artifact_root=tmp_path)
+
+    assert any(
+        "accepted certification base check must fail" in claim
+        for claim in section.unsupported_claims
+    )
+
+
+@pytest.mark.parametrize(
+    ("filename", "error"),
+    (
+        ("tasks.jsonl", "task records digest does not match"),
+        ("checks.jsonl", "check records digest does not match"),
+        (
+            "certification-evidence.jsonl",
+            "certification evidence digest does not match",
+        ),
+    ),
+)
+def test_task_pool_claims_reject_artifact_digest_drift(
+    tmp_path,
+    filename: str,
+    error: str,
+) -> None:
+    task_pool = _task_pool_with_artifacts(tmp_path)
+    path = tmp_path / filename
+    record = json.loads(path.read_text(encoding="utf-8"))
+    changed_field = {
+        "tasks.jsonl": "cluster_id",
+        "checks.jsonl": "oracle_source",
+        "certification-evidence.jsonl": "candidate_id",
+    }[filename]
+    record[changed_field] = "changed"
+    path.write_text(json.dumps(record) + "\n", encoding="utf-8")
+
+    section = build_task_pool_report(task_pool, artifact_root=tmp_path)
+    claim_section = build_claim_boundary(
+        task_pool,
+        (),
+        (),
+        (),
+        (),
+        ClaimConfig("claims"),
+        artifact_root=tmp_path,
+    )
+
+    assert any(error in claim for claim in section.unsupported_claims)
+    assert any(
+        error in claim
+        for claim in claim_section.unsupported_claims
+    )
+
+
 def test_claim_boundary_does_not_support_claims_without_evidence() -> None:
     section = build_claim_boundary(
         _task_pool(),
@@ -594,7 +925,7 @@ def test_claim_boundary_does_not_support_claims_without_evidence() -> None:
         results=(),
     )
 
-    assert "task_pool_coverage" in section.supported_claims
+    assert any(claim.startswith("task_pool_coverage:") for claim in section.unsupported_claims)
     assert any(claim.startswith("benchmark_selection_frozen:") for claim in section.unsupported_claims)
     assert any(claim.startswith("cache_completeness:") for claim in section.unsupported_claims)
     assert any(claim.startswith("selector_metrics:") for claim in section.unsupported_claims)
@@ -616,7 +947,11 @@ def test_write_report_writes_markdown_and_json_summaries(tmp_path) -> None:
     assert "task_pool_digest" in markdown
     assert "tasks.jsonl" in markdown
     assert payload[0]["section_id"] == "task_pool"
-    assert payload[0]["artifact_paths"] == ["tasks.jsonl", "checks.jsonl"]
+    assert payload[0]["artifact_paths"] == [
+        "tasks.jsonl",
+        "checks.jsonl",
+        "certification-evidence.jsonl",
+    ]
 
 
 def test_write_report_sanitizes_local_absolute_artifact_paths(tmp_path) -> None:
@@ -645,6 +980,38 @@ def test_write_report_sanitizes_local_absolute_artifact_paths(tmp_path) -> None:
     assert payload[0]["artifact_paths"] == ["runs/workspace-run/stdout.txt"]
 
 
+@pytest.mark.parametrize(
+    ("artifact_path", "safe_ref"),
+    (
+        ("/tmp/barcarolle-user/workspaces/run/stdout.txt", "stdout.txt"),
+        ("/private/var/folders/ab/private-run/verifier/stderr.txt", "stderr.txt"),
+    ),
+)
+def test_write_report_hides_external_absolute_artifact_directories(
+    tmp_path,
+    artifact_path: str,
+    safe_ref: str,
+) -> None:
+    section = ReportSection(
+        section_id="artifacts",
+        heading="Artifacts",
+        summary={"artifact_ref": artifact_path},
+        source_digests={"artifact_digest": "digest"},
+        artifact_paths=(artifact_path,),
+    )
+    markdown_path = tmp_path / "report.md"
+    json_path = tmp_path / "report.json"
+
+    write_report((section,), markdown_path, artifact_root=tmp_path / "artifacts")
+    write_report((section,), json_path, artifact_root=tmp_path / "artifacts")
+
+    markdown = markdown_path.read_text(encoding="utf-8")
+    payload = json.loads(json_path.read_text(encoding="utf-8"))
+    assert artifact_path not in markdown
+    assert payload[0]["summary"]["artifact_ref"] == safe_ref
+    assert payload[0]["artifact_paths"] == [safe_ref]
+
+
 def _task_pool() -> TaskPoolRecord:
     record = TaskPoolRecord(
         task_pool_id="task-pool",
@@ -656,6 +1023,7 @@ def _task_pool() -> TaskPoolRecord:
         task_records_digest="task-records",
         check_records_ref="checks.jsonl",
         check_records_digest="check-records",
+        certification_evidence_ref="certification-evidence.jsonl",
         rejected_candidate_ids=("rejected",),
         rejection_summary_digest="rejection-summary",
         certification_evidence_digest="certification-evidence",
@@ -665,6 +1033,92 @@ def _task_pool() -> TaskPoolRecord:
         created_at="2026-01-01T00:00:00Z",
     )
     return record_with_digest(record)
+
+
+def _task_pool_with_artifacts(root) -> TaskPoolRecord:
+    task_text = "Fix the issue."
+    solver_material_refs = ("README.md",)
+    task = TaskRecord(
+        task_id="task",
+        repository_id="repo",
+        base_commit="commit",
+        source_family="issue",
+        source_ref="issue-1",
+        source_resolved_at="2026-01-01T00:00:00Z",
+        task_material_available_at="2026-01-01T00:00:00Z",
+        task_text=task_text,
+        solver_material_digest=make_solver_material_digest(
+            task_text, solver_material_refs
+        ),
+        solver_material_refs=solver_material_refs,
+        check_ids=("check",),
+        cluster_id="cluster",
+    )
+    check = CheckRecord(
+        check_id="check",
+        task_id="task",
+        check_type="pytest",
+        check_manifest_digest="check-manifest",
+        hidden_check_bundle_digest="hidden-bundle",
+        resource_limits={"timeout_seconds": 5},
+        oracle_source="private-tests",
+        check_material_available_at="2026-01-01T00:00:00Z",
+    )
+    evidence = (
+        {
+            "candidate_id": "candidate",
+            "accepted": True,
+            "rejection_reasons": (),
+            "repeat_count": 1,
+            "base_check": (
+                {
+                    "outcome": "fail",
+                    "failure_label": "check_failed",
+                    "timed_out": False,
+                    "duration_seconds": 0.1,
+                    "evidence_excerpt": "",
+                },
+            ),
+            "reference_patch_check": (
+                {
+                    "outcome": "pass",
+                    "failure_label": None,
+                    "timed_out": False,
+                    "duration_seconds": 0.1,
+                    "evidence_excerpt": "",
+                },
+            ),
+            "reference_patch_digest": "0" * 64,
+            "task_digest": canonical_digest(task),
+            "check_digest": canonical_digest(check),
+        },
+    )
+    write_jsonl_records(root / "tasks.jsonl", (task,))
+    write_jsonl_records(root / "checks.jsonl", (check,))
+    write_jsonl_records(root / "certification-evidence.jsonl", evidence)
+    return record_with_digest(
+        TaskPoolRecord(
+            task_pool_id="task-pool",
+            task_pool_digest="",
+            repository_id="repo",
+            task_ids=(task.task_id,),
+            check_ids=(check.check_id,),
+            task_records_ref="tasks.jsonl",
+            task_records_digest=canonical_digest((task,)),
+            check_records_ref="checks.jsonl",
+            check_records_digest=canonical_digest((check,)),
+            certification_evidence_ref="certification-evidence.jsonl",
+            rejected_candidate_ids=(),
+            rejection_summary_digest=canonical_digest(
+                {"rejected_count": 0, "reasons": {}}
+            ),
+            certification_evidence_digest=canonical_digest(evidence),
+            source_event_inventory_digest="source-events",
+            generator_config_digest="generator",
+            certification_config_digest=canonical_digest({"repeat_count": 1}),
+            created_at="2026-01-01T00:00:00Z",
+        )
+    )
 
 
 def _agent() -> AgentRecord:
@@ -691,10 +1145,7 @@ def _identity() -> ResultCacheIdentity:
         base_commit="commit",
         submodule_state_digest="submodules",
         solver_material_digest="solver",
-        check_manifest_digest="check-manifest",
-        hidden_check_bundle_digest="hidden-bundle",
-        verifier_image_digest="image",
-        verifier_deps_digest="deps",
+        check_digest="check",
         agent_manifest_digest="agent-manifest",
         model_snapshot_id="model",
         harness_digest="harness",
@@ -711,7 +1162,6 @@ def _identity() -> ResultCacheIdentity:
         workspace_config_digest="workspace",
         runtime_config_digest="runtime",
         hardware_profile_digest=None,
-        scoring_config_digest="scoring",
         identity_digest="",
     )
     return record_with_digest(identity)
@@ -721,7 +1171,7 @@ def _result(
     result_id: str = "result",
     outcome: str = "pass",
     terminal_status: str = "passed",
-    total_cost: float = 0.5,
+    total_cost: float | None = 0.5,
     workspace_seconds: float = 2.0,
 ) -> ResultRecord:
     result = ResultRecord(
@@ -737,9 +1187,9 @@ def _result(
         invalid_owner=None,
         failure_label=None,
         cost={"total_cost": total_cost},
+        scoring_config_digest="scoring",
         pricing_version="test",
         usage={"total_tokens": 10},
-        usage_coverage="reported",
         latency={"workspace_seconds": workspace_seconds},
         diff_digest="diff",
         verifier_metadata_digest="verifier",
