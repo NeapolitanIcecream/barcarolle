@@ -585,6 +585,12 @@ def _matrix_completeness_error(selected_matrix: ResultMatrix, future_matrix: Res
         return selected_matrix.abstention_reason or future_matrix.abstention_reason
     if any(cell.cell_state == "missing" for cell in selected_matrix.cells + future_matrix.cells):
         return "missing_required_results"
+    for matrix in (selected_matrix, future_matrix):
+        agents_with_results = {
+            cell.agent_id for cell in matrix.cells if cell.cell_state == "result"
+        }
+        if any(agent_id not in agents_with_results for agent_id in matrix.agent_ids):
+            return f"{matrix.matrix_role}_empty_agent_denominator"
     return None
 
 
@@ -605,8 +611,7 @@ def _pass_rates(matrix: ResultMatrix, weights: Mapping[str, float] | None = None
     for agent_id in matrix.agent_ids:
         cells = [cell for cell in matrix.cells if cell.agent_id == agent_id and cell.cell_state == "result"]
         if not cells:
-            rates[agent_id] = 0.0
-            continue
+            raise ValueError("result matrix has an empty Agent denominator")
         if any(cell.outcome not in {"pass", "fail", "invalid"} for cell in cells):
             raise ValueError("result matrix cells must carry outcomes for metric computation")
         if weights is None:
@@ -622,7 +627,9 @@ def _pass_rates(matrix: ResultMatrix, weights: Mapping[str, float] | None = None
             weighted_total += weight
             if cell.outcome == "pass":
                 weighted_passed += weight
-        rates[agent_id] = 0.0 if weighted_total == 0.0 else weighted_passed / weighted_total
+        if weighted_total == 0.0:
+            raise ValueError("selected matrix has an empty weighted denominator")
+        rates[agent_id] = weighted_passed / weighted_total
     return rates
 
 

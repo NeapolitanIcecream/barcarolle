@@ -398,8 +398,11 @@ Effect:
 - Every emitted metric binds `budget_digest` to the frozen selection budget. A
   non-null, conflicting `MetricConfig.budget_digest` produces an invalid metric
   instead of a cross-budget comparison.
-- Metric completeness is `complete_with_exclusions` when either the selected or
-  future matrix has exclusions; it is `complete` only when both are complete.
+- Metric completeness is `complete_with_exclusions` when either matrix has
+  exclusions and every Agent still has result cells in both matrices. If
+  exclusions empty any Agent's selected or future denominator, evaluation
+  abstains instead of assigning a zero pass rate. Metrics are `complete` only
+  when both matrices are complete.
 
 ### choose_selector_by_mean_mae
 

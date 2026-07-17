@@ -1885,30 +1885,42 @@ def test_evaluate_selection_abstains_on_missing_cells() -> None:
     assert metrics[0].abstention_reason == "missing_required_results"
 
 
-def test_evaluate_selection_reports_selected_matrix_exclusions() -> None:
+@pytest.mark.parametrize("matrix_role", ("selected", "future_holdout"))
+def test_evaluate_selection_abstains_when_exclusions_empty_agent_denominator(
+    matrix_role: str,
+) -> None:
     task_pool = _task_pool(("task-old",), ("check-old",))
     origin = _origin(task_pool)
     selection = _selection(origin, task_pool)
     cell_set = _cell_set(origin, selection)
+    cell_index = 0 if matrix_role == "selected" else 1
     excluded = replace(
-        cell_set.cells[0],
+        cell_set.cells[cell_index],
         result_id=None,
         result_digest=None,
         cell_state="excluded",
         exclusion_reason="agent_invalid",
         outcome="invalid",
     )
+    cells = list(cell_set.cells)
+    cells[cell_index] = excluded
     cell_set = record_with_digest(
-        replace(cell_set, cells=(excluded, cell_set.cells[1]), cell_set_digest="")
+        replace(cell_set, cells=tuple(cells), cell_set_digest="")
     )
-    selected_matrix = record_with_digest(
+    selected_matrix = _matrix(origin, selection, cell_set, role="selected")
+    future_matrix = _matrix(origin, selection, cell_set, role="future_holdout")
+    target_matrix = selected_matrix if matrix_role == "selected" else future_matrix
+    target_matrix = record_with_digest(
         replace(
-            _matrix(origin, selection, cell_set, role="selected"),
+            target_matrix,
             scoreable_state="complete_with_exclusions",
             matrix_digest="",
         )
     )
-    future_matrix = _matrix(origin, selection, cell_set, role="future_holdout")
+    if matrix_role == "selected":
+        selected_matrix = target_matrix
+    else:
+        future_matrix = target_matrix
 
     metrics = evaluate_selection(
         selection,
@@ -1919,9 +1931,12 @@ def test_evaluate_selection_reports_selected_matrix_exclusions() -> None:
         MetricConfig("metric-config"),
     )
 
-    assert {metric.completeness_state for metric in metrics} == {
-        "complete_with_exclusions"
-    }
+    assert len(metrics) == 1
+    assert metrics[0].metric_name == "selection_evaluation_invalid"
+    assert metrics[0].completeness_state == "abstained"
+    assert metrics[0].abstention_reason == (
+        f"{matrix_role}_empty_agent_denominator"
+    )
 
 
 def test_evaluate_selection_rejects_matrix_with_omitted_agent_denominator_cell() -> None:

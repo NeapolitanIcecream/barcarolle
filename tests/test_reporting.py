@@ -674,6 +674,40 @@ def test_task_pool_claims_require_referenced_artifacts(
 
 
 @pytest.mark.parametrize(
+    ("filename", "missing_field", "error"),
+    (
+        ("tasks.jsonl", "task_id", "task records are unavailable or invalid"),
+        ("checks.jsonl", "check_id", "check records are unavailable or invalid"),
+    ),
+)
+def test_task_pool_claims_treat_missing_artifact_fields_as_unsupported(
+    tmp_path,
+    filename: str,
+    missing_field: str,
+    error: str,
+) -> None:
+    task_pool = _task_pool_with_artifacts(tmp_path)
+    path = tmp_path / filename
+    record = json.loads(path.read_text(encoding="utf-8"))
+    record.pop(missing_field)
+    path.write_text(json.dumps(record) + "\n", encoding="utf-8")
+
+    section = build_task_pool_report(task_pool, artifact_root=tmp_path)
+    claim_section = build_claim_boundary(
+        task_pool,
+        (),
+        (),
+        (),
+        (),
+        ClaimConfig("claims"),
+        artifact_root=tmp_path,
+    )
+
+    assert any(error in claim for claim in section.unsupported_claims)
+    assert any(error in claim for claim in claim_section.unsupported_claims)
+
+
+@pytest.mark.parametrize(
     ("filename", "error"),
     (
         ("tasks.jsonl", "task records digest does not match"),

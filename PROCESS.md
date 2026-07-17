@@ -33,7 +33,8 @@ frameworks without a current caller.
 Reports support Task Pool coverage only after loading the referenced Task,
 Check, and certification-evidence files and matching their frozen digests.
 Persisted Selector inputs must retain the complete rolling-history denominator;
-benchmark infrastructure failures stop certification instead of shrinking it.
+benchmark infrastructure failures stop certification instead of shrinking it,
+and selection metrics abstain if exclusions leave any Agent without results.
 
 The default runtime target is a cooperative Agent. Fresh workspaces, diff
 replay, and verifier-only hidden material are required benchmark behavior.

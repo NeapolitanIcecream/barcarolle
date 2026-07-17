@@ -590,7 +590,7 @@ def _load_task_pool_records(
         return None
     try:
         return tuple(load_jsonl_records(_artifact_ref_path(ref, root), record_type))
-    except (OSError, TypeError, ValueError):
+    except (KeyError, OSError, TypeError, ValueError):
         errors.append(f"{label} are unavailable or invalid")
         return None
 

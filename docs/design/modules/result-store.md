@@ -315,6 +315,8 @@ failures. Persistent task-level infrastructure failures should be removed from
 all Agents' denominators for that matrix. If required Agent-task-check cells
 are missing and cannot be filled under the configured policy, the matrix must
 carry an abstention reason instead of silently scoring a partial comparison.
+Selection also abstains when exclusions leave any Agent with no result cells in
+the selected or future matrix.
 
 ## Design Consistency Check
 
