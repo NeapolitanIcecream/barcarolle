@@ -800,6 +800,40 @@ def test_post_diff_check_launch_error_caused_by_agent_is_agent_invalid(tmp_path:
     assert record.failure_label == "check_launch_error"
 
 
+def test_post_diff_check_invalid_caused_by_agent_is_agent_invalid(tmp_path: Path) -> None:
+    repo, _ = _make_repo(tmp_path)
+    check_script = repo / "check.sh"
+    check_script.write_text("#!/bin/sh\nexit 0\n", encoding="utf-8")
+    check_script.chmod(0o755)
+    _git(repo, "add", "check.sh")
+    _git(repo, "commit", "-m", "add check script")
+    base_commit = _git(repo, "rev-parse", "HEAD").stdout.strip()
+    task = _task(base_commit=base_commit)
+    workspace_config = _workspace_config(repo)
+    hidden = tmp_path / "hidden.txt"
+    hidden.write_text("private oracle", encoding="utf-8")
+    agent_command = (
+        sys.executable,
+        "-c",
+        "from pathlib import Path; Path('check.sh').write_text('#!/bin/sh\\nexit 2\\n')",
+    )
+    check_command = ("./check.sh",)
+    agent = _agent(agent_command)
+    check = _check(command=check_command, hidden=hidden)
+    bind_repository_source(workspace_config, repo)
+    bind_agent_harness(agent, agent_command)
+    bind_check_material(check, check_command, hidden)
+
+    record = run_agent_on_task(task, check, agent, workspace_config, _runtime())
+
+    assert validate_workspace_run(record).ok
+    assert record.terminal_status == "invalid"
+    assert record.replay_status == "applied"
+    assert record.check_outcome == "invalid"
+    assert record.invalid_owner == "agent"
+    assert record.failure_label == "check_invalid"
+
+
 def test_external_check_launch_error_is_benchmark_invalid(tmp_path: Path) -> None:
     repo, base_commit = _make_repo(tmp_path)
     task = _task(base_commit=base_commit)
@@ -826,6 +860,33 @@ def test_external_check_launch_error_is_benchmark_invalid(tmp_path: Path) -> Non
     assert record.check_outcome == "invalid"
     assert record.invalid_owner == "benchmark"
     assert record.failure_label == "check_launch_error"
+
+
+def test_external_check_invalid_is_benchmark_invalid(tmp_path: Path) -> None:
+    repo, base_commit = _make_repo(tmp_path)
+    task = _task(base_commit=base_commit)
+    workspace_config = _workspace_config(repo)
+    hidden = tmp_path / "hidden.txt"
+    hidden.write_text("private oracle", encoding="utf-8")
+    external_check = tmp_path / "external-check"
+    external_check.write_text("#!/bin/sh\nexit 2\n", encoding="utf-8")
+    external_check.chmod(0o755)
+    agent_command = (sys.executable, "-c", "from pathlib import Path; Path('new.txt').write_text('edit')")
+    check_command = (str(external_check),)
+    agent = _agent(agent_command)
+    check = _check(command=check_command, hidden=hidden)
+    bind_repository_source(workspace_config, repo)
+    bind_agent_harness(agent, agent_command)
+    bind_check_material(check, check_command, hidden)
+
+    record = run_agent_on_task(task, check, agent, workspace_config, _runtime())
+
+    assert validate_workspace_run(record).ok
+    assert record.terminal_status == "invalid"
+    assert record.replay_status == "applied"
+    assert record.check_outcome == "invalid"
+    assert record.invalid_owner == "benchmark"
+    assert record.failure_label == "check_invalid"
 
 
 def test_run_agent_on_task_counts_noop_as_failure_when_the_check_fails(tmp_path: Path) -> None:

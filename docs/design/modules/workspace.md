@@ -268,9 +268,9 @@ Effect:
 - Attributes an unapplicable captured patch (`replay_status=failed`) to the
   Agent, while replay launch or missing-workspace infrastructure failures
   (`replay_status=invalid`) remain benchmark-owned.
-- Attributes a post-diff Check launch failure to the Agent only when replay
-  changed a workspace-relative Check executable. Missing external executables
-  and unchanged workspace executables remain benchmark-owned.
+- Attributes a post-diff Check launch failure or configured invalid exit to the
+  Agent only when replay changed a workspace-relative Check executable.
+  External and unchanged workspace Check failures remain benchmark-owned.
 
 ### run_agent_on_task_with_artifacts
 

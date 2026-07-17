@@ -38,6 +38,8 @@ Selector metrics from their bound matrices before supporting metric claims.
 Persisted Selector inputs must retain the complete rolling-history denominator;
 benchmark infrastructure failures stop certification instead of shrinking it,
 and selection metrics abstain if exclusions leave any Agent without results.
+Post-diff Check launch and invalid-exit failures are Agent-owned only when the
+captured diff changed a workspace-relative Check executable.
 
 The default runtime target is a cooperative Agent. Fresh workspaces, diff
 replay, and verifier-only hidden material are required benchmark behavior.
