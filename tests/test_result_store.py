@@ -448,6 +448,22 @@ def test_resolve_result_cells_never_reuses_structurally_invalid_result(tmp_path:
     assert cells[0].result_id is None
 
 
+def test_resolve_result_cells_rejects_invalid_computed_cache_identity(tmp_path: Path) -> None:
+    invalid_agent = replace(_agent(), model_snapshot_id="")
+
+    with pytest.raises(ValueError, match="cache identity is invalid"):
+        resolve_result_cells(
+            task_check_refs=(TaskCheckRef("task", "check"),),
+            tasks=(_task(),),
+            checks={"check": _check()},
+            agents=(invalid_agent,),
+            workspace_config=_workspace_config(),
+            runtime_config=_runtime_config(),
+            store=ResultStore(tmp_path / "results.jsonl"),
+            cache_config=ResultCacheConfig(),
+        )
+
+
 def test_resolve_result_cells_keeps_agent_invalid_result_reusable(tmp_path: Path) -> None:
     store = ResultStore(tmp_path / "results.jsonl")
     agent_invalid = _result(

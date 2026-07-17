@@ -149,13 +149,17 @@ def compute_result_cache_identity(
     workspace_config: WorkspaceConfig,
     runtime_config: RuntimeConfig,
 ) -> ResultCacheIdentity:
-    return make_result_cache_identity(
+    identity = make_result_cache_identity(
         task,
         check,
         agent,
         workspace_config,
         runtime_config,
     )
+    validation = validate_result_cache_identity(identity)
+    if not validation.ok:
+        raise ValueError(f"result cache identity is invalid: {', '.join(validation.errors)}")
+    return identity
 
 
 def compute_result_cache_key(identity: ResultCacheIdentity) -> str:
@@ -254,9 +258,7 @@ def resolve_result_cells(
         check = _check_for_ref(ref, task, checks)
         for agent in agents:
             identity = compute_result_cache_identity(task, check, agent, workspace_config, runtime_config)
-            reusable = None
-            if validate_result_cache_identity(identity).ok:
-                reusable = reusable_results.get((agent.agent_id, task.task_id, check.check_id, identity))
+            reusable = reusable_results.get((agent.agent_id, task.task_id, check.check_id, identity))
             cells.append(_resolved_result_cell(agent, task, check, identity, reusable))
     return tuple(cells)
 
@@ -452,8 +454,12 @@ def _normalize_result_state(workspace_run: WorkspaceRunRecord) -> tuple[str, str
     return ("benchmark_invalid", "invalid", invalid_owner or "benchmark")
 
 
-def compute_cost(usage: Mapping[str, Any], scoring_config: ScoringConfig) -> Mapping[str, Any]:
-    """Price recorded usage without affecting the paid execution identity."""
+def validate_scoring_config(scoring_config: ScoringConfig) -> None:
+    """Reject scoring inputs that cannot produce a durable Result."""
+    if not isinstance(scoring_config.pricing_version, str) or not scoring_config.pricing_version:
+        raise ValueError("pricing_version is required")
+    if not isinstance(scoring_config.cost_rates, Mapping):
+        raise ValueError("cost_rates must be a mapping")
     for key, rate in scoring_config.cost_rates.items():
         if not isinstance(key, str):
             raise ValueError("cost rate keys must be strings")
@@ -465,6 +471,11 @@ def compute_cost(usage: Mapping[str, Any], scoring_config: ScoringConfig) -> Map
             raise ValueError(f"cost rate for {key} must be a finite and nonnegative number") from exc
         if not isfinite(numeric_rate) or numeric_rate < 0.0:
             raise ValueError(f"cost rate for {key} must be a finite and nonnegative number")
+
+
+def compute_cost(usage: Mapping[str, Any], scoring_config: ScoringConfig) -> Mapping[str, Any]:
+    """Price recorded usage without affecting the paid execution identity."""
+    validate_scoring_config(scoring_config)
     missing_keys = [key for key in scoring_config.cost_rates if key not in usage]
     costs: dict[str, Any] = {}
     total = 0.0

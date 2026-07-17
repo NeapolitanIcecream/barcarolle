@@ -477,7 +477,7 @@ def run_agent_on_task_with_artifacts(
             check_outcome = CheckOutcome("invalid", replay.failure_label, None, False, 0.0, "")
         check_execution_failure_agent_owned = (
             check_outcome.failure_label in {"check_invalid", "check_launch_error"}
-            and _agent_changed_check_executable(check, verifier_workspace, diff)
+            and _agent_changed_check_command_path(check, verifier_workspace, diff)
         )
         run = _workspace_run_record(
             task=task,
@@ -870,7 +870,7 @@ def _material_binding(check: CheckRecord, verifier_workspace: WorkspaceRef) -> _
     return _CHECK_MATERIALS.get(_check_key(check))
 
 
-def _agent_changed_check_executable(
+def _agent_changed_check_command_path(
     check: CheckRecord,
     verifier_workspace: WorkspaceRef,
     diff: CapturedDiff,
@@ -878,19 +878,26 @@ def _agent_changed_check_executable(
     binding = _material_binding(check, verifier_workspace)
     if binding is None or not binding.check_command:
         return False
-    executable_ref = binding.check_command[0]
-    executable_path = Path(executable_ref)
-    if executable_path.is_absolute():
-        try:
-            executable_path = executable_path.relative_to(verifier_workspace.path)
-        except ValueError:
-            return False
-    elif not any(separator in executable_ref for separator in ("/", "\\")) or ".." in executable_path.parts:
-        return False
     try:
-        return executable_path.as_posix() in _captured_diff_paths(diff.diff_text)
+        changed_paths = set(_captured_diff_paths(diff.diff_text))
     except (RuntimeError, ValueError):
         return False
+    for position, command_arg in enumerate(binding.check_command):
+        if not command_arg or command_arg.startswith("-"):
+            continue
+        command_path = Path(command_arg.replace("\\", "/"))
+        if command_path.is_absolute():
+            try:
+                command_path = command_path.relative_to(verifier_workspace.path)
+            except ValueError:
+                continue
+        elif ".." in command_path.parts:
+            continue
+        elif position == 0 and not any(separator in command_arg for separator in ("/", "\\")):
+            continue
+        if command_path.as_posix() in changed_paths:
+            return True
+    return False
 
 
 def _agent_key(agent: AgentRecord) -> tuple[str, str, str]:

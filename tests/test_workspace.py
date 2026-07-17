@@ -800,6 +800,39 @@ def test_post_diff_check_launch_error_caused_by_agent_is_agent_invalid(tmp_path:
     assert record.failure_label == "check_launch_error"
 
 
+def test_interpreter_launched_check_invalid_caused_by_agent_is_agent_invalid(tmp_path: Path) -> None:
+    repo, _ = _make_repo(tmp_path)
+    check_script = repo / "check.py"
+    check_script.write_text("raise SystemExit(0)\n", encoding="utf-8")
+    _git(repo, "add", "check.py")
+    _git(repo, "commit", "-m", "add check script")
+    base_commit = _git(repo, "rev-parse", "HEAD").stdout.strip()
+    task = _task(base_commit=base_commit)
+    workspace_config = _workspace_config(repo)
+    hidden = tmp_path / "hidden.txt"
+    hidden.write_text("private oracle", encoding="utf-8")
+    agent_command = (
+        sys.executable,
+        "-c",
+        "from pathlib import Path; Path('check.py').unlink()",
+    )
+    check_command = (sys.executable, "check.py")
+    agent = _agent(agent_command)
+    check = _check(command=check_command, hidden=hidden)
+    bind_repository_source(workspace_config, repo)
+    bind_agent_harness(agent, agent_command)
+    bind_check_material(check, check_command, hidden)
+
+    record = run_agent_on_task(task, check, agent, workspace_config, _runtime())
+
+    assert validate_workspace_run(record).ok
+    assert record.terminal_status == "invalid"
+    assert record.replay_status == "applied"
+    assert record.check_outcome == "invalid"
+    assert record.invalid_owner == "agent"
+    assert record.failure_label == "check_invalid"
+
+
 def test_post_diff_check_invalid_caused_by_agent_is_agent_invalid(tmp_path: Path) -> None:
     repo, _ = _make_repo(tmp_path)
     check_script = repo / "check.sh"

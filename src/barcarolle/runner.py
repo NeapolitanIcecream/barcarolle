@@ -624,6 +624,7 @@ def _run_agent_cells(
     scoring_config: result_store_module.ScoringConfig,
     result_store: result_store_module.ResultStore,
 ) -> tuple[ResultRecord, ...]:
+    result_store_module.validate_scoring_config(scoring_config)
     if not cells:
         return ()
     agent_by_id = {agent.agent_id: agent for agent in agents}

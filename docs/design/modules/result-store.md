@@ -121,7 +121,8 @@ Effect:
 
 - Produces the structured identity used to decide whether a cached execution is
   reusable. A single `check_digest` binds all behavior-changing Check fields.
-  Pricing and scoring are excluded.
+  Pricing and scoring are excluded. Rejects an invalid identity instead of
+  returning a runnable missing cell.
 
 ### compute_cost
 
@@ -138,7 +139,8 @@ Effect:
 
 - Computes a pricing view from retained usage without executing an Agent or a
   Check. Returns `total_cost=null` when usage is absent, no rates are
-  configured, or a configured priced key is missing.
+  configured, or a configured priced key is missing. Rejects an absent pricing
+  version and nonnumeric, negative, or non-finite rates.
 
 ### compute_result_cache_key
 

@@ -186,6 +186,49 @@ def test_fill_results_runs_only_missing_agent_task_check_cells(tmp_path: Path, m
     assert {result.agent_id for result in load_results(store, ResultQuery())} == {"agent", "other-agent"}
 
 
+@pytest.mark.parametrize(
+    ("scoring_config", "error"),
+    (
+        (ScoringConfig("", {}), "pricing_version"),
+        (ScoringConfig("invalid-pricing", {"input_tokens": -0.01}), "finite and nonnegative"),
+    ),
+)
+def test_fill_results_rejects_invalid_scoring_before_agent_runs(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    scoring_config: ScoringConfig,
+    error: str,
+) -> None:
+    task = _task()
+    check = _check()
+    agent = _agent()
+    task_pool = _task_pool((task,), (check,))
+    selection = _selection(task_pool, TaskCheckRef(task.task_id, check.check_id))
+    calls: list[str] = []
+
+    def fake_run_agent_on_task(*args, **kwargs):
+        calls.append("called")
+        return _workspace_run(task, check, agent)
+
+    monkeypatch.setattr("barcarolle.runner.workspace_module.run_agent_on_task", fake_run_agent_on_task)
+
+    with pytest.raises(ValueError, match=error):
+        fill_results(
+            selection,
+            task_pool,
+            (task,),
+            {check.check_id: check},
+            (agent,),
+            _workspace_config(),
+            _runtime_config(),
+            scoring_config,
+            ResultCacheConfig(),
+            ResultStore(tmp_path / "results.jsonl"),
+        )
+
+    assert calls == []
+
+
 def test_fill_results_reprices_cached_execution_without_rerunning_agent(tmp_path: Path, monkeypatch) -> None:
     task = _task()
     check = _check()

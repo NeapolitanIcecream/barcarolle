@@ -228,7 +228,8 @@ Output:
 Effect:
 
 - Calls Workspace for requested Agent-task-check cells and calls Result Store to
-  store the produced records.
+  store the produced records. Rejects invalid cache identities and scoring
+  configuration before invoking an Agent.
 
 ### fill_results
 
@@ -255,7 +256,8 @@ Effect:
   reusable from the cache, then calls Workspace and Result Store to execute and
   store only those cells. If an exact execution exists only under older
   pricing, appends and returns the current pricing view without running the
-  Agent. An already-present current pricing view is not duplicated.
+  Agent. An already-present current pricing view is not duplicated. Invalid
+  cache identities and scoring configuration fail before paid execution.
 
 ### prepare_evaluation_cells
 
