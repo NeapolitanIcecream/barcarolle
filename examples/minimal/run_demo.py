@@ -173,7 +173,7 @@ def main(output_dir: Path = DEFAULT_OUTPUT_DIR) -> dict[str, object]:
     )
     results = tuple(load_results(result_store, ResultQuery()))
     sections = (
-        reporting.build_task_pool_report(task_pool),
+        reporting.build_task_pool_report(task_pool, artifact_root=output_dir),
         reporting.build_result_report(results, agents),
         reporting.build_selector_report((selection,), (scored_cell_set,), (selected_matrix, future_matrix), metrics),
     )

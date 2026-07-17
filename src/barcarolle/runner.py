@@ -61,6 +61,7 @@ class TaskPoolConfig:
 class ReportConfig:
     output_dir: Path
     agents: tuple[AgentRecord, ...] = ()
+    artifact_root: Path | None = None
     markdown_filename: str = "report.md"
     json_filename: str = "report.json"
     claim_config: reporting_module.ClaimConfig = field(
@@ -510,7 +511,10 @@ def write_report(
     report_config: ReportConfig,
 ) -> Mapping[str, object]:
     sections = (
-        reporting_module.build_task_pool_report(task_pool),
+        reporting_module.build_task_pool_report(
+            task_pool,
+            artifact_root=report_config.artifact_root,
+        ),
         reporting_module.build_result_report(results, report_config.agents),
         reporting_module.build_selector_report(selections, cell_sets, result_matrices, metrics),
         reporting_module.build_claim_boundary(
@@ -521,12 +525,21 @@ def write_report(
             metrics,
             report_config.claim_config,
             results=results,
+            artifact_root=report_config.artifact_root,
         ),
     )
     markdown_path = report_config.output_dir / report_config.markdown_filename
     json_path = report_config.output_dir / report_config.json_filename
-    reporting_module.write_report(sections, markdown_path)
-    reporting_module.write_report(sections, json_path)
+    reporting_module.write_report(
+        sections,
+        markdown_path,
+        artifact_root=report_config.artifact_root,
+    )
+    reporting_module.write_report(
+        sections,
+        json_path,
+        artifact_root=report_config.artifact_root,
+    )
     return {
         "report_paths": {"markdown": str(markdown_path), "json": str(json_path)},
         "section_ids": tuple(section.section_id for section in sections),

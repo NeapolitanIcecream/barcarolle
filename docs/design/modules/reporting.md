@@ -48,6 +48,7 @@ output, and effect only; it does not prescribe implementation.
 Input:
 
 - `task_pool: TaskPoolRecord`
+- `artifact_root: Path | None`
 
 Output:
 
@@ -57,8 +58,10 @@ Effect:
 
 - Summarizes task count, check count, generator families, execution-based task
   validation coverage, and rejection reasons.
-- Carries the Task, Check, and certification-evidence refs with their stored
-  digests. It does not claim to have re-certified tasks from the digest alone.
+- Loads the referenced Task, Check, and certification-evidence files and
+  compares their canonical digests with the frozen Task Pool. Missing,
+  malformed, or mismatched artifacts make coverage claims unsupported. It
+  does not re-certify tasks.
 
 ### build_result_report
 
@@ -108,6 +111,7 @@ Input:
 - `result_matrices: Sequence[ResultMatrix]`
 - `metrics: Sequence[MetricRecord]`
 - `claim_config: ClaimConfig`
+- `artifact_root: Path | None`
 
 Output:
 
@@ -118,6 +122,8 @@ Effect:
 - Separates supported claims from unsupported claims using task-pool coverage,
   rejection and task-validation evidence, cache completeness, abstentions,
   benchmark exposure state, and Agent/result identity drift.
+- Supports `task_pool_coverage` only when the referenced Task, Check, and
+  certification-evidence files are available and match their stored digests.
 
 ### write_report
 

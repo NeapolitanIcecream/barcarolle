@@ -7,6 +7,7 @@ import sys
 
 import pytest
 
+import barcarolle.task_pool as task_pool_module
 from barcarolle.records import RuntimeConfig, WorkspaceConfig, canonical_digest, make_check_digest
 from barcarolle.task_pool import (
     CertificationConfig,
@@ -23,6 +24,7 @@ from barcarolle.task_pool import (
     summarize_task_pool,
 )
 from barcarolle.workspace import CapturedDiff, bind_check_material, bind_repository_source
+from barcarolle.verification import CheckOutcome
 
 
 @pytest.fixture(scope="module")
@@ -204,6 +206,43 @@ def test_certify_task_candidate_rejects_empty_task_text(tmp_path: Path) -> None:
 
     assert not result.accepted
     assert "task_text must not be empty" in result.rejection_reasons
+
+
+@pytest.mark.parametrize(
+    "failure_label",
+    (
+        "verifier_workspace_error",
+        "verification_error",
+        "diff_replay_launch_error",
+        "missing_git_checkout",
+        "check_launch_error",
+        "check_invalid",
+    ),
+)
+def test_certify_task_candidate_stops_on_validation_infrastructure_failure(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    failure_label: str,
+) -> None:
+    candidate, workspace_config, runtime_config, reference_patch = (
+        _executable_candidate(tmp_path)
+    )
+    monkeypatch.setattr(
+        task_pool_module,
+        "_run_task_check",
+        lambda *args, **kwargs: CheckOutcome(
+            "invalid", failure_label, None, False, 0.0, ""
+        ),
+    )
+
+    with pytest.raises(RuntimeError, match=failure_label):
+        certify_task_candidate(
+            candidate,
+            CertificationConfig(),
+            workspace_config,
+            runtime_config,
+            reference_patch,
+        )
 
 
 def test_freeze_task_pool_records_digests_rejections_and_summary(accepted_result: CertificationResult) -> None:

@@ -38,14 +38,20 @@ from barcarolle.workspace import (
 _VALIDATION_SETUP_FAILURES = frozenset(
     {
         "check_command_mismatch",
+        "check_invalid",
+        "check_launch_error",
         "check_workspace_mismatch",
+        "diff_replay_launch_error",
         "hidden_material_mismatch",
         "invalid_hidden_material_destination",
         "missing_check_command",
+        "missing_git_checkout",
         "missing_repository_source",
         "missing_verification_material",
         "not_verifier_workspace",
         "verifier_preparation_failed",
+        "verifier_workspace_error",
+        "verification_error",
         "workspace_cleanup_failed",
     }
 )

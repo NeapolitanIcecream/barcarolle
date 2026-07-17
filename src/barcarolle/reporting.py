@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 from collections import Counter
 from dataclasses import dataclass, replace
 from pathlib import Path
@@ -10,14 +11,17 @@ from typing import Any, Mapping, Sequence
 from barcarolle.records import (
     AgentRecord,
     BenchmarkSelectionRecord,
+    CheckRecord,
     EvaluationCellSet,
     MetricRecord,
     ResultCellRef,
     ResultMatrix,
     ResultRecord,
     TaskPoolRecord,
+    TaskRecord,
     canonical_digest,
     canonical_json,
+    load_jsonl_records,
     validate_benchmark_selection,
     validate_evaluation_cell_set,
     validate_metric,
@@ -53,8 +57,11 @@ class ClaimConfig:
     require_valid_metrics: bool = True
 
 
-def build_task_pool_report(task_pool: TaskPoolRecord) -> ReportSection:
-    validation_errors = _task_pool_validation_errors(task_pool)
+def build_task_pool_report(
+    task_pool: TaskPoolRecord,
+    artifact_root: Path | None = None,
+) -> ReportSection:
+    validation_errors = _task_pool_validation_errors(task_pool, artifact_root)
     supported_claims = () if validation_errors else ("task_pool_counts",)
     limitations = tuple(validation_errors)
     summary = {
@@ -287,10 +294,11 @@ def build_claim_boundary(
     metrics: Sequence[MetricRecord],
     claim_config: ClaimConfig,
     results: Sequence[ResultRecord] = (),
+    artifact_root: Path | None = None,
 ) -> ReportSection:
     supported: list[str] = []
     unsupported: list[str] = []
-    task_pool_errors = _task_pool_validation_errors(task_pool)
+    task_pool_errors = _task_pool_validation_errors(task_pool, artifact_root)
     _claim(supported, unsupported, "task_pool_coverage", not task_pool_errors, "; ".join(task_pool_errors))
     selections_present = bool(selections)
     selection_validations = [validate_benchmark_selection(selection) for selection in selections]
@@ -495,7 +503,10 @@ def _section_data(section: ReportSection) -> Mapping[str, Any]:
     }
 
 
-def _task_pool_validation_errors(task_pool: TaskPoolRecord) -> tuple[str, ...]:
+def _task_pool_validation_errors(
+    task_pool: TaskPoolRecord,
+    artifact_root: Path | None = None,
+) -> tuple[str, ...]:
     errors: list[str] = []
     if task_pool.task_pool_digest != canonical_digest(task_pool, exclude_self_digest=True):
         errors.append("task_pool_digest does not match canonical task pool")
@@ -506,6 +517,7 @@ def _task_pool_validation_errors(task_pool: TaskPoolRecord) -> tuple[str, ...]:
     for field in (
         "task_records_ref",
         "check_records_ref",
+        "certification_evidence_ref",
         "task_records_digest",
         "check_records_digest",
         "rejection_summary_digest",
@@ -517,7 +529,103 @@ def _task_pool_validation_errors(task_pool: TaskPoolRecord) -> tuple[str, ...]:
             errors.append(f"{field} is missing")
     if not task_pool.certification_evidence_digest:
         errors.append("certification_evidence_digest is missing")
+    errors.extend(_task_pool_artifact_errors(task_pool, artifact_root))
     return tuple(errors)
+
+
+def _task_pool_artifact_errors(
+    task_pool: TaskPoolRecord,
+    artifact_root: Path | None,
+) -> tuple[str, ...]:
+    errors: list[str] = []
+    root = artifact_root or Path.cwd()
+    tasks = _load_task_pool_records(
+        task_pool.task_records_ref,
+        root,
+        TaskRecord,
+        "task records",
+        errors,
+    )
+    checks = _load_task_pool_records(
+        task_pool.check_records_ref,
+        root,
+        CheckRecord,
+        "check records",
+        errors,
+    )
+    evidence = _load_certification_evidence(
+        task_pool.certification_evidence_ref,
+        root,
+        errors,
+    )
+
+    if tasks is not None:
+        if canonical_digest(tasks) != task_pool.task_records_digest:
+            errors.append("task records digest does not match TaskPoolRecord")
+        if tuple(task.task_id for task in tasks) != task_pool.task_ids:
+            errors.append("task records do not match TaskPoolRecord task_ids")
+
+    if checks is not None:
+        if canonical_digest(checks) != task_pool.check_records_digest:
+            errors.append("check records digest does not match TaskPoolRecord")
+        if tuple(check.check_id for check in checks) != task_pool.check_ids:
+            errors.append("check records do not match TaskPoolRecord check_ids")
+
+    if evidence is not None:
+        if canonical_digest(evidence) != task_pool.certification_evidence_digest:
+            errors.append(
+                "certification evidence digest does not match TaskPoolRecord"
+            )
+    return tuple(errors)
+
+
+def _load_task_pool_records(
+    ref: str,
+    root: Path,
+    record_type: type,
+    label: str,
+    errors: list[str],
+) -> tuple[Any, ...] | None:
+    if not ref:
+        return None
+    try:
+        return tuple(load_jsonl_records(_artifact_ref_path(ref, root), record_type))
+    except (OSError, TypeError, ValueError):
+        errors.append(f"{label} are unavailable or invalid")
+        return None
+
+
+def _load_certification_evidence(
+    ref: str,
+    root: Path,
+    errors: list[str],
+) -> tuple[Mapping[str, Any], ...] | None:
+    if not ref:
+        return None
+    try:
+        records: list[Mapping[str, Any]] = []
+        with _artifact_ref_path(ref, root).open("r", encoding="utf-8") as handle:
+            for line in handle:
+                if not line.strip():
+                    continue
+                value = json.loads(line, parse_constant=_reject_json_constant)
+                if not isinstance(value, Mapping):
+                    raise ValueError("certification evidence must contain objects")
+                records.append(value)
+        return tuple(records)
+    except (OSError, TypeError, ValueError):
+        errors.append("certification evidence is unavailable or invalid")
+        return None
+
+
+def _artifact_ref_path(ref: str, root: Path) -> Path:
+    normalized = ref[5:] if ref.startswith("path:") else ref
+    path = Path(normalized)
+    return path if path.is_absolute() else root / path
+
+
+def _reject_json_constant(value: str) -> None:
+    raise ValueError(f"non-finite JSON number is not allowed: {value}")
 
 
 def _validation_errors(label: str, records: Sequence[Any], validate: Any) -> tuple[str, ...]:

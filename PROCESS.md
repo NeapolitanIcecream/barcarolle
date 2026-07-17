@@ -30,6 +30,11 @@ evidence, or preserve reusable paid results. Do not add aliases for existing
 concepts, uncommon names for standard methods, unused identity fields, or
 frameworks without a current caller.
 
+Reports support Task Pool coverage only after loading the referenced Task,
+Check, and certification-evidence files and matching their frozen digests.
+Persisted Selector inputs must retain the complete rolling-history denominator;
+benchmark infrastructure failures stop certification instead of shrinking it.
+
 The default runtime target is a cooperative Agent. Fresh workspaces, diff
 replay, and verifier-only hidden material are required benchmark behavior.
 Filesystem, network, process, CPU, and memory limits are optional adapter

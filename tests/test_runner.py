@@ -890,6 +890,16 @@ def test_report_cli_reads_relative_jsonl_paths_and_writes_reports(tmp_path: Path
 
     assert (tmp_path / "published" / "report.md").exists()
     assert (tmp_path / "published" / "report.json").exists()
+    report = json.loads(
+        (tmp_path / "published" / "report.json").read_text(encoding="utf-8")
+    )
+    claim_section = next(
+        section for section in report if section["section_id"] == "claim_boundary"
+    )
+    assert any(
+        claim.startswith("task_pool_coverage:")
+        for claim in claim_section["unsupported_claims"]
+    )
     assert '"section_ids"' in capsys.readouterr().out
 
 

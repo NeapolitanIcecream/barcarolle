@@ -29,6 +29,7 @@ _REPORT_PATH_KEYS = (
     "evaluation_cell_sets",
     "result_matrices",
     "metrics",
+    "artifact_root",
     "output_dir",
 )
 _REQUIRED_REPORT_PATH_KEYS = ("task_pool", "output_dir")
@@ -67,7 +68,11 @@ def _write_report_from_config(config_path: Path) -> Mapping[str, object]:
         _load_optional_records(config, "evaluation_cell_sets", EvaluationCellSet),
         _load_optional_records(config, "result_matrices", ResultMatrix),
         _load_optional_records(config, "metrics", MetricRecord),
-        ReportConfig(output_dir=config["output_dir"], agents=agents),
+        ReportConfig(
+            output_dir=config["output_dir"],
+            agents=agents,
+            artifact_root=config.get("artifact_root", config_path.resolve().parent),
+        ),
     )
 
 

@@ -155,8 +155,11 @@ Effect:
   material refs. It uses Workspace and Verification but does not run Agents.
 - Stores normalized outcomes and the reference-patch digest, not the patch,
   workspace contents, or raw Check output.
-- Rejects a bad candidate transition. Missing repository or Check bindings are
-  run-setup errors because they prevent all candidates from being evaluated.
+- Rejects a bad candidate transition. Missing repository or Check bindings,
+  verifier-workspace failures, check-launch failures, and unexpected
+  verification failures are run-setup errors because they prevent comparable
+  candidate evaluation; they stop certification instead of shrinking the
+  pool.
 
 ### certification_evidence_records
 

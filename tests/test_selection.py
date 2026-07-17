@@ -901,6 +901,82 @@ def test_freeze_evaluation_selections_rejects_valid_input_with_future_ref() -> N
         )
 
 
+def test_freeze_evaluation_selections_rejects_incomplete_history_denominator() -> None:
+    refs = (
+        TaskCheckRef("task-a", "check-a"),
+        TaskCheckRef("task-b", "check-b"),
+    )
+    task_pool = _task_pool(
+        tuple(ref.task_id for ref in refs),
+        tuple(ref.check_id for ref in refs),
+    )
+    origin = _origin(task_pool, refs)
+    tasks = (
+        _task("task-a", "check-a"),
+        _task("task-b", "check-b", available_at="2026-01-03T00:00:00Z"),
+    )
+    checks = {
+        "check-a": _check("check-a", "task-a"),
+        "check-b": _check(
+            "check-b", "task-b", available_at="2026-01-03T00:00:00Z"
+        ),
+    }
+    result = _result(
+        result_available_at="2026-01-04T00:00:00Z",
+        task_id="task-a",
+        check_id="check-a",
+    )
+    snapshot = build_feature_snapshot(
+        origin,
+        task_pool,
+        tasks,
+        checks,
+        (result,),
+        FeatureConfig("features", "leakage"),
+    )
+    selector_input = build_selector_input(
+        origin,
+        task_pool,
+        snapshot,
+        (result,),
+        (_agent(),),
+        SelectionBudget("budget", 1),
+        LeakagePolicy(
+            "leakage",
+            ("task_metadata", "pre_origin_result"),
+            origin.as_of_cutoff,
+        ),
+    )
+    narrowed = replace(
+        selector_input,
+        eligible_task_check_refs=(refs[0],),
+        origin_history_refs_digest=canonical_digest((refs[0],)),
+        selector_input_id="",
+        selector_input_digest="",
+    )
+    narrowed = record_with_digest(
+        replace(narrowed, selector_input_id=make_selector_input_id(narrowed))
+    )
+
+    with pytest.raises(ValueError, match="complete chronological history"):
+        freeze_evaluation_selections(
+            _selector("selector-recency", "recency"),
+            task_pool,
+            tasks,
+            checks,
+            (narrowed,),
+            (_agent(),),
+            TimeRange("2026-01-01T00:00:00Z", "2026-01-05T00:00:00Z"),
+            SelectionConfig(
+                "selection-config",
+                "selector-recency",
+                snapshot.feature_snapshot_id,
+                "strict_history",
+            ),
+            _rolling_policy(),
+        )
+
+
 def test_train_selector_persists_executable_rule_parameters() -> None:
     parameters = {"seed": 11}
 

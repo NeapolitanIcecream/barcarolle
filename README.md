@@ -89,6 +89,7 @@ Paths are resolved relative to the config file:
   "evaluation_cell_sets": "records/evaluation_cell_sets.jsonl",
   "result_matrices": "records/result_matrices.jsonl",
   "metrics": "records/metrics.jsonl",
+  "artifact_root": ".",
   "output_dir": "report"
 }
 ```
@@ -96,7 +97,11 @@ Paths are resolved relative to the config file:
 The task-pool file must contain one `TaskPoolRecord`. `task_pool` and
 `output_dir` are required; omit a record file when that evidence is absent.
 Included record files contain zero or more records of the type named by the
-key. The command writes `report.md` and `report.json` under `output_dir`.
+key. Task Pool artifact refs resolve under `artifact_root`, which defaults to
+the config-file directory. Coverage is unsupported when referenced Task,
+Check, or certification-evidence files are missing or do not match their
+stored digests. The command writes `report.md` and `report.json` under
+`output_dir`.
 
 ## Python Interface
 

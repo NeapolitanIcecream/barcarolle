@@ -128,6 +128,17 @@ def _ensure_selector_input_matches_history(
         known_at = _task_check_known_at(task, check)
         if not _time_range_contains(origin_history_window, known_at):
             raise ValueError("selector input includes refs outside history window")
+    expected_refs = _training_history_refs(
+        task_pool,
+        tasks,
+        checks,
+        origin_history_window,
+        rolling_policy,
+    )
+    if selector_input.eligible_task_check_refs != expected_refs:
+        raise ValueError(
+            "selector input eligible refs do not match complete chronological history"
+        )
 
 
 def _ensure_training_results_allowed(

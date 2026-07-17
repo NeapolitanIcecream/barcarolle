@@ -46,6 +46,10 @@ def test_minimal_demo_writes_reports_with_selected_and_future_evidence(tmp_path:
     report = json.loads(report_json.read_text(encoding="utf-8"))
     section_ids = [section["section_id"] for section in report]
     assert section_ids == ["task_pool", "agent_results", "selector_performance"]
+    task_pool_section = next(
+        section for section in report if section["section_id"] == "task_pool"
+    )
+    assert task_pool_section["supported_claims"] == ["task_pool_counts"]
     selector_section = next(section for section in report if section["section_id"] == "selector_performance")
     selection_summary = selector_section["summary"]["selections"][0]
     assert selection_summary["matrix_roles"] == ["future_holdout", "selected"]

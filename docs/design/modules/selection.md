@@ -157,6 +157,9 @@ Effect:
   input order, for a specified Selector.
   It does not score selections, does not accept raw result sets, and does not
   open future outcomes.
+- Requires each input's eligible refs to exactly match the complete
+  chronological history derived from the Task Pool, origin cutoff, history
+  window, and rolling policy. A valid-looking subset is rejected.
 
 ### select_benchmark
 

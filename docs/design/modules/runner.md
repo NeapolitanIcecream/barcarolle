@@ -337,6 +337,8 @@ Effect:
 
 - Calls Reporting to write human-readable and machine-readable summaries, then
   returns paths and record references.
+- Uses `ReportConfig.artifact_root` to resolve Task Pool artifact refs. The
+  offline command defaults it to the report-config directory.
 
 ## Design Consistency Check
 
