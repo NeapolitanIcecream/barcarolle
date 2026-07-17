@@ -611,6 +611,46 @@ def test_run_agent_on_task_removes_solver_and_verifier_workspaces_after_success(
     assert not Path(verifier_path_record.read_text(encoding="utf-8")).exists()
 
 
+def test_run_agent_on_task_returns_completed_record_when_cleanup_fails(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo, base_commit = _make_repo(tmp_path)
+    task = _task(base_commit=base_commit)
+    workspace_config = _workspace_config(repo)
+    hidden = tmp_path / "hidden.txt"
+    hidden.write_text("private oracle", encoding="utf-8")
+    agent_command = (sys.executable, "-c", "from pathlib import Path; Path('new.txt').write_text('edit')")
+    check_command = (sys.executable, "-c", "raise SystemExit(0)")
+    agent = _agent(agent_command)
+    check = _check(command=check_command, hidden=hidden)
+    bind_repository_source(workspace_config, repo)
+    bind_agent_harness(agent, agent_command)
+    bind_check_material(check, check_command, hidden)
+    original_remove = workspace_module._remove_owned_workspace_path
+    failed_paths: list[Path] = []
+
+    def fail_once(path: Path) -> None:
+        if not failed_paths:
+            failed_paths.append(path)
+            raise OSError("transient cleanup failure")
+        original_remove(path)
+
+    record = None
+    try:
+        with monkeypatch.context() as patch:
+            patch.setattr(workspace_module, "_remove_owned_workspace_path", fail_once)
+            with pytest.warns(RuntimeWarning, match="workspace cleanup failed"):
+                record = run_agent_on_task(task, check, agent, workspace_config, _runtime())
+    finally:
+        for path in failed_paths:
+            original_remove(path)
+
+    assert record is not None
+    assert record.terminal_status == "passed"
+    assert record.check_outcome == "pass"
+
+
 def test_run_agent_on_task_rejects_noop_when_the_base_checkout_passes_the_check(tmp_path: Path) -> None:
     repo, base_commit = _make_repo(tmp_path)
     task = _task(base_commit=base_commit)

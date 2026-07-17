@@ -85,6 +85,8 @@ Effect:
   adapter implements them. The built-in subprocess path does not claim
   filesystem, network, process, CPU, or memory isolation.
 - Rechecks the bound command digest immediately before execution.
+- Treats exit code 2 as an invalid Check execution rather than an ordinary test
+  failure; adapters use it for verifier or harness infrastructure errors.
 
 ### normalize_outcome
 

@@ -259,7 +259,8 @@ Effect:
 - Orchestrates solver workspace, Agent invocation, diff capture, verifier
   workspace, diff replay, and Check execution.
 - Removes solver and verifier workspaces before returning, after any configured
-  summaries or diffs have been preserved. Cleanup failures are terminal errors.
+  summaries or diffs have been preserved. A cleanup failure emits a bounded
+  runtime warning without replacing an already completed run record.
 - Classifies a passing Check on an empty diff as benchmark-invalid
   (`baseline_check_passed_without_diff`). Post-Agent diff-capture failures,
   including damaged Git metadata or config, are Agent-invalid

@@ -63,7 +63,7 @@ Input:
   - a direct `candidate_id -> CapturedDiff` mapping of trusted reference
     patches;
   - direct `candidate_id -> check command` and `candidate_id -> hidden material
-    path` mappings;
+    path` mappings, plus optional semantic Check manifests;
   - either an import path or a time range with task-source config;
   - certification config and output refs in metadata.
 
@@ -77,7 +77,9 @@ Effect:
   `config.repository_id`; the local path is never used as record identity.
 - Binds `repository_path` to the Workspace config, builds each Check directly
   from its candidate, then binds the matching check command and hidden
-  material before certification.
+  material before certification. When provided, the candidate's semantic Check
+  manifest is passed through without replacing it with the machine-local
+  command.
 - Requires one reference patch, check command, and hidden-material path for
   every candidate. It runs executable base-fail/reference-patch-pass
   certification and passes the accepted records and complete certification

@@ -14,6 +14,7 @@ import json
 import math
 import shutil
 import subprocess
+import warnings
 
 from barcarolle.records import (
     AgentRecord,
@@ -494,7 +495,10 @@ def run_agent_on_task_with_artifacts(
         )
         return _workspace_run_result(run, artifact_config, diff, agent_outcome, solver_workspace, verifier_workspace)
     finally:
-        _cleanup_workspaces(verifier_workspace, solver_workspace)
+        try:
+            _cleanup_workspaces(verifier_workspace, solver_workspace)
+        except RuntimeError as exc:
+            warnings.warn(str(exc), RuntimeWarning, stacklevel=2)
 
 
 def _workspace_run_result(

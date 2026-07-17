@@ -49,6 +49,7 @@ class TaskPoolConfig:
     reference_patches: Mapping[str, workspace_module.CapturedDiff]
     check_commands: Mapping[str, tuple[str, ...]]
     hidden_material_paths: Mapping[str, Path]
+    check_manifests: Mapping[str, Mapping[str, object]] = field(default_factory=dict)
     time_range: TimeRange | None = None
     task_source_config: task_pool_module.TaskSourceConfig | None = None
     import_path: Path | None = None
@@ -103,6 +104,7 @@ def build_task_pool(config: TaskPoolConfig) -> TaskPoolRecord:
             task_pool_module.build_check_candidate(candidate),
             config.check_commands[candidate.candidate_id],
             config.hidden_material_paths[candidate.candidate_id],
+            check_manifest=config.check_manifests.get(candidate.candidate_id),
         )
     certified = tuple(
         task_pool_module.certify_task_candidate(

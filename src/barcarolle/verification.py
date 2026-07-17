@@ -39,7 +39,7 @@ class CheckOutcome:
 @dataclass(frozen=True)
 class CheckNormalizationConfig:
     pass_exit_codes: tuple[int, ...] = (0,)
-    invalid_exit_codes: tuple[int, ...] = ()
+    invalid_exit_codes: tuple[int, ...] = (2,)
     timeout_failure_label: str = "timeout"
     fail_failure_label: str = "check_failed"
     invalid_failure_label: str = "check_invalid"

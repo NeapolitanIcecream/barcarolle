@@ -69,7 +69,7 @@ from barcarolle.task_pool import TaskSourceConfig, TimeRange
 from barcarolle.workspace import CapturedDiff
 
 
-def test_build_task_pool_executes_validation_and_writes_resolvable_records(tmp_path: Path) -> None:
+def test_build_task_pool_accepts_semantic_manifest_and_writes_resolvable_records(tmp_path: Path) -> None:
     task_ref = tmp_path / "tasks.jsonl"
     check_ref = tmp_path / "checks.jsonl"
     evidence_ref = tmp_path / "certification-evidence.jsonl"
@@ -108,10 +108,11 @@ def test_build_task_pool_executes_validation_and_writes_resolvable_records(tmp_p
         "image",
         "deps",
     )
+    check_manifest = {"implementation": "test-check-v1"}
     candidate = _candidate_event(
         base_commit=base_commit,
         solver_material_refs=(),
-        check_manifest_digest=canonical_digest({"check_command": check_command}),
+        check_manifest_digest=canonical_digest(check_manifest),
         hidden_check_bundle_digest=hashlib.sha256(hidden_material.read_bytes()).hexdigest(),
     )
     config = TaskPoolConfig(
@@ -122,6 +123,7 @@ def test_build_task_pool_executes_validation_and_writes_resolvable_records(tmp_p
         reference_patches={"candidate": reference_patch},
         check_commands={"candidate": check_command},
         hidden_material_paths={"candidate": hidden_material},
+        check_manifests={"candidate": check_manifest},
         time_range=TimeRange("2026-01-01T00:00:00Z", "2026-01-31T00:00:00Z"),
         task_source_config=TaskSourceConfig("user_import", (candidate,)),
         metadata={

@@ -150,6 +150,29 @@ def test_verify_diff_executes_prepared_check_and_normalizes_pass(tmp_path: Path)
     assert outcome.evidence_excerpt == "[verifier output omitted]"
 
 
+def test_verify_diff_treats_exit_two_as_invalid(tmp_path: Path) -> None:
+    workspace = tmp_path / "workspace"
+    workspace.mkdir()
+    hidden = tmp_path / "hidden.txt"
+    hidden.write_text("private oracle", encoding="utf-8")
+    command = ("python", "-c", "raise SystemExit(2)")
+    check = _check(command=command)
+    prepared = prepare_verifier(
+        check,
+        _workspace_ref(
+            path=workspace,
+            check_command=command,
+            hidden_material_source=hidden,
+            hidden_material_destination=Path(".barcarolle/check_bundle.txt"),
+        ),
+    )
+
+    outcome = verify_diff(check, prepared, _runtime(timeout_seconds=5))
+
+    assert outcome.outcome == "invalid"
+    assert outcome.failure_label == "check_invalid"
+
+
 def test_verify_diff_returns_invalid_for_check_workspace_mismatch(tmp_path: Path) -> None:
     workspace = tmp_path / "workspace"
     workspace.mkdir()
