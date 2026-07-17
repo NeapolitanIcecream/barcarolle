@@ -17,6 +17,7 @@ from barcarolle.records import CheckRecord, RuntimeConfig, canonical_digest
 class WorkspaceRef:
     path: Path
     check_command: tuple[str, ...]
+    check_command_digest: str
     check_id: str
     check_manifest_digest: str
     hidden_check_bundle_digest: str
@@ -63,8 +64,8 @@ def prepare_verifier(check: CheckRecord, verifier_workspace: WorkspaceRef) -> Wo
         raise ValueError("hidden_material_source is required to prepare verifier workspace")
     if _path_digest(verifier_workspace.hidden_material_source) != check.hidden_check_bundle_digest:
         raise ValueError("hidden material digest does not match check")
-    if _check_command_digest(verifier_workspace.check_command) != check.check_manifest_digest:
-        raise ValueError("check command digest does not match check manifest")
+    if _check_command_digest(verifier_workspace.check_command) != verifier_workspace.check_command_digest:
+        raise ValueError("check command digest does not match bound command")
     if verifier_workspace.hidden_material_destination is None:
         raise ValueError("hidden_material_destination is required when hidden material is provided")
     destination = _resolve_under_workspace(verifier_workspace.path, verifier_workspace.hidden_material_destination)
@@ -93,7 +94,7 @@ def verify_diff(
             duration_seconds=0.0,
             evidence_excerpt="",
         )
-    if _check_command_digest(verifier_workspace.check_command) != check.check_manifest_digest:
+    if _check_command_digest(verifier_workspace.check_command) != verifier_workspace.check_command_digest:
         return CheckOutcome(
             outcome="invalid",
             failure_label="check_command_mismatch",

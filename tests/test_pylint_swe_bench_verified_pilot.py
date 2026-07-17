@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from dataclasses import replace
 import json
 import os
 from pathlib import Path
@@ -54,13 +55,88 @@ def test_candidate_separates_task_source_time_from_check_time(
             "issue_url": "https://example.invalid/issues/1",
             "task_material_available_at": "2021-01-01T00:00:00Z",
             "check_material_available_at": "2021-02-01T00:00:00Z",
+            "image_digest": f"sha256:{'b' * 64}",
         },
-        ("check",),
     )
 
     assert candidate.source_resolved_at == "2021-01-01T00:00:00Z"
     assert candidate.task_material_available_at == "2021-01-01T00:00:00Z"
     assert candidate.check_material_available_at == "2021-02-01T00:00:00Z"
+
+
+def test_candidate_check_identity_ignores_local_execution_paths(
+    tmp_path: Path,
+) -> None:
+    instance_id = "pylint-dev__pylint-4551"
+    configured = pilot._task_source_by_instance()[instance_id]
+    source = {
+        "instance_id": instance_id,
+        "base_commit": "a" * 40,
+        "problem_statement": "Fix the bug.",
+        "difficulty": "<15 min fix",
+    }
+    paths = tuple(
+        pilot.PilotPaths(
+            output_dir=tmp_path / name,
+            target_repo=tmp_path / name / "target",
+            dataset=tmp_path / name / "dataset",
+            supplemental_dataset=tmp_path / name / "supplemental-dataset",
+            harness_python=tmp_path / name / "harness-env/bin/python",
+        )
+        for name in ("first-run", "second-run")
+    )
+    for item in paths:
+        bundle = item.output_dir / "hidden-checks" / instance_id
+        bundle.mkdir(parents=True)
+        (bundle / "spec.json").write_text("{}", encoding="utf-8")
+
+    commands = tuple(pilot._check_command(item, configured) for item in paths)
+    candidates = tuple(pilot._candidate(item, source, configured) for item in paths)
+
+    assert commands[0] != commands[1]
+    assert candidates[0].check_manifest_digest == candidates[1].check_manifest_digest
+    assert (
+        pilot.build_check_candidate(candidates[0]).check_id
+        == pilot.build_check_candidate(candidates[1]).check_id
+    )
+
+
+def test_check_binding_keeps_existing_paid_command_identity(tmp_path: Path) -> None:
+    instance_id = "pylint-dev__pylint-4551"
+    configured = pilot._task_source_by_instance()[instance_id]
+    paths = pilot.PilotPaths(
+        output_dir=tmp_path,
+        target_repo=tmp_path / "target",
+        dataset=tmp_path / "dataset",
+        supplemental_dataset=tmp_path / "supplemental-dataset",
+        harness_python=tmp_path / "harness-env/bin/python",
+    )
+    bundle = paths.output_dir / "hidden-checks" / instance_id
+    bundle.mkdir(parents=True)
+    (bundle / "spec.json").write_text("{}", encoding="utf-8")
+    candidate = pilot._candidate(
+        paths,
+        {
+            "instance_id": instance_id,
+            "base_commit": "a" * 40,
+            "problem_statement": "Fix the bug.",
+            "difficulty": "<15 min fix",
+        },
+        configured,
+    )
+    command = pilot._check_command(paths, configured)
+    existing_candidate = replace(
+        candidate,
+        check_manifest_digest=pilot.canonical_digest(
+            {"check_command": command}
+        ),
+    )
+
+    pilot._bind_check(
+        paths,
+        pilot.build_check_candidate(existing_candidate),
+        configured,
+    )
 
 
 def test_certification_counts_require_base_negative_and_reference_positive() -> None:

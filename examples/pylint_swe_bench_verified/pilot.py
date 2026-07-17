@@ -151,15 +151,11 @@ def prepare(paths: PilotPaths) -> Mapping[str, object]:
     bind_repository_source(workspace_config, paths.target_repo)
     candidates: list[TaskCandidate] = []
     reference_patches: list[CapturedDiff] = []
-    commands: dict[str, tuple[str, ...]] = {}
     for source in extracted:
         instance_id = _required_string(source, "instance_id")
-        command = _check_command(paths, configured[instance_id])
-        commands[instance_id] = command
-        candidate = _candidate(paths, source, configured[instance_id], command)
+        candidate = _candidate(paths, source, configured[instance_id])
         candidates.append(candidate)
-        check = build_check_candidate(candidate)
-        bind_check_material(check, command, _hidden_check_dir(paths, instance_id))
+        _bind_check(paths, build_check_candidate(candidate), configured[instance_id])
         reference_patches.append(_reference_patch(paths, instance_id))
 
     certification_config = CertificationConfig(repeat_count=1)
@@ -688,7 +684,6 @@ def _candidate(
     paths: PilotPaths,
     source: Mapping[str, Any],
     configured: Mapping[str, Any],
-    command: Sequence[str],
 ) -> TaskCandidate:
     instance_id = _required_string(source, "instance_id")
     source_family = configured.get("dataset_family", "swe_bench_verified")
@@ -712,7 +707,7 @@ def _candidate(
         task_text=_required_string(source, "problem_statement"),
         solver_material_refs=(),
         cluster_id=_required_string(source, "difficulty"),
-        check_manifest_digest=canonical_digest({"check_command": tuple(command)}),
+        check_manifest_digest=canonical_digest(_check_manifest(configured)),
         hidden_check_bundle_digest=_path_digest(_hidden_check_dir(paths, instance_id)),
         resource_limits={"timeout_seconds": CHECK_TIMEOUT_SECONDS},
         oracle_source="swe_bench_test_patch",
@@ -947,13 +942,28 @@ def _bind_context(
     bind_repository_source(context.workspace_config, context.paths.target_repo)
     for check in context.checks.values():
         instance_id = context.instance_by_task_id[check.task_id]
-        bind_check_material(
-            check,
-            _check_command(context.paths, configured[instance_id]),
-            _hidden_check_dir(context.paths, instance_id),
-        )
+        _bind_check(context.paths, check, configured[instance_id])
     for agent in context.agents:
         bind_agent_harness(agent, context.commands[agent.agent_id])
+
+
+def _bind_check(
+    paths: PilotPaths,
+    check: CheckRecord,
+    task_source: Mapping[str, Any],
+) -> None:
+    instance_id = _required_string(task_source, "instance_id")
+    command = _check_command(paths, task_source)
+    manifest = _check_manifest(task_source)
+    if check.check_manifest_digest == canonical_digest(manifest):
+        bind_check_material(
+            check,
+            command,
+            _hidden_check_dir(paths, instance_id),
+            check_manifest=manifest,
+        )
+        return
+    bind_check_material(check, command, _hidden_check_dir(paths, instance_id))
 
 
 def _check_command(
@@ -976,6 +986,19 @@ def _check_command(
         "--timeout-seconds",
         str(CHECK_TIMEOUT_SECONDS),
     )
+
+
+def _check_manifest(task_source: Mapping[str, Any]) -> Mapping[str, Any]:
+    instance_id = _required_string(task_source, "instance_id")
+    return {
+        "check_implementation_sha256": _file_sha256(CHECK),
+        "swe_bench_harness_revision": _required_string(
+            _source_config()["harness"], "revision"
+        ),
+        "bundle_destination": ".barcarolle/check_bundle",
+        "image_ref": _image_ref(instance_id, task_source),
+        "timeout_seconds": CHECK_TIMEOUT_SECONDS,
+    }
 
 
 def _image_ref(instance_id: str, task_source: Mapping[str, Any]) -> str:

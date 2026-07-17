@@ -119,6 +119,7 @@ def test_prepare_verifier_rejects_check_command_digest_mismatch(tmp_path: Path) 
             _workspace_ref(
                 path=workspace,
                 check_command=("python", "-c", "print('different check')"),
+                check_command_digest=_check().check_manifest_digest,
                 check_manifest_digest=_check().check_manifest_digest,
                 hidden_material_source=hidden,
                 hidden_material_destination=Path(".barcarolle/check_bundle.txt"),
@@ -173,6 +174,7 @@ def test_verify_diff_rechecks_command_digest_before_execution(tmp_path: Path) ->
     prepared = _workspace_ref(
         path=workspace,
         check_command=("python", "-c", "from pathlib import Path; Path('should-not-exist.txt').write_text('ran')"),
+        check_command_digest=check.check_manifest_digest,
         check_manifest_digest=check.check_manifest_digest,
         hidden_material_source=None,
         hidden_material_destination=None,
@@ -312,6 +314,7 @@ def _workspace_ref(
     path: Path,
     check_command: tuple[str, ...],
     *,
+    check_command_digest: str | None = None,
     check_id: str = "check",
     check_manifest_digest: str | None = None,
     hidden_check_bundle_digest: str | None = None,
@@ -322,6 +325,7 @@ def _workspace_ref(
     return WorkspaceRef(
         path=path,
         check_command=check_command,
+        check_command_digest=check_command_digest or _command_digest(check_command),
         check_id=check_id,
         check_manifest_digest=check_manifest_digest or _command_digest(check_command),
         hidden_check_bundle_digest=hidden_check_bundle_digest or _hidden_digest(),

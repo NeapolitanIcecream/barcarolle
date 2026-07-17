@@ -99,6 +99,7 @@ class DiffReplayOutcome:
 @dataclass(frozen=True)
 class _CheckMaterialBinding:
     check_command: tuple[str, ...]
+    check_command_digest: str
     hidden_material_source: Path
     hidden_material_destination: Path
 
@@ -153,12 +154,19 @@ def bind_check_material(
     check_command: Sequence[str],
     hidden_material_source: Path,
     hidden_material_destination: Path = Path(".barcarolle/check_bundle"),
+    *,
+    check_manifest: Mapping[str, Any] | None = None,
 ) -> None:
     if not _is_reserved_hidden_material_destination(hidden_material_destination):
         raise ValueError("hidden material destination must stay under .barcarolle")
     normalized_command = tuple(check_command)
-    if _check_command_digest(normalized_command) != check.check_manifest_digest:
-        raise ValueError("check command digest does not match check manifest")
+    manifest = (
+        check_manifest
+        if check_manifest is not None
+        else {"check_command": normalized_command}
+    )
+    if canonical_digest(manifest) != check.check_manifest_digest:
+        raise ValueError("check manifest digest does not match check")
     source = hidden_material_source.resolve()
     if not source.exists():
         raise ValueError("hidden_material_source must exist")
@@ -166,6 +174,7 @@ def bind_check_material(
         raise ValueError("hidden material digest does not match check")
     _CHECK_MATERIALS[_check_key(check)] = _CheckMaterialBinding(
         check_command=normalized_command,
+        check_command_digest=_check_command_digest(normalized_command),
         hidden_material_source=source,
         hidden_material_destination=hidden_material_destination,
     )
@@ -359,6 +368,7 @@ def verify_agent_diff(
     verifier_ref = VerifierWorkspaceRef(
         path=verifier_workspace.path,
         check_command=binding.check_command,
+        check_command_digest=binding.check_command_digest,
         check_id=check.check_id,
         check_manifest_digest=check.check_manifest_digest,
         hidden_check_bundle_digest=check.hidden_check_bundle_digest,
@@ -832,8 +842,12 @@ def _invalid_run_record(
 
 def _material_binding(check: CheckRecord, verifier_workspace: WorkspaceRef) -> _CheckMaterialBinding | None:
     if verifier_workspace.check_command and verifier_workspace.hidden_material_source is not None:
+        command_digest = _check_command_digest(verifier_workspace.check_command)
+        if command_digest != check.check_manifest_digest:
+            return None
         return _CheckMaterialBinding(
             check_command=verifier_workspace.check_command,
+            check_command_digest=command_digest,
             hidden_material_source=verifier_workspace.hidden_material_source,
             hidden_material_destination=verifier_workspace.hidden_material_destination or Path(".barcarolle/check_bundle"),
         )

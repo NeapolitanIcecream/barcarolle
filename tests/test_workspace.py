@@ -372,6 +372,50 @@ def test_verify_agent_diff_delegates_to_verification_with_bound_material(tmp_pat
     assert (tmp_path / ".barcarolle/check_bundle").read_text(encoding="utf-8") == "private oracle"
 
 
+def test_bind_check_material_accepts_semantic_manifest(tmp_path: Path) -> None:
+    hidden = tmp_path / "hidden.txt"
+    hidden.write_text("private oracle", encoding="utf-8")
+    command = (sys.executable, "-c", "print('ok')")
+    manifest = {"implementation_sha256": "check-code", "timeout_seconds": 5}
+    check = replace(
+        _check(command=command, hidden=hidden),
+        check_manifest_digest=canonical_digest(manifest),
+    )
+
+    bind_check_material(check, command, hidden, check_manifest=manifest)
+    workspace = WorkspaceRef(
+        path=tmp_path,
+        role="verifier",
+        task_id="task",
+        base_commit="commit",
+        workspace_digest="workspace",
+    )
+
+    outcome = verify_agent_diff(workspace, check, _runtime())
+
+    assert outcome.outcome == "pass"
+
+
+def test_bind_check_material_rejects_semantic_manifest_mismatch(
+    tmp_path: Path,
+) -> None:
+    hidden = tmp_path / "hidden.txt"
+    hidden.write_text("private oracle", encoding="utf-8")
+    command = (sys.executable, "-c", "print('ok')")
+    check = replace(
+        _check(command=command, hidden=hidden),
+        check_manifest_digest=canonical_digest({"implementation": "expected"}),
+    )
+
+    with pytest.raises(ValueError, match="check manifest digest"):
+        bind_check_material(
+            check,
+            command,
+            hidden,
+            check_manifest={"implementation": "different"},
+        )
+
+
 def test_verify_agent_diff_normalizes_hidden_material_copy_collision(tmp_path: Path) -> None:
     hidden = tmp_path / "hidden"
     hidden.mkdir()

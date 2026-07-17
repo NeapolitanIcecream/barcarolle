@@ -101,6 +101,12 @@ availability and is not stored on Task or Check.
 - `oracle_source`
 - `check_material_available_at`
 
+`check_manifest_digest` binds the behavior-changing check implementation and
+configuration. Machine-local executable paths and diagnostic-output paths are
+runtime bindings, not Check identity. A simple adapter may use the exact
+command as its manifest; an adapter with relocatable local paths should use a
+structured manifest and bind the actual command separately.
+
 `resource_limits` may be empty. `RuntimeConfig.timeout_seconds` is the default
 Check timeout; a positive per-Check `resource_limits["timeout_seconds"]` only
 narrows that default. Other entries have effect only when the active execution

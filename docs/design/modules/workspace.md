@@ -90,6 +90,7 @@ Input:
 - `check_command: Sequence[str]`
 - `hidden_material_source: Path`
 - optional verifier-workspace destination under `.barcarolle`
+- optional structured `check_manifest`
 
 Output:
 
@@ -97,8 +98,12 @@ Output:
 
 Effect:
 
-- Verifies the command and hidden-material digests, then binds the material for
-  verifier preparation. Runner performs this binding before certification.
+- Verifies the Check manifest and hidden-material digests, then binds the
+  material for verifier preparation. Without an explicit manifest, the exact
+  command remains the manifest. Adapters may instead provide a structured
+  manifest so machine-local executable and output paths do not become Check
+  identity. The exact bound command is still digested and rechecked before
+  execution. Runner performs this binding before certification.
 
 ### create_solver_workspace
 

@@ -128,10 +128,12 @@ replacement matrix restored Codex CLI default transport retries and completed
 passed 4/10; high passed 5/10; the only disagreement was high-only. The
 sanitized report is `docs/pylint-swe-bench-reasoning-pilot.md`.
 
-Before expanding this pool, remove ignored output-directory and harness
-absolute paths from semantic Check identity while still binding the harness
-content and hidden oracle. The current paid Results keep their existing
-identities; do not rewrite them to claim equivalence.
+Future Pylint pools use a semantic Check manifest that excludes ignored output
+directories and local harness paths while retaining the check implementation,
+SWE-bench revision, verifier image, timeout, and hidden-oracle digest. The
+exact runtime command is still checked before execution. Current paid Results
+keep their original identities and remain loadable from their original output
+directory; do not rewrite them to claim equivalence.
 
 Known authorized spend across the boltons mechanism run and both Pylint
 attempts is USD 2.95516590. Keep the interrupted Pylint cell's cost unknown; do

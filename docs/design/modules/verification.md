@@ -59,6 +59,9 @@ Effect:
   that workspace reference. The low-level function confines the destination
   to the verifier workspace; the Workspace module additionally reserves the
   `.barcarolle` namespace for its bound hidden material.
+- Rechecks the bound command digest before material injection. This transient
+  execution check is separate from the semantic Check manifest stored in
+  `CheckRecord`.
 
 ### verify_diff
 
@@ -81,6 +84,7 @@ Effect:
 - Other resource-limit entries have effect only when the active execution
   adapter implements them. The built-in subprocess path does not claim
   filesystem, network, process, CPU, or memory isolation.
+- Rechecks the bound command digest immediately before execution.
 
 ### normalize_outcome
 

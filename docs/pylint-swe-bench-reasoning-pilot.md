@@ -87,6 +87,13 @@ because network conditions also changed between attempts. No recorded event
 proves that an internal retry was needed, and external session resume was not
 exercised.
 
+After the run, the adapter was corrected so future Check manifests bind the
+check implementation, SWE-bench revision, verifier image, hidden-bundle
+destination, and timeout without binding local Python or raw-output paths. The
+completed paid records retain their original identities and remain loadable
+from the original output directory; they were not relabeled as equivalent to
+the corrected identity.
+
 ## Evidence and cost integrity
 
 - The completed ledger has 20 reservations and 20 matched completions. All 20
