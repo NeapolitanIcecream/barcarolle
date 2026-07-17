@@ -453,8 +453,8 @@ def build_context(
     workspace_config = _workspace_config()
     runtime_config = RuntimeConfig(
         runtime_config_id="boltons-codex-mini-paired-900s",
-        budget_digest="codex-mini-paired-900s-no-retry-v1",
-        retry_policy_digest="retry-none",
+        budget_digest="codex-mini-paired-900s-default-network-retries-v1",
+        retry_policy_digest="codex-default-network-retries-no-cell-retry",
         stochastic_settings_digest="reasoning-effort-bound-in-agent-identity",
         timeout_seconds=900,
         hardware_profile_digest=None,
@@ -538,8 +538,8 @@ def _agents(
                 "provider": "barcarolle_openai",
                 "wire_api": "responses",
                 "endpoint_digest": endpoint_digest,
-                "request_max_retries": 0,
-                "stream_max_retries": 0,
+                "request_max_retries": "codex-cli-default",
+                "stream_max_retries": "codex-cli-default",
             }
         )
         agent = AgentRecord(

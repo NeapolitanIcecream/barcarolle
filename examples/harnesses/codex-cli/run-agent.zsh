@@ -81,8 +81,6 @@ provider_config=(
   -c "model_providers.barcarolle_openai.base_url=$(toml_string "$OPENAI_BASE_URL")"
   -c 'model_providers.barcarolle_openai.env_key="OPENAI_API_KEY"'
   -c 'model_providers.barcarolle_openai.wire_api="responses"'
-  -c 'model_providers.barcarolle_openai.request_max_retries=0'
-  -c 'model_providers.barcarolle_openai.stream_max_retries=0'
   -c 'shell_environment_policy.exclude=["OPENAI_API_KEY","OPENAI_BASE_URL"]'
 )
 if [[ -n "$reasoning_effort" ]]; then

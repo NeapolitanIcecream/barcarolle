@@ -114,8 +114,8 @@ def test_codex_harness_writes_usage_for_workspace_runner(tmp_path: Path) -> None
     assert 'model_providers.barcarolle_openai.base_url="https://example.invalid/v1"' in argv
     assert 'model_providers.barcarolle_openai.env_key="OPENAI_API_KEY"' in argv
     assert 'model_providers.barcarolle_openai.wire_api="responses"' in argv
-    assert "model_providers.barcarolle_openai.request_max_retries=0" in argv
-    assert "model_providers.barcarolle_openai.stream_max_retries=0" in argv
+    assert "model_providers.barcarolle_openai.request_max_retries" not in argv
+    assert "model_providers.barcarolle_openai.stream_max_retries" not in argv
     assert 'shell_environment_policy.exclude=["OPENAI_API_KEY","OPENAI_BASE_URL"]' in argv
     assert 'model_reasoning_effort="low"' in argv
     argv_lines = argv.splitlines()

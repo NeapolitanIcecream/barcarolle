@@ -12,7 +12,7 @@ enforces it.
 | Module | Implemented | Partial or not yet enforced |
 | --- | --- | --- |
 | Records | Dataclass records, canonical digests, JSON/JSONL conversion, boundary validation, directly replayable Task text, exact certification-evidence refs/digests, and a latest-schema-only core. A one-off script migrates the pre-2026-07 Result cache without adding runtime compatibility branches. | Future schema changes should add another small migration only when valuable paid results require it. |
-| Task Pool | Candidate import/generation, direct Task/Check construction, executable aggregate-Check base-fail/reference-patch-pass validation, optional repeated patched checks in fresh verifier workspaces, rejection summaries, and frozen pool records. Evidence retains normalized outcomes and digests rather than raw patches, workspaces, or Check output. | The aggregate Check does not separately certify SWE-bench `FAIL_TO_PASS` and `PASS_TO_PASS`. A SWE-bench adapter must implement that distinction in its Check wrapper. Dependency setup and framework-specific import remain adapter responsibilities. |
+| Task Pool | Candidate import/generation, direct Task/Check construction, executable aggregate-Check base-fail/reference-patch-pass validation, optional repeated patched checks in fresh verifier workspaces, rejection summaries, and frozen pool records. The fixed Pylint SWE-bench adapter also certifies `FAIL_TO_PASS` and `PASS_TO_PASS` counts separately. Evidence retains normalized outcomes and digests rather than raw patches, workspaces, or Check output. | Separate SWE-bench test-set certification remains an adapter responsibility rather than a generic core behavior. Dependency setup and framework-specific import also remain adapter responsibilities. |
 | Verification | Hidden material is injected only after diff capture; check outcomes are normalized and time-bounded. | The built-in subprocess path enforces timeouts. Stronger process, network, filesystem, or resource limits belong in an optional execution adapter. |
 | Workspace | Fresh solver/verifier checkouts containing the base commit and its ancestors but no later source refs, direct Task text in `TASK.md`, validated checkout-local supporting-file refs, diff capture/replay that omits Python runtime caches, optional artifacts, and cleanup after high-level runs. | The built-in harness shares the caller's host privileges and does not byte-bound output. Use a host-isolation adapter when the Agent is adversarial or concurrent same-user runs require isolation. |
 | Result Store | Exact execution cache identity, derived scoring identity, append-only repricing from retained usage without rerunning Agents, missing-cell queries, and result matrices. | JSONL is a single-writer format without locking, crash-tail recovery, or a persistent index. |
@@ -67,8 +67,8 @@ instead of being made reusable automatically.
 
 ## Near-Term Engineering Order
 
-1. Collect paired rolling-origin evidence and compare Selector MAE when paid
-   benchmark runs are explicitly authorized.
+1. Expand the real paired Task history, then compare Selector MAE under
+   rolling-origin evaluation when paid benchmark runs are explicitly authorized.
 2. Develop the next learned or Adaptive algorithm only when its comparative
    MAE result can be measured against the implemented baselines.
 3. Harden JSONL storage when concurrent writers or crash recovery become an

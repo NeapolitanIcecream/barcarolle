@@ -233,7 +233,11 @@ def test_pilot_resource_ledger_pins_authorized_limits_and_official_rates() -> No
     assert ledger["limits"] == {
         "maximum_estimated_cost_usd": 30.0,
         "maximum_paid_calls": 20,
-        "retry_policy": "none",
+        "retry_policy": {
+            "cell_retries": 0,
+            "codex_request_retries": "default",
+            "codex_stream_retries": "default",
+        },
     }
     pricing = cast(dict[str, object], ledger["pricing"])
     models = cast(dict[str, object], pricing["models"])

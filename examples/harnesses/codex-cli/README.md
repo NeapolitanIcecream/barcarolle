@@ -35,8 +35,9 @@ auth. This harness sets `CODEX_HOME` to `BARCAROLLE_CODEX_HOME`, runs Codex with
 - `base_url` comes from `OPENAI_BASE_URL`.
 - `env_key` is `OPENAI_API_KEY`.
 - `wire_api` is `responses`.
-- request and stream retries are both zero; the benchmark driver owns any
-  decision to spend another call.
+- request and stream retries use the Codex CLI defaults. In Codex CLI 0.144.5,
+  those defaults are four request retries and five stream retries. Evidence
+  producers must bind the CLI version into the Agent identity.
 
 Before invoking Codex, the harness disables Codex plugins and subagents, uses
 an ephemeral session, excludes `OPENAI_API_KEY` and `OPENAI_BASE_URL` from

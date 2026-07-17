@@ -70,7 +70,7 @@ EXTRACT_SOURCE = (HERE / "extract_source.py").resolve()
 CHECK = (HERE / "check.py").resolve()
 TASK_SOURCES = (HERE / "task_sources.json").resolve()
 DEFAULT_OUTPUT_DIR = Path(
-    "outputs/user-journeys/2026-07-17-swe-bench-verified-pylint-pilot"
+    "outputs/user-journeys/2026-07-17-swe-bench-verified-pylint-pilot-default-retries"
 )
 DEFAULT_DATASET_NAME = "swe-bench-verified-test-91aa3ed.parquet"
 DEFAULT_SUPPLEMENTAL_DATASET_NAME = "swe-bench-lite-test-6ec7bb8.parquet"
@@ -841,8 +841,8 @@ def _workspace_config(
 def _runtime_config() -> RuntimeConfig:
     return RuntimeConfig(
         runtime_config_id="pylint-codex-mini-paired-900s",
-        budget_digest="codex-mini-paired-900s-no-retry-v1",
-        retry_policy_digest="retry-none",
+        budget_digest="codex-mini-paired-900s-default-network-retries-v1",
+        retry_policy_digest="codex-default-network-retries-no-cell-retry",
         stochastic_settings_digest="reasoning-effort-bound-in-agent-identity",
         timeout_seconds=AGENT_TIMEOUT_SECONDS,
         hardware_profile_digest=None,
@@ -896,8 +896,8 @@ def _agents(
                 "provider": "barcarolle_openai",
                 "wire_api": "responses",
                 "endpoint_digest": endpoint_digest,
-                "request_max_retries": 0,
-                "stream_max_retries": 0,
+                "request_max_retries": "codex-cli-default",
+                "stream_max_retries": "codex-cli-default",
             }
         )
         agent_id = f"codex-{MODEL}-reasoning-{effort}"
@@ -1090,7 +1090,11 @@ def _new_ledger() -> Mapping[str, object]:
         "limits": {
             "maximum_estimated_cost_usd": MAXIMUM_ESTIMATED_COST_USD,
             "maximum_paid_calls": MAXIMUM_PAID_CALLS,
-            "retry_policy": "none",
+            "retry_policy": {
+                "cell_retries": 0,
+                "codex_request_retries": "default",
+                "codex_stream_retries": "default",
+            },
         },
         "pricing": {
             "accounting_basis": (

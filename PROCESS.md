@@ -1,6 +1,6 @@
 # Barcarolle Internal Process Notes
 
-Last updated: 2026-07-15.
+Last updated: 2026-07-17.
 
 These notes are for repository-maintenance agents. They are not user
 documentation and they are not a source of truth for intended system behavior.
@@ -16,6 +16,14 @@ evidence, keeps rolling-origin inputs time-correct, captures real usage and
 unknown cost accurately, and evaluates Adaptive methods by paired MAE.
 `docs/implementation-status.md` records which effects the alpha implementation
 enforces.
+
+The fixed real-task Pylint pilot is complete. It observed one high-only pass
+among ten single-run low/high pairs, which is too sparse to separate a
+reasoning-effort effect from run-level variation or train a controller. Its
+hindsight per-task oracle tied always-high at 5/10, so it did not demonstrate
+an adaptive accuracy gain. The next outcome-facing step is a larger paired
+history followed by rolling-origin MAE comparisons, not another controller
+schema or framework.
 
 Complexity is justified when it can improve prediction, prevent invalid
 evidence, or preserve reusable paid results. Do not add aliases for existing
@@ -109,11 +117,52 @@ are controlled. The sanitized report is
 The v1 paid diffs retained generated Python caches. Preserve those Results
 unchanged. Commit `c052addc` excludes `.pytest_cache` and `__pycache__` from
 future captured diffs and binds examples to adapter v2. The next predictive
-experiment needs a larger Task Pool with real availability times and multiple
-future tasks per origin; do not infer that requirement into another paid run
-without explicit scope and budget.
+experiment needs a larger Task Pool with multiple future tasks per origin.
+
+The fixed Pylint pilot used real availability times and executable SWE-bench
+`FAIL_TO_PASS`/`PASS_TO_PASS` certification. The first transport-aborted attempt
+is preserved under its ignored output directory: one known-cost Result used
+USD 0.13451550 and one interrupted Result has unknown usage and cost. The
+replacement matrix restored Codex CLI default transport retries and completed
+20/20 scoreable cells for USD 2.46819345 estimated at official prices. Low
+passed 4/10; high passed 5/10; the only disagreement was high-only. The
+sanitized report is `docs/pylint-swe-bench-reasoning-pilot.md`.
+
+Before expanding this pool, remove ignored output-directory and harness
+absolute paths from semantic Check identity while still binding the harness
+content and hidden oracle. The current paid Results keep their existing
+identities; do not rewrite them to claim equivalence.
+
+Known authorized spend across the boltons mechanism run and both Pylint
+attempts is USD 2.95516590. Keep the interrupted Pylint cell's cost unknown; do
+not subtract a guessed zero from the USD 300 authorization.
 
 Repository-maintenance Codex sessions used to implement, review, or coordinate
 work are outside this paid-call boundary. Reviewer Codex CLI sessions should
 use the user's local Codex CLI authentication/subscription unless the user
 explicitly requests a different reviewer execution mode.
+
+## Local Experiment Time Estimates
+
+Estimate task supply, deterministic certification, preflight, paid execution,
+and analysis separately. Record active wall time for each phase and exclude
+user pauses or known network outages instead of folding them into throughput.
+
+For a serial paid matrix, wait for at least three scoreable cells per Agent
+configuration, then estimate remaining wall time as:
+
+```text
+overhead factor * sum(remaining cells for config * observed mean workspace seconds for config)
+```
+
+Use `result time span / summed workspace seconds` as the overhead factor. This
+pilot observed 1.009; use 1.02 for the same local serial runner until a later
+run replaces it. Low averaged 67.77 seconds and high averaged 148.44 seconds,
+so the observed pair mean was 216.21 seconds. At that rate, 30 paired tasks take
+about 1.8 paid hours and 50 take about 3.0, before setup and analysis.
+
+Do not extrapolate research and task-source repair from warm recertification.
+The first ten-task supply pass took 81 minutes 6 seconds because it included
+source research, a rejected task, an architecture probe, and repository repair.
+Rebuilding the same fixed ten tasks from warm local inputs took 7 minutes 34
+seconds; preflight took 3 seconds. State which case an estimate uses.
