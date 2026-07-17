@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run the fixed SWE-bench Verified Pylint pilot one paid cell at a time."""
+"""Run the fixed SWE-bench Pylint pilot one paid cell at a time."""
 
 from __future__ import annotations
 
@@ -73,6 +73,7 @@ DEFAULT_OUTPUT_DIR = Path(
     "outputs/user-journeys/2026-07-17-swe-bench-verified-pylint-pilot"
 )
 DEFAULT_DATASET_NAME = "swe-bench-verified-test-91aa3ed.parquet"
+DEFAULT_SUPPLEMENTAL_DATASET_NAME = "swe-bench-lite-test-6ec7bb8.parquet"
 MODEL = "gpt-5.4-mini"
 REASONING_EFFORTS = ("low", "high")
 MAXIMUM_PAID_CALLS = 20
@@ -96,6 +97,7 @@ class PilotPaths:
     output_dir: Path
     target_repo: Path
     dataset: Path
+    supplemental_dataset: Path
     harness_python: Path
 
 
@@ -119,6 +121,10 @@ class PilotContext:
 def prepare(paths: PilotPaths) -> Mapping[str, object]:
     _require_prepare_may_replace(paths.output_dir)
     _require_file_digest(paths.dataset, _source_config()["dataset"]["parquet_sha256"])
+    _require_file_digest(
+        paths.supplemental_dataset,
+        _source_config()["supplemental_dataset"]["parquet_sha256"],
+    )
     _require_executable(paths.harness_python)
     _require_harness_revision(paths.harness_python)
     _require_git_repository(paths.target_repo)
@@ -205,8 +211,11 @@ def prepare(paths: PilotPaths) -> Mapping[str, object]:
             ),
             "generator_config_digest": canonical_digest(
                 {
-                    "pilot": "swe-bench-verified-pylint-10x2-v1",
+                    "pilot": "swe-bench-pylint-10x2-v2",
                     "dataset": _source_config()["dataset"],
+                    "supplemental_dataset": _source_config()[
+                        "supplemental_dataset"
+                    ],
                     "harness": _source_config()["harness"],
                     "check_sha256": _file_sha256(CHECK),
                 }
@@ -682,11 +691,14 @@ def _candidate(
     command: Sequence[str],
 ) -> TaskCandidate:
     instance_id = _required_string(source, "instance_id")
+    source_family = configured.get("dataset_family", "swe_bench_verified")
+    if not isinstance(source_family, str) or not source_family:
+        raise RuntimeError(f"{instance_id} has no dataset family")
     return TaskCandidate(
         candidate_id=f"candidate-{instance_id}",
         repository_id="pylint-dev/pylint",
         base_commit=_required_string(source, "base_commit"),
-        source_family="swe_bench_verified",
+        source_family=source_family,
         source_ref=_required_string(configured, "issue_url"),
         source_resolved_at=_required_string(
             configured, "task_material_available_at"
@@ -703,7 +715,7 @@ def _candidate(
         check_manifest_digest=canonical_digest({"check_command": tuple(command)}),
         hidden_check_bundle_digest=_path_digest(_hidden_check_dir(paths, instance_id)),
         resource_limits={"timeout_seconds": CHECK_TIMEOUT_SECONDS},
-        oracle_source="swe_bench_verified_test_patch",
+        oracle_source="swe_bench_test_patch",
         check_type="swe_bench",
     )
 
@@ -797,7 +809,7 @@ def _workspace_config(
 ) -> WorkspaceConfig:
     source_config = _source_config()
     return WorkspaceConfig(
-        workspace_config_id="pylint-swe-bench-verified-10-v1",
+        workspace_config_id="pylint-swe-bench-10-v2",
         repository_checkout_config_digest=canonical_digest(
             {
                 "repository": "pylint-dev/pylint",
@@ -819,6 +831,7 @@ def _workspace_config(
         dependency_lock_digest=canonical_digest(
             {
                 "dataset": source_config["dataset"],
+                "supplemental_dataset": source_config["supplemental_dataset"],
                 "swe_bench_harness": source_config["harness"],
             }
         ),
@@ -977,6 +990,8 @@ def _extract_source(paths: PilotPaths) -> None:
             str(EXTRACT_SOURCE),
             "--dataset",
             str(paths.dataset),
+            "--supplemental-dataset",
+            str(paths.supplemental_dataset),
             "--task-sources",
             str(TASK_SOURCES),
             "--output-dir",
@@ -1069,7 +1084,7 @@ def _new_ledger() -> Mapping[str, object]:
             "approved_at": "2026-07-17",
             "budget_usd": MAXIMUM_ESTIMATED_COST_USD,
             "credential_variables": ["OPENAI_API_KEY", "OPENAI_BASE_URL"],
-            "scope": "fixed 10-task x low/high SWE-bench Verified Pylint pilot",
+            "scope": "fixed 10-task x low/high SWE-bench Pylint pilot",
         },
         "calls": [],
         "limits": {
@@ -1729,6 +1744,10 @@ def _paths(args: argparse.Namespace) -> PilotPaths:
         dataset=(
             args.dataset or output_dir / "source" / DEFAULT_DATASET_NAME
         ).resolve(),
+        supplemental_dataset=(
+            args.supplemental_dataset
+            or output_dir / "source" / DEFAULT_SUPPLEMENTAL_DATASET_NAME
+        ).resolve(),
         harness_python=(
             args.harness_python or output_dir / "harness-env/bin/python"
         ).absolute(),
@@ -1745,6 +1764,7 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR)
     parser.add_argument("--target-repo", type=Path)
     parser.add_argument("--dataset", type=Path)
+    parser.add_argument("--supplemental-dataset", type=Path)
     parser.add_argument("--harness-python", type=Path)
     parser.add_argument("--ledger", type=Path)
     stage = parser.add_mutually_exclusive_group(required=True)

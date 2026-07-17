@@ -16,6 +16,16 @@ sys.path.insert(0, str(REPOSITORY_ROOT))
 from examples.pylint_swe_bench_verified import pilot  # noqa: E402
 
 
+def test_fixed_task_sources_replace_the_uncertifiable_verified_instance() -> None:
+    configured = pilot._task_source_by_instance()
+
+    assert len(configured) == 10
+    assert "pylint-dev__pylint-8898" not in configured
+    assert configured["pylint-dev__pylint-5859"]["dataset_family"] == (
+        "swe_bench_lite"
+    )
+
+
 def test_candidate_separates_task_source_time_from_check_time(
     tmp_path: Path,
 ) -> None:
@@ -27,6 +37,7 @@ def test_candidate_separates_task_source_time_from_check_time(
         output_dir=tmp_path,
         target_repo=tmp_path / "target",
         dataset=tmp_path / "dataset",
+        supplemental_dataset=tmp_path / "supplemental-dataset",
         harness_python=tmp_path / "python",
     )
 
@@ -217,7 +228,7 @@ def test_pilot_resource_ledger_pins_authorized_limits_and_official_rates() -> No
         "approved_at": "2026-07-17",
         "budget_usd": 30.0,
         "credential_variables": ["OPENAI_API_KEY", "OPENAI_BASE_URL"],
-        "scope": "fixed 10-task x low/high SWE-bench Verified Pylint pilot",
+        "scope": "fixed 10-task x low/high SWE-bench Pylint pilot",
     }
     assert ledger["limits"] == {
         "maximum_estimated_cost_usd": 30.0,
