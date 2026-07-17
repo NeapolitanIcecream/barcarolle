@@ -688,7 +688,9 @@ def _candidate(
         base_commit=_required_string(source, "base_commit"),
         source_family="swe_bench_verified",
         source_ref=_required_string(configured, "issue_url"),
-        source_resolved_at=_required_string(configured, "check_material_available_at"),
+        source_resolved_at=_required_string(
+            configured, "task_material_available_at"
+        ),
         task_material_available_at=_required_string(
             configured, "task_material_available_at"
         ),

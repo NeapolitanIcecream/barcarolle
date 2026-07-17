@@ -16,6 +16,42 @@ sys.path.insert(0, str(REPOSITORY_ROOT))
 from examples.pylint_swe_bench_verified import pilot  # noqa: E402
 
 
+def test_candidate_separates_task_source_time_from_check_time(
+    tmp_path: Path,
+) -> None:
+    instance_id = "pylint-dev__pylint-4551"
+    bundle = tmp_path / "hidden-checks" / instance_id
+    bundle.mkdir(parents=True)
+    (bundle / "spec.json").write_text("{}", encoding="utf-8")
+    paths = pilot.PilotPaths(
+        output_dir=tmp_path,
+        target_repo=tmp_path / "target",
+        dataset=tmp_path / "dataset",
+        harness_python=tmp_path / "python",
+    )
+
+    candidate = pilot._candidate(
+        paths,
+        {
+            "instance_id": instance_id,
+            "base_commit": "a" * 40,
+            "problem_statement": "Fix the bug.",
+            "difficulty": "<15 min fix",
+        },
+        {
+            "instance_id": instance_id,
+            "issue_url": "https://example.invalid/issues/1",
+            "task_material_available_at": "2021-01-01T00:00:00Z",
+            "check_material_available_at": "2021-02-01T00:00:00Z",
+        },
+        ("check",),
+    )
+
+    assert candidate.source_resolved_at == "2021-01-01T00:00:00Z"
+    assert candidate.task_material_available_at == "2021-01-01T00:00:00Z"
+    assert candidate.check_material_available_at == "2021-02-01T00:00:00Z"
+
+
 def test_certification_counts_require_base_negative_and_reference_positive() -> None:
     base = {
         "tests": {
