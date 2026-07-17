@@ -1596,6 +1596,16 @@ def _require_harness_revision(python: Path) -> None:
 def _require_git_repository(path: Path) -> None:
     if not (path / ".git").exists():
         raise RuntimeError(f"target repository is unavailable: {path}")
+    completed = subprocess.run(
+        ("git", "rev-parse", "--is-shallow-repository"),
+        cwd=path,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=False,
+    )
+    if completed.returncode != 0 or completed.stdout.strip() == "true":
+        raise RuntimeError("target repository must provide complete base history")
 
 
 def _require_repository_commits(
