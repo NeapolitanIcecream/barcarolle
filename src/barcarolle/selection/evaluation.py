@@ -102,8 +102,11 @@ def evaluate_selection(
             ),
         )
     try:
-        selected_rates = _pass_rates(selected_matrix, selection.selected_weights)
-        future_rates = _pass_rates(future_matrix)
+        metric_values = compute_selection_metric_values(
+            selection,
+            selected_matrix,
+            future_matrix,
+        )
     except ValueError as exc:
         return (
             _metric_record(
@@ -120,18 +123,7 @@ def evaluate_selection(
                 abstention_reason=str(exc),
             ),
         )
-    mae = _mean_absolute_error(selected_rates, future_rates)
-    coverage = _coverage(future_matrix)
-    invalid_rate = _invalid_rate(future_matrix)
     completeness_state = _combined_completeness_state(selected_matrix, future_matrix)
-    metric_values = (
-        ("future_pass_rate_mae", mae),
-        ("future_coverage", coverage),
-        ("future_invalid_rate", invalid_rate),
-        ("pairwise_gap_mae", _pairwise_gap_mae(selected_rates, future_rates)),
-        ("rank_agreement", _rank_agreement(selected_rates, future_rates)),
-        ("recommendation_regret", _recommendation_regret(selected_rates, future_rates)),
-    )
     return tuple(
         _metric_record(
             selection,
@@ -146,8 +138,26 @@ def evaluate_selection(
             completeness_state=completeness_state,
             abstention_reason=future_matrix.abstention_reason,
         )
-        for metric_name, metric_value in metric_values
+        for metric_name, metric_value in metric_values.items()
     )
+
+
+def compute_selection_metric_values(
+    selection: BenchmarkSelectionRecord,
+    selected_matrix: ResultMatrix,
+    future_matrix: ResultMatrix,
+) -> Mapping[str, float]:
+    """Derive every current aggregate metric from supplied Result matrices."""
+    selected_rates = _pass_rates(selected_matrix, selection.selected_weights)
+    future_rates = _pass_rates(future_matrix)
+    return {
+        "future_pass_rate_mae": _mean_absolute_error(selected_rates, future_rates),
+        "future_coverage": _coverage(future_matrix),
+        "future_invalid_rate": _invalid_rate(future_matrix),
+        "pairwise_gap_mae": _pairwise_gap_mae(selected_rates, future_rates),
+        "rank_agreement": _rank_agreement(selected_rates, future_rates),
+        "recommendation_regret": _recommendation_regret(selected_rates, future_rates),
+    }
 
 
 def choose_selector_by_mean_mae(

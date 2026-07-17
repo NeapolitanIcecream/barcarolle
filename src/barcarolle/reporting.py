@@ -28,6 +28,7 @@ from barcarolle.records import (
     validate_result,
     validate_result_matrix,
 )
+from barcarolle.selection.evaluation import compute_selection_metric_values
 from barcarolle.task_pool import validate_task_pool_artifacts
 
 
@@ -747,6 +748,33 @@ def _selector_trace_errors(
             errors.append(f"metric {metric.metric_id} budget digest does not match selection {selection.selection_id}")
         if metric.origin_id != selection.origin_id:
             errors.append(f"metric {metric.metric_id} origin does not match selection {selection.selection_id}")
+        if selected_matrix is None or future_matrix is None:
+            continue
+        if (
+            metric.metric_scope != "aggregate"
+            or metric.aggregation_level != "all_agents"
+            or metric.agent_id is not None
+            or metric.agent_pair is not None
+            or metric.stratum_ref is not None
+        ):
+            errors.append(f"metric {metric.metric_id} is not a recomputable aggregate all-Agents metric")
+            continue
+        try:
+            expected_values = compute_selection_metric_values(
+                selection,
+                selected_matrix,
+                future_matrix,
+            )
+        except (OverflowError, TypeError, ValueError, ZeroDivisionError) as exc:
+            errors.append(f"metric {metric.metric_id} cannot be recomputed: {exc}")
+            continue
+        expected_value = expected_values.get(metric.metric_name)
+        if expected_value is None:
+            errors.append(f"metric {metric.metric_id} has an unsupported metric name: {metric.metric_name}")
+        elif metric.metric_value != expected_value:
+            errors.append(
+                f"metric {metric.metric_id} value {metric.metric_value} does not match recomputed value {expected_value}"
+            )
     return tuple(errors)
 
 

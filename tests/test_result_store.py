@@ -18,6 +18,7 @@ from barcarolle.records import (
     WorkspaceConfig,
     WorkspaceRunRecord,
     canonical_digest,
+    canonical_json,
     make_solver_material_digest,
     record_with_digest,
     validate_result,
@@ -400,6 +401,53 @@ def test_resolve_result_cells_does_not_reuse_benchmark_invalid_result_by_default
     assert cells[0].result_id is None
 
 
+def test_resolve_result_cells_can_reuse_valid_benchmark_invalid_result_when_configured(tmp_path: Path) -> None:
+    store = ResultStore(tmp_path / "results.jsonl")
+    benchmark_invalid = _result(
+        workspace_run=_workspace_run(
+            terminal_status="invalid",
+            check_outcome="invalid",
+            invalid_owner="benchmark",
+            failure_label="verifier_preparation_failed",
+        )
+    )
+    store_result(benchmark_invalid, store)
+
+    cells = resolve_result_cells(
+        task_check_refs=(TaskCheckRef("task", "check"),),
+        tasks=(_task(),),
+        checks={"check": _check()},
+        agents=(_agent(),),
+        workspace_config=_workspace_config(),
+        runtime_config=_runtime_config(),
+        store=store,
+        cache_config=ResultCacheConfig(reuse_benchmark_invalid=True),
+    )
+
+    assert cells[0].cell_state == "result"
+    assert cells[0].result_id == benchmark_invalid.result_id
+
+
+def test_resolve_result_cells_never_reuses_structurally_invalid_result(tmp_path: Path) -> None:
+    store = ResultStore(tmp_path / "results.jsonl")
+    invalid = replace(_result(), result_digest="not-canonical")
+    store.path.write_text(f"{canonical_json(invalid)}\n", encoding="utf-8")
+
+    cells = resolve_result_cells(
+        task_check_refs=(TaskCheckRef("task", "check"),),
+        tasks=(_task(),),
+        checks={"check": _check()},
+        agents=(_agent(),),
+        workspace_config=_workspace_config(),
+        runtime_config=_runtime_config(),
+        store=store,
+        cache_config=ResultCacheConfig(reuse_benchmark_invalid=True),
+    )
+
+    assert cells[0].cell_state == "missing"
+    assert cells[0].result_id is None
+
+
 def test_resolve_result_cells_keeps_agent_invalid_result_reusable(tmp_path: Path) -> None:
     store = ResultStore(tmp_path / "results.jsonl")
     agent_invalid = _result(
@@ -515,6 +563,20 @@ def test_build_result_matrix_joins_selected_cells_and_marks_missing_denominator(
         ("agent", "result"),
         ("other-agent", "missing"),
     }
+
+
+@pytest.mark.parametrize(
+    ("field_name", "build_config"),
+    (
+        ("missing_cell_policy", lambda: ResultJoinConfig("join", "denominator", missing_cell_policy="typo")),
+        ("agent_invalid_policy", lambda: ResultJoinConfig("join", "denominator", agent_invalid_policy="typo")),
+        ("benchmark_invalid_policy", lambda: ResultJoinConfig("join", "denominator", benchmark_invalid_policy="typo")),
+        ("abstention_policy", lambda: ResultJoinConfig("join", "denominator", abstention_policy="typo")),
+    ),
+)
+def test_result_join_config_rejects_unknown_policy(field_name: str, build_config: Any) -> None:
+    with pytest.raises(ValueError, match=field_name):
+        build_config()
 
 
 def test_build_result_matrix_excludes_benchmark_invalid_result_with_traceability() -> None:

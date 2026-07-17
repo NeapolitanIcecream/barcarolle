@@ -272,6 +272,36 @@ def test_selector_and_claim_reports_reject_incomplete_metric_without_abstention(
     assert any(claim.startswith("selector_metrics:") for claim in claim_section.unsupported_claims)
 
 
+def test_selector_and_claim_reports_reject_recomputed_metric_value_mismatch() -> None:
+    task_pool = _task_pool()
+    result = _result()
+    selection = _selection(task_pool)
+    cell_set = _cell_set(selection, result.cache_identity.identity_digest, result)
+    selected_matrix = _matrix(selection, cell_set, role="selected")
+    future_matrix = _matrix(selection, cell_set, role="future_holdout")
+    metric = _metric(selection, cell_set, selected_matrix, future_matrix)
+    fabricated_metric = record_with_digest(replace(metric, metric_value=0.5, metric_digest=""))
+
+    selector_section = build_selector_report(
+        (selection,),
+        (cell_set,),
+        (selected_matrix, future_matrix),
+        (fabricated_metric,),
+    )
+    claim_section = build_claim_boundary(
+        task_pool,
+        (selection,),
+        (cell_set,),
+        (selected_matrix, future_matrix),
+        (fabricated_metric,),
+        ClaimConfig("claims"),
+        results=(result,),
+    )
+
+    assert any("does not match recomputed value" in claim for claim in selector_section.unsupported_claims)
+    assert any("does not match recomputed value" in claim for claim in claim_section.unsupported_claims)
+
+
 def test_selector_and_claim_reports_require_metrics_for_each_selection() -> None:
     task_pool = _task_pool()
     result = _result()

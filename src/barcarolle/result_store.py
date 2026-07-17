@@ -71,7 +71,7 @@ class ResultQuery:
 @dataclass(frozen=True)
 class ResultCacheConfig:
     reuse_policy: str = "exact_identity"
-    require_valid_result: bool = True
+    reuse_benchmark_invalid: bool = False
 
 
 @dataclass(frozen=True)
@@ -82,6 +82,19 @@ class ResultJoinConfig:
     agent_invalid_policy: str = "count_as_failure"
     benchmark_invalid_policy: str = "exclude_task_check"
     abstention_policy: str = "abstain_on_missing"
+
+    def __post_init__(self) -> None:
+        supported = {
+            "missing_cell_policy": {"error", "mark_missing"},
+            "agent_invalid_policy": {"count_as_failure", "exclude"},
+            "benchmark_invalid_policy": {"exclude_task_check"},
+            "abstention_policy": {"abstain_on_missing"},
+        }
+        for field_name, allowed_values in supported.items():
+            value = getattr(self, field_name)
+            if value not in allowed_values:
+                allowed = ", ".join(sorted(allowed_values))
+                raise ValueError(f"{field_name} must be one of: {allowed}")
 
 
 def build_result_record(
@@ -590,9 +603,10 @@ def _index_reusable_results(
     for result in results:
         if scoring_config_digest is not None and result.scoring_config_digest != scoring_config_digest:
             continue
-        if cache_config.require_valid_result:
-            if not validate_result(result).ok or result.scoreable_state == "benchmark_invalid":
-                continue
+        if not validate_result(result).ok:
+            continue
+        if result.scoreable_state == "benchmark_invalid" and not cache_config.reuse_benchmark_invalid:
+            continue
         key = (result.agent_id, result.task_id, result.check_id, result.cache_identity)
         reusable.setdefault(key, result)
     return reusable

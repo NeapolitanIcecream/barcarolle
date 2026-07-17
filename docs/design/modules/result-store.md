@@ -215,9 +215,10 @@ Effect:
 - Without `scoring_config`, resolves execution reuse independently of pricing.
   With it, resolves only the exact derived scoring-config digest so evaluation
   cells cannot bind a stale price view.
-- Under the default valid-result policy, does not reuse benchmark-invalid
-  infrastructure results. Agent-invalid results retain the existing reuse
-  policy.
+- Validates every stored Result before indexing it for reuse. By default it
+  does not reuse benchmark-invalid infrastructure results; callers may opt in
+  with `reuse_benchmark_invalid` without allowing malformed records. Agent-
+  invalid results remain reusable.
 - If duplicate eligible records have the same exact identity, chooses the first
   record in append order.
 - Loads and indexes matching stored results once per resolution operation.
@@ -308,6 +309,9 @@ Effect:
 - benchmark infrastructure failure policy;
 - denominator policy;
 - abstention policy.
+
+Construction rejects unsupported policy values, so a misspelled policy cannot
+silently change a matrix denominator.
 
 Agent-attributable invalid outcomes such as timeout, no meaningful patch, or
 budget exhaustion are failures. Benchmark infrastructure failures are not Agent

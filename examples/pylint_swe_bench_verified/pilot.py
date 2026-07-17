@@ -89,7 +89,7 @@ OFFICIAL_RATES = {
     "output_tokens": 4.50 / 1_000_000,
 }
 SCORING_CONFIG = ScoringConfig(PRICING_VERSION, OFFICIAL_RATES)
-CACHE_CONFIG = ResultCacheConfig(require_valid_result=False)
+CACHE_CONFIG = ResultCacheConfig(reuse_benchmark_invalid=True)
 
 
 @dataclass(frozen=True)

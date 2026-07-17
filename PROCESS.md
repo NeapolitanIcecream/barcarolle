@@ -33,7 +33,8 @@ frameworks without a current caller.
 Reports support Task Pool coverage only after loading the referenced Task,
 Check, and certification-evidence files, validating Task/Check semantics, and
 matching complete base-fail/reference-patch-pass evidence to every accepted
-Task/Check and rejected candidate.
+Task/Check and rejected candidate. Reports also recompute current aggregate
+Selector metrics from their bound matrices before supporting metric claims.
 Persisted Selector inputs must retain the complete rolling-history denominator;
 benchmark infrastructure failures stop certification instead of shrinking it,
 and selection metrics abstain if exclusions leave any Agent without results.

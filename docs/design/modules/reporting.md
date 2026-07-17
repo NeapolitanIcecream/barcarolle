@@ -100,6 +100,8 @@ Effect:
   benchmark exposure state using selections, cell sets, matrices, and metrics.
 - Rejects trace claims when a matrix cell changes the required identity,
   result ID, result digest, or outcome frozen in its `EvaluationCellSet`.
+- Recomputes current aggregate metric values from the supplied selected and
+  future matrices before supporting selector-performance claims.
 
 ### build_claim_boundary
 
