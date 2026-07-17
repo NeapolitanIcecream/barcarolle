@@ -841,9 +841,11 @@ def make_check_digest(check: CheckRecord) -> str:
     """Digest every Check field that can change execution or verification."""
     return canonical_digest(
         {
+            "check_type": check.check_type,
             "check_manifest_digest": check.check_manifest_digest,
             "hidden_check_bundle_digest": check.hidden_check_bundle_digest,
             "resource_limits": check.resource_limits,
+            "oracle_source": check.oracle_source,
         }
     )
 

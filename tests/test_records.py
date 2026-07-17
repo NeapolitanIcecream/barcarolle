@@ -91,6 +91,23 @@ def test_result_cache_identity_changes_with_check_resource_limits() -> None:
     assert make_result_cache_key(changed_identity) != make_result_cache_key(identity)
 
 
+@pytest.mark.parametrize(
+    ("field", "value"),
+    (("check_type", "unittest"), ("oracle_source", "generated_tests")),
+)
+def test_result_cache_identity_changes_with_check_behavior(field: str, value: str) -> None:
+    task = _task()
+    check = _check(task)
+    changed_check = replace(check, **{field: value})
+    inputs = (_agent(), _workspace_config(), _runtime_config())
+
+    identity = make_result_cache_identity(task, check, *inputs)
+    changed_identity = make_result_cache_identity(task, changed_check, *inputs)
+
+    assert changed_identity.identity_digest != identity.identity_digest
+    assert make_result_cache_key(changed_identity) != make_result_cache_key(identity)
+
+
 def test_result_cache_key_rejects_incomplete_identity() -> None:
     identity = ResultCacheIdentity(
         task_id="task",
