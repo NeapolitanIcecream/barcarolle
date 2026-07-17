@@ -1606,6 +1606,21 @@ def _require_git_repository(path: Path) -> None:
     )
     if completed.returncode != 0 or completed.stdout.strip() == "true":
         raise RuntimeError("target repository must provide complete base history")
+    partial = subprocess.run(
+        (
+            "git",
+            "config",
+            "--get-regexp",
+            r"^(extensions\.partialclone|remote\..*\.promisor|remote\..*\.partialclonefilter)$",
+        ),
+        cwd=path,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=False,
+    )
+    if partial.returncode not in {0, 1} or partial.stdout.strip():
+        raise RuntimeError("target repository must not depend on partial-clone objects")
 
 
 def _require_repository_commits(
