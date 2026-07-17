@@ -1,0 +1,93 @@
+{
+  "dataset": {
+    "parquet_sha256": "43ed5a3d1d98da36472c1ade65ddd2085d7b4ff694fcaf6a023a07c5c1f32f21",
+    "repository": "SWE-bench/SWE-bench_Verified",
+    "revision": "91aa3ed51b709be6457e12d00300a6a596d4c6a3"
+  },
+  "harness": {
+    "repository": "epoch-research/SWE-bench",
+    "revision": "081198488444f4ac0db0713ece85ac75a03255cf"
+  },
+  "tasks": [
+    {
+      "check_material_available_at": "2021-06-26T18:36:10Z",
+      "image_digest": "sha256:cd3d6ac065557938365761f280c0999e13a668d1b2becfba76f9840073796c3d",
+      "instance_id": "pylint-dev__pylint-4551",
+      "issue_url": "https://github.com/pylint-dev/pylint/issues/1548",
+      "pull_request_url": "https://github.com/pylint-dev/pylint/pull/4551",
+      "task_material_available_at": "2017-06-22T11:40:07Z"
+    },
+    {
+      "check_material_available_at": "2021-06-27T18:11:54Z",
+      "image_digest": "sha256:462e88bf758ebf305a04d929b207a2179fdca4050a7cab5433a2fa76d407590d",
+      "instance_id": "pylint-dev__pylint-4604",
+      "issue_url": "https://github.com/pylint-dev/pylint/issues/4603",
+      "pull_request_url": "https://github.com/pylint-dev/pylint/pull/4604",
+      "task_material_available_at": "2021-06-22T10:04:16Z"
+    },
+    {
+      "check_material_available_at": "2021-07-28T20:02:54Z",
+      "image_digest": "sha256:90c980e4678aa5e441adfaadbe0b7d3849834e4128751fce8532168699759a4d",
+      "instance_id": "pylint-dev__pylint-4661",
+      "issue_url": "https://github.com/pylint-dev/pylint/issues/3878",
+      "pull_request_url": "https://github.com/pylint-dev/pylint/pull/4661",
+      "task_material_available_at": "2020-10-05T13:52:55Z"
+    },
+    {
+      "check_material_available_at": "2021-09-07T12:17:11Z",
+      "image_digest": "sha256:f49e65bb607e71d3982b137a50b6ce490ff772bf76606fdeab9f897e32c5713c",
+      "instance_id": "pylint-dev__pylint-4970",
+      "issue_url": "https://github.com/pylint-dev/pylint/issues/4901",
+      "pull_request_url": "https://github.com/pylint-dev/pylint/pull/4970",
+      "task_material_available_at": "2021-08-23T13:48:06Z"
+    },
+    {
+      "check_material_available_at": "2022-04-19T08:45:36Z",
+      "image_digest": "sha256:6bcd2a52431cd210a2436e931394e69ea504e6ac6677326e27df531e102e274c",
+      "instance_id": "pylint-dev__pylint-6386",
+      "issue_url": "https://github.com/pylint-dev/pylint/issues/6385",
+      "pull_request_url": "https://github.com/pylint-dev/pylint/pull/6386",
+      "task_material_available_at": "2022-04-19T07:06:20Z"
+    },
+    {
+      "check_material_available_at": "2022-05-13T06:06:04Z",
+      "image_digest": "sha256:ab3aeee583a6b5b2cdba93ca0d3524f243a9b023129068ec14882fed9cd2b316",
+      "instance_id": "pylint-dev__pylint-6528",
+      "issue_url": "https://github.com/pylint-dev/pylint/issues/6471",
+      "pull_request_url": "https://github.com/pylint-dev/pylint/pull/6528",
+      "task_material_available_at": "2022-04-28T14:52:20Z"
+    },
+    {
+      "check_material_available_at": "2022-06-11T19:32:30Z",
+      "image_digest": "sha256:8c2196e649116a9786ea2a152b3bc00cc7cd712460f725f233366de8a9aec1cb",
+      "instance_id": "pylint-dev__pylint-6903",
+      "issue_url": "https://github.com/pylint-dev/pylint/issues/6902",
+      "pull_request_url": "https://github.com/pylint-dev/pylint/pull/6903",
+      "task_material_available_at": "2022-06-09T14:21:39Z"
+    },
+    {
+      "check_material_available_at": "2022-06-28T21:10:05Z",
+      "image_digest": "sha256:a953de0a577f860c32ab4c544ee357c9b008bb6bd31b08207f54077b0b8d385f",
+      "instance_id": "pylint-dev__pylint-7080",
+      "issue_url": "https://github.com/pylint-dev/pylint/issues/6964",
+      "pull_request_url": "https://github.com/pylint-dev/pylint/pull/7080",
+      "task_material_available_at": "2022-06-16T18:05:48Z"
+    },
+    {
+      "check_material_available_at": "2022-08-09T12:25:47Z",
+      "image_digest": "sha256:1ad9077ac6525b01b56703eebaae58733734db91cbfa98554d3fa94e4156434d",
+      "instance_id": "pylint-dev__pylint-7277",
+      "issue_url": "https://github.com/pylint-dev/pylint/issues/7231",
+      "pull_request_url": "https://github.com/pylint-dev/pylint/pull/7277",
+      "task_material_available_at": "2022-07-26T00:47:37Z"
+    },
+    {
+      "check_material_available_at": "2023-07-30T15:32:54Z",
+      "image_digest": "sha256:04f7bc9262e6a43e9da3ca71c77c09204b93effcf3f5dc4951b6b419362bfd16",
+      "instance_id": "pylint-dev__pylint-8898",
+      "issue_url": "https://github.com/pylint-dev/pylint/issues/7229",
+      "pull_request_url": "https://github.com/pylint-dev/pylint/pull/8898",
+      "task_material_available_at": "2022-07-25T21:53:53Z"
+    }
+  ]
+}
