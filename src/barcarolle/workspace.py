@@ -474,6 +474,10 @@ def run_agent_on_task_with_artifacts(
                 )
         else:
             check_outcome = CheckOutcome("invalid", replay.failure_label, None, False, 0.0, "")
+        check_launch_error_agent_owned = (
+            check_outcome.failure_label == "check_launch_error"
+            and _agent_changed_check_executable(check, verifier_workspace, diff)
+        )
         run = _workspace_run_record(
             task=task,
             check=check,
@@ -486,6 +490,7 @@ def run_agent_on_task_with_artifacts(
             check_outcome=check_outcome,
             started_at=started_at,
             finished_at=_now(),
+            check_launch_error_agent_owned=check_launch_error_agent_owned,
         )
         return _workspace_run_result(run, artifact_config, diff, agent_outcome, solver_workspace, verifier_workspace)
     finally:
@@ -788,6 +793,7 @@ def _workspace_run_record(
     check_outcome: CheckOutcome,
     started_at: str,
     finished_at: str,
+    check_launch_error_agent_owned: bool = False,
 ) -> WorkspaceRunRecord:
     terminal_status = _terminal_status(agent_outcome, replay, check_outcome)
     return WorkspaceRunRecord(
@@ -801,7 +807,13 @@ def _workspace_run_record(
         diff_digest=diff.diff_digest,
         replay_status=replay.replay_status,
         check_outcome=check_outcome.outcome,
-        invalid_owner=_invalid_owner(terminal_status, agent_outcome, replay, check_outcome),
+        invalid_owner=_invalid_owner(
+            terminal_status,
+            agent_outcome,
+            replay,
+            check_outcome,
+            check_launch_error_agent_owned=check_launch_error_agent_owned,
+        ),
         failure_label=_failure_label(agent_outcome, replay, check_outcome),
         usage=agent_outcome.usage,
         started_at=started_at,
@@ -854,6 +866,29 @@ def _material_binding(check: CheckRecord, verifier_workspace: WorkspaceRef) -> _
     return _CHECK_MATERIALS.get(_check_key(check))
 
 
+def _agent_changed_check_executable(
+    check: CheckRecord,
+    verifier_workspace: WorkspaceRef,
+    diff: CapturedDiff,
+) -> bool:
+    binding = _material_binding(check, verifier_workspace)
+    if binding is None or not binding.check_command:
+        return False
+    executable_ref = binding.check_command[0]
+    executable_path = Path(executable_ref)
+    if executable_path.is_absolute():
+        try:
+            executable_path = executable_path.relative_to(verifier_workspace.path)
+        except ValueError:
+            return False
+    elif not any(separator in executable_ref for separator in ("/", "\\")) or ".." in executable_path.parts:
+        return False
+    try:
+        return executable_path.as_posix() in _captured_diff_paths(diff.diff_text)
+    except (RuntimeError, ValueError):
+        return False
+
+
 def _agent_key(agent: AgentRecord) -> tuple[str, str, str]:
     return (agent.agent_id, agent.agent_manifest_digest, agent.harness_digest)
 
@@ -883,6 +918,8 @@ def _invalid_owner(
     agent_outcome: AgentRunOutcome,
     replay: DiffReplayOutcome,
     check_outcome: CheckOutcome,
+    *,
+    check_launch_error_agent_owned: bool = False,
 ) -> str | None:
     if terminal_status != "invalid":
         return None
@@ -891,6 +928,8 @@ def _invalid_owner(
     if replay.replay_status == "invalid":
         return "benchmark"
     if check_outcome.outcome == "invalid":
+        if check_outcome.failure_label == "check_launch_error":
+            return "agent" if check_launch_error_agent_owned else "benchmark"
         return "benchmark" if check_outcome.failure_label in _BENCHMARK_CHECK_FAILURE_LABELS else "agent"
     if agent_outcome.terminal_status == "invalid":
         return "agent"
