@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from collections.abc import Sequence as SequenceABC
+from collections.abc import Mapping as MappingABC, Sequence as SequenceABC
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
@@ -15,6 +15,7 @@ from barcarolle.records import (
     RuntimeConfig,
     TaskPoolRecord,
     TaskRecord,
+    ValidationResult,
     WorkspaceConfig,
     canonical_digest,
     make_check_id,
@@ -293,7 +294,19 @@ def freeze_task_pool(
     )
     if not record.task_pool_id:
         record = TaskPoolRecord(**{**record.__dict__, "task_pool_id": f"task_pool_{canonical_digest(record)}"})
-    return record_with_digest(record)
+    record = record_with_digest(record)
+    validation = validate_task_pool_artifacts(
+        record,
+        accepted_tasks,
+        accepted_checks,
+        certification_evidence,
+    )
+    if not validation.ok:
+        raise ValueError(
+            "task pool artifacts failed validation: "
+            + "; ".join(validation.errors)
+        )
+    return record
 
 
 def certification_evidence_records(
@@ -307,6 +320,211 @@ def certification_evidence_records(
         if result.evidence_digest != canonical_digest(result.evidence):
             raise ValueError("certification evidence digest does not match structured evidence")
     return tuple(result.evidence for result in ordered)
+
+
+def validate_task_pool_artifacts(
+    task_pool: TaskPoolRecord,
+    tasks: Sequence[TaskRecord],
+    checks: Sequence[CheckRecord],
+    certification_evidence: Sequence[Mapping[str, Any]],
+) -> ValidationResult:
+    errors: list[str] = []
+    tasks_tuple = tuple(tasks)
+    checks_tuple = tuple(checks)
+    evidence_tuple = tuple(certification_evidence)
+    if canonical_digest(tasks_tuple) != task_pool.task_records_digest:
+        errors.append("task records digest does not match TaskPoolRecord")
+    if tuple(task.task_id for task in tasks_tuple) != task_pool.task_ids:
+        errors.append("task records do not match TaskPoolRecord task_ids")
+    if canonical_digest(checks_tuple) != task_pool.check_records_digest:
+        errors.append("check records digest does not match TaskPoolRecord")
+    if tuple(check.check_id for check in checks_tuple) != task_pool.check_ids:
+        errors.append("check records do not match TaskPoolRecord check_ids")
+    if canonical_digest(evidence_tuple) != task_pool.certification_evidence_digest:
+        errors.append("certification evidence digest does not match TaskPoolRecord")
+    try:
+        _validate_accepted_task_check_linkage(tasks_tuple, checks_tuple)
+    except ValueError as exc:
+        errors.append(str(exc))
+    try:
+        _validate_accepted_records(
+            tasks_tuple,
+            checks_tuple,
+            task_pool.repository_id,
+        )
+    except ValueError as exc:
+        errors.append(str(exc))
+    errors.extend(
+        _certification_evidence_errors(
+            task_pool,
+            tasks_tuple,
+            checks_tuple,
+            evidence_tuple,
+        )
+    )
+    return ValidationResult.fail(errors) if errors else ValidationResult.pass_()
+
+
+def _certification_evidence_errors(
+    task_pool: TaskPoolRecord,
+    tasks: tuple[TaskRecord, ...],
+    checks: tuple[CheckRecord, ...],
+    evidence: tuple[Mapping[str, Any], ...],
+) -> tuple[str, ...]:
+    errors: list[str] = []
+    candidate_ids: list[str] = []
+    accepted_pairs: list[tuple[str, str]] = []
+    rejected_ids: list[str] = []
+    rejection_reason_counts: dict[str, int] = {}
+    rejected_record_count = 0
+    certification_config_digests: set[str] = set()
+    required_fields = (
+        "candidate_id",
+        "accepted",
+        "rejection_reasons",
+        "repeat_count",
+        "base_check",
+        "reference_patch_check",
+        "reference_patch_digest",
+        "task_digest",
+        "check_digest",
+    )
+    for index, record in enumerate(evidence):
+        label = f"certification evidence record {index}"
+        if not isinstance(record, MappingABC):
+            errors.append(f"{label} must be an object")
+            continue
+        missing = tuple(field for field in required_fields if field not in record)
+        if missing:
+            errors.append(f"{label} is missing: {', '.join(missing)}")
+            continue
+        candidate_id = record["candidate_id"]
+        if not isinstance(candidate_id, str) or not candidate_id:
+            errors.append(f"{label} candidate_id must be a non-empty string")
+        else:
+            candidate_ids.append(candidate_id)
+        accepted = record["accepted"]
+        if not isinstance(accepted, bool):
+            errors.append(f"{label} accepted must be boolean")
+            continue
+        reasons_value = record["rejection_reasons"]
+        if (
+            not isinstance(reasons_value, SequenceABC)
+            or isinstance(reasons_value, str)
+            or any(not isinstance(reason, str) or not reason for reason in reasons_value)
+        ):
+            errors.append(f"{label} rejection_reasons must be a sequence of non-empty strings")
+            reasons: tuple[str, ...] = ()
+        else:
+            reasons = tuple(reasons_value)
+        repeat_count = record["repeat_count"]
+        if isinstance(repeat_count, bool) or not isinstance(repeat_count, int) or repeat_count < 1:
+            errors.append(f"{label} repeat_count must be a positive integer")
+            repeat_count = 0
+        else:
+            certification_config_digests.add(
+                canonical_digest(CertificationConfig(repeat_count=repeat_count))
+            )
+        patch_digest = record["reference_patch_digest"]
+        if not isinstance(patch_digest, str) or not patch_digest:
+            errors.append(f"{label} reference_patch_digest must be a non-empty string")
+        task_digest = record["task_digest"]
+        check_digest = record["check_digest"]
+        if not isinstance(task_digest, str) or not task_digest:
+            errors.append(f"{label} task_digest must be a non-empty string")
+        if not isinstance(check_digest, str) or not check_digest:
+            errors.append(f"{label} check_digest must be a non-empty string")
+        base_outcomes = _evidence_outcomes(
+            record["base_check"],
+            f"{label} base_check",
+            errors,
+        )
+        reference_outcomes = _evidence_outcomes(
+            record["reference_patch_check"],
+            f"{label} reference_patch_check",
+            errors,
+        )
+        if accepted:
+            if reasons:
+                errors.append("accepted certification evidence must not have rejection reasons")
+            if (
+                isinstance(task_digest, str)
+                and task_digest
+                and isinstance(check_digest, str)
+                and check_digest
+            ):
+                accepted_pairs.append((task_digest, check_digest))
+            if len(base_outcomes) != 1:
+                errors.append("accepted certification base check must contain exactly one attempt")
+            elif base_outcomes[0] != "fail":
+                errors.append("accepted certification base check must fail")
+            if len(reference_outcomes) != repeat_count:
+                errors.append("accepted certification reference patch checks must match repeat_count")
+            elif any(outcome != "pass" for outcome in reference_outcomes):
+                errors.append("accepted certification reference patch checks must pass")
+        else:
+            rejected_record_count += 1
+            if isinstance(candidate_id, str) and candidate_id:
+                rejected_ids.append(candidate_id)
+            if not reasons:
+                errors.append("rejected certification evidence must include rejection reasons")
+            for reason in reasons:
+                rejection_reason_counts[reason] = rejection_reason_counts.get(reason, 0) + 1
+
+    if len(candidate_ids) != len(set(candidate_ids)):
+        errors.append("certification evidence contains duplicate candidate_id values")
+    if evidence and certification_config_digests != {
+        task_pool.certification_config_digest
+    }:
+        errors.append(
+            "certification evidence repeat_count does not match certification_config_digest"
+        )
+    tasks_by_id = {task.task_id: task for task in tasks}
+    expected_accepted_pairs = {
+        (canonical_digest(tasks_by_id[check.task_id]), canonical_digest(check))
+        for check in checks
+        if check.task_id in tasks_by_id
+    }
+    if len(accepted_pairs) != len(set(accepted_pairs)):
+        errors.append("certification evidence contains duplicate accepted Task/Check records")
+    if set(accepted_pairs) != expected_accepted_pairs:
+        errors.append(
+            "certification evidence does not exactly cover accepted Task/Check records"
+        )
+    if (
+        len(rejected_ids) != len(set(rejected_ids))
+        or set(rejected_ids) != set(task_pool.rejected_candidate_ids)
+        or len(task_pool.rejected_candidate_ids) != len(set(task_pool.rejected_candidate_ids))
+    ):
+        errors.append("certification evidence does not exactly cover rejected candidates")
+    rejection_summary = {
+        "rejected_count": rejected_record_count,
+        "reasons": rejection_reason_counts,
+    }
+    if canonical_digest(rejection_summary) != task_pool.rejection_summary_digest:
+        errors.append("rejection summary digest does not match certification evidence")
+    return tuple(errors)
+
+
+def _evidence_outcomes(
+    value: object,
+    label: str,
+    errors: list[str],
+) -> tuple[str, ...]:
+    if not isinstance(value, SequenceABC) or isinstance(value, str):
+        errors.append(f"{label} must be a sequence")
+        return ()
+    outcomes: list[str] = []
+    for index, item in enumerate(value):
+        if not isinstance(item, MappingABC):
+            errors.append(f"{label} attempt {index} must be an object")
+            continue
+        outcome = item.get("outcome")
+        if outcome not in {"pass", "fail", "invalid"}:
+            errors.append(f"{label} attempt {index} outcome is not normalized")
+            continue
+        outcomes.append(outcome)
+    return tuple(outcomes)
 
 
 def summarize_task_pool(task_pool: TaskPoolRecord) -> Mapping[str, object]:

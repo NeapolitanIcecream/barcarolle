@@ -152,7 +152,8 @@ Steps:
    Each future window ends at the next origin; the last ends at the historical
    window boundary. A Task/Check known exactly at the next origin is in the
    preceding future holdout and in the next origin's history, never in both
-   future holdouts.
+   future holdouts. Task/Check refs before the historical window start are not
+   included in any origin's history.
 3. Selection builds leakage-safe feature snapshots.
 4. Selection freezes `Benchmark Selection` records for those origins and does
    not score them.

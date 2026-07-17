@@ -28,6 +28,8 @@ def build_rolling_origin(
     origin_time: datetime,
     future_window: TimeRange,
     policy: RollingOriginPolicy,
+    *,
+    history_window: TimeRange | None = None,
 ) -> RollingOriginRecord:
     _ensure_time_range_order(future_window)
     origin_time_iso = _datetime_to_iso(origin_time)
@@ -35,6 +37,12 @@ def build_rolling_origin(
     if _instant_gt(as_of_cutoff, origin_time_iso):
         raise ValueError("as_of_cutoff must not be after origin_time")
     as_of_cutoff = _datetime_to_iso(_parse_timestamp_utc(as_of_cutoff))
+    effective_history_window: TimeRange | None = None
+    if history_window is not None:
+        _ensure_time_range_order(history_window)
+        if not _time_range_contains(history_window, as_of_cutoff):
+            raise ValueError("as_of_cutoff must be inside history_window")
+        effective_history_window = TimeRange(history_window.start, as_of_cutoff)
     history_refs: list[tuple[datetime, TaskCheckRef]] = []
     future_refs: list[tuple[datetime, TaskCheckRef]] = []
     for task in tasks:
@@ -50,7 +58,10 @@ def build_rolling_origin(
                 continue
             known_at = _task_check_known_at(task, check)
             ref = TaskCheckRef(task.task_id, check.check_id)
-            if _instant_lte(known_at, as_of_cutoff):
+            if _instant_lte(known_at, as_of_cutoff) and (
+                effective_history_window is None
+                or _time_range_contains(effective_history_window, known_at)
+            ):
                 history_refs.append((_parse_timestamp_utc(known_at), ref))
             elif policy.future_holdout_known and _instant_gt(known_at, as_of_cutoff) and _time_range_contains(future_window, known_at):
                 future_refs.append((_parse_timestamp_utc(known_at), ref))

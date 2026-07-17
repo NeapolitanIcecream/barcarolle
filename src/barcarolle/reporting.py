@@ -28,6 +28,7 @@ from barcarolle.records import (
     validate_result,
     validate_result_matrix,
 )
+from barcarolle.task_pool import validate_task_pool_artifacts
 
 
 @dataclass(frozen=True)
@@ -559,23 +560,14 @@ def _task_pool_artifact_errors(
         errors,
     )
 
-    if tasks is not None:
-        if canonical_digest(tasks) != task_pool.task_records_digest:
-            errors.append("task records digest does not match TaskPoolRecord")
-        if tuple(task.task_id for task in tasks) != task_pool.task_ids:
-            errors.append("task records do not match TaskPoolRecord task_ids")
-
-    if checks is not None:
-        if canonical_digest(checks) != task_pool.check_records_digest:
-            errors.append("check records digest does not match TaskPoolRecord")
-        if tuple(check.check_id for check in checks) != task_pool.check_ids:
-            errors.append("check records do not match TaskPoolRecord check_ids")
-
-    if evidence is not None:
-        if canonical_digest(evidence) != task_pool.certification_evidence_digest:
-            errors.append(
-                "certification evidence digest does not match TaskPoolRecord"
-            )
+    if tasks is not None and checks is not None and evidence is not None:
+        validation = validate_task_pool_artifacts(
+            task_pool,
+            tasks,
+            checks,
+            evidence,
+        )
+        errors.extend(validation.errors)
     return tuple(errors)
 
 

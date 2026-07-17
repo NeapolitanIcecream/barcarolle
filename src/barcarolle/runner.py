@@ -231,6 +231,7 @@ def evaluate_selector(
             origin_time,
             TimeRange(start=_datetime_to_iso(origin_time), end=future_window_end),
             rolling_policy,
+            history_window=history_window,
         )
         for origin_time, future_window_end in zip(origin_times, future_window_ends, strict=True)
     )
@@ -662,6 +663,7 @@ def _load_training_results(
         _parse_datetime(history_window.end),
         history_window,
         rolling_policy,
+        history_window=history_window,
     )
     task_ids, check_ids = _refs_query_parts(origin.history_task_check_refs)
     if not task_ids or not agents:

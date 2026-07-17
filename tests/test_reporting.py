@@ -17,6 +17,7 @@ from barcarolle.records import (
     TaskPoolRecord,
     TaskRecord,
     canonical_digest,
+    load_jsonl_records,
     make_solver_material_digest,
     record_with_digest,
     write_jsonl_records,
@@ -708,6 +709,137 @@ def test_task_pool_claims_treat_missing_artifact_fields_as_unsupported(
 
 
 @pytest.mark.parametrize(
+    ("filename", "field", "value", "record_type", "digest_field", "error"),
+    (
+        (
+            "tasks.jsonl",
+            "task_text",
+            "",
+            TaskRecord,
+            "task_records_digest",
+            "task_text must not be empty",
+        ),
+        (
+            "checks.jsonl",
+            "resource_limits",
+            {"timeout_seconds": None},
+            CheckRecord,
+            "check_records_digest",
+            "check check failed validation: resource_limits values must be bounded",
+        ),
+    ),
+)
+def test_task_pool_claims_reject_semantically_invalid_task_and_check_records(
+    tmp_path,
+    filename: str,
+    field: str,
+    value: object,
+    record_type: type,
+    digest_field: str,
+    error: str,
+) -> None:
+    task_pool = _task_pool_with_artifacts(tmp_path)
+    path = tmp_path / filename
+    record = json.loads(path.read_text(encoding="utf-8"))
+    record[field] = value
+    path.write_text(json.dumps(record) + "\n", encoding="utf-8")
+    records = tuple(load_jsonl_records(path, record_type))
+    task_pool = record_with_digest(
+        replace(
+            task_pool,
+            **{digest_field: canonical_digest(records), "task_pool_digest": ""},
+        )
+    )
+
+    section = build_task_pool_report(task_pool, artifact_root=tmp_path)
+    claim_section = build_claim_boundary(
+        task_pool,
+        (),
+        (),
+        (),
+        (),
+        ClaimConfig("claims"),
+        artifact_root=tmp_path,
+    )
+
+    assert any(error in claim for claim in section.unsupported_claims)
+    assert any(error in claim for claim in claim_section.unsupported_claims)
+
+
+def test_task_pool_claims_require_evidence_for_every_accepted_task_check(
+    tmp_path,
+) -> None:
+    task_pool = _task_pool_with_artifacts(tmp_path)
+    evidence: tuple[object, ...] = ()
+    write_jsonl_records(tmp_path / "certification-evidence.jsonl", evidence)
+    task_pool = record_with_digest(
+        replace(
+            task_pool,
+            certification_evidence_digest=canonical_digest(evidence),
+            task_pool_digest="",
+        )
+    )
+
+    section = build_task_pool_report(task_pool, artifact_root=tmp_path)
+
+    assert any(
+        "certification evidence does not exactly cover accepted Task/Check records"
+        in claim
+        for claim in section.unsupported_claims
+    )
+
+
+def test_task_pool_claims_require_evidence_for_every_rejected_candidate(
+    tmp_path,
+) -> None:
+    task_pool = _task_pool_with_artifacts(tmp_path)
+    task_pool = record_with_digest(
+        replace(
+            task_pool,
+            rejected_candidate_ids=("rejected-candidate",),
+            rejection_summary_digest=canonical_digest(
+                {"rejected_count": 1, "reasons": {"check failed": 1}}
+            ),
+            task_pool_digest="",
+        )
+    )
+
+    section = build_task_pool_report(task_pool, artifact_root=tmp_path)
+
+    assert any(
+        "certification evidence does not exactly cover rejected candidates"
+        in claim
+        for claim in section.unsupported_claims
+    )
+
+
+def test_task_pool_claims_require_base_fail_reference_patch_pass_evidence(
+    tmp_path,
+) -> None:
+    task_pool = _task_pool_with_artifacts(tmp_path)
+    path = tmp_path / "certification-evidence.jsonl"
+    evidence = json.loads(path.read_text(encoding="utf-8"))
+    evidence["base_check"][0]["outcome"] = "pass"
+    evidence["base_check"][0]["failure_label"] = None
+    records = (evidence,)
+    write_jsonl_records(path, records)
+    task_pool = record_with_digest(
+        replace(
+            task_pool,
+            certification_evidence_digest=canonical_digest(records),
+            task_pool_digest="",
+        )
+    )
+
+    section = build_task_pool_report(task_pool, artifact_root=tmp_path)
+
+    assert any(
+        "accepted certification base check must fail" in claim
+        for claim in section.unsupported_claims
+    )
+
+
+@pytest.mark.parametrize(
     ("filename", "error"),
     (
         ("tasks.jsonl", "task records digest does not match"),
@@ -907,6 +1039,26 @@ def _task_pool_with_artifacts(root) -> TaskPoolRecord:
             "candidate_id": "candidate",
             "accepted": True,
             "rejection_reasons": (),
+            "repeat_count": 1,
+            "base_check": (
+                {
+                    "outcome": "fail",
+                    "failure_label": "check_failed",
+                    "timed_out": False,
+                    "duration_seconds": 0.1,
+                    "evidence_excerpt": "",
+                },
+            ),
+            "reference_patch_check": (
+                {
+                    "outcome": "pass",
+                    "failure_label": None,
+                    "timed_out": False,
+                    "duration_seconds": 0.1,
+                    "evidence_excerpt": "",
+                },
+            ),
+            "reference_patch_digest": "0" * 64,
             "task_digest": canonical_digest(task),
             "check_digest": canonical_digest(check),
         },
@@ -933,7 +1085,7 @@ def _task_pool_with_artifacts(root) -> TaskPoolRecord:
             certification_evidence_digest=canonical_digest(evidence),
             source_event_inventory_digest="source-events",
             generator_config_digest="generator",
-            certification_config_digest="certification",
+            certification_config_digest=canonical_digest({"repeat_count": 1}),
             created_at="2026-01-01T00:00:00Z",
         )
     )

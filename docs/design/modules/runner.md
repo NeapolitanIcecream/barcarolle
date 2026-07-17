@@ -173,7 +173,8 @@ Effect:
   increasing UTC order. Each origin's future window ends at the next origin;
   the final future window ends at `history_window.end`. A Task/Check known at
   an origin boundary is in the preceding future holdout and the following
-  history. For each timestamp,
+  history, while Task/Check refs before `history_window.start` are excluded.
+  For each timestamp,
   resolves Task/Check records, builds pre-origin selector input, calls Selection
   `freeze_evaluation_selections` to freeze `BenchmarkSelectionRecord`s, then
   calls `prepare_evaluation_cells` and `score_selection`. It returns frozen

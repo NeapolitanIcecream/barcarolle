@@ -200,6 +200,28 @@ Effect:
   Check records, and sanitized certification evidence referenced by the frozen
   record.
 
+### validate_task_pool_artifacts
+
+Input:
+
+- `task_pool: TaskPoolRecord`
+- `tasks: Sequence[TaskRecord]`
+- `checks: Sequence[CheckRecord]`
+- `certification_evidence: Sequence[Mapping[str, object]]`
+
+Output:
+
+- `ValidationResult`
+
+Effect:
+
+- Reuses Task/Check validation and linkage rules for persisted artifacts.
+- Requires exact accepted Task/Check and rejected-candidate evidence coverage,
+  one failing base check and the configured passing reference-patch attempts for
+  every accepted pair, matching certification-config, evidence, and
+  rejection-summary digests.
+- Is used by freeze and Reporting; it does not execute Checks again.
+
 ### summarize_task_pool
 
 Input:

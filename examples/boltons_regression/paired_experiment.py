@@ -673,6 +673,7 @@ def _build_origin(
         datetime.fromisoformat(origin_time.replace("Z", "+00:00")),
         future_window,
         POLICY,
+        history_window=TimeRange(HISTORY_START, HISTORY_END),
     )
 
 

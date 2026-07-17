@@ -200,6 +200,7 @@ Input:
 - `origin_time: datetime`
 - `future_window: TimeRange`
 - `policy: RollingOriginPolicy`
+- `history_window: TimeRange | None`
 
 Output:
 
@@ -210,7 +211,9 @@ Effect:
 - Defines history pool and future holdout without exposing future outcomes to
   selectors. It uses Task and Check timestamps to build eligible `Task + Check`
   refs. The policy defines as-of cutoff, cluster constraints, eligibility mode,
-  and holdout overlap rules.
+  and holdout overlap rules. When supplied, `history_window` bounds history at
+  both its start and the origin's as-of cutoff; omitting it means all history
+  through that cutoff.
 
 ### build_feature_snapshot
 

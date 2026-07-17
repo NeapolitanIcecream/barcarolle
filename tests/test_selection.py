@@ -68,6 +68,45 @@ def test_build_rolling_origin_separates_history_and_future_without_outcomes() ->
     assert origin.as_of_cutoff == "2026-01-05T00:00:00.000000Z"
 
 
+def test_build_rolling_origin_bounds_history_to_requested_window() -> None:
+    task_pool = _task_pool(
+        ("task-too-old", "task-history", "task-future"),
+        ("check-too-old", "check-history", "check-future"),
+    )
+    origin = build_rolling_origin(
+        task_pool,
+        (
+            _task("task-too-old", "check-too-old", available_at="2026-01-01T00:00:00Z"),
+            _task("task-history", "check-history", available_at="2026-01-03T00:00:00Z"),
+            _task("task-future", "check-future", available_at="2026-01-07T00:00:00Z"),
+        ),
+        {
+            "check-too-old": _check(
+                "check-too-old", "task-too-old", available_at="2026-01-01T00:00:00Z"
+            ),
+            "check-history": _check(
+                "check-history", "task-history", available_at="2026-01-03T00:00:00Z"
+            ),
+            "check-future": _check(
+                "check-future", "task-future", available_at="2026-01-07T00:00:00Z"
+            ),
+        },
+        datetime(2026, 1, 5, tzinfo=UTC),
+        TimeRange("2026-01-06T00:00:00Z", "2026-01-10T00:00:00Z"),
+        _rolling_policy(future_holdout_known=True),
+        history_window=TimeRange(
+            "2026-01-02T00:00:00Z", "2026-01-05T00:00:00Z"
+        ),
+    )
+
+    assert origin.history_task_check_refs == (
+        TaskCheckRef("task-history", "check-history"),
+    )
+    assert origin.future_holdout_task_check_refs == (
+        TaskCheckRef("task-future", "check-future"),
+    )
+
+
 def test_build_rolling_origin_preserves_fractional_second_boundary() -> None:
     task_pool = _task_pool(("history", "future"), ("history-check", "future-check"))
     origin = build_rolling_origin(

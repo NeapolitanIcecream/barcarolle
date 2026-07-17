@@ -123,7 +123,9 @@ Effect:
   rejection and task-validation evidence, cache completeness, abstentions,
   benchmark exposure state, and Agent/result identity drift.
 - Supports `task_pool_coverage` only when the referenced Task, Check, and
-  certification-evidence files are available and match their stored digests.
+  certification-evidence files are available, match their stored digests, pass
+  Task/Check validation, and completely cover accepted Task/Check and rejected
+  candidate decisions with valid certification transitions.
 
 ### write_report
 
