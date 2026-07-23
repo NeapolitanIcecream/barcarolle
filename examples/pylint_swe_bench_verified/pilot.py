@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 import argparse
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import UTC, datetime
 import hashlib
 import json
@@ -23,15 +23,17 @@ from barcarolle.records import (  # noqa: E402
     AgentRecord,
     CheckRecord,
     ResultCellRef,
+    ResultRecord,
     RuntimeConfig,
+    SourceEventRecord,
     TaskCheckRef,
     TaskPoolRecord,
     TaskRecord,
     WorkspaceConfig,
     WorkspaceRunRecord,
     canonical_digest,
-    canonical_json,
     load_jsonl_records,
+    make_source_event_id,
     write_jsonl_records,
 )
 from barcarolle.result_store import (  # noqa: E402
@@ -50,17 +52,40 @@ from barcarolle.task_pool import (  # noqa: E402
     CertificationResult,
     TaskCandidate,
     build_check_candidate,
+    candidate_batch,
     certification_evidence_records,
     certify_task_candidate,
+    finalize_source_event_records,
     freeze_task_pool,
 )
 from barcarolle.workspace import (  # noqa: E402
     CapturedDiff,
     WorkspaceArtifactConfig,
+    WorkspaceRunContext,
     bind_agent_harness,
     bind_check_material,
     bind_repository_source,
+    harness_content_digest,
+    make_openai_env_network_policy_digest,
+    preflight_run_bindings,
+    resolve_openai_endpoint_digest,
     run_agent_on_task_with_artifacts,
+)
+from barcarolle.verification import hidden_material_digest  # noqa: E402
+from examples.experiment_ledger import (  # noqa: E402
+    append_ledger_event as _append_ledger_event,
+    ledger_events_path as _ledger_events_path,
+    load_ledger_events as _load_ledger_events,
+    load_resource_ledger,
+    rebuild_ledger_snapshot as _rebuild_resource_ledger_snapshot,
+    write_json as _write_json,
+)
+from examples.pylint_swe_bench_verified.dependency_evidence import (  # noqa: E402
+    DEPENDENCY_PROTOCOL_VERSION,
+    PylintDependencyEvidence,
+    build_dependency_evidence,
+    validate_dependency_evidence_against_patches,
+    validate_source_event_clusters,
 )
 
 
@@ -75,6 +100,9 @@ DEFAULT_OUTPUT_DIR = Path(
 DEFAULT_DATASET_NAME = "swe-bench-verified-test-91aa3ed.parquet"
 DEFAULT_SUPPLEMENTAL_DATASET_NAME = "swe-bench-lite-test-6ec7bb8.parquet"
 MODEL = "gpt-5.4-mini"
+MODEL_RESOLUTION_SCOPE_ID = "pylint-reasoning-pilot-default-retries-2026-07"
+MODEL_RESOLUTION_SCOPE_STARTED_AT = "2026-07-17T00:00:00Z"
+MODEL_RESOLUTION_SCOPE_ENDED_AT = "2026-08-01T00:00:00Z"
 REASONING_EFFORTS = ("low", "high")
 MAXIMUM_PAID_CALLS = 20
 MAXIMUM_ESTIMATED_COST_USD = 30.0
@@ -90,6 +118,8 @@ OFFICIAL_RATES = {
 }
 SCORING_CONFIG = ScoringConfig(PRICING_VERSION, OFFICIAL_RATES)
 CACHE_CONFIG = ResultCacheConfig(reuse_benchmark_invalid=True)
+REPOSITORY_ID = "pylint-dev/pylint"
+DEPENDENCY_EVIDENCE_REF = "records/dependency-evidence.jsonl"
 
 
 @dataclass(frozen=True)
@@ -116,6 +146,7 @@ class PilotContext:
     result_store: ResultStore
     instance_by_task_id: Mapping[str, str]
     difficulty_by_task_id: Mapping[str, str]
+    run_context: WorkspaceRunContext
 
 
 def prepare(paths: PilotPaths) -> Mapping[str, object]:
@@ -148,15 +179,39 @@ def prepare(paths: PilotPaths) -> Mapping[str, object]:
 
     workspace_config = _workspace_config(extracted, configured)
     runtime_config = _runtime_config()
-    bind_repository_source(workspace_config, paths.target_repo)
+    run_context = bind_repository_source(
+        WorkspaceRunContext(), workspace_config, paths.target_repo
+    )
+    reference_patches_by_source_event = _dependency_reference_patches(
+        paths,
+        extracted,
+        configured,
+    )
+    dependency_evidence = build_dependency_evidence(
+        REPOSITORY_ID,
+        reference_patches_by_source_event,
+    )
     candidates: list[TaskCandidate] = []
     reference_patches: list[CapturedDiff] = []
     for source in extracted:
         instance_id = _required_string(source, "instance_id")
-        candidate = _candidate(paths, source, configured[instance_id])
+        source_event_id = _source_event_id(configured[instance_id])
+        candidate = _candidate(
+            paths,
+            source,
+            configured[instance_id],
+            dependency_cluster_id=dependency_evidence.cluster_by_source_event_id[
+                source_event_id
+            ],
+        )
         candidates.append(candidate)
-        _bind_check(paths, build_check_candidate(candidate), configured[instance_id])
-        reference_patches.append(_reference_patch(paths, instance_id))
+        run_context = _bind_check(
+            run_context,
+            paths,
+            build_check_candidate(candidate),
+            configured[instance_id],
+        )
+        reference_patches.append(reference_patches_by_source_event[source_event_id])
 
     certification_config = CertificationConfig(repeat_count=1)
     certified: list[CertificationResult] = []
@@ -168,6 +223,7 @@ def prepare(paths: PilotPaths) -> Mapping[str, object]:
             workspace_config,
             runtime_config,
             reference_patch,
+            run_context,
         )
         if result.accepted:
             instance_id = candidate.candidate_id.removeprefix("candidate-")
@@ -192,36 +248,42 @@ def prepare(paths: PilotPaths) -> Mapping[str, object]:
         raise RuntimeError(f"Pylint Task certification failed: {failures}")
     tasks = tuple(result.task for result in certified if result.task is not None)
     checks = tuple(result.check for result in certified if result.check is not None)
+    source_events = finalize_source_event_records(
+        candidate_batch(candidates),
+        certified,
+    )
+    cluster_validation = validate_source_event_clusters(
+        dependency_evidence,
+        source_events,
+    )
+    if not cluster_validation.ok:
+        raise RuntimeError(
+            "Pylint dependency evidence does not match SourceEvents: "
+            + "; ".join(cluster_validation.errors)
+        )
     task_pool = freeze_task_pool(
         tasks,
         checks,
-        (),
+        certified,
+        source_events,
         {
-            "repository_id": "pylint-dev/pylint",
-            "accepted_certification_results": tuple(certified),
+            "repository_id": REPOSITORY_ID,
             "task_records_ref": "records/tasks.jsonl",
             "check_records_ref": "records/checks.jsonl",
             "certification_evidence_ref": "records/certification-evidence.jsonl",
-            "source_event_inventory_digest": canonical_digest(
-                tuple(configured[instance_id] for instance_id in configured)
-            ),
-            "generator_config_digest": canonical_digest(
-                {
-                    "pilot": "swe-bench-pylint-10x2-v2",
-                    "dataset": _source_config()["dataset"],
-                    "supplemental_dataset": _source_config()[
-                        "supplemental_dataset"
-                    ],
-                    "harness": _source_config()["harness"],
-                    "check_sha256": _file_sha256(CHECK),
-                }
-            ),
+            "source_event_records_ref": "records/source-events.jsonl",
+            "generator_config_digest": _generator_config_digest(dependency_evidence),
             "certification_config_digest": canonical_digest(certification_config),
             "created_at": "2026-07-17T00:00:00Z",
         },
     )
     write_jsonl_records(records_dir / "tasks.jsonl", tasks)
     write_jsonl_records(records_dir / "checks.jsonl", checks)
+    write_jsonl_records(records_dir / "source-events.jsonl", source_events)
+    write_jsonl_records(
+        paths.output_dir / DEPENDENCY_EVIDENCE_REF,
+        (dependency_evidence,),
+    )
     write_jsonl_records(records_dir / "task_pool.jsonl", (task_pool,))
     _write_json(
         records_dir / "task-index.json",
@@ -231,6 +293,9 @@ def prepare(paths: PilotPaths) -> Mapping[str, object]:
                     "instance_id": instance_id,
                     "task_id": task.task_id,
                     "check_id": task.check_ids[0],
+                    "dependency_cluster_id": dependency_evidence.cluster_by_source_event_id[
+                        _source_event_id(configured[instance_id])
+                    ],
                     "difficulty": _required_string(
                         _extracted_by_instance(extracted)[instance_id], "difficulty"
                     ),
@@ -265,10 +330,19 @@ def build_context(paths: PilotPaths, ledger_path: Path | None = None) -> PilotCo
     (task_pool,) = load_jsonl_records(records_dir / "task_pool.jsonl", TaskPoolRecord)
     tasks = tuple(load_jsonl_records(records_dir / "tasks.jsonl", TaskRecord))
     checks_tuple = tuple(load_jsonl_records(records_dir / "checks.jsonl", CheckRecord))
+    source_events = tuple(
+        load_jsonl_records(records_dir / "source-events.jsonl", SourceEventRecord)
+    )
+    (dependency_evidence,) = load_jsonl_records(
+        paths.output_dir / DEPENDENCY_EVIDENCE_REF,
+        PylintDependencyEvidence,
+    )
     if canonical_digest(tasks) != task_pool.task_records_digest:
         raise RuntimeError("Task records do not match the prepared Task Pool")
     if canonical_digest(checks_tuple) != task_pool.check_records_digest:
         raise RuntimeError("Check records do not match the prepared Task Pool")
+    if canonical_digest(source_events) != task_pool.source_event_records_digest:
+        raise RuntimeError("SourceEvent records do not match the prepared Task Pool")
     index = _load_object(records_dir / "task-index.json")
     index_rows = index.get("tasks")
     if not isinstance(index_rows, list):
@@ -286,13 +360,37 @@ def build_context(paths: PilotPaths, ledger_path: Path | None = None) -> PilotCo
 
     configured = _task_source_by_instance()
     extracted = _extracted_tasks(paths.output_dir)
+    dependency_validation = validate_dependency_evidence_against_patches(
+        dependency_evidence,
+        _dependency_reference_patches(paths, extracted, configured),
+    )
+    if not dependency_validation.ok:
+        raise RuntimeError(
+            "Pylint dependency evidence does not replay from reference patches: "
+            + "; ".join(dependency_validation.errors)
+        )
+    cluster_validation = validate_source_event_clusters(
+        dependency_evidence,
+        source_events,
+    )
+    if not cluster_validation.ok:
+        raise RuntimeError(
+            "Pylint dependency evidence does not match SourceEvents: "
+            + "; ".join(cluster_validation.errors)
+        )
+    if task_pool.generator_config_digest != _generator_config_digest(
+        dependency_evidence
+    ):
+        raise RuntimeError(
+            "Pylint dependency evidence does not match the prepared Task Pool"
+        )
     workspace_config = _workspace_config(extracted, configured)
     runtime_config = _runtime_config()
     agents, commands = _agents(
         paths.output_dir,
         tasks,
         cli_version=_codex_cli_version(),
-        endpoint_digest=_authorized_endpoint_digest(),
+        endpoint_digest=resolve_openai_endpoint_digest(),
     )
     context = PilotContext(
         paths=paths,
@@ -310,9 +408,9 @@ def build_context(paths: PilotPaths, ledger_path: Path | None = None) -> PilotCo
         result_store=ResultStore(records_dir / "results.jsonl"),
         instance_by_task_id=instance_by_task_id,
         difficulty_by_task_id=difficulty_by_task_id,
+        run_context=WorkspaceRunContext(),
     )
-    _bind_context(context, configured)
-    return context
+    return replace(context, run_context=_bind_context(context, configured))
 
 
 def preflight(context: PilotContext) -> Mapping[str, object]:
@@ -320,7 +418,17 @@ def preflight(context: PilotContext) -> Mapping[str, object]:
     calls = ledger["calls"]
     if not isinstance(calls, list):
         raise RuntimeError("resource ledger calls are invalid")
-    _ensure_credentials_available()
+    preflight_run_bindings(
+        context.run_context,
+        tuple(
+            (task, context.checks[check_id], agent)
+            for task in context.tasks
+            for check_id in task.check_ids
+            for agent in context.agents
+        ),
+        context.workspace_config,
+        context.runtime_config,
+    )
     if len(context.tasks) != TASK_COUNT or len(context.agents) != 2:
         raise RuntimeError("preflight requires the fixed 10 Task x 2 Agent matrix")
     configured = _task_source_by_instance()
@@ -442,86 +550,19 @@ def summarize(context: PilotContext) -> Mapping[str, object]:
     if not isinstance(calls, list):
         raise RuntimeError("resource ledger calls are invalid")
     results = _paid_results(context)
-    execution_keys = tuple(
-        (
-            result.agent_id,
-            result.task_id,
-            result.check_id,
-            result.cache_identity.identity_digest,
-        )
-        for result in results
-    )
-    if len(execution_keys) != len(set(execution_keys)):
-        raise RuntimeError("Result Store contains duplicate paid execution identities")
-    by_agent = {agent.agent_id: agent for agent in context.agents}
+    _ensure_unique_paid_execution_identities(results)
+    effort_by_agent = {agent.agent_id: _agent_effort(agent) for agent in context.agents}
     result_by_cell = {
-        (result.task_id, _agent_effort(by_agent[result.agent_id])): result
-        for result in results
+        (result.task_id, effort_by_agent[result.agent_id]): result for result in results
     }
-    per_effort: list[Mapping[str, object]] = []
-    for effort in REASONING_EFFORTS:
-        effort_results = tuple(
-            result
-            for result in results
-            if _agent_effort(by_agent[result.agent_id]) == effort
-        )
-        scoreable = tuple(
-            result for result in effort_results if result.scoreable_state == "scoreable"
-        )
-        passed = sum(result.outcome == "pass" for result in scoreable)
-        per_effort.append(
-            {
-                "reasoning_effort": effort,
-                "result_count": len(effort_results),
-                "scoreable_count": len(scoreable),
-                "pass_count": passed,
-                "pass_rate": passed / len(scoreable) if scoreable else None,
-                "estimated_cost_usd": sum(
-                    float(result.cost["total_cost"]) for result in effort_results
-                ),
-                "workspace_seconds": sum(
-                    float(result.latency["workspace_seconds"])
-                    for result in effort_results
-                ),
-            }
-        )
-    pairs: list[Mapping[str, object]] = []
-    disagreement_count = 0
-    complete_pair_count = 0
-    for task in context.tasks:
-        low = result_by_cell.get((task.task_id, "low"))
-        high = result_by_cell.get((task.task_id, "high"))
-        complete = (
-            low is not None
-            and high is not None
-            and low.scoreable_state == "scoreable"
-            and high.scoreable_state == "scoreable"
-        )
-        disagreement = bool(
-            complete
-            and low is not None
-            and high is not None
-            and low.outcome != high.outcome
-        )
-        complete_pair_count += int(complete)
-        disagreement_count += int(disagreement)
-        pairs.append(
-            {
-                "instance_id": context.instance_by_task_id[task.task_id],
-                "difficulty": context.difficulty_by_task_id[task.task_id],
-                "low_outcome": low.outcome if low is not None else None,
-                "high_outcome": high.outcome if high is not None else None,
-                "complete_scoreable_pair": complete,
-                "disagreement": disagreement,
-            }
-        )
+    paired = _paired_pilot_summary(context, result_by_cell)
     usage = {
         key: sum(_priced_usage(result.usage)[key] for result in results)
         for key in OFFICIAL_RATES
     }
     summary = {
         "schema_version": 1,
-        "stage": "complete" if len(results) == MAXIMUM_PAID_CALLS else "incomplete",
+        "stage": _pilot_summary_stage(results, calls),
         "task_pool_id": context.task_pool.task_pool_id,
         "task_count": len(context.tasks),
         "planned_paid_calls": MAXIMUM_PAID_CALLS,
@@ -530,12 +571,8 @@ def summarize(context: PilotContext) -> Mapping[str, object]:
         "scoreable_result_count": sum(
             result.scoreable_state == "scoreable" for result in results
         ),
-        "per_reasoning_effort": tuple(per_effort),
-        "paired": {
-            "complete_scoreable_pair_count": complete_pair_count,
-            "disagreement_count": disagreement_count,
-            "rows": tuple(pairs),
-        },
+        "per_reasoning_effort": _reasoning_effort_rows(results, effort_by_agent),
+        "paired": paired,
         "usage": usage,
         "estimated_cost_usd": sum(
             float(result.cost["total_cost"]) for result in results
@@ -557,12 +594,115 @@ def summarize(context: PilotContext) -> Mapping[str, object]:
     return summary
 
 
+def _ensure_unique_paid_execution_identities(
+    results: Sequence[ResultRecord],
+) -> None:
+    execution_keys = tuple(
+        (
+            result.agent_id,
+            result.task_id,
+            result.check_id,
+            result.cache_identity.identity_digest,
+        )
+        for result in results
+    )
+    if len(execution_keys) != len(set(execution_keys)):
+        raise RuntimeError("Result Store contains duplicate paid execution identities")
+
+
+def _reasoning_effort_rows(
+    results: Sequence[ResultRecord],
+    effort_by_agent: Mapping[str, str],
+) -> tuple[Mapping[str, object], ...]:
+    per_effort: list[Mapping[str, object]] = []
+    for effort in REASONING_EFFORTS:
+        effort_results = tuple(
+            result for result in results if effort_by_agent[result.agent_id] == effort
+        )
+        scoreable = tuple(
+            result for result in effort_results if result.scoreable_state == "scoreable"
+        )
+        passed = sum(result.outcome == "pass" for result in scoreable)
+        per_effort.append(
+            {
+                "reasoning_effort": effort,
+                "result_count": len(effort_results),
+                "scoreable_count": len(scoreable),
+                "pass_count": passed,
+                "pass_rate": passed / len(scoreable) if scoreable else None,
+                "estimated_cost_usd": sum(
+                    float(result.cost["total_cost"]) for result in effort_results
+                ),
+                "workspace_seconds": sum(
+                    float(result.latency["workspace_seconds"])
+                    for result in effort_results
+                ),
+            }
+        )
+    return tuple(per_effort)
+
+
+def _paired_pilot_summary(
+    context: PilotContext,
+    result_by_cell: Mapping[tuple[str, str], ResultRecord],
+) -> Mapping[str, object]:
+    pairs: list[Mapping[str, object]] = []
+    disagreement_count = 0
+    complete_pair_count = 0
+    for task in context.tasks:
+        low = result_by_cell.get((task.task_id, "low"))
+        high = result_by_cell.get((task.task_id, "high"))
+        if low is None or high is None:
+            complete = False
+            disagreement = False
+        else:
+            complete = (
+                low.scoreable_state == "scoreable"
+                and high.scoreable_state == "scoreable"
+            )
+            disagreement = complete and low.outcome != high.outcome
+        complete_pair_count += int(complete)
+        disagreement_count += int(disagreement)
+        pairs.append(
+            {
+                "instance_id": context.instance_by_task_id[task.task_id],
+                "difficulty": context.difficulty_by_task_id[task.task_id],
+                "low_outcome": low.outcome if low is not None else None,
+                "high_outcome": high.outcome if high is not None else None,
+                "complete_scoreable_pair": complete,
+                "disagreement": disagreement,
+            }
+        )
+    return {
+        "complete_scoreable_pair_count": complete_pair_count,
+        "disagreement_count": disagreement_count,
+        "rows": tuple(pairs),
+    }
+
+
+def _pilot_summary_stage(
+    results: Sequence[ResultRecord],
+    calls: Sequence[object],
+) -> str:
+    complete_ledger = len(calls) == MAXIMUM_PAID_CALLS and all(
+        isinstance(call, Mapping) and call.get("state") == "completed" for call in calls
+    )
+    if len(results) == MAXIMUM_PAID_CALLS and complete_ledger:
+        return "complete"
+    return "incomplete"
+
+
 def _execute_cell(context: PilotContext, cell: ResultCellRef):
     task = next(task for task in context.tasks if task.task_id == cell.task_id)
     check = context.checks[cell.check_id]
     agent = next(agent for agent in context.agents if agent.agent_id == cell.agent_id)
     _assert_command_identity(agent, context.commands[agent.agent_id])
-    _ensure_credentials_available()
+    preflight_run_bindings(
+        context.run_context,
+        ((task, check, agent),),
+        context.workspace_config,
+        context.runtime_config,
+    )
     ledger = _reconcile_ledger(context)
     _ensure_ledger_allows_call(ledger, context, task, check, agent)
     call_id = _start_ledger_call(context, ledger, task, check, agent)
@@ -597,6 +737,7 @@ def _execute_cell(context: PilotContext, cell: ResultCellRef):
             agent,
             context.workspace_config,
             context.runtime_config,
+            context.run_context,
             WorkspaceArtifactConfig(
                 output_root=context.paths.output_dir / "raw/agent-runs",
                 preserve_solver_workspace_summary="on_failure",
@@ -684,20 +825,18 @@ def _candidate(
     paths: PilotPaths,
     source: Mapping[str, Any],
     configured: Mapping[str, Any],
+    *,
+    dependency_cluster_id: str,
 ) -> TaskCandidate:
     instance_id = _required_string(source, "instance_id")
-    source_family = configured.get("dataset_family", "swe_bench_verified")
-    if not isinstance(source_family, str) or not source_family:
-        raise RuntimeError(f"{instance_id} has no dataset family")
+    source_family = _source_family(configured)
     return TaskCandidate(
         candidate_id=f"candidate-{instance_id}",
-        repository_id="pylint-dev/pylint",
+        repository_id=REPOSITORY_ID,
         base_commit=_required_string(source, "base_commit"),
         source_family=source_family,
         source_ref=_required_string(configured, "issue_url"),
-        source_resolved_at=_required_string(
-            configured, "task_material_available_at"
-        ),
+        source_resolved_at=_required_string(configured, "task_material_available_at"),
         task_material_available_at=_required_string(
             configured, "task_material_available_at"
         ),
@@ -706,9 +845,12 @@ def _candidate(
         ),
         task_text=_required_string(source, "problem_statement"),
         solver_material_refs=(),
-        cluster_id=_required_string(source, "difficulty"),
+        dependency_cluster_id=dependency_cluster_id,
+        sampling_stratum=_required_string(source, "difficulty"),
         check_manifest_digest=canonical_digest(_check_manifest(configured)),
-        hidden_check_bundle_digest=_path_digest(_hidden_check_dir(paths, instance_id)),
+        hidden_check_bundle_digest=hidden_material_digest(
+            _hidden_check_dir(paths, instance_id)
+        ),
         resource_limits={"timeout_seconds": CHECK_TIMEOUT_SECONDS},
         oracle_source="swe_bench_test_patch",
         check_type="swe_bench",
@@ -855,12 +997,7 @@ def _agents(
     if "BARCAROLLE_CODEX_REASONING_EFFORT" not in harness_text:
         raise RuntimeError("Codex harness does not bind reasoning effort")
     usage_helper = HARNESS.parent / "extract-usage.py"
-    harness_content_digest = canonical_digest(
-        {
-            "run_agent_sha256": _file_sha256(HARNESS),
-            "extract_usage_sha256": _file_sha256(usage_helper),
-        }
-    )
+    content_digest = harness_content_digest((HARNESS, usage_helper))
     repository_instruction_digest = canonical_digest(
         {
             "state": "none-at-selected-base-commits",
@@ -901,17 +1038,29 @@ def _agents(
             agent_manifest_digest=canonical_digest(
                 {
                     "agent": "codex-cli",
-                    "model": MODEL,
+                    "requested_model_id": MODEL,
+                    "model_snapshot_id": None,
+                    "model_resolution_scope_id": MODEL_RESOLUTION_SCOPE_ID,
+                    "model_resolution_scope_started_at": (
+                        MODEL_RESOLUTION_SCOPE_STARTED_AT
+                    ),
+                    "model_resolution_scope_ended_at": (
+                        MODEL_RESOLUTION_SCOPE_ENDED_AT
+                    ),
                     "reasoning_effort": effort,
                     "codex_cli_version": cli_version,
                     "harness_digest": harness_digest,
-                    "harness_content_digest": harness_content_digest,
+                    "harness_content_digest": content_digest,
                     "prompt_digest": prompt_digest,
                     "provider_digest": provider_digest,
                     "multi_agent_disabled": True,
                 }
             ),
-            model_snapshot_id=MODEL,
+            requested_model_id=MODEL,
+            model_snapshot_id=None,
+            model_resolution_scope_id=MODEL_RESOLUTION_SCOPE_ID,
+            model_resolution_scope_started_at=MODEL_RESOLUTION_SCOPE_STARTED_AT,
+            model_resolution_scope_ended_at=MODEL_RESOLUTION_SCOPE_ENDED_AT,
             harness_digest=harness_digest,
             repository_instruction_digest=repository_instruction_digest,
             prompt_digest=prompt_digest,
@@ -928,7 +1077,11 @@ def _agents(
                     "user_config_ignored": True,
                 }
             ),
-            network_policy_digest=provider_digest,
+            network_policy_digest=make_openai_env_network_policy_digest(
+                endpoint_digest=endpoint_digest,
+                harness_digest=harness_digest,
+                harness_content_digest=content_digest,
+            ),
             adapter_digest="barcarolle-worktree-diff-v2-python-cache-excluded",
         )
         agents.append(agent)
@@ -938,32 +1091,46 @@ def _agents(
 
 def _bind_context(
     context: PilotContext, configured: Mapping[str, Mapping[str, Any]]
-) -> None:
-    bind_repository_source(context.workspace_config, context.paths.target_repo)
+) -> WorkspaceRunContext:
+    run_context = bind_repository_source(
+        context.run_context, context.workspace_config, context.paths.target_repo
+    )
     for check in context.checks.values():
         instance_id = context.instance_by_task_id[check.task_id]
-        _bind_check(context.paths, check, configured[instance_id])
+        run_context = _bind_check(
+            run_context, context.paths, check, configured[instance_id]
+        )
     for agent in context.agents:
-        bind_agent_harness(agent, context.commands[agent.agent_id])
+        run_context = bind_agent_harness(
+            run_context,
+            agent,
+            context.commands[agent.agent_id],
+            execution_mode="openai_paid",
+            endpoint_harness_paths=(HARNESS, HARNESS.parent / "extract-usage.py"),
+        )
+    return run_context
 
 
 def _bind_check(
+    run_context: WorkspaceRunContext,
     paths: PilotPaths,
     check: CheckRecord,
     task_source: Mapping[str, Any],
-) -> None:
+) -> WorkspaceRunContext:
     instance_id = _required_string(task_source, "instance_id")
     command = _check_command(paths, task_source)
     manifest = _check_manifest(task_source)
     if check.check_manifest_digest == canonical_digest(manifest):
-        bind_check_material(
+        return bind_check_material(
+            run_context,
             check,
             command,
             _hidden_check_dir(paths, instance_id),
             check_manifest=manifest,
         )
-        return
-    bind_check_material(check, command, _hidden_check_dir(paths, instance_id))
+    return bind_check_material(
+        run_context, check, command, _hidden_check_dir(paths, instance_id)
+    )
 
 
 def _check_command(
@@ -1033,6 +1200,22 @@ def _source_config() -> Mapping[str, Any]:
     return _load_object(TASK_SOURCES)
 
 
+def _source_family(configured: Mapping[str, Any]) -> str:
+    instance_id = _required_string(configured, "instance_id")
+    source_family = configured.get("dataset_family", "swe_bench_verified")
+    if not isinstance(source_family, str) or not source_family:
+        raise RuntimeError(f"{instance_id} has no dataset family")
+    return source_family
+
+
+def _source_event_id(configured: Mapping[str, Any]) -> str:
+    return make_source_event_id(
+        REPOSITORY_ID,
+        _source_family(configured),
+        _required_string(configured, "issue_url"),
+    )
+
+
 def _task_source_by_instance() -> dict[str, Mapping[str, Any]]:
     tasks = _source_config().get("tasks")
     if not isinstance(tasks, list):
@@ -1077,6 +1260,40 @@ def _reference_patch(paths: PilotPaths, instance_id: str) -> CapturedDiff:
     return CapturedDiff(
         diff_text=text,
         diff_digest=hashlib.sha256(text.encode("utf-8")).hexdigest(),
+    )
+
+
+def _dependency_reference_patches(
+    paths: PilotPaths,
+    extracted: Sequence[Mapping[str, Any]],
+    configured: Mapping[str, Mapping[str, Any]],
+) -> dict[str, CapturedDiff]:
+    patches: dict[str, CapturedDiff] = {}
+    for source in extracted:
+        instance_id = _required_string(source, "instance_id")
+        source_event_id = _source_event_id(configured[instance_id])
+        if source_event_id in patches:
+            raise RuntimeError("configured tasks contain a duplicate SourceEvent")
+        patches[source_event_id] = _reference_patch(paths, instance_id)
+    return patches
+
+
+def _generator_config_digest(
+    dependency_evidence: PylintDependencyEvidence,
+) -> str:
+    return canonical_digest(
+        {
+            "pilot": "swe-bench-pylint-10x2-v2",
+            "dataset": _source_config()["dataset"],
+            "supplemental_dataset": _source_config()["supplemental_dataset"],
+            "harness": _source_config()["harness"],
+            "check_sha256": _file_sha256(CHECK),
+            "dependency_evidence_ref": DEPENDENCY_EVIDENCE_REF,
+            "dependency_protocol_version": DEPENDENCY_PROTOCOL_VERSION,
+            "dependency_evidence_digest": (
+                dependency_evidence.dependency_evidence_digest
+            ),
+        }
     )
 
 
@@ -1147,15 +1364,20 @@ def _new_ledger() -> Mapping[str, object]:
 
 
 def _load_ledger(path: Path) -> dict[str, object]:
-    value = dict(_load_object(path))
-    if not isinstance(value.get("calls"), list):
-        raise RuntimeError("resource ledger must contain a calls list")
-    events = _load_ledger_events(_ledger_events_path(path))
-    if events:
-        value = _rebuild_ledger_snapshot(path, value, events)
-    elif value["calls"]:
-        raise RuntimeError("resource ledger snapshot has calls without an event log")
-    return value
+    return load_resource_ledger(path, updated_at=_now())
+
+
+def _rebuild_ledger_snapshot(
+    path: Path,
+    ledger: Mapping[str, object],
+    events: Sequence[Mapping[str, object]],
+) -> dict[str, object]:
+    return _rebuild_resource_ledger_snapshot(
+        path,
+        ledger,
+        events,
+        updated_at=_now(),
+    )
 
 
 def _reconcile_ledger(context: PilotContext) -> dict[str, object]:
@@ -1338,7 +1560,9 @@ def _start_ledger_call(
         "call_id": call_id,
         "state": "started",
         "agent_id": agent.agent_id,
-        "model": agent.model_snapshot_id,
+        "requested_model_id": agent.requested_model_id,
+        "model_snapshot_id": agent.model_snapshot_id,
+        "model_resolution_scope_id": agent.model_resolution_scope_id,
         "reasoning_effort": _agent_effort(agent),
         "task_id": task.task_id,
         "check_id": check.check_id,
@@ -1403,81 +1627,6 @@ def _finish_ledger_call(
     _rebuild_ledger_snapshot(path, ledger, _load_ledger_events(events_path))
 
 
-def _ledger_events_path(snapshot_path: Path) -> Path:
-    return snapshot_path.with_name(f"{snapshot_path.stem}-events.jsonl")
-
-
-def _load_ledger_events(path: Path) -> tuple[dict[str, object], ...]:
-    if not path.exists():
-        return ()
-    events: list[dict[str, object]] = []
-    for line in path.read_text(encoding="utf-8").splitlines():
-        value = json.loads(line)
-        if not isinstance(value, dict):
-            raise RuntimeError("resource ledger events must be JSON objects")
-        events.append(value)
-    return tuple(events)
-
-
-def _append_ledger_event(path: Path, event: Mapping[str, object]) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("a", encoding="utf-8") as handle:
-        handle.write(canonical_json(event))
-        handle.write("\n")
-        handle.flush()
-        os.fsync(handle.fileno())
-    _fsync_directory(path.parent)
-
-
-def _rebuild_ledger_snapshot(
-    path: Path,
-    ledger: Mapping[str, object],
-    events: Sequence[Mapping[str, object]],
-) -> dict[str, object]:
-    calls: list[dict[str, object]] = []
-    by_id: dict[str, dict[str, object]] = {}
-    completed: set[str] = set()
-    for event in events:
-        event_type = event.get("event_type")
-        call_id = event.get("call_id")
-        if not isinstance(call_id, str):
-            raise RuntimeError("resource ledger event call_id is required")
-        if event_type == "reservation":
-            if call_id in by_id:
-                raise RuntimeError("resource ledger has a duplicate reservation")
-            call = {key: value for key, value in event.items() if key != "event_type"}
-            calls.append(call)
-            by_id[call_id] = call
-        elif event_type == "completion":
-            call = by_id.get(call_id)
-            if call is None or call_id in completed:
-                raise RuntimeError("resource ledger completion has no reservation")
-            call.update(
-                {
-                    key: value
-                    for key, value in event.items()
-                    if key not in {"event_type", "call_id"}
-                }
-            )
-            completed.add(call_id)
-        else:
-            raise RuntimeError("resource ledger event_type is invalid")
-    snapshot = dict(ledger)
-    snapshot["calls"] = calls
-    spent = 0.0
-    for call in calls:
-        estimated_cost = call.get("estimated_cost_usd")
-        if isinstance(estimated_cost, int | float) and not isinstance(
-            estimated_cost, bool
-        ):
-            spent += float(estimated_cost)
-    snapshot["spent_usd"] = spent
-    snapshot["remaining_usd"] = MAXIMUM_ESTIMATED_COST_USD - spent
-    snapshot["updated_at"] = _now()
-    _write_json(path, snapshot)
-    return snapshot
-
-
 def _priced_usage(usage: Mapping[str, object]) -> Mapping[str, int]:
     priced: dict[str, int] = {}
     for key in OFFICIAL_RATES:
@@ -1496,15 +1645,41 @@ def _priced_usage(usage: Mapping[str, object]) -> Mapping[str, int]:
     return priced
 
 
-def _paid_results(context: PilotContext):
-    return tuple(
-        load_results(
-            context.result_store,
-            ResultQuery(
-                agent_ids=tuple(agent.agent_id for agent in context.agents),
-                scoring_config_digests=(SCORING_CONFIG.scoring_config_digest,),
-            ),
+def _paid_results(context: PilotContext) -> tuple[ResultRecord, ...]:
+    expected_execution_keys = {
+        (
+            agent.agent_id,
+            task.task_id,
+            check.check_id,
+            compute_result_cache_identity(
+                task,
+                check,
+                agent,
+                context.workspace_config,
+                context.runtime_config,
+            ).identity_digest,
         )
+        for task in context.tasks
+        for check in (context.checks[task.check_ids[0]],)
+        for agent in context.agents
+    }
+    candidates = load_results(
+        context.result_store,
+        ResultQuery(
+            agent_ids=tuple(agent.agent_id for agent in context.agents),
+            scoring_config_digests=(SCORING_CONFIG.scoring_config_digest,),
+        ),
+    )
+    return tuple(
+        result
+        for result in candidates
+        if (
+            result.agent_id,
+            result.task_id,
+            result.check_id,
+            result.cache_identity.identity_digest,
+        )
+        in expected_execution_keys
     )
 
 
@@ -1521,51 +1696,11 @@ def _agent_effort(agent: AgentRecord) -> str:
 
 def _assert_command_identity(agent: AgentRecord, command: Sequence[str]) -> None:
     required = {
-        f"BARCAROLLE_CODEX_MODEL={agent.model_snapshot_id}",
+        f"BARCAROLLE_CODEX_MODEL={agent.requested_model_id}",
         f"BARCAROLLE_CODEX_REASONING_EFFORT={_agent_effort(agent)}",
     }
     if not required.issubset(command):
         raise RuntimeError("Agent command does not match model/effort identity")
-
-
-def _ensure_credentials_available() -> None:
-    if os.environ.get("OPENAI_BASE_URL") and os.environ.get("OPENAI_API_KEY"):
-        return
-    completed = subprocess.run(
-        (
-            "zsh",
-            "-lc",
-            'source "$HOME/.zshrc"; [[ -n "$OPENAI_BASE_URL" && -n "$OPENAI_API_KEY" ]]',
-        ),
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL,
-        check=False,
-    )
-    if completed.returncode != 0:
-        raise RuntimeError(
-            "OPENAI_BASE_URL and OPENAI_API_KEY are required for paid cells"
-        )
-
-
-def _authorized_endpoint_digest() -> str:
-    base_url = os.environ.get("OPENAI_BASE_URL")
-    if not base_url:
-        completed = subprocess.run(
-            (
-                "zsh",
-                "-lc",
-                'source "$HOME/.zshrc"; printf %s "$OPENAI_BASE_URL"',
-            ),
-            text=True,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.DEVNULL,
-            check=False,
-        )
-        if completed.returncode == 0:
-            base_url = completed.stdout
-    if not base_url:
-        raise RuntimeError("OPENAI_BASE_URL is required to bind Agent identity")
-    return canonical_digest({"openai_base_url": base_url.rstrip("/")})
 
 
 def _codex_cli_version() -> str:
@@ -1704,14 +1839,6 @@ def _require_no_repository_instructions(
             )
 
 
-def _path_digest(path: Path) -> str:
-    entries = tuple(
-        (str(child.relative_to(path)), _file_sha256(child))
-        for child in sorted(item for item in path.rglob("*") if item.is_file())
-    )
-    return canonical_digest(entries)
-
-
 def _file_sha256(path: Path) -> str:
     digest = hashlib.sha256()
     with path.open("rb") as handle:
@@ -1732,26 +1859,6 @@ def _required_string(value: Mapping[str, Any], key: str) -> str:
     if not isinstance(item, str) or not item:
         raise RuntimeError(f"{key} must be a non-empty string")
     return item
-
-
-def _write_json(path: Path, value: Mapping[str, object]) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    temporary = path.with_suffix(path.suffix + ".tmp")
-    with temporary.open("w", encoding="utf-8") as handle:
-        handle.write(canonical_json(value))
-        handle.write("\n")
-        handle.flush()
-        os.fsync(handle.fileno())
-    os.replace(temporary, path)
-    _fsync_directory(path.parent)
-
-
-def _fsync_directory(path: Path) -> None:
-    directory = os.open(path, os.O_RDONLY)
-    try:
-        os.fsync(directory)
-    finally:
-        os.close(directory)
 
 
 def _fsync_file(path: Path) -> None:

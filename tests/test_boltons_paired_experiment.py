@@ -27,9 +27,14 @@ def test_paired_agents_bind_exact_model_and_reasoning_effort(
         endpoint_digest="endpoint-digest",
     )
 
-    assert tuple(agent.model_snapshot_id for agent in agents) == (
+    assert tuple(agent.requested_model_id for agent in agents) == (
         "gpt-5.4-mini",
         "gpt-5.4-mini",
+    )
+    assert all(agent.model_snapshot_id is None for agent in agents)
+    assert all(
+        agent.model_resolution_scope_id == paired_experiment.MODEL_RESOLUTION_SCOPE_ID
+        for agent in agents
     )
     assert tuple(paired_experiment._agent_effort(agent) for agent in agents) == (
         "low",
@@ -38,14 +43,12 @@ def test_paired_agents_bind_exact_model_and_reasoning_effort(
     assert agents[0].agent_manifest_digest != agents[1].agent_manifest_digest
     for agent in agents:
         command = commands[agent.agent_id]
-        assert f"BARCAROLLE_CODEX_MODEL={agent.model_snapshot_id}" in command
+        assert f"BARCAROLLE_CODEX_MODEL={agent.requested_model_id}" in command
         assert (
             "BARCAROLLE_CODEX_REASONING_EFFORT="
             f"{paired_experiment._agent_effort(agent)}"
         ) in command
-        assert agent.harness_digest == canonical_digest(
-            {"agent_command": command}
-        )
+        assert agent.harness_digest == canonical_digest({"agent_command": command})
 
 
 def test_official_mini_pricing_requires_all_three_measured_token_fields() -> None:
@@ -229,7 +232,9 @@ def test_fake_codex_runs_both_frozen_origins_without_paid_network(
 ) -> None:
     configured_target = os.environ.get("BARCAROLLE_BOLTONS_REPO")
     if configured_target is None:
-        pytest.skip("set BARCAROLLE_BOLTONS_REPO to run the real-target fake-Codex test")
+        pytest.skip(
+            "set BARCAROLLE_BOLTONS_REPO to run the real-target fake-Codex test"
+        )
     output_dir = tmp_path / "paired"
     output_dir.mkdir()
     ledger = {
@@ -265,14 +270,14 @@ def test_fake_codex_runs_both_frozen_origins_without_paid_network(
     fake_codex = fake_bin / "codex"
     fake_codex.write_text(
         "#!/bin/sh\n"
-        "if [ \"${1:-}\" = \"--version\" ]; then\n"
+        'if [ "${1:-}" = "--version" ]; then\n'
         "  printf '%s\\n' 'codex-cli 0.test'\n"
         "  exit 0\n"
         "fi\n"
         "cat >/dev/null\n"
-        "printf '%s\\n' '{\"type\":\"turn.completed\",\"usage\":"
-        "{\"input_tokens\":12,\"cached_input_tokens\":2,"
-        "\"output_tokens\":3}}'\n",
+        'printf \'%s\\n\' \'{"type":"turn.completed","usage":'
+        '{"input_tokens":12,"cached_input_tokens":2,'
+        '"output_tokens":3}}\'\n',
         encoding="utf-8",
     )
     fake_codex.chmod(0o755)

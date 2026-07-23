@@ -4,8 +4,7 @@
 from __future__ import annotations
 
 import argparse
-from dataclasses import dataclass
-import hashlib
+from dataclasses import dataclass, replace
 import json
 import os
 from pathlib import Path
@@ -33,7 +32,6 @@ from barcarolle.records import (  # noqa: E402
     TaskRecord,
     WorkspaceConfig,
     canonical_digest,
-    canonical_json,
     load_jsonl_records,
     record_with_digest,
     task_check_ref_key,
@@ -56,25 +54,36 @@ from barcarolle.result_store import (  # noqa: E402
 )
 from barcarolle.selection import (  # noqa: E402
     FeatureConfig,
-    LeakagePolicy,
-    MetricConfig,
     RollingOriginPolicy,
     SelectionBudget,
-    SelectionConfig,
     build_feature_snapshot,
+    build_rule_selector,
     build_rolling_origin,
     build_selector_input,
     evaluate_selection,
-    fit_rule_mixture_from_metrics,
     select_with_selector,
+    train_selector,
 )
 from barcarolle.task_pool import TimeRange  # noqa: E402
 from barcarolle.workspace import (  # noqa: E402
     WorkspaceArtifactConfig,
+    WorkspaceRunContext,
     bind_agent_harness,
     bind_check_material,
     bind_repository_source,
+    harness_content_digest,
+    make_openai_env_network_policy_digest,
+    preflight_run_bindings,
+    resolve_openai_endpoint_digest,
     run_agent_on_task_with_artifacts,
+)
+from examples.experiment_ledger import (  # noqa: E402
+    append_ledger_event as _append_ledger_event,
+    ledger_events_path as _ledger_events_path,
+    load_ledger_events as _load_ledger_events,
+    load_resource_ledger,
+    rebuild_ledger_snapshot as _rebuild_resource_ledger_snapshot,
+    write_json as _write_json,
 )
 from examples.boltons_regression import run as fixture  # noqa: E402
 
@@ -85,6 +94,9 @@ DEFAULT_OUTPUT_DIR = Path(
     "outputs/user-journeys/2026-07-15-openai-paired-rolling-origin"
 )
 MODEL = "gpt-5.4-mini"
+MODEL_RESOLUTION_SCOPE_ID = "boltons-paired-rolling-origin-2026-07"
+MODEL_RESOLUTION_SCOPE_STARTED_AT = "2026-07-15T00:00:00Z"
+MODEL_RESOLUTION_SCOPE_ENDED_AT = "2026-08-01T00:00:00Z"
 REASONING_EFFORTS = ("low", "high")
 ORIGIN_ONE = "2026-07-01T00:00:00Z"
 ORIGIN_TWO = "2026-07-05T00:00:00Z"
@@ -98,25 +110,18 @@ OFFICIAL_RATES = {
     "output_tokens": 4.50 / 1_000_000,
 }
 SCORING_CONFIG = ScoringConfig(PRICING_VERSION, OFFICIAL_RATES)
-CACHE_CONFIG = ResultCacheConfig(reuse_benchmark_invalid=True)
-JOIN_CONFIG = ResultJoinConfig(
-    join_policy_digest="paired-exact-result-v1",
-    denominator_policy_digest="all-required-agent-task-check-cells-v1",
-)
+CACHE_CONFIG = ResultCacheConfig()
+JOIN_CONFIG = ResultJoinConfig()
 FEATURE_CONFIG = FeatureConfig(
-    feature_config_digest="boltons-metadata-only-v1",
-    leakage_policy_digest="task-metadata-only-v1",
-    feature_names=("task_count", "task_cluster"),
-    allowed_leakage_classes=("task_metadata",),
+    feature_names=("task_count", "task_stratum"),
 )
-BUDGET = SelectionBudget("two-task-checks-per-origin-v1", 2)
+BUDGET = SelectionBudget(2)
 POLICY = RollingOriginPolicy(
-    policy_digest="boltons-sequential-rolling-origin-v1",
     as_of_cutoff_rule="origin_time",
-    cluster_constraints_digest="all-boltons-clusters-v1",
-    eligibility_mode="strict_history",
-    holdout_overlap_policy="disjoint",
+    eligibility_mode="counterfactual_replay",
+    holdout_overlap_policy="allow_cluster_overlap",
     future_holdout_known=True,
+    maturity_lag_seconds=0,
 )
 
 
@@ -133,6 +138,7 @@ class ExperimentContext:
     workspace_config: WorkspaceConfig
     runtime_config: RuntimeConfig
     result_store: ResultStore
+    run_context: WorkspaceRunContext
 
 
 def prepare(target_repo: Path, output_dir: Path) -> Mapping[str, object]:
@@ -151,9 +157,7 @@ def prepare(target_repo: Path, output_dir: Path) -> Mapping[str, object]:
             if result.agent_id != "scripted-known-good-boltons"
         )
         if paid:
-            raise RuntimeError(
-                "prepare refuses to replace existing paid Agent Results"
-            )
+            raise RuntimeError("prepare refuses to replace existing paid Agent Results")
     records_dir = output_dir / "records"
     if records_dir.exists():
         for path in records_dir.glob("paired-*.jsonl"):
@@ -199,9 +203,7 @@ def freeze_origin_one(context: ExperimentContext) -> Mapping[str, object]:
         origin_two, selections_two = _load_origin_two_baselines(context)
     else:
         selectors = _baseline_selectors(context.task_pool, context.tasks)
-        origin = _build_origin(
-            context, ORIGIN_ONE, TimeRange(ORIGIN_ONE, ORIGIN_TWO)
-        )
+        origin = _build_origin(context, ORIGIN_ONE, TimeRange(ORIGIN_ONE, ORIGIN_TWO))
         selections = _freeze_selections(context, origin, selectors)
         origin_two = _build_origin(
             context, ORIGIN_TWO, TimeRange(ORIGIN_TWO, HISTORY_END)
@@ -228,9 +230,7 @@ def freeze_origin_one(context: ExperimentContext) -> Mapping[str, object]:
     }
 
 
-def run_next_cell(
-    context: ExperimentContext, *, canary: bool
-) -> Mapping[str, object]:
+def run_next_cell(context: ExperimentContext, *, canary: bool) -> Mapping[str, object]:
     _reconcile_ledger(context)
     freeze_origin_one(context)
     _, origin_one, origin_one_selections = _load_origin_one(context)
@@ -267,7 +267,8 @@ def run_next_cell(
     return {
         "stage": f"{stage}_cell_recorded",
         "agent_id": result.agent_id,
-        "model": result.cache_identity.model_snapshot_id,
+        "requested_model_id": result.cache_identity.requested_model_id,
+        "model_snapshot_id": result.cache_identity.model_snapshot_id,
         "task_id": result.task_id,
         "check_id": result.check_id,
         "terminal_status": result.terminal_status,
@@ -289,19 +290,44 @@ def fit_mixture(context: ExperimentContext) -> Mapping[str, object]:
         context, "origin-one", origin_one, selections
     )
     mae_metrics = tuple(
-        metric
-        for metric in metrics
-        if metric.metric_name == "future_pass_rate_mae"
-    )
-    future_matrices = tuple(
-        matrix for matrix in matrices if matrix.matrix_role == "future_holdout"
+        metric for metric in metrics if metric.metric_name == "future_pass_rate_mae"
     )
     mixture_path = context.records_dir / "paired-mixture-selector.jsonl"
     if mixture_path.exists():
         (mixture,) = load_jsonl_records(mixture_path, SelectorRecord)
     else:
-        mixture = fit_rule_mixture_from_metrics(
-            selectors, selections, mae_metrics, future_matrices
+        origin_two, _ = _load_origin_two_baselines(context)
+        snapshot, selector_input = _selection_material(context, origin_one)
+        result_bindings = {
+            (cell.result_id, cell.result_digest)
+            for matrix in matrices
+            for cell in matrix.cells
+            if cell.result_id is not None and cell.result_digest is not None
+        }
+        result_ids = tuple(sorted({result_id for result_id, _ in result_bindings}))
+        training_results = tuple(
+            result
+            for result in load_results(
+                context.result_store,
+                ResultQuery(result_ids=result_ids),
+            )
+            if (result.result_id, result.result_digest) in result_bindings
+        )
+        mixture = train_selector(
+            "rule_mixture",
+            deployment_origin=origin_two,
+            task_pool=context.task_pool,
+            tasks=context.tasks,
+            checks=context.checks,
+            training_origins=(origin_one,),
+            feature_snapshots=(snapshot,),
+            selector_inputs=(selector_input,),
+            expert_selectors=selectors,
+            selections=selections,
+            result_matrices=matrices,
+            metrics=mae_metrics,
+            pre_origin_results=(),
+            training_results=training_results,
         )
         write_jsonl_records(mixture_path, (mixture,))
 
@@ -399,7 +425,9 @@ def evaluate(context: ExperimentContext) -> Mapping[str, object]:
         "agents": tuple(
             {
                 "agent_id": agent.agent_id,
-                "model": agent.model_snapshot_id,
+                "requested_model_id": agent.requested_model_id,
+                "model_snapshot_id": agent.model_snapshot_id,
+                "model_resolution_scope_id": agent.model_resolution_scope_id,
                 "reasoning_effort": _agent_effort(agent),
             }
             for agent in context.agents
@@ -442,9 +470,7 @@ def build_context(
         raise RuntimeError("run --prepare-only before the paired experiment")
     (task_pool,) = load_jsonl_records(task_pool_path, TaskPoolRecord)
     tasks = tuple(load_jsonl_records(records_dir / "tasks.jsonl", TaskRecord))
-    checks_tuple = tuple(
-        load_jsonl_records(records_dir / "checks.jsonl", CheckRecord)
-    )
+    checks_tuple = tuple(load_jsonl_records(records_dir / "checks.jsonl", CheckRecord))
     if canonical_digest(tasks) != task_pool.task_records_digest:
         raise RuntimeError("Task records do not match the prepared Task Pool")
     if canonical_digest(checks_tuple) != task_pool.check_records_digest:
@@ -462,7 +488,7 @@ def build_context(
     agents, commands = _agents(
         output_dir,
         cli_version=_codex_cli_version(),
-        endpoint_digest=_authorized_endpoint_digest(),
+        endpoint_digest=resolve_openai_endpoint_digest(),
     )
     context = ExperimentContext(
         output_dir=output_dir,
@@ -476,9 +502,12 @@ def build_context(
         workspace_config=workspace_config,
         runtime_config=runtime_config,
         result_store=ResultStore(records_dir / "results.jsonl"),
+        run_context=WorkspaceRunContext(),
     )
-    _bind_context(context, target_repo.resolve())
-    return context
+    return replace(
+        context,
+        run_context=_bind_context(context, target_repo.resolve()),
+    )
 
 
 def _workspace_config() -> WorkspaceConfig:
@@ -489,9 +518,7 @@ def _workspace_config() -> WorkspaceConfig:
         ),
         submodule_state_digest="submodules-none",
         base_image_digest=canonical_digest({"python": sys.version.split()[0]}),
-        dependency_lock_digest=canonical_digest(
-            {"pytest": "barcarolle-dev-lock"}
-        ),
+        dependency_lock_digest=canonical_digest({"pytest": "barcarolle-dev-lock"}),
     )
 
 
@@ -505,14 +532,7 @@ def _agents(
     if "BARCAROLLE_CODEX_REASONING_EFFORT" not in harness_text:
         raise RuntimeError("Codex harness does not bind reasoning effort")
     usage_helper = HARNESS.parent / "extract-usage.py"
-    harness_content_digest = canonical_digest(
-        {
-            "run_agent_sha256": hashlib.sha256(HARNESS.read_bytes()).hexdigest(),
-            "extract_usage_sha256": hashlib.sha256(
-                usage_helper.read_bytes()
-            ).hexdigest(),
-        }
-    )
+    content_digest = harness_content_digest((HARNESS, usage_helper))
     agents: list[AgentRecord] = []
     commands: dict[str, tuple[str, ...]] = {}
     for effort in REASONING_EFFORTS:
@@ -547,17 +567,29 @@ def _agents(
             agent_manifest_digest=canonical_digest(
                 {
                     "agent": "codex-cli",
-                    "model": MODEL,
+                    "requested_model_id": MODEL,
+                    "model_snapshot_id": None,
+                    "model_resolution_scope_id": MODEL_RESOLUTION_SCOPE_ID,
+                    "model_resolution_scope_started_at": (
+                        MODEL_RESOLUTION_SCOPE_STARTED_AT
+                    ),
+                    "model_resolution_scope_ended_at": (
+                        MODEL_RESOLUTION_SCOPE_ENDED_AT
+                    ),
                     "reasoning_effort": effort,
                     "codex_cli_version": cli_version,
                     "harness_digest": harness_digest,
-                    "harness_content_digest": harness_content_digest,
+                    "harness_content_digest": content_digest,
                     "prompt_digest": prompt_digest,
                     "provider_digest": provider_digest,
                     "multi_agent_disabled": True,
                 }
             ),
-            model_snapshot_id=MODEL,
+            requested_model_id=MODEL,
+            model_snapshot_id=None,
+            model_resolution_scope_id=MODEL_RESOLUTION_SCOPE_ID,
+            model_resolution_scope_started_at=MODEL_RESOLUTION_SCOPE_STARTED_AT,
+            model_resolution_scope_ended_at=MODEL_RESOLUTION_SCOPE_ENDED_AT,
             harness_digest=harness_digest,
             repository_instruction_digest=canonical_digest(
                 {
@@ -579,7 +611,11 @@ def _agents(
                     "user_config_ignored": True,
                 }
             ),
-            network_policy_digest=provider_digest,
+            network_policy_digest=make_openai_env_network_policy_digest(
+                endpoint_digest=endpoint_digest,
+                harness_digest=harness_digest,
+                harness_content_digest=content_digest,
+            ),
             adapter_digest="barcarolle-worktree-diff-v2-python-cache-excluded",
         )
         agents.append(agent)
@@ -587,19 +623,29 @@ def _agents(
     return tuple(agents), commands
 
 
-def _bind_context(context: ExperimentContext, target_repo: Path) -> None:
+def _bind_context(context: ExperimentContext, target_repo: Path) -> WorkspaceRunContext:
     _require_no_repository_instructions(target_repo)
-    bind_repository_source(context.workspace_config, target_repo)
+    run_context = bind_repository_source(
+        context.run_context, context.workspace_config, target_repo
+    )
     task_by_id = {task.task_id: task for task in context.tasks}
     for check in context.checks.values():
         task = task_by_id[check.task_id]
-        bind_check_material(
+        run_context = bind_check_material(
+            run_context,
             check,
             fixture.CHECK_COMMAND,
             fixture._hidden_check_dir(task.source_ref),
         )
     for agent in context.agents:
-        bind_agent_harness(agent, context.commands[agent.agent_id])
+        run_context = bind_agent_harness(
+            run_context,
+            agent,
+            context.commands[agent.agent_id],
+            execution_mode="openai_paid",
+            endpoint_harness_paths=(HARNESS, HARNESS.parent / "extract-usage.py"),
+        )
+    return run_context
 
 
 def _require_no_repository_instructions(target_repo: Path) -> None:
@@ -629,35 +675,25 @@ def _baseline_selectors(
     task_pool: TaskPoolRecord, tasks: Sequence[TaskRecord]
 ) -> tuple[SelectorRecord, ...]:
     group_by_ref_key = {
-        task_check_ref_key(TaskCheckRef(task.task_id, check_id)): task.cluster_id
+        task_check_ref_key(TaskCheckRef(task.task_id, check_id)): task.sampling_stratum
         for task in tasks
         for check_id in task.check_ids
     }
     return (
-        _selector(task_pool, "coverage", {"group_by_ref_key": group_by_ref_key}),
-        _selector(task_pool, "random", {"seed": 5}),
-        _selector(task_pool, "recency", {}),
-    )
-
-
-def _selector(
-    task_pool: TaskPoolRecord, family: str, parameters: Mapping[str, object]
-) -> SelectorRecord:
-    config_digest = canonical_digest(
-        {"selector_family": family, "parameters": parameters}
-    )
-    return SelectorRecord(
-        selector_id=f"selector_{canonical_digest((task_pool.task_pool_digest, family, config_digest))}",
-        selector_family=family,
-        selector_version="1",
-        training_source_digests=(
-            task_pool.task_pool_digest,
-            FEATURE_CONFIG.feature_config_digest,
+        build_rule_selector(
+            "coverage",
+            {"group_by_ref_key": group_by_ref_key},
+            allowed_feature_classes=FEATURE_CONFIG.allowed_leakage_classes,
         ),
-        allowed_feature_classes=FEATURE_CONFIG.allowed_leakage_classes,
-        parameters=parameters,
-        config_digest=config_digest,
-        created_at="2026-07-15T00:00:00Z",
+        build_rule_selector(
+            "random",
+            {"seed": 5},
+            allowed_feature_classes=FEATURE_CONFIG.allowed_leakage_classes,
+        ),
+        build_rule_selector(
+            "recency",
+            allowed_feature_classes=FEATURE_CONFIG.allowed_leakage_classes,
+        ),
     )
 
 
@@ -682,6 +718,18 @@ def _freeze_selections(
     origin: RollingOriginRecord,
     selectors: Sequence[SelectorRecord],
 ) -> tuple[BenchmarkSelectionRecord, ...]:
+    snapshot, selector_input = _selection_material(context, origin)
+    return tuple(
+        select_with_selector(
+            selector_input,
+            snapshot,
+            selector,
+        )
+        for selector in selectors
+    )
+
+
+def _selection_material(context: ExperimentContext, origin: RollingOriginRecord):
     snapshot = build_feature_snapshot(
         origin,
         context.task_pool,
@@ -697,25 +745,9 @@ def _freeze_selections(
         (),
         context.agents,
         BUDGET,
-        LeakagePolicy(
-            FEATURE_CONFIG.leakage_policy_digest,
-            FEATURE_CONFIG.allowed_leakage_classes,
-            origin.as_of_cutoff,
-        ),
+        FEATURE_CONFIG.leakage_policy(origin.as_of_cutoff),
     )
-    return tuple(
-        select_with_selector(
-            selector_input,
-            selector,
-            SelectionConfig(
-                selection_config_digest=f"boltons-{selector.selector_family}-v1",
-                selector_id=selector.selector_id,
-                feature_snapshot_id=snapshot.feature_snapshot_id,
-                eligibility_mode="strict_history",
-            ),
-        )
-        for selector in selectors
-    )
+    return snapshot, selector_input
 
 
 def _required_refs(
@@ -729,8 +761,7 @@ def _required_refs(
         for ref in selection.selected_task_check_refs
     }
     keys.update(
-        (ref.task_id, ref.check_id)
-        for ref in origin.future_holdout_task_check_refs
+        (ref.task_id, ref.check_id) for ref in origin.future_holdout_task_check_refs
     )
     return tuple(
         TaskCheckRef(task.task_id, check_id)
@@ -751,12 +782,15 @@ def _execute_cell(
     agent = next(agent for agent in context.agents if agent.agent_id == cell.agent_id)
     command = context.commands[agent.agent_id]
     _assert_command_identity(agent, command)
-    _ensure_credentials_available()
+    preflight_run_bindings(
+        context.run_context,
+        ((task, check, agent),),
+        context.workspace_config,
+        context.runtime_config,
+    )
     ledger = _reconcile_ledger(context)
     _ensure_ledger_allows_call(ledger, context, task, check, agent)
-    call_id = _start_ledger_call(
-        context.ledger_path, ledger, task, check, agent
-    )
+    call_id = _start_ledger_call(context.ledger_path, ledger, task, check, agent)
     result = None
     usage = None
     artifact_manifest_ref = None
@@ -788,6 +822,7 @@ def _execute_cell(
             agent,
             context.workspace_config,
             context.runtime_config,
+            context.run_context,
             WorkspaceArtifactConfig(
                 output_root=context.output_dir / "raw/agent-runs",
                 preserve_solver_workspace_summary="on_failure",
@@ -829,12 +864,10 @@ def _execute_cell(
     return result
 
 
-def _assert_command_identity(
-    agent: AgentRecord, command: Sequence[str]
-) -> None:
+def _assert_command_identity(agent: AgentRecord, command: Sequence[str]) -> None:
     effort = _agent_effort(agent)
     required = {
-        f"BARCAROLLE_CODEX_MODEL={agent.model_snapshot_id}",
+        f"BARCAROLLE_CODEX_MODEL={agent.requested_model_id}",
         f"BARCAROLLE_CODEX_REASONING_EFFORT={effort}",
     }
     if not required.issubset(command):
@@ -901,13 +934,14 @@ def _load_or_score_origin(
     for selection in selections:
         refs = tuple(
             dict.fromkeys(
-                (*selection.selected_task_check_refs, *origin.future_holdout_task_check_refs)
+                (
+                    *selection.selected_task_check_refs,
+                    *origin.future_holdout_task_check_refs,
+                )
             )
         )
         _require_no_missing(context, refs, label)
-        cell_set = _prepare_cells_without_execution(
-            context, selection, origin, refs
-        )
+        cell_set = _prepare_cells_without_execution(context, selection, origin, refs)
         selected, future, selection_metrics = _score_without_side_effects(
             context, selection, origin, cell_set
         )
@@ -947,6 +981,9 @@ def _prepare_cells_without_execution(
         selection_id=selection.selection_id,
         selected_task_check_refs=selection.selected_task_check_refs,
         future_task_check_refs=origin.future_holdout_task_check_refs,
+        future_censored_task_check_refs=origin.future_censored_task_check_refs,
+        future_task_pool_id=origin.task_pool_id,
+        future_task_pool_digest=origin.task_pool_digest,
         cells=cells,
         abstention_reason=None,
         cell_set_digest="",
@@ -1005,7 +1042,6 @@ def _score_without_side_effects(
             cell_set,
             selected,
             future,
-            MetricConfig("paired-pass-rate-mae-v1", BUDGET.budget_digest),
         )
     )
     return selected, future, metrics
@@ -1138,46 +1174,6 @@ def _paid_result_count(context: ExperimentContext) -> int:
     return len(_paid_results(context))
 
 
-def _ensure_credentials_available() -> None:
-    if os.environ.get("OPENAI_BASE_URL") and os.environ.get("OPENAI_API_KEY"):
-        return
-    completed = subprocess.run(
-        (
-            "zsh",
-            "-lc",
-            "source \"$HOME/.zshrc\"; [[ -n \"$OPENAI_BASE_URL\" && -n \"$OPENAI_API_KEY\" ]]",
-        ),
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL,
-        check=False,
-    )
-    if completed.returncode != 0:
-        raise RuntimeError(
-            "OPENAI_BASE_URL and OPENAI_API_KEY are required for paid cells"
-        )
-
-
-def _authorized_endpoint_digest() -> str:
-    base_url = os.environ.get("OPENAI_BASE_URL")
-    if not base_url:
-        completed = subprocess.run(
-            (
-                "zsh",
-                "-lc",
-                "source \"$HOME/.zshrc\"; printf %s \"$OPENAI_BASE_URL\"",
-            ),
-            text=True,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.DEVNULL,
-            check=False,
-        )
-        if completed.returncode == 0:
-            base_url = completed.stdout
-    if not base_url:
-        raise RuntimeError("OPENAI_BASE_URL is required to bind Agent identity")
-    return canonical_digest({"openai_base_url": base_url.rstrip("/")})
-
-
 def _codex_cli_version() -> str:
     completed = subprocess.run(
         ("codex", "--version"),
@@ -1193,17 +1189,20 @@ def _codex_cli_version() -> str:
 
 
 def _load_ledger(path: Path) -> dict[str, object]:
-    if not path.exists():
-        raise RuntimeError(f"resource ledger is missing: {path}")
-    value = json.loads(path.read_text(encoding="utf-8"))
-    if not isinstance(value, dict) or not isinstance(value.get("calls"), list):
-        raise RuntimeError("resource ledger must contain a calls list")
-    events = _load_ledger_events(_ledger_events_path(path))
-    if events:
-        value = _rebuild_ledger_snapshot(path, value, events)
-    elif value["calls"]:
-        raise RuntimeError("resource ledger snapshot has calls without an event log")
-    return value
+    return load_resource_ledger(path, updated_at="2026-07-15")
+
+
+def _rebuild_ledger_snapshot(
+    path: Path,
+    ledger: Mapping[str, object],
+    events: Sequence[Mapping[str, object]],
+) -> dict[str, object]:
+    return _rebuild_resource_ledger_snapshot(
+        path,
+        ledger,
+        events,
+        updated_at="2026-07-15",
+    )
 
 
 def _reconcile_ledger(context: ExperimentContext) -> dict[str, object]:
@@ -1244,8 +1243,7 @@ def _reconcile_ledger(context: ExperimentContext) -> dict[str, object]:
     calls = ledger["calls"]
     assert isinstance(calls, list)
     if any(
-        not isinstance(call, dict) or call.get("state") != "completed"
-        for call in calls
+        not isinstance(call, dict) or call.get("state") != "completed" for call in calls
     ):
         raise RuntimeError("resource ledger contains a stopped paid cell")
     _ensure_historical_calls_scoreable(calls)
@@ -1323,8 +1321,7 @@ def _ensure_ledger_allows_call(
     ):
         raise RuntimeError("resource ledger pricing does not match official rates")
     if any(
-        isinstance(call, dict) and call.get("state") != "completed"
-        for call in calls
+        isinstance(call, dict) and call.get("state") != "completed" for call in calls
     ):
         raise RuntimeError("resource ledger contains a stopped paid cell")
     _ensure_historical_calls_scoreable(calls)
@@ -1380,7 +1377,9 @@ def _start_ledger_call(
         "call_id": call_id,
         "state": "started",
         "agent_id": agent.agent_id,
-        "model": agent.model_snapshot_id,
+        "requested_model_id": agent.requested_model_id,
+        "model_snapshot_id": agent.model_snapshot_id,
+        "model_resolution_scope_id": agent.model_resolution_scope_id,
         "reasoning_effort": _agent_effort(agent),
         "task_id": task.task_id,
         "check_id": check.check_id,
@@ -1449,109 +1448,6 @@ def _finish_ledger_call(
         ledger,
         _load_ledger_events(_ledger_events_path(path)),
     )
-
-
-def _ledger_events_path(snapshot_path: Path) -> Path:
-    return snapshot_path.with_name(f"{snapshot_path.stem}-events.jsonl")
-
-
-def _load_ledger_events(path: Path) -> tuple[dict[str, object], ...]:
-    if not path.exists():
-        return ()
-    events: list[dict[str, object]] = []
-    for line in path.read_text(encoding="utf-8").splitlines():
-        value = json.loads(line)
-        if not isinstance(value, dict):
-            raise RuntimeError("resource ledger events must be JSON objects")
-        events.append(value)
-    return tuple(events)
-
-
-def _append_ledger_event(path: Path, event: Mapping[str, object]) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("a", encoding="utf-8") as handle:
-        handle.write(canonical_json(event))
-        handle.write("\n")
-        handle.flush()
-        os.fsync(handle.fileno())
-    _fsync_directory(path.parent)
-
-
-def _rebuild_ledger_snapshot(
-    path: Path,
-    ledger: Mapping[str, object],
-    events: Sequence[Mapping[str, object]],
-) -> dict[str, object]:
-    calls: list[dict[str, object]] = []
-    by_id: dict[str, dict[str, object]] = {}
-    completed: set[str] = set()
-    for event in events:
-        event_type = event.get("event_type")
-        call_id = event.get("call_id")
-        if not isinstance(call_id, str):
-            raise RuntimeError("resource ledger event call_id is required")
-        if event_type == "reservation":
-            if call_id in by_id:
-                raise RuntimeError("resource ledger has a duplicate reservation")
-            call = {
-                key: value for key, value in event.items() if key != "event_type"
-            }
-            calls.append(call)
-            by_id[call_id] = call
-        elif event_type == "completion":
-            call = by_id.get(call_id)
-            if call is None or call_id in completed:
-                raise RuntimeError("resource ledger completion has no reservation")
-            call.update(
-                {
-                    key: value
-                    for key, value in event.items()
-                    if key not in {"event_type", "call_id"}
-                }
-            )
-            completed.add(call_id)
-        else:
-            raise RuntimeError("resource ledger event_type is invalid")
-    snapshot = dict(ledger)
-    snapshot["calls"] = calls
-    known_costs: list[float] = []
-    for call in calls:
-        estimated_cost = call.get("estimated_cost_usd")
-        if isinstance(estimated_cost, int | float) and not isinstance(
-            estimated_cost, bool
-        ):
-            known_costs.append(float(estimated_cost))
-    authorization = snapshot.get("authorization")
-    if not isinstance(authorization, dict):
-        raise RuntimeError("resource ledger authorization is missing")
-    budget = authorization.get("budget_usd")
-    if isinstance(budget, bool) or not isinstance(budget, int | float):
-        raise RuntimeError("resource ledger budget_usd must be numeric")
-    snapshot["spent_usd"] = sum(known_costs)
-    snapshot["remaining_usd"] = float(budget) - sum(known_costs)
-    snapshot["updated_at"] = "2026-07-15"
-    _write_json(path, snapshot)
-    return snapshot
-
-
-def _write_json(path: Path, value: Mapping[str, object]) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    temporary = path.with_suffix(path.suffix + ".tmp")
-    with temporary.open("w", encoding="utf-8") as handle:
-        handle.write(canonical_json(value))
-        handle.write("\n")
-        handle.flush()
-        os.fsync(handle.fileno())
-    os.replace(temporary, path)
-    _fsync_directory(path.parent)
-
-
-def _fsync_directory(path: Path) -> None:
-    directory = os.open(path, os.O_RDONLY)
-    try:
-        os.fsync(directory)
-    finally:
-        os.close(directory)
 
 
 def _fsync_file(path: Path) -> None:
