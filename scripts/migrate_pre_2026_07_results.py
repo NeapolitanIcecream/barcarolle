@@ -120,7 +120,9 @@ def migrate_result_cache(
     for check, old_environment in _read_old_checks(checks_path):
         validation = validate_check(check)
         if not validation.ok:
-            raise ValueError(f"invalid CheckRecord {check.check_id}: {', '.join(validation.errors)}")
+            raise ValueError(
+                f"invalid CheckRecord {check.check_id}: {', '.join(validation.errors)}"
+            )
         if check.check_id in checks_by_id:
             raise ValueError(f"duplicate CheckRecord: {check.check_id}")
         checks_by_id[check.check_id] = (check, old_environment)
@@ -139,7 +141,9 @@ def _read_old_rows(path: Path) -> tuple[Mapping[str, Any], ...]:
                 continue
             row = json.loads(line)
             if not isinstance(row, Mapping) or set(row) != _OLD_RESULT_FIELDS:
-                raise ValueError(f"line {line_number} is not the supported pre-2026-07 Result schema")
+                raise ValueError(
+                    f"line {line_number} is not the supported pre-2026-07 Result schema"
+                )
             rows.append(row)
     return tuple(rows)
 
@@ -152,17 +156,23 @@ def _read_old_checks(path: Path) -> tuple[tuple[CheckRecord, Mapping[str, str]],
                 continue
             row = json.loads(line)
             if not isinstance(row, Mapping) or set(row) != _OLD_CHECK_FIELDS:
-                raise ValueError(f"line {line_number} is not the supported pre-2026-07 Check schema")
+                raise ValueError(
+                    f"line {line_number} is not the supported pre-2026-07 Check schema"
+                )
             check = CheckRecord(
                 check_id=_string(row["check_id"], "check_id"),
                 task_id=_string(row["task_id"], "task_id"),
                 check_type=_string(row["check_type"], "check_type"),
-                check_manifest_digest=_string(row["check_manifest_digest"], "check_manifest_digest"),
+                check_manifest_digest=_string(
+                    row["check_manifest_digest"], "check_manifest_digest"
+                ),
                 hidden_check_bundle_digest=_string(
                     row["hidden_check_bundle_digest"],
                     "hidden_check_bundle_digest",
                 ),
-                resource_limits=dict(_mapping(row["resource_limits"], "resource_limits")),
+                resource_limits=dict(
+                    _mapping(row["resource_limits"], "resource_limits")
+                ),
                 oracle_source=_string(row["oracle_source"], "oracle_source"),
                 check_material_available_at=_string(
                     row["check_material_available_at"],
@@ -209,17 +219,32 @@ def _migrate_result(
     if check.task_id != task_id:
         raise ValueError(f"CheckRecord {check_id} does not match Result task")
     _require_old_check_binding(old_identity, check, old_environment)
+    requested_model_id = _string(old_identity["model_snapshot_id"], "model_snapshot_id")
+    model_scope_started_at = _string(old_result["started_at"], "started_at")
+    model_scope_ended_at = _string(
+        old_result["result_available_at"], "result_available_at"
+    )
 
     identity = ResultCacheIdentity(
         task_id=task_id,
         check_id=check_id,
         repository_id=_string(old_identity["repository_id"], "repository_id"),
         base_commit=_string(old_identity["base_commit"], "base_commit"),
-        submodule_state_digest=_string(old_identity["submodule_state_digest"], "submodule_state_digest"),
-        solver_material_digest=_string(old_identity["solver_material_digest"], "solver_material_digest"),
+        submodule_state_digest=_string(
+            old_identity["submodule_state_digest"], "submodule_state_digest"
+        ),
+        solver_material_digest=_string(
+            old_identity["solver_material_digest"], "solver_material_digest"
+        ),
         check_digest=make_check_digest(check),
-        agent_manifest_digest=_string(old_identity["agent_manifest_digest"], "agent_manifest_digest"),
-        model_snapshot_id=_string(old_identity["model_snapshot_id"], "model_snapshot_id"),
+        agent_manifest_digest=_string(
+            old_identity["agent_manifest_digest"], "agent_manifest_digest"
+        ),
+        requested_model_id=requested_model_id,
+        model_snapshot_id=None,
+        model_resolution_scope_id=f"legacy-result-{canonical_digest({'old_result_digest': old_result['result_digest']})}",
+        model_resolution_scope_started_at=model_scope_started_at,
+        model_resolution_scope_ended_at=model_scope_ended_at,
         harness_digest=_string(old_identity["harness_digest"], "harness_digest"),
         repository_instruction_digest=_string(
             old_identity["repository_instruction_digest"],
@@ -229,16 +254,24 @@ def _migrate_result(
         tools_digest=_string(old_identity["tools_digest"], "tools_digest"),
         retrieval_digest=_string(old_identity["retrieval_digest"], "retrieval_digest"),
         skills_digest=_string(old_identity["skills_digest"], "skills_digest"),
-        network_policy_digest=_string(old_identity["network_policy_digest"], "network_policy_digest"),
+        network_policy_digest=_string(
+            old_identity["network_policy_digest"], "network_policy_digest"
+        ),
         budget_digest=_string(old_identity["budget_digest"], "budget_digest"),
-        retry_policy_digest=_string(old_identity["retry_policy_digest"], "retry_policy_digest"),
+        retry_policy_digest=_string(
+            old_identity["retry_policy_digest"], "retry_policy_digest"
+        ),
         stochastic_settings_digest=_string(
             old_identity["stochastic_settings_digest"],
             "stochastic_settings_digest",
         ),
         adapter_digest=_string(old_identity["adapter_digest"], "adapter_digest"),
-        workspace_config_digest=_string(old_identity["workspace_config_digest"], "workspace_config_digest"),
-        runtime_config_digest=_string(old_identity["runtime_config_digest"], "runtime_config_digest"),
+        workspace_config_digest=_string(
+            old_identity["workspace_config_digest"], "workspace_config_digest"
+        ),
+        runtime_config_digest=_string(
+            old_identity["runtime_config_digest"], "runtime_config_digest"
+        ),
         hardware_profile_digest=_optional_string(
             old_identity["hardware_profile_digest"],
             "hardware_profile_digest",
@@ -279,7 +312,9 @@ def _migrate_result(
         invalid_owner=invalid_owner,
         failure_label=failure_label,
         cost=cost,
-        scoring_config_digest=_string(old_identity["scoring_config_digest"], "scoring_config_digest"),
+        scoring_config_digest=_string(
+            old_identity["scoring_config_digest"], "scoring_config_digest"
+        ),
         pricing_version=_string(old_result["pricing_version"], "pricing_version"),
         usage=usage,
         latency=dict(_mapping(old_result["latency"], "latency")),
@@ -290,12 +325,16 @@ def _migrate_result(
         ),
         started_at=_string(old_result["started_at"], "started_at"),
         finished_at=_string(old_result["finished_at"], "finished_at"),
-        result_available_at=_string(old_result["result_available_at"], "result_available_at"),
+        result_available_at=_string(
+            old_result["result_available_at"], "result_available_at"
+        ),
     )
     result = record_with_digest(result)
     validation = validate_result(result)
     if not validation.ok:
-        raise ValueError(f"migrated Result {result.result_id} is invalid: {', '.join(validation.errors)}")
+        raise ValueError(
+            f"migrated Result {result.result_id} is invalid: {', '.join(validation.errors)}"
+        )
     return result
 
 
@@ -311,7 +350,10 @@ def _normalize_old_result_state(
         return ("scoreable", "pass", None)
     if old_state == ("failed", "scoreable", "fail", None):
         return ("scoreable", "fail", None)
-    if old_state == ("error", "scoreable", "fail", None) and failure_label == "agent_failed":
+    if (
+        old_state == ("error", "scoreable", "fail", None)
+        and failure_label == "agent_failed"
+    ):
         return ("agent_invalid", "invalid", "agent")
     raise ValueError(
         "unsupported old result state; inspect benchmark ownership before migration"
@@ -335,9 +377,13 @@ def _require_old_check_binding(
         "hidden_check_bundle_digest": check.hidden_check_bundle_digest,
         **old_environment,
     }
-    mismatched = [field for field, value in expected.items() if identity[field] != value]
+    mismatched = [
+        field for field, value in expected.items() if identity[field] != value
+    ]
     if mismatched:
-        raise ValueError(f"old cache identity does not match CheckRecord: {', '.join(mismatched)}")
+        raise ValueError(
+            f"old cache identity does not match CheckRecord: {', '.join(mismatched)}"
+        )
 
 
 def _mapping(value: Any, label: str) -> Mapping[str, Any]:
@@ -360,9 +406,15 @@ def _optional_string(value: Any, label: str) -> str | None:
 
 def _parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--results", type=Path, required=True, help="pre-2026-07 results.jsonl")
-    parser.add_argument("--checks", type=Path, required=True, help="matching checks.jsonl")
-    parser.add_argument("--output", type=Path, required=True, help="new, current-schema JSONL path")
+    parser.add_argument(
+        "--results", type=Path, required=True, help="pre-2026-07 results.jsonl"
+    )
+    parser.add_argument(
+        "--checks", type=Path, required=True, help="matching checks.jsonl"
+    )
+    parser.add_argument(
+        "--output", type=Path, required=True, help="new, current-schema JSONL path"
+    )
     return parser.parse_args(argv)
 
 

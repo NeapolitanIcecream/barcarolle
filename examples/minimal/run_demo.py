@@ -45,26 +45,31 @@ from barcarolle.result_store import (
 from barcarolle.runner import prepare_evaluation_cells, score_selection
 from barcarolle.selection import (
     FeatureConfig,
-    LeakagePolicy,
-    MetricConfig,
     RollingOriginPolicy,
     SelectionBudget,
-    SelectionConfig,
     build_feature_snapshot,
     build_rolling_origin,
     build_selector_input,
     select_with_selector,
 )
 from barcarolle.task_pool import (
+    candidate_batch,
     CertificationConfig,
     TaskCandidate,
     TimeRange,
     build_check_candidate,
     certification_evidence_records,
     certify_task_candidate,
+    finalize_source_event_records,
     freeze_task_pool,
 )
-from barcarolle.workspace import CapturedDiff, bind_check_material, bind_repository_source
+from barcarolle.workspace import (
+    CapturedDiff,
+    WorkspaceRunContext,
+    bind_check_material,
+    bind_repository_source,
+)
+from barcarolle.verification import hidden_material_digest
 
 
 DEFAULT_OUTPUT_DIR = Path(__file__).resolve().parent / "out"
@@ -82,19 +87,34 @@ def main(output_dir: Path = DEFAULT_OUTPUT_DIR) -> dict[str, object]:
     tasks, checks, task_pool = _build_task_pool(records_dir)
     checks_by_id = {check.check_id: check for check in checks}
     agents = _agents()
-    workspace_config = WorkspaceConfig("workspace-fixture", "checkout-fixture", "submodules-none", "python-fixture", "deps-fixture")
-    runtime_config = RuntimeConfig("runtime-fixture", "budget-fixture", "retry-none", "deterministic", 30, None)
+    workspace_config = WorkspaceConfig(
+        "workspace-fixture",
+        "checkout-fixture",
+        "submodules-none",
+        "python-fixture",
+        "deps-fixture",
+    )
+    runtime_config = RuntimeConfig(
+        "runtime-fixture", "budget-fixture", "retry-none", "deterministic", 30, None
+    )
     scoring_config = ScoringConfig("fixture-v1", {"input_tokens": 0.0})
     result_store = ResultStore(records_dir / "results.jsonl")
-    _store_fixture_results(tasks, checks_by_id, agents, workspace_config, runtime_config, scoring_config, result_store)
+    _store_fixture_results(
+        tasks,
+        checks_by_id,
+        agents,
+        workspace_config,
+        runtime_config,
+        scoring_config,
+        result_store,
+    )
 
     policy = RollingOriginPolicy(
-        policy_digest="rolling-origin-fixture",
         as_of_cutoff_rule="origin_time",
-        cluster_constraints_digest="clusters-all",
-        eligibility_mode="strict_history",
-        holdout_overlap_policy="disjoint",
+        eligibility_mode="counterfactual_replay",
+        holdout_overlap_policy="allow_cluster_overlap",
         future_holdout_known=True,
+        maturity_lag_seconds=0,
     )
     origin = build_rolling_origin(
         task_pool,
@@ -104,15 +124,16 @@ def main(output_dir: Path = DEFAULT_OUTPUT_DIR) -> dict[str, object]:
         TimeRange(start=ORIGIN_TIME_ISO, end=FUTURE_END_ISO),
         policy,
     )
-    pre_origin_results = _pre_origin_results(result_store, origin.history_task_check_refs, agents, ORIGIN_TIME_ISO)
-    feature_config = FeatureConfig(
-        feature_config_digest="feature-fixture",
-        leakage_policy_digest="leakage-fixture",
-        feature_names=("task_count", "pre_origin_result_count", "task_cluster"),
-        allowed_leakage_classes=("task_metadata", "pre_origin_result"),
+    pre_origin_results = _pre_origin_results(
+        result_store, origin.history_task_check_refs, agents, ORIGIN_TIME_ISO
     )
-    snapshot = build_feature_snapshot(origin, task_pool, tasks, checks_by_id, pre_origin_results, feature_config)
-    budget = SelectionBudget("budget-one-task-check", 1)
+    feature_config = FeatureConfig(
+        feature_names=("task_count", "pre_origin_result_count", "task_stratum"),
+    )
+    snapshot = build_feature_snapshot(
+        origin, task_pool, tasks, checks_by_id, pre_origin_results, feature_config
+    )
+    budget = SelectionBudget(1)
     selector_input = build_selector_input(
         origin,
         task_pool,
@@ -120,31 +141,28 @@ def main(output_dir: Path = DEFAULT_OUTPUT_DIR) -> dict[str, object]:
         pre_origin_results,
         agents,
         budget,
-        LeakagePolicy(feature_config.leakage_policy_digest, feature_config.allowed_leakage_classes, origin.as_of_cutoff),
+        feature_config.leakage_policy(origin.as_of_cutoff),
     )
     selector_parameters = {}
-    selector = SelectorRecord(
-        selector_id="selector-demo-recency",
-        selector_family="recency",
-        selector_version="1",
-        training_source_digests=(task_pool.task_pool_digest, snapshot.feature_records_digest),
-        allowed_feature_classes=feature_config.allowed_leakage_classes,
-        parameters=selector_parameters,
-        config_digest=canonical_digest(
-            {"selector_family": "recency", "parameters": selector_parameters}
-        ),
-        created_at="2026-01-05T00:00:00Z",
+    selector = record_with_digest(
+        SelectorRecord(
+            selector_id="selector-demo-recency",
+            selector_family="recency",
+            selector_version="1",
+            training_source_digests=(
+                task_pool.task_pool_digest,
+                snapshot.feature_records_digest,
+            ),
+            allowed_feature_classes=feature_config.allowed_leakage_classes,
+            parameters=selector_parameters,
+            config_digest=canonical_digest(
+                {"selector_family": "recency", "parameters": selector_parameters}
+            ),
+            created_at="2026-01-05T00:00:00Z",
+            selector_digest="",
+        )
     )
-    selection = select_with_selector(
-        selector_input,
-        selector,
-        SelectionConfig(
-            selection_config_digest="selection-fixture",
-            selector_id=selector.selector_id,
-            feature_snapshot_id=snapshot.feature_snapshot_id,
-            eligibility_mode="recency",
-        ),
-    )
+    selection = select_with_selector(selector_input, snapshot, selector)
     cell_set = prepare_evaluation_cells(
         selection,
         origin,
@@ -157,7 +175,8 @@ def main(output_dir: Path = DEFAULT_OUTPUT_DIR) -> dict[str, object]:
         scoring_config,
         ResultCacheConfig(),
         result_store,
-        ResultJoinConfig("join-fixture", "denominator-fixture"),
+        ResultJoinConfig(),
+        WorkspaceRunContext(),
     )
     scored_cell_set, selected_matrix, future_matrix, metrics = score_selection(
         selection,
@@ -168,14 +187,26 @@ def main(output_dir: Path = DEFAULT_OUTPUT_DIR) -> dict[str, object]:
         agents,
         cell_set,
         result_store,
-        ResultJoinConfig("join-fixture", "denominator-fixture"),
-        MetricConfig("metric-fixture", budget.budget_digest),
+        ResultJoinConfig(),
     )
     results = tuple(load_results(result_store, ResultQuery()))
     sections = (
         reporting.build_task_pool_report(task_pool, artifact_root=output_dir),
         reporting.build_result_report(results, agents),
-        reporting.build_selector_report((selection,), (scored_cell_set,), (selected_matrix, future_matrix), metrics),
+        reporting.build_selector_report(
+            (selection,),
+            (scored_cell_set,),
+            (selected_matrix, future_matrix),
+            metrics,
+            origins=(origin,),
+            feature_snapshots=(snapshot,),
+            selector_inputs=(selector_input,),
+            selectors=(selector,),
+            agents=agents,
+            results=results,
+            task_pool=task_pool,
+            artifact_root=output_dir,
+        ),
     )
     markdown_path = output_dir / "report.md"
     json_path = output_dir / "report.json"
@@ -191,7 +222,9 @@ def main(output_dir: Path = DEFAULT_OUTPUT_DIR) -> dict[str, object]:
     }
 
 
-def _build_task_pool(records_dir: Path) -> tuple[tuple[TaskRecord, ...], tuple[CheckRecord, ...], TaskPoolRecord]:
+def _build_task_pool(
+    records_dir: Path,
+) -> tuple[tuple[TaskRecord, ...], tuple[CheckRecord, ...], TaskPoolRecord]:
     certification_config = CertificationConfig()
     with TemporaryDirectory(prefix="barcarolle-demo-task-") as temp_dir:
         (
@@ -199,6 +232,7 @@ def _build_task_pool(records_dir: Path) -> tuple[tuple[TaskRecord, ...], tuple[C
             workspace_config,
             runtime_config,
             reference_patch,
+            run_context,
         ) = _executable_task_candidates(Path(temp_dir))
         certified = tuple(
             certify_task_candidate(
@@ -207,26 +241,38 @@ def _build_task_pool(records_dir: Path) -> tuple[tuple[TaskRecord, ...], tuple[C
                 workspace_config,
                 runtime_config,
                 reference_patch,
+                run_context,
             )
             for candidate in candidates
         )
-    accepted_tasks = tuple(result.task for result in certified if result.accepted and result.task is not None)
-    accepted_checks = tuple(result.check for result in certified if result.accepted and result.check is not None)
-    rejected = tuple(result for result in certified if not result.accepted)
+    accepted_tasks = tuple(
+        result.task
+        for result in certified
+        if result.accepted and result.task is not None
+    )
+    accepted_checks = tuple(
+        result.check
+        for result in certified
+        if result.accepted and result.check is not None
+    )
+    source_events = finalize_source_event_records(
+        candidate_batch(candidates),
+        certified,
+    )
     task_pool = freeze_task_pool(
         accepted_tasks,
         accepted_checks,
-        rejected,
+        certified,
+        source_events,
         {
             "repository_id": "demo-repo",
-            "accepted_certification_results": tuple(result for result in certified if result.accepted),
             "task_records_ref": "records/tasks.jsonl",
             "check_records_ref": "records/checks.jsonl",
             "certification_evidence_ref": "records/certification-evidence.jsonl",
-            "source_event_inventory_digest": canonical_digest(tuple(candidate.source_ref for candidate in candidates)),
+            "source_event_records_ref": "records/source-events.jsonl",
             "generator_config_digest": "generator-fixture",
             "certification_config_digest": canonical_digest(certification_config),
-            "created_at": "2026-01-01T00:00:00Z",
+            "created_at": "2026-01-11T00:00:00Z",
         },
     )
     write_jsonl_records(records_dir / "tasks.jsonl", accepted_tasks)
@@ -235,6 +281,7 @@ def _build_task_pool(records_dir: Path) -> tuple[tuple[TaskRecord, ...], tuple[C
         records_dir / "certification-evidence.jsonl",
         certification_evidence_records(certified),
     )
+    write_jsonl_records(records_dir / "source-events.jsonl", source_events)
     return accepted_tasks, accepted_checks, task_pool
 
 
@@ -295,7 +342,7 @@ def _candidate(
     candidate_id: str,
     source_ref: str,
     available_at: str,
-    cluster_id: str,
+    sampling_stratum: str,
     title: str,
     body: str,
     base_commit: str,
@@ -313,7 +360,8 @@ def _candidate(
         check_material_available_at=available_at,
         task_text=f"{title}\n\n{body}",
         solver_material_refs=(),
-        cluster_id=cluster_id,
+        dependency_cluster_id=source_ref,
+        sampling_stratum=sampling_stratum,
         check_manifest_digest=check_manifest_digest,
         hidden_check_bundle_digest=hidden_check_bundle_digest,
         resource_limits={"timeout_seconds": 30},
@@ -324,7 +372,13 @@ def _candidate(
 
 def _executable_task_candidates(
     root: Path,
-) -> tuple[tuple[TaskCandidate, ...], WorkspaceConfig, RuntimeConfig, CapturedDiff]:
+) -> tuple[
+    tuple[TaskCandidate, ...],
+    WorkspaceConfig,
+    RuntimeConfig,
+    CapturedDiff,
+    WorkspaceRunContext,
+]:
     repository = root / "repository"
     repository.mkdir()
     _git(repository, "init", "--quiet")
@@ -347,8 +401,10 @@ def _executable_task_candidates(
         "raise SystemExit(0 if fixed and private else 1)",
     )
     check_manifest_digest = canonical_digest({"check_command": check_command})
-    hidden_check_bundle_digest = hashlib.sha256(hidden_material.read_bytes()).hexdigest()
-    candidates = _task_candidates(base_commit, check_manifest_digest, hidden_check_bundle_digest)
+    hidden_check_bundle_digest = hidden_material_digest(hidden_material)
+    candidates = _task_candidates(
+        base_commit, check_manifest_digest, hidden_check_bundle_digest
+    )
     workspace_config = WorkspaceConfig(
         "workspace-task-validation-fixture",
         canonical_digest({"repository_path": str(repository)}),
@@ -364,10 +420,14 @@ def _executable_task_candidates(
         30,
         None,
     )
-    bind_repository_source(workspace_config, repository)
+    run_context = bind_repository_source(
+        WorkspaceRunContext(), workspace_config, repository
+    )
     for candidate in candidates:
         check = build_check_candidate(candidate)
-        bind_check_material(check, check_command, hidden_material)
+        run_context = bind_check_material(
+            run_context, check, check_command, hidden_material
+        )
 
     patch_text = (
         "diff --git a/value.txt b/value.txt\n"
@@ -381,7 +441,7 @@ def _executable_task_candidates(
         patch_text,
         hashlib.sha256(patch_text.encode("utf-8")).hexdigest(),
     )
-    return candidates, workspace_config, runtime_config, reference_patch
+    return candidates, workspace_config, runtime_config, reference_patch, run_context
 
 
 def _git(repository: Path, *args: str) -> subprocess.CompletedProcess[str]:
@@ -400,7 +460,11 @@ def _agents() -> tuple[AgentRecord, ...]:
         AgentRecord(
             agent_id="fixture-fast",
             agent_manifest_digest="agent-fast-manifest",
+            requested_model_id="fixture-model-fast",
             model_snapshot_id="fixture-model-fast",
+            model_resolution_scope_id=None,
+            model_resolution_scope_started_at=None,
+            model_resolution_scope_ended_at=None,
             harness_digest="fixture-harness-fast",
             repository_instruction_digest="fixture-instructions",
             prompt_digest="fixture-prompt-fast",
@@ -413,7 +477,11 @@ def _agents() -> tuple[AgentRecord, ...]:
         AgentRecord(
             agent_id="fixture-careful",
             agent_manifest_digest="agent-careful-manifest",
+            requested_model_id="fixture-model-careful",
             model_snapshot_id="fixture-model-careful",
+            model_resolution_scope_id=None,
+            model_resolution_scope_started_at=None,
+            model_resolution_scope_ended_at=None,
             harness_digest="fixture-harness-careful",
             repository_instruction_digest="fixture-instructions",
             prompt_digest="fixture-prompt-careful",
@@ -473,7 +541,9 @@ def _fixture_result(
     outcome: str,
     result_available_at: str,
 ) -> ResultRecord:
-    identity = compute_result_cache_identity(task, check, agent, workspace_config, runtime_config)
+    identity = compute_result_cache_identity(
+        task, check, agent, workspace_config, runtime_config
+    )
     workspace_run = WorkspaceRunRecord(
         workspace_run_id=f"fixture-run-{task.source_ref}-{agent.agent_id}-{outcome}",
         task_id=task.task_id,
@@ -488,11 +558,24 @@ def _fixture_result(
         invalid_owner=None,
         failure_label=None if outcome == "pass" else "check_failed",
         usage={"input_tokens": 100, "output_tokens": 20},
+        latency={
+            "workspace_seconds": 0.0,
+            "agent_seconds": 0.0,
+            "verification_seconds": 0.0,
+            "solver_checkout_seconds": 0.0,
+            "verifier_checkout_seconds": 0.0,
+            "diff_replay_seconds": 0.0,
+            "cleanup_seconds": 0.0,
+        },
         started_at=result_available_at,
         finished_at=result_available_at,
     )
-    result = build_result_record(task, check, agent, workspace_run, identity, scoring_config)
-    return record_with_digest(replace(result, result_available_at=result_available_at, result_digest=""))
+    result = build_result_record(
+        task, check, agent, workspace_run, identity, scoring_config
+    )
+    return record_with_digest(
+        replace(result, result_available_at=result_available_at, result_digest="")
+    )
 
 
 def _pre_origin_results(
@@ -513,7 +596,9 @@ def _pre_origin_results(
         ),
     )
     allowed = {(ref.task_id, ref.check_id) for ref in refs}
-    return tuple(result for result in results if (result.task_id, result.check_id) in allowed)
+    return tuple(
+        result for result in results if (result.task_id, result.check_id) in allowed
+    )
 
 
 def _clear_output_dir(output_dir: Path) -> None:
@@ -530,7 +615,9 @@ def _clear_output_dir(output_dir: Path) -> None:
 
 
 def _parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Run the offline Barcarolle minimal demo.")
+    parser = argparse.ArgumentParser(
+        description="Run the offline Barcarolle minimal demo."
+    )
     parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR)
     return parser.parse_args()
 

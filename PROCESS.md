@@ -1,185 +1,153 @@
 # Barcarolle Internal Process Notes
 
-Last updated: 2026-07-17.
+Last updated: 2026-07-23.
 
-These notes are for repository-maintenance agents. They are not user
-documentation and they are not a source of truth for intended system behavior.
-For implementation, use the current design documents under `docs/design/` as
-the design authority. If this file conflicts with those documents, the design
-documents win.
+This file records the active research direction, paid-call boundary, claim
+boundary, and cross-session handoff. Intended behavior lives in `docs/design/`;
+completed findings and historical evidence live in
+`docs/research-improvement-backlog.md`.
 
-## Current Mode
+## Current State
 
-The current development direction is predictive validity. The active work makes
-task certification executable, binds replayable Task/Check/certification
-evidence, keeps rolling-origin inputs time-correct, captures real usage and
-unknown cost accurately, and evaluates Adaptive methods by paired MAE.
-`docs/implementation-status.md` records which effects the alpha implementation
-enforces.
+The active direction is predictive validity.
 
-The fixed real-task Pylint pilot is complete. It observed one high-only pass
-among ten single-run low/high pairs, which is too sparse to separate a
-reasoning-effort effect from run-level variation or train a controller. Its
-hindsight per-task oracle tied always-high at 5/10, so it did not demonstrate
-an adaptive accuracy gain. The next outcome-facing step is a larger paired
-history followed by rolling-origin MAE comparisons, not another controller
-schema or framework.
+- Research Stages 0 through 2 are implemented: evidence integrity, runtime and
+  storage reliability, and the final-form Selector boundary.
+- Stage 3's offline contracts are implemented: arrival versus label maturity,
+  censored SourceEvents, dependency evidence, repeated-cell scheduling,
+  strict-prospective replay, paired metrics, and uncertainty rules.
+- The Pylint replicate campaign has a concrete entry point. It loads frozen
+  Agent, Runtime, schedule, Task Pool, and adapter evidence, then exposes only
+  `authorize`, `preflight`, and one-cell `run-next` actions.
+- No campaign authority ledger or paid call was created during the current
+  maintenance work.
 
-Complexity is justified when it can improve prediction, prevent invalid
-evidence, or preserve reusable paid results. Do not add aliases for existing
-concepts, uncommon names for standard methods, unused identity fields, or
-frameworks without a current caller.
+Core infrastructure has reached its stop line. Do not add another validation
+framework, experiment framework, model service, Feature Store, workflow engine,
+plugin host, distributed scheduler, or generic Task Generator.
 
-Reports support Task Pool coverage only after loading the referenced Task,
-Check, and certification-evidence files, validating Task/Check semantics, and
-matching complete base-fail/reference-patch-pass evidence to every accepted
-Task/Check and rejected candidate. Reports also recompute current aggregate
-Selector metrics from their bound matrices before supporting metric claims.
-Persisted Selector inputs must retain the complete rolling-history denominator;
-benchmark infrastructure failures stop certification instead of shrinking it,
-and selection metrics abstain if exclusions leave any Agent without results.
-Post-diff Check launch and invalid-exit failures are Agent-owned only when the
-captured diff changed a workspace-relative path named by the Check command.
-Runner rejects invalid Result cache identities and scoring configuration before
-invoking an Agent. Workspace rejects invalid artifact configuration before the
-same boundary; post-execution artifact I/O failures warn without replacing the
-completed run record.
+## Active Decisions
 
-The default runtime target is a cooperative Agent. Fresh workspaces, diff
-replay, and verifier-only hidden material are required benchmark behavior.
-Filesystem, network, process, CPU, and memory limits are optional adapter
-requirements for adversarial or shared-host execution.
+1. Wait for the model server and API before the next evidence-producing run.
+2. Defer Task Pool expansion until one concrete Task Generator is selected.
+   Some generators may be LLM-driven; deterministic importers have different
+   source and certification requirements. Reuse the existing candidate,
+   certification, SourceEvent, and immutable publication boundaries.
+3. Keep ALG-001 through ALG-004 as offline analysis rules until outer-origin
+   evidence compares them. Do not implement ALG-005 without a measured resource
+   problem and a predeclared resource estimand. ALG-006 requires substantially
+   more independent clusters and repeated cells.
+4. Continue RI-034 refactoring only for a reproduced boundary failure or a
+   measured maintenance bottleneck. Static hotspot counts alone do not justify
+   another abstraction.
 
-Archived material is historical reference. It is not an active implementation
-input and should not be imported without a specific review.
+## Next Campaign
 
-## Design Rules
+The concrete procedure is documented in
+`docs/pylint-swe-bench-reasoning-pilot.md`.
 
-- Design before implementation.
-- Keep module boundaries direct and small.
-- Keep the core data vocabulary to `Task`, `Check`, `Workspace`, `Result`,
-  `Selector`, `RollingOrigin`, `Task Pool`, `Benchmark Selection`, and
-  `Agent Results`.
-- Use the current module vocabulary: `Records`, `Task Pool`, `Verification`,
-  `Workspace`, `Result Store`, `Selection`, `Reporting`, and `Runner`.
-- Prefer the current module vocabulary; avoid alternate module names.
-- Do not introduce a new first-class concept when one of those terms is enough.
-- Every design document must include a source-alignment check against the
-  architecture document.
-- Module-level design should define function names, inputs, outputs, and
-  effects, but not implementation bodies.
-- Later module documents may refine earlier system documents. Update the
-  affected documents instead of leaving contradictions.
-- Design learned data and parameter contracts with a concrete algorithm. MAE is
-  the current primary prediction objective.
+Required frozen inputs under one ignored campaign directory:
 
-## Schema And Result Preservation
+- `records/agents.jsonl`;
+- `records/runtime-config.jsonl`;
+- `records/replicate-schedule.jsonl`;
+- the prepared Pylint Task Pool and its local repository, Check, dependency,
+  and verifier-image inputs.
 
-Core code reads and writes only the latest schema. Do not keep runtime
-compatibility branches for old records.
+Execution order:
 
-When a schema change affects valuable paid results, preserve them with a small
-one-off migration that validates the new records and leaves the source
-untouched. Drop an old result only when it cannot be migrated without guessing
-evidence. Stop extending the migration when it starts becoming a compatibility
-framework.
+1. Freeze Agent and Runtime records for the actual endpoint, model identity,
+   campaign window, harness, and enforced runtime budget.
+2. Freeze the replicate schedule before opening Result evidence.
+3. Invoke the campaign CLI's `authorize` action with explicit approval time,
+   scope, total budget, per-call limit, and pricing sources.
+4. Inspect `preflight` output. It makes no Agent call and validates the pinned
+   verifier images plus every remaining Runtime slot.
+5. Invoke `run-next` once. Re-run `preflight` before each later cell. Do not add
+   an automatic paid loop.
 
-Preserved does not mean exact-cache reusable. When Agent-visible task material
-or repository-history boundaries change, keep the old paid record for analysis
-instead of rewriting its execution identity without proof of equivalence.
+If the endpoint, authority, schedule, Result evidence, pricing, model window,
+or runtime budget cannot be proven, stop before the Agent call.
 
-## Design Review Stop Line
+## Paid-Call Boundary
 
-Future design review should only request document changes for gaps that can
-break the trustworthy evidence chain. Continue fixing design docs when a gap
-could cause:
-
-- stale paid results to be reused;
-- Selectors to see future results or future-derived features;
-- Task, Check, or oracle mismatches;
-- selected or future denominators to become unauditable;
-- frozen selections, results, or metrics to be changed after the fact;
-- reports to lose traceability to cell, matrix, or result evidence.
-
-Do not continue expanding design docs only to make fields more complete, feature
-provenance more detailed, reports more expressive, validators more exhaustive,
-or schemas more strongly typed. Defer those refinements to implementation paths
-that actually need them.
-
-## Paid Calls
-
-The user authorized up to USD 300 for the current paired rolling-origin
-experiment. Use only:
+Benchmark and evidence-producing calls must use only:
 
 ```text
 OPENAI_BASE_URL
 OPENAI_API_KEY
 ```
 
-The ignored protocol and exact resource ledger are under
-`outputs/user-journeys/2026-07-15-openai-paired-rolling-origin/`. Estimate cost
-with current OpenAI standard API prices, as explicitly approved by the user;
-label it as an estimate because the gateway does not publish billing rates.
-The ten-call, no-retry boltons mechanism experiment is complete: five certified
-Task/Check cells for each of the `gpt-5.4-mini` low- and high-reasoning Agent
-configurations. All ten Results were scoreable; nine passed and one failed.
-Official-price estimated cost was USD 0.35245695. The held-out origin 2 rule
-mixture MAE was 0.00, tying coverage and random and beating recency at 0.25.
-This is mechanism evidence only because the five tasks and availability times
-are controlled. The sanitized report is
-`docs/boltons-paired-mae-mechanism.md`.
+If either is missing, source `~/.zshrc` and check again. Do not use subscription
+authentication, `LLM_BASE_URL`, `LLM_API_KEY`, OpenRouter variables, or
+provider-specific credentials unless the user changes this rule. Repository
+maintenance and PR review sessions use local Codex authentication instead.
 
-The v1 paid diffs retained generated Python caches. Preserve those Results
-unchanged. Commit `c052addc` excludes `.pytest_cache` and `__pycache__` from
-future captured diffs and binds examples to adapter v2. The next predictive
-experiment needs a larger Task Pool with multiple future tasks per origin.
+Every paid Agent binding must prove the exact endpoint, command, each declared
+harness path-to-content binding, requested model, immutable snapshot or bounded
+campaign scope, and runtime identity. Raw URLs and credentials are not
+persisted.
 
-The fixed Pylint pilot used real availability times and executable SWE-bench
-`FAIL_TO_PASS`/`PASS_TO_PASS` certification. The first transport-aborted attempt
-is preserved under its ignored output directory: one known-cost Result used
-USD 0.13451550 and one interrupted Result has unknown usage and cost. The
-replacement matrix restored Codex CLI default transport retries and completed
-20/20 scoreable cells for USD 2.46819345 estimated at official prices. Low
-passed 4/10; high passed 5/10; the only disagreement was high-only. The
-sanitized report is `docs/pylint-swe-bench-reasoning-pilot.md`.
+Every replicate campaign authority must bind:
 
-Future Pylint pools use a semantic Check manifest that excludes ignored output
-directories and local harness paths while retaining the check implementation,
-SWE-bench revision, verifier image, timeout, and hidden-oracle digest. The
-exact runtime command is still checked before execution. Current paid Results
-keep their original identities and remain loadable from their original output
-directory; do not rewrite them to claim equivalence.
+- the frozen schedule, Task Pool, Agent set, Workspace and Runtime configs;
+- endpoint digest and model identity;
+- total estimated-cost budget and one conservative per-call limit;
+- the schedule-derived call cap;
+- pricing version, rates, sources, and accounting basis.
 
-Known authorized spend across the boltons mechanism run and both Pylint
-attempts is USD 2.95516590. Keep the interrupted Pylint cell's cost unknown; do
-not subtract a guessed zero from the USD 300 authorization.
+The remaining total must cover one full per-call limit before reservation. A
+stopped reservation, a reservation without an exact Result, or a Result above a
+declared limit forbids automatic retry. The ledger limits Barcarolle's authority;
+the Agent harness or provider must enforce the actual per-call runtime budget.
 
-Repository-maintenance Codex sessions used to implement, review, or coordinate
-work are outside this paid-call boundary. Reviewer Codex CLI sessions should
-use the user's local Codex CLI authentication/subscription unless the user
-explicitly requests a different reviewer execution mode.
+The existing project authorization note allows up to USD 300 for the paired
+rolling-origin work. Known priced spend is USD 2.95516590 across the Boltons
+mechanism run and the two Pylint attempts; one interrupted Pylint cell retains
+unknown cost. A new campaign still requires its own immutable authority ledger.
 
-## Local Experiment Time Estimates
+## Claim Boundary
 
-Estimate task supply, deterministic certification, preflight, paid execution,
-and analysis separately. Record active wall time for each phase and exclude
-user pauses or known network outages instead of folding them into throughput.
+- The Boltons run proves the paired-MAE mechanism on controlled tasks. It is not
+  real-target predictive evidence.
+- The ten-task Pylint pilot proves executable task certification and one
+  observed low/high disagreement. One run per cell cannot separate treatment
+  effect from run noise and cannot support a learned controller.
+- ALG-001 through ALG-004 have executable offline rules but no outer-origin
+  empirical win claim.
+- Strict-prospective claims require the original frozen Selection plus a later
+  immutable Task Pool covering the planned future window. Never rewrite the
+  original Origin.
+- Reports support claims only after replaying exact Task, Check, Agent, Result,
+  Selection, matrix, metric, source, and timing evidence. Missing evidence must
+  produce an unsupported claim, not an inferred value.
 
-For a serial paid matrix, wait for at least three scoreable cells per Agent
-configuration, then estimate remaining wall time as:
+## Storage And Schema
 
-```text
-overhead factor * sum(remaining cells for config * observed mean workspace seconds for config)
-```
+Core readers accept only the latest schema. Preserve valuable older paid
+Results with a small, non-destructive one-off migration; do not add runtime
+compatibility branches. A migrated Result is not exact-cache reusable unless
+its execution identity is still proven.
 
-Use `result time span / summed workspace seconds` as the overhead factor. This
-pilot observed 1.009; use 1.02 for the same local serial runner until a later
-run replaces it. Low averaged 67.77 seconds and high averaged 148.44 seconds,
-so the observed pair mean was 216.21 seconds. At that rate, 30 paired tasks take
-about 1.8 paid hours and 50 take about 3.0, before setup and analysis.
+Task Pools publish immutable bundles. Result Store owns durable append, locking,
+exact reuse, repricing views, and conservative tail recovery. Raw prompts,
+completions, transcripts, workspaces, credentials, and large outputs stay below
+ignored paths.
 
-Do not extrapolate research and task-source repair from warm recertification.
-The first ten-task supply pass took 81 minutes 6 seconds because it included
-source research, a rejected task, an architecture probe, and repository repair.
-Rebuilding the same fixed ten tasks from warm local inputs took 7 minutes 34
-seconds; preflight took 3 seconds. State which case an estimate uses.
+## Deferred Scale Work
+
+- RI-021 checkout caching: reopen only after warm/cold small, medium, and large
+  repository measurements show checkout plus cleanup above 5 percent of total
+  scoreable-cell wall time or p95 blocks target throughput.
+- RI-033 bounded parallelism: reopen when a planned serial run exceeds one hour
+  or the API has explicit controlled concurrency. Use a standard-library worker
+  pool, one Result writer, and `max_concurrency=1` by default.
+
+## Handoff
+
+The campaign entry point and documentation are the last planned no-API
+infrastructure work. Before the endpoint arrives, further development should
+start only after selecting a concrete Task Generator or reproducing a new
+evidence-chain defect. When the endpoint arrives, prepare the frozen campaign
+inputs, create explicit authority, run no-call preflight, and advance one cell
+at a time.

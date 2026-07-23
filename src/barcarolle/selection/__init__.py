@@ -1,56 +1,77 @@
 """Public Selection API."""
 
 from .algorithms import (
-    CoverageConfig,
-    SelectionConfig,
-    select_coverage,
-    select_random,
-    select_recency,
-    select_rule_mixture,
+    build_rule_mixture_grid,
+    build_rule_selector,
+    ensure_selector_executable,
+    ensure_selection_replay,
     select_with_selector,
+    summarize_stratified_forecast,
 )
 from .core import (
     SelectorEvaluationConfig,
-    SelectorTrainingConfig,
-    freeze_evaluation_selections,
-    select_benchmark,
-    train_selector,
 )
 from .evaluation import (
-    MetricConfig,
-    choose_selector_by_mean_mae,
+    EWMASwitchConfig,
+    SafeSwitchConfig,
+    SimplexChoiceConfig,
+    choose_rule_mixture_from_grid,
     choose_selector_from_metrics,
+    choose_selector_with_ewma_guard,
+    choose_selector_with_safe_switch,
     evaluate_selection,
-    fit_rule_mixture_from_metrics,
+    summarize_selector_mae,
+    train_selector,
 )
-from .features import FeatureConfig, LeakagePolicy, build_feature_snapshot, lint_feature_snapshot
-from .inputs import SelectionBudget, build_selector_input
-from .origin import RollingOriginPolicy, build_rolling_origin
+from .features import (
+    FeatureConfig,
+    LeakagePolicy,
+    build_feature_snapshot,
+    ensure_feature_snapshot_task_metadata_provenance,
+    lint_feature_snapshot,
+)
+from .inputs import (
+    SelectionBudget,
+    build_selector_input,
+    ensure_selector_input_result_evidence,
+)
+from .origin import (
+    RollingOriginPolicy,
+    build_rolling_origin,
+    materialize_prospective_future_cohort,
+    compare_arrival_and_label_time_cohorts,
+    validate_rolling_origin_against_records,
+)
 
 __all__ = [
-    "CoverageConfig",
+    "EWMASwitchConfig",
     "FeatureConfig",
     "LeakagePolicy",
-    "MetricConfig",
     "RollingOriginPolicy",
+    "SafeSwitchConfig",
     "SelectionBudget",
-    "SelectionConfig",
+    "SimplexChoiceConfig",
     "SelectorEvaluationConfig",
-    "SelectorTrainingConfig",
+    "build_rule_selector",
+    "build_rule_mixture_grid",
     "build_feature_snapshot",
     "build_rolling_origin",
+    "materialize_prospective_future_cohort",
     "build_selector_input",
-    "choose_selector_by_mean_mae",
     "choose_selector_from_metrics",
+    "choose_selector_with_ewma_guard",
+    "choose_selector_with_safe_switch",
+    "choose_rule_mixture_from_grid",
+    "compare_arrival_and_label_time_cohorts",
     "evaluate_selection",
-    "fit_rule_mixture_from_metrics",
-    "freeze_evaluation_selections",
+    "ensure_selector_executable",
+    "ensure_selection_replay",
+    "ensure_feature_snapshot_task_metadata_provenance",
+    "ensure_selector_input_result_evidence",
     "lint_feature_snapshot",
-    "select_benchmark",
-    "select_coverage",
-    "select_random",
-    "select_recency",
-    "select_rule_mixture",
     "select_with_selector",
+    "summarize_stratified_forecast",
+    "summarize_selector_mae",
     "train_selector",
+    "validate_rolling_origin_against_records",
 ]

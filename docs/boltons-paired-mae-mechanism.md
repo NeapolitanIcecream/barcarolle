@@ -69,6 +69,10 @@ an independent improvement over the best baseline.
 - The Result Store contains ten distinct execution identities under one pricing
   configuration. The resource ledger contains ten reservations and ten matched
   completions; all are `completed` and `scoreable`.
+- The resource ledger now uses the same examples-layer single-writer event
+  persistence as the Pylint pilot. A temporary replay preserved the ten calls,
+  `$0.35245695` spent cost, and remaining budget; the historical source files
+  were not changed.
 - Every raw Codex stream contains exactly one `turn.completed`, no
   `turn.failed` or error event, and no subagent or collaboration event.
 - Raw completion usage, normalized Result usage, ledger usage, artifact

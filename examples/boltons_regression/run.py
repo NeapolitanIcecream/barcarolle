@@ -36,17 +36,21 @@ from barcarolle.task_pool import (  # noqa: E402
     CertificationConfig,
     TaskCandidate,
     build_check_candidate,
+    candidate_batch,
     certification_evidence_records,
     certify_task_candidate,
+    finalize_source_event_records,
     freeze_task_pool,
 )
 from barcarolle.workspace import (  # noqa: E402
     CapturedDiff,
+    WorkspaceRunContext,
     bind_agent_harness,
     bind_check_material,
     bind_repository_source,
     run_agent_on_task,
 )
+from barcarolle.verification import hidden_material_digest  # noqa: E402
 
 
 HERE = Path(__file__).resolve().parent
@@ -67,7 +71,7 @@ CHECK_COMMAND = (
 class _TaskInput:
     source_ref: str
     available_at: str
-    cluster_id: str
+    sampling_stratum: str
     title: str
     body: str
     solver_material_refs: tuple[str, ...]
@@ -159,11 +163,14 @@ def run(target_repo: Path, output_dir: Path) -> dict[str, object]:
         timeout_seconds=120,
         hardware_profile_digest=None,
     )
-    bind_repository_source(workspace_config, target_repo)
+    run_context = bind_repository_source(
+        WorkspaceRunContext(), workspace_config, target_repo
+    )
 
     candidates = tuple(_candidate(task_input) for task_input in TASK_INPUTS)
     for task_input, candidate in zip(TASK_INPUTS, candidates, strict=True):
-        bind_check_material(
+        run_context = bind_check_material(
+            run_context,
             build_check_candidate(candidate),
             CHECK_COMMAND,
             _hidden_check_dir(task_input.source_ref),
@@ -177,6 +184,7 @@ def run(target_repo: Path, output_dir: Path) -> dict[str, object]:
             workspace_config,
             runtime_config,
             _reference_patch(task_input.source_ref),
+            run_context,
         )
         for task_input, candidate in zip(TASK_INPUTS, candidates, strict=True)
     )
@@ -194,19 +202,21 @@ def run(target_repo: Path, output_dir: Path) -> dict[str, object]:
 
     tasks = tuple(result.task for result in certified if result.task is not None)
     checks = tuple(result.check for result in certified if result.check is not None)
+    source_events = finalize_source_event_records(
+        candidate_batch(candidates),
+        certified,
+    )
     task_pool = freeze_task_pool(
         tasks,
         checks,
-        (),
+        certified,
+        source_events,
         {
             "repository_id": "boltons",
-            "accepted_certification_results": certified,
             "task_records_ref": "records/tasks.jsonl",
             "check_records_ref": "records/checks.jsonl",
             "certification_evidence_ref": "records/certification-evidence.jsonl",
-            "source_event_inventory_digest": canonical_digest(
-                tuple(task_input.source_ref for task_input in TASK_INPUTS)
-            ),
+            "source_event_records_ref": "records/source-events.jsonl",
             "generator_config_digest": canonical_digest(
                 {
                     "fixture": "boltons-current-schema-regression-v1",
@@ -219,6 +229,7 @@ def run(target_repo: Path, output_dir: Path) -> dict[str, object]:
     )
     write_jsonl_records(records_dir / "tasks.jsonl", tasks)
     write_jsonl_records(records_dir / "checks.jsonl", checks)
+    write_jsonl_records(records_dir / "source-events.jsonl", source_events)
     write_jsonl_records(records_dir / "task_pool.jsonl", (task_pool,))
 
     command = (
@@ -228,7 +239,7 @@ def run(target_repo: Path, output_dir: Path) -> dict[str, object]:
         str((HERE / "reference-patches").resolve()),
     )
     agent = _scripted_agent(command)
-    bind_agent_harness(agent, command)
+    run_context = bind_agent_harness(run_context, agent, command)
     checks_by_id = {check.check_id: check for check in checks}
     scoring_config = ScoringConfig(
         pricing_version="not-applicable-scripted", cost_rates={}
@@ -237,7 +248,7 @@ def run(target_repo: Path, output_dir: Path) -> dict[str, object]:
     for task in tasks:
         check = checks_by_id[task.check_ids[0]]
         workspace_run = run_agent_on_task(
-            task, check, agent, workspace_config, runtime_config
+            task, check, agent, workspace_config, runtime_config, run_context
         )
         identity = compute_result_cache_identity(
             task, check, agent, workspace_config, runtime_config
@@ -289,9 +300,10 @@ def _candidate(task_input: _TaskInput) -> TaskCandidate:
         check_material_available_at=task_input.available_at,
         task_text=f"{task_input.title}\n\n{task_input.body}",
         solver_material_refs=task_input.solver_material_refs,
-        cluster_id=task_input.cluster_id,
+        dependency_cluster_id=task_input.source_ref,
+        sampling_stratum=task_input.sampling_stratum,
         check_manifest_digest=canonical_digest({"check_command": CHECK_COMMAND}),
-        hidden_check_bundle_digest=_path_digest(hidden_check),
+        hidden_check_bundle_digest=hidden_material_digest(hidden_check),
         resource_limits={"timeout_seconds": 60},
         oracle_source="private_pytest_fixture",
         check_type="pytest",
@@ -305,7 +317,11 @@ def _scripted_agent(command: tuple[str, ...]) -> AgentRecord:
         agent_manifest_digest=canonical_digest(
             {"agent": "scripted-known-good-boltons", "harness_digest": harness_digest}
         ),
+        requested_model_id="none-scripted",
         model_snapshot_id="none-scripted",
+        model_resolution_scope_id=None,
+        model_resolution_scope_started_at=None,
+        model_resolution_scope_ended_at=None,
         harness_digest=harness_digest,
         repository_instruction_digest="none",
         prompt_digest="task-md-v1",
@@ -329,14 +345,6 @@ def _reference_patch(source_ref: str) -> CapturedDiff:
 
 def _hidden_check_dir(source_ref: str) -> Path:
     return HERE / "hidden-checks" / source_ref
-
-
-def _path_digest(path: Path) -> str:
-    entries = tuple(
-        (str(child.relative_to(path)), hashlib.sha256(child.read_bytes()).hexdigest())
-        for child in sorted(item for item in path.rglob("*") if item.is_file())
-    )
-    return canonical_digest(entries)
 
 
 def _require_pinned_commit(target_repo: Path) -> None:

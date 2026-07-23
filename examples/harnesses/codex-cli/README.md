@@ -69,6 +69,12 @@ The binder validates this argv but does not hash `run-agent.zsh`. If results
 will be reused, the Agent identity must change when the script or its
 behavior-changing configuration changes.
 
+Set `requested_model_id` to the value passed through
+`BARCAROLLE_CODEX_MODEL`. Set `model_snapshot_id` only when the provider or
+adapter proves an immutable resolved ID. Otherwise leave it null and declare a
+campaign scope and execution window; paid preflight rejects calls outside that
+window, and exact-cache reuse cannot cross scopes.
+
 The command edits files in the solver worktree. Barcarolle captures the final
 diff, replays it in a verifier worktree, injects private check material only
 there, and records the normalized result.

@@ -19,6 +19,9 @@ between these documents and the alpha runtime.
 
 - [System design](system-design.md): module boundaries and responsibilities.
 - [Data flow](data-flow.md): how data moves between modules.
+- [Evidence storage and recovery](evidence-storage-and-recovery.md): artifact
+  roots, immutable Task Pool publication, exact Result reuse, pricing views,
+  and interruption recovery.
 - [Design consistency check](source-alignment-check.md): consistency checks for
   vocabulary, module boundaries, and evidence flow.
 

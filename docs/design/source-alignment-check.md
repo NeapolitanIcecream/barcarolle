@@ -1,6 +1,6 @@
 # Design Consistency Check
 
-Status: draft, 2026-07-14.
+Status: current, 2026-07-23.
 
 ## Vocabulary
 
@@ -52,11 +52,42 @@ The Selection module keeps these constraints:
   a comparison;
 - metadata-only and pre-origin-result features with recorded `observed_at`
   timestamps and leakage classes;
-- selector inputs that bind origin, task pool, feature snapshot, Agent set,
-  budget, and pre-origin result view;
-- rolling-origin policy with as-of cutoff, cluster constraints,
-  eligibility mode, and holdout overlap rules;
+- a FeatureConfig whose non-empty unique supported names are normalized to
+  builder order and whose leakage classes are derived by Selection rather than
+  declared independently by callers;
+- selector inputs that bind origin, task pool, feature snapshot, ordered Agent
+  IDs and full-record digests, a positive selection limit and its derived
+  budget digest, and the pre-origin result view;
+- rolling-origin policy with arrival cohorts, label-maturity/censoring rules,
+  dependency-cluster constraints, exact
+  `strict_prospective` or `counterfactual_replay` eligibility semantics, and
+  enforced holdout overlap rules;
 - benchmark selections frozen before future outcomes are opened;
+- strict-prospective CellSets that bind a separately frozen later Task Pool,
+  while counterfactual CellSets bind the Origin pool; Reporting replays the
+  later source window, maturity, censoring, and dependency policy;
+- a persisted, self-digested
+  Selector→RollingOrigin→FeatureSnapshot→SelectorInput→Benchmark Selection
+  chain that can be deterministically replayed;
+- ordered resolution of every pre-origin Result ID/digest frozen by
+  SelectorInput, with Origin Agent/history/cutoff scope and Feature provenance
+  replayed before strict-prospective supply reads;
+- exact replay of Task Pool-backed FeatureRecords: `task_count` binds the
+  Origin and pool, while `task_stratum` binds complete history coverage, Task
+  value, known-at time, and canonical Task digest before future-pool reads;
+- Records-owned replay of Result cache identity against the frozen Agent before
+  supply reads and against the validated selection-time Task/Check records
+  before future-pool reads or Agent execution;
+- learned-Selector training that holds the ordered full AgentRecord identity
+  fixed across Origins, validates the common Task Pool/Origin/Snapshot records,
+  and binds every pre-origin and outcome Result cache projection to the frozen
+  Agent/Task/Check records;
+- one Records-owned ResultCell binding contract across Result Store, Runner,
+  Selection, and Reporting, including exact Result ID/digest and outcome;
+- one Result Store-owned Matrix state derivation: only benchmark-invalid and
+  agent-invalid Result evidence can justify exclusions, and the complete Matrix
+  must replay under one declared join/denominator policy, including abstention
+  and scoreability;
 - mean-MAE Selector choice over complete, comparable metrics from earlier
   rolling origins; the choice does not reinterpret whether a recorded MAE is
   available.
@@ -64,6 +95,8 @@ The Selection module keeps these constraints:
 ## Cache And Scoring Boundary
 
 Result reuse depends on exact `ResultCacheIdentity`, not broad runtime names.
+The identity binds the requested model plus either a proven snapshot or one
+bounded campaign scope, so a moving alias cannot cross campaigns unchanged.
 Pricing is stored on `Result` and excluded from execution identity, so a price
 change cannot trigger another Agent run.
 Result matrices carry cell-level Agent/Task/Check mappings, completeness,
@@ -84,4 +117,16 @@ does not move that historical availability time.
 
 Reports summarize existing evidence. They do not create new evidence, inspect
 hidden oracle material, or reinterpret missing, invalid, excluded, or abstained
-cells after scoring.
+cells after scoring. Selector-performance claims require the exact Agent,
+Result, origin, snapshot, input, selection, cell-set, matrix, and metric
+bindings; reports use mode-specific claim names so counterfactual replay is not
+presented as prospective evidence.
+
+## Paid Execution Boundary
+
+Runner validates the complete missing-cell plan before the first Agent call.
+Workspace then revalidates repository and Check material, positive timeouts,
+harness command and content, and the `OPENAI_BASE_URL`/`OPENAI_API_KEY` endpoint
+proof immediately before execution. Offline Agents use the literal `offline`
+network policy. Credentials and raw endpoint URLs are not stored in evidence
+records, and cache-only or repricing operations do not require them.

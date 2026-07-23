@@ -11,9 +11,13 @@ from barcarolle.records import (
     AgentRecord,
     BenchmarkSelectionRecord,
     EvaluationCellSet,
+    FeatureSnapshotRecord,
     MetricRecord,
     ResultMatrix,
     ResultRecord,
+    RollingOriginRecord,
+    SelectorInput,
+    SelectorRecord,
     TaskPoolRecord,
     canonical_json,
     load_jsonl_records,
@@ -23,7 +27,12 @@ from barcarolle.runner import ReportConfig, write_report
 
 _REPORT_PATH_KEYS = (
     "task_pool",
+    "future_task_pools",
     "agents",
+    "selectors",
+    "origins",
+    "feature_snapshots",
+    "selector_inputs",
     "selections",
     "results",
     "evaluation_cell_sets",
@@ -50,7 +59,9 @@ def main(argv: Sequence[str] | None = None) -> int:
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="barcarolle")
     commands = parser.add_subparsers(dest="command", required=True)
-    report = commands.add_parser("report", help="write a report from existing JSONL records")
+    report = commands.add_parser(
+        "report", help="write a report from existing JSONL records"
+    )
     report.add_argument("config", type=Path, help="path to the report JSON config")
     return parser
 
@@ -72,6 +83,21 @@ def _write_report_from_config(config_path: Path) -> Mapping[str, object]:
             output_dir=config["output_dir"],
             agents=agents,
             artifact_root=config.get("artifact_root", config_path.resolve().parent),
+        ),
+        selectors=_load_optional_records(config, "selectors", SelectorRecord),
+        origins=_load_optional_records(config, "origins", RollingOriginRecord),
+        feature_snapshots=_load_optional_records(
+            config,
+            "feature_snapshots",
+            FeatureSnapshotRecord,
+        ),
+        selector_inputs=_load_optional_records(
+            config, "selector_inputs", SelectorInput
+        ),
+        future_task_pools=_load_optional_records(
+            config,
+            "future_task_pools",
+            TaskPoolRecord,
         ),
     )
 
@@ -96,6 +122,8 @@ def _load_report_config(config_path: Path) -> dict[str, Path]:
     return paths
 
 
-def _load_optional_records(config: Mapping[str, Path], key: str, record_type: type[_RecordT]) -> list[_RecordT]:
+def _load_optional_records(
+    config: Mapping[str, Path], key: str, record_type: type[_RecordT]
+) -> list[_RecordT]:
     path = config.get(key)
     return [] if path is None else load_jsonl_records(path, record_type)

@@ -1,5 +1,7 @@
 from pathlib import Path
 import hashlib
+import stat
+import sys
 
 import pytest
 
@@ -7,15 +9,18 @@ from barcarolle.records import CheckRecord, RuntimeConfig, canonical_digest
 from barcarolle.verification import (
     CheckOutcome,
     CheckNormalizationConfig,
-    WorkspaceRef,
+    VerifierWorkspace,
     normalize_outcome,
     prepare_verifier,
+    hidden_material_digest,
     summarize_evidence,
     verify_diff,
 )
 
 
-def test_prepare_verifier_copies_hidden_material_only_inside_verifier_workspace(tmp_path: Path) -> None:
+def test_prepare_verifier_copies_hidden_material_only_inside_verifier_workspace(
+    tmp_path: Path,
+) -> None:
     workspace = tmp_path / "workspace"
     workspace.mkdir()
     hidden = tmp_path / "hidden.txt"
@@ -33,10 +38,14 @@ def test_prepare_verifier_copies_hidden_material_only_inside_verifier_workspace(
     )
 
     assert prepared.prepared
-    assert (workspace / ".barcarolle/check_bundle.txt").read_text(encoding="utf-8") == "private oracle"
+    assert (workspace / ".barcarolle/check_bundle.txt").read_text(
+        encoding="utf-8"
+    ) == "private oracle"
 
 
-def test_prepare_verifier_rejects_hidden_material_destination_outside_workspace(tmp_path: Path) -> None:
+def test_prepare_verifier_rejects_hidden_material_destination_outside_workspace(
+    tmp_path: Path,
+) -> None:
     workspace = tmp_path / "workspace"
     workspace.mkdir()
     hidden = tmp_path / "hidden.txt"
@@ -55,7 +64,9 @@ def test_prepare_verifier_rejects_hidden_material_destination_outside_workspace(
         )
 
 
-def test_prepare_verifier_rejects_mismatch_before_copying_hidden_material(tmp_path: Path) -> None:
+def test_prepare_verifier_rejects_mismatch_before_copying_hidden_material(
+    tmp_path: Path,
+) -> None:
     workspace = tmp_path / "workspace"
     workspace.mkdir()
     hidden = tmp_path / "hidden.txt"
@@ -78,6 +89,60 @@ def test_prepare_verifier_rejects_mismatch_before_copying_hidden_material(tmp_pa
     assert not destination.exists()
 
 
+def test_prepare_verifier_requires_reserved_namespace_to_be_absent(
+    tmp_path: Path,
+) -> None:
+    workspace = tmp_path / "workspace"
+    (workspace / ".barcarolle").mkdir(parents=True)
+    (workspace / ".barcarolle" / "unexpected.txt").write_text(
+        "unexpected",
+        encoding="utf-8",
+    )
+    hidden = tmp_path / "hidden.txt"
+    hidden.write_text("private oracle", encoding="utf-8")
+
+    with pytest.raises(ValueError, match="namespace must be absent"):
+        prepare_verifier(
+            _check(),
+            _workspace_ref(
+                path=workspace,
+                check_command=("python", "-c", "print('ok')"),
+                hidden_material_source=hidden,
+                hidden_material_destination=Path(".barcarolle/check_bundle.txt"),
+            ),
+        )
+
+
+def test_hidden_material_digest_binds_entry_type_content_and_executable_bits(
+    tmp_path: Path,
+) -> None:
+    hidden = tmp_path / "hidden"
+    hidden.mkdir()
+    check_file = hidden / "check.py"
+    check_file.write_text("print('private')\n", encoding="utf-8")
+    original = hidden_material_digest(hidden)
+
+    check_file.chmod(check_file.stat().st_mode | stat.S_IXUSR)
+    executable = hidden_material_digest(hidden)
+    check_file.chmod(check_file.stat().st_mode & ~0o111)
+    (hidden / "unexpected").mkdir()
+    unexpected_entry = hidden_material_digest(hidden)
+
+    assert executable != original
+    assert unexpected_entry != original
+
+
+def test_hidden_material_digest_rejects_symbolic_links(tmp_path: Path) -> None:
+    hidden = tmp_path / "hidden"
+    hidden.mkdir()
+    target = tmp_path / "target.txt"
+    target.write_text("private", encoding="utf-8")
+    (hidden / "link.txt").symlink_to(target)
+
+    with pytest.raises(ValueError, match="symbolic links"):
+        hidden_material_digest(hidden)
+
+
 def test_prepare_verifier_requires_hidden_material_source(tmp_path: Path) -> None:
     workspace = tmp_path / "workspace"
     workspace.mkdir()
@@ -85,7 +150,9 @@ def test_prepare_verifier_requires_hidden_material_source(tmp_path: Path) -> Non
     with pytest.raises(ValueError, match="hidden_material_source is required"):
         prepare_verifier(
             _check(),
-            _workspace_ref(path=workspace, check_command=("python", "-c", "print('ok')")),
+            _workspace_ref(
+                path=workspace, check_command=("python", "-c", "print('ok')")
+            ),
         )
 
 
@@ -127,7 +194,9 @@ def test_prepare_verifier_rejects_check_command_digest_mismatch(tmp_path: Path) 
         )
 
 
-def test_verify_diff_executes_prepared_check_and_normalizes_pass(tmp_path: Path) -> None:
+def test_verify_diff_executes_prepared_check_and_normalizes_pass(
+    tmp_path: Path,
+) -> None:
     workspace = tmp_path / "workspace"
     workspace.mkdir()
     hidden = tmp_path / "hidden.txt"
@@ -138,6 +207,36 @@ def test_verify_diff_executes_prepared_check_and_normalizes_pass(tmp_path: Path)
         _workspace_ref(
             path=workspace,
             check_command=("python", "-c", "print('ok')"),
+            hidden_material_source=hidden,
+            hidden_material_destination=Path(".barcarolle/check_bundle.txt"),
+        ),
+    )
+
+    outcome = verify_diff(check, prepared, _runtime(timeout_seconds=5))
+
+    assert outcome.outcome == "pass"
+    assert outcome.failure_label is None
+    assert outcome.evidence_excerpt == "[verifier output omitted]"
+
+
+def test_verify_diff_drains_large_output_without_exposing_it(tmp_path: Path) -> None:
+    workspace = tmp_path / "workspace"
+    workspace.mkdir()
+    hidden = tmp_path / "hidden.txt"
+    hidden.write_text("private oracle", encoding="utf-8")
+    command = (
+        sys.executable,
+        "-c",
+        "import sys; "
+        "sys.stdout.buffer.write(b'A' * (2 * 1024 * 1024)); "
+        "sys.stderr.buffer.write(b'B' * (2 * 1024 * 1024))",
+    )
+    check = _check(command=command)
+    prepared = prepare_verifier(
+        check,
+        _workspace_ref(
+            path=workspace,
+            check_command=command,
             hidden_material_source=hidden,
             hidden_material_destination=Path(".barcarolle/check_bundle.txt"),
         ),
@@ -173,7 +272,9 @@ def test_verify_diff_treats_exit_two_as_invalid(tmp_path: Path) -> None:
     assert outcome.failure_label == "check_invalid"
 
 
-def test_verify_diff_returns_invalid_for_check_workspace_mismatch(tmp_path: Path) -> None:
+def test_verify_diff_returns_invalid_for_check_workspace_mismatch(
+    tmp_path: Path,
+) -> None:
     workspace = tmp_path / "workspace"
     workspace.mkdir()
     prepared = _workspace_ref(
@@ -196,7 +297,11 @@ def test_verify_diff_rechecks_command_digest_before_execution(tmp_path: Path) ->
     check = _check()
     prepared = _workspace_ref(
         path=workspace,
-        check_command=("python", "-c", "from pathlib import Path; Path('should-not-exist.txt').write_text('ran')"),
+        check_command=(
+            "python",
+            "-c",
+            "from pathlib import Path; Path('should-not-exist.txt').write_text('ran')",
+        ),
         check_command_digest=check.check_manifest_digest,
         check_manifest_digest=check.check_manifest_digest,
         hidden_material_source=None,
@@ -239,7 +344,13 @@ def test_verify_diff_requires_prepared_workspace(tmp_path: Path) -> None:
     workspace.mkdir()
 
     with pytest.raises(ValueError, match="must be prepared"):
-        verify_diff(_check(), _workspace_ref(path=workspace, check_command=("python", "-c", "print('ok')")), _runtime())
+        verify_diff(
+            _check(),
+            _workspace_ref(
+                path=workspace, check_command=("python", "-c", "print('ok')")
+            ),
+            _runtime(),
+        )
 
 
 def test_normalize_outcome_maps_fail_invalid_and_timeout() -> None:
@@ -257,6 +368,47 @@ def test_normalize_outcome_maps_fail_invalid_and_timeout() -> None:
     assert timeout.failure_label == "timeout"
 
 
+@pytest.mark.parametrize(
+    ("config_kwargs", "error"),
+    (
+        ({"pass_exit_codes": (0, 2)}, "pass and invalid exit codes"),
+        ({"pass_exit_codes": (False,)}, "exit codes must be integers"),
+        ({"timeout_failure_label": ""}, "failure labels must be nonempty"),
+        ({"max_evidence_chars": 0}, "max_evidence_chars must be a positive integer"),
+        ({"forbidden_evidence_markers": ("hidden", 1)}, "markers must be strings"),
+        ({"allow_verifier_text": "false"}, "allow_verifier_text must be a bool"),
+    ),
+)
+def test_check_normalization_config_rejects_ambiguous_or_malformed_behavior(
+    config_kwargs: dict[str, object],
+    error: str,
+) -> None:
+    with pytest.raises(ValueError, match=error):
+        CheckNormalizationConfig(**config_kwargs)  # type: ignore[arg-type]
+
+
+@pytest.mark.parametrize(
+    "raw_output",
+    (
+        {"exit_code": False},
+        {"exit_code": 0, "timed_out": "false"},
+        {"exit_code": 0, "duration_seconds": True},
+        {"exit_code": 0, "duration_seconds": -0.1},
+        {"exit_code": 0, "duration_seconds": float("nan")},
+    ),
+)
+def test_normalize_outcome_never_scores_malformed_execution_state_as_pass(
+    raw_output: object,
+) -> None:
+    outcome = normalize_outcome(raw_output, CheckNormalizationConfig())
+
+    assert outcome.outcome == "invalid"
+    assert outcome.failure_label == "check_invalid"
+    assert outcome.exit_code is None
+    assert outcome.timed_out is False
+    assert outcome.duration_seconds == 0.0
+
+
 def test_summarize_evidence_omits_raw_verifier_text_by_default() -> None:
     outcome = normalize_outcome(
         {"exit_code": 1, "stdout": "AssertionError: assert 3 == 4", "stderr": ""},
@@ -269,9 +421,15 @@ def test_summarize_evidence_omits_raw_verifier_text_by_default() -> None:
     assert "3 == 4" not in summary.evidence_excerpt
 
 
-def test_summarize_evidence_redacts_hidden_oracle_text_when_text_is_explicitly_allowed() -> None:
+def test_summarize_evidence_redacts_hidden_oracle_text_when_text_is_explicitly_allowed() -> (
+    None
+):
     outcome = normalize_outcome(
-        {"exit_code": 1, "stdout": "the hidden oracle expected output is 42", "stderr": ""},
+        {
+            "exit_code": 1,
+            "stdout": "the hidden oracle expected output is 42",
+            "stderr": "",
+        },
         CheckNormalizationConfig(allow_verifier_text=True),
     )
 
@@ -297,7 +455,9 @@ def test_summarize_evidence_omits_prepopulated_raw_excerpt() -> None:
     assert "3 == 4" not in summary.evidence_excerpt
 
 
-def test_summarize_evidence_omits_explicit_text_normalization_path_when_not_known_safe() -> None:
+def test_summarize_evidence_omits_explicit_text_normalization_path_when_not_known_safe() -> (
+    None
+):
     outcome = normalize_outcome(
         {"exit_code": 1, "stdout": "AssertionError: assert 3 == 4", "stderr": ""},
         CheckNormalizationConfig(allow_verifier_text=True),
@@ -344,8 +504,8 @@ def _workspace_ref(
     hidden_material_source: Path | None = None,
     hidden_material_destination: Path | None = None,
     prepared: bool = False,
-) -> WorkspaceRef:
-    return WorkspaceRef(
+) -> VerifierWorkspace:
+    return VerifierWorkspace(
         path=path,
         check_command=check_command,
         check_command_digest=check_command_digest or _command_digest(check_command),
@@ -363,4 +523,16 @@ def _command_digest(command: tuple[str, ...]) -> str:
 
 
 def _hidden_digest() -> str:
-    return hashlib.sha256(b"private oracle").hexdigest()
+    return canonical_digest(
+        {
+            "format": "hidden_material_tree_v1",
+            "entries": (
+                (
+                    ".",
+                    "file",
+                    0,
+                    hashlib.sha256(b"private oracle").hexdigest(),
+                ),
+            ),
+        }
+    )

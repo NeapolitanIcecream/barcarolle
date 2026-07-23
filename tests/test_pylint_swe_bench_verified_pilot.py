@@ -22,9 +22,7 @@ def test_fixed_task_sources_replace_the_uncertifiable_verified_instance() -> Non
 
     assert len(configured) == 10
     assert "pylint-dev__pylint-8898" not in configured
-    assert configured["pylint-dev__pylint-5859"]["dataset_family"] == (
-        "swe_bench_lite"
-    )
+    assert configured["pylint-dev__pylint-5859"]["dataset_family"] == ("swe_bench_lite")
 
 
 def test_candidate_separates_task_source_time_from_check_time(
@@ -57,11 +55,13 @@ def test_candidate_separates_task_source_time_from_check_time(
             "check_material_available_at": "2021-02-01T00:00:00Z",
             "image_digest": f"sha256:{'b' * 64}",
         },
+        dependency_cluster_id="dependency-cluster-test",
     )
 
     assert candidate.source_resolved_at == "2021-01-01T00:00:00Z"
     assert candidate.task_material_available_at == "2021-01-01T00:00:00Z"
     assert candidate.check_material_available_at == "2021-02-01T00:00:00Z"
+    assert candidate.dependency_cluster_id == "dependency-cluster-test"
 
 
 def test_candidate_check_identity_ignores_local_execution_paths(
@@ -91,7 +91,15 @@ def test_candidate_check_identity_ignores_local_execution_paths(
         (bundle / "spec.json").write_text("{}", encoding="utf-8")
 
     commands = tuple(pilot._check_command(item, configured) for item in paths)
-    candidates = tuple(pilot._candidate(item, source, configured) for item in paths)
+    candidates = tuple(
+        pilot._candidate(
+            item,
+            source,
+            configured,
+            dependency_cluster_id="dependency-cluster-test",
+        )
+        for item in paths
+    )
 
     assert commands[0] != commands[1]
     assert candidates[0].check_manifest_digest == candidates[1].check_manifest_digest
@@ -123,19 +131,34 @@ def test_check_binding_keeps_existing_paid_command_identity(tmp_path: Path) -> N
             "difficulty": "<15 min fix",
         },
         configured,
+        dependency_cluster_id="dependency-cluster-test",
     )
     command = pilot._check_command(paths, configured)
     existing_candidate = replace(
         candidate,
-        check_manifest_digest=pilot.canonical_digest(
-            {"check_command": command}
-        ),
+        check_manifest_digest=pilot.canonical_digest({"check_command": command}),
     )
 
     pilot._bind_check(
+        pilot.WorkspaceRunContext(),
         paths,
         pilot.build_check_candidate(existing_candidate),
         configured,
+    )
+
+
+def test_generator_config_binds_dependency_evidence_digest() -> None:
+    evidence = pilot.PylintDependencyEvidence(
+        protocol_version=pilot.DEPENDENCY_PROTOCOL_VERSION,
+        repository_id=pilot.REPOSITORY_ID,
+        patch_footprints=(),
+        relations=(),
+        cluster_by_source_event_id={},
+        dependency_evidence_digest="first-digest",
+    )
+
+    assert pilot._generator_config_digest(evidence) != pilot._generator_config_digest(
+        replace(evidence, dependency_evidence_digest="second-digest")
     )
 
 
@@ -239,6 +262,62 @@ def test_started_cell_recovers_an_exact_scoreable_result(
     }
 
 
+def test_paid_results_include_only_the_exact_pilot_execution_identity(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    expected = SimpleNamespace(
+        agent_id="agent-low",
+        task_id="task-1",
+        check_id="check-1",
+        cache_identity=SimpleNamespace(identity_digest="expected-identity"),
+    )
+    unrelated = SimpleNamespace(
+        agent_id="agent-low",
+        task_id="task-1",
+        check_id="check-1",
+        cache_identity=SimpleNamespace(identity_digest="other-runtime-identity"),
+    )
+    context = cast(
+        pilot.PilotContext,
+        SimpleNamespace(
+            agents=(SimpleNamespace(agent_id="agent-low"),),
+            tasks=(SimpleNamespace(task_id="task-1", check_ids=("check-1",)),),
+            checks={"check-1": SimpleNamespace(check_id="check-1")},
+            workspace_config=object(),
+            runtime_config=object(),
+            result_store=object(),
+        ),
+    )
+    monkeypatch.setattr(
+        pilot,
+        "compute_result_cache_identity",
+        lambda *_: SimpleNamespace(identity_digest="expected-identity"),
+    )
+    monkeypatch.setattr(pilot, "load_results", lambda *_: (expected, unrelated))
+
+    assert pilot._paid_results(context) == (expected,)
+
+
+def test_pilot_summary_complete_requires_a_completed_resource_ledger() -> None:
+    results = cast(
+        tuple[pilot.ResultRecord, ...],
+        tuple(object() for _ in range(pilot.MAXIMUM_PAID_CALLS)),
+    )
+    completed_calls = tuple(
+        {"state": "completed"} for _ in range(pilot.MAXIMUM_PAID_CALLS)
+    )
+
+    assert pilot._pilot_summary_stage(results, completed_calls) == "complete"
+    assert pilot._pilot_summary_stage(results, completed_calls[:-1]) == "incomplete"
+    assert (
+        pilot._pilot_summary_stage(
+            results,
+            (*completed_calls[:-1], {"state": "stopped"}),
+        )
+        == "incomplete"
+    )
+
+
 def test_pilot_cli_only_exposes_single_cell_paid_stages() -> None:
     completed = subprocess.run(
         [
@@ -263,9 +342,7 @@ def test_paid_check_rejects_a_stale_summary(tmp_path: Path) -> None:
     instance_id = "pylint-dev__pylint-4551"
     task_id = "task-1"
     diff_digest = "a" * 64
-    summary_path = (
-        tmp_path / "raw/checks" / instance_id / diff_digest / "summary.json"
-    )
+    summary_path = tmp_path / "raw/checks" / instance_id / diff_digest / "summary.json"
     summary_path.parent.mkdir(parents=True)
     summary_path.write_text(
         json.dumps(
