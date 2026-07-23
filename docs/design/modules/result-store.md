@@ -1,6 +1,6 @@
 # Module Design: Result Store
 
-Status: draft, 2026-07-14.
+Status: current behavior and planned scale boundary, 2026-07-23.
 
 ## Responsibility
 
@@ -48,7 +48,15 @@ output, and effect only; it does not prescribe implementation.
 
 `ScoringConfig` accepts only `pricing_version` and `cost_rates`. Its
 `scoring_config_digest` is the canonical digest of those values, not a
-caller-supplied identifier.
+caller-supplied identifier. Construction validates both fields, normalizes
+finite nonnegative integer or float rates to sorted built-in floats, maps signed
+zero to positive `0.0`, and stores a read-only snapshot. Numeric representations
+with identical pricing behavior therefore have one stable digest, and later
+mutation of the source mapping cannot create a second pricing view identity.
+
+`ResultCacheConfig` exposes only `reuse_benchmark_invalid`, which must be an
+exact boolean. Exact full-identity reuse is a fixed Result Store invariant,
+not a caller-selectable cache policy.
 
 ## Functions
 
@@ -69,8 +77,14 @@ Output:
 
 Effect:
 
+- Validates the supplied Task, Check, Agent, and WorkspaceRun records before
+  evaluating linkage or cache projections. A schema-invalid upstream record
+  cannot be converted into a valid-looking Result merely because the malformed
+  field is absent from cache identity.
 - Normalizes pass/fail/invalid, cost, latency, failure label, diff digest, and
   verifier metadata, and stores the exact cache identity used for reuse.
+- Reuses the Records-owned Agent and Task/Check projection contract to require
+  that the supplied cache identity matches the exact construction inputs.
 - Treats `error` and `timeout` terminal states as Agent-attributable invalid
   results even if a Check also reported `fail`; only terminal `failed` is a
   scoreable failure.
@@ -119,6 +133,11 @@ Output:
 
 Effect:
 
+- Validates the supplied Task, Check, Agent, WorkspaceConfig, and RuntimeConfig
+  before Task/Check linkage or identity construction. Missing-cell and
+  cache-reuse planning therefore cannot derive a valid-looking identity from a
+  schema-invalid upstream record or configuration. Runtime timeout and optional
+  hardware identity are also checked at this boundary.
 - Produces the structured identity used to decide whether a cached execution is
   reusable. A single `check_digest` binds all behavior-changing Check fields.
   Pricing and scoring are excluded. Rejects an invalid identity instead of
@@ -170,8 +189,30 @@ Output:
 
 Effect:
 
-- Writes a result record append-only. Corrections or rescoring create a new
-  `result_id` and `result_digest`; existing frozen records are not mutated.
+- Delegates to the same locked writer used for batches. Writes a result record
+  append-only. Corrections or rescoring create a new `result_id` and
+  `result_digest`; existing frozen records are not mutated.
+
+### open_result_store_session
+
+Input:
+
+- `store: ResultStore`
+
+Output:
+
+- one context-managed `ResultStoreSession`.
+
+Effect:
+
+- Takes an exclusive advisory lock, loads and indexes the JSONL file once, and
+  rejects a repeated `result_id` before building the live index. Identical and
+  conflicting duplicates are both invalid persisted histories.
+- Keeps the index current as Results are appended. Each `append` writes one
+  complete canonical line, flushes it, and fsyncs it before returning; first
+  creation also fsyncs the directory. `append_many` validates the entire batch,
+  writes it once, and fsyncs once. Runner holds one session across cell
+  resolution, execution, repricing, and final resolution.
 
 ### load_results
 
@@ -186,10 +227,37 @@ Output:
 
 Effect:
 
+- Validates every ID/digest filter as a tuple of nonempty strings before store
+  access. Availability bounds are explicitly null or nonempty timezone-aware
+  timestamps, and the lower bound cannot follow the upper bound. Malformed
+  queries therefore behave the same whether the store is absent, empty, or
+  populated.
 - Reads result records matching task, check, Agent, result ID, exact cache
   identity, scoring config, and result-availability time filters.
 - Compares availability bounds as UTC instants, so equivalent timestamps with
   different offsets have the same ordering.
+- Takes a shared advisory lock and rejects an unterminated final line instead of
+  treating a partial append as a record.
+- Rejects the second occurrence of any `result_id`, with its line number, before
+  applying query filters. This is the same rule used by a locked session.
+
+### recover_result_store_tail
+
+Input:
+
+- `store: ResultStore`
+
+Output:
+
+- `not_needed`, `completed`, or `truncated`.
+
+Effect:
+
+- Under the exclusive lock, explicitly repairs only a final line lacking its
+  newline. A parseable JSON value receives the missing newline and remains
+  subject to normal schema validation. An unparseable byte tail is truncated to
+  the last complete newline. Complete invalid lines are never changed; normal
+  loading reports their line number.
 
 ### resolve_result_cells
 
@@ -214,6 +282,9 @@ Effect:
 - Returns one result-or-missing cell for every requested Agent-task-check cell.
 - Reuses only a valid, fully equal `ResultCacheIdentity` under
   `exact_identity`; a digest match alone is insufficient.
+- Separates the requested model name from an immutable snapshot. When no
+  snapshot is proven, exact reuse is limited to the identical model-resolution
+  campaign scope stored in the identity.
 - Without `scoring_config`, resolves execution reuse independently of pricing.
   With it, resolves only the exact derived scoring-config digest so evaluation
   cells cannot bind a stale price view.
@@ -224,6 +295,8 @@ Effect:
 - If duplicate eligible records have the same exact identity, chooses the first
   record in append order.
 - Loads and indexes matching stored results once per resolution operation.
+- When Runner supplies its active Result Store session, reuses the same live
+  index instead of parsing JSONL again.
 
 ### reprice_cached_results
 
@@ -299,21 +372,32 @@ Effect:
 - Resolves only the exact `result_id`, `result_digest`, required identity, and
   outcome frozen in each `EvaluationCellSet` cell. A later result with the same
   cache identity cannot replace the frozen result; an absent frozen binding is
-  handled as missing under the join policy.
+  handled as missing under the join policy. Resolution uses Records' complete
+  ResultCell-to-Result predicate, including Agent/Task/Check and outcome.
+- Validates persisted Matrix cell states against the same Results. A
+  benchmark-invalid Result produces the canonical task-wide exclusion; an
+  agent-invalid Result follows one supported policy for the complete Matrix.
+  Normal Results cannot invent exclusions, cell-local policy mixtures are
+  rejected, and unbound exclusions require a benchmark-invalid Result on the
+  same Task/Check denominator. The same replay binds the declared join and
+  denominator policy digests, abstention reason, and scoreable state to one of
+  the four currently executable missing-cell/agent-invalid combinations.
 
 ## Join And Denominator Policy
 
-`ResultJoinConfig` must explicitly define:
+`ResultJoinConfig` explicitly defines:
 
-- required result cache identity;
 - missing-cell policy;
 - Agent-attributable invalid outcome policy;
 - benchmark infrastructure failure policy;
-- denominator policy;
 - abstention policy.
 
 Construction rejects unsupported policy values, so a misspelled policy cannot
-silently change a matrix denominator.
+silently change a matrix denominator. `join_policy_digest` is derived from all
+four values. `denominator_policy_digest` is derived from the two invalid-outcome
+policies that determine whether Agent or benchmark failures enter the common
+denominator. Neither digest is caller-supplied. Required Result identity comes
+from each frozen evaluation cell, not from this policy config.
 
 Agent-attributable invalid outcomes such as timeout, no meaningful patch, or
 budget exhaustion are failures. Benchmark infrastructure failures are not Agent

@@ -1,6 +1,6 @@
 # Module Design: Verification
 
-Status: draft, 2026-07-14.
+Status: current built-in behavior, 2026-07-22.
 
 ## Responsibility
 
@@ -12,7 +12,7 @@ Verification does not select tasks, run Agents, or store Result records.
 ## Inputs
 
 - `CheckRecord`;
-- verifier `WorkspaceRef`;
+- verifier `VerifierWorkspace` adapter value;
 - applied candidate diff;
 - verification runtime config.
 
@@ -40,18 +40,44 @@ Output consumers:
 Functions below define module interfaces. Each function specifies input,
 output, and effect only; it does not prescribe implementation.
 
+`VerifierWorkspace` is a transient Verification-adapter value containing the
+Check execution binding. It is deliberately distinct from Workspace's
+lifecycle-owning `WorkspaceRef`; solver workspaces do not carry verifier-only
+nullable fields.
+
 ## Functions
+
+### hidden_material_digest
+
+Input:
+
+- hidden material file or directory path.
+
+Output:
+
+- canonical tree digest.
+
+Effect:
+
+- Digests relative paths, entry types, file contents, and executable bits using
+  one versioned representation shared by Workspace and Verification.
+- Rejects a symlink at the root or anywhere below it, and rejects unsupported
+  filesystem entry types. Directory entries, including empty directories, are
+  part of the identity.
+
+`VERIFICATION_ADAPTER_DIGEST` identifies the exact built-in preparation and
+execution semantics used by certification evidence.
 
 ### prepare_verifier
 
 Input:
 
 - `check: CheckRecord`
-- `verifier_workspace: WorkspaceRef`
+- `verifier_workspace: VerifierWorkspace`
 
 Output:
 
-- `WorkspaceRef`
+- `VerifierWorkspace`
 
 Effect:
 
@@ -59,6 +85,10 @@ Effect:
   that workspace reference. The low-level function confines the destination
   to the verifier workspace; the Workspace module additionally reserves the
   `.barcarolle` namespace for its bound hidden material.
+- Requires the destination to be absent. When the destination is inside the
+  reserved namespace, that namespace must also be absent before creation.
+  Material is copied without merging and the destination tree is rehashed
+  before returning.
 - Rechecks the bound command digest before material injection. This transient
   execution check is separate from the semantic Check manifest stored in
   `CheckRecord`.
@@ -68,7 +98,7 @@ Effect:
 Input:
 
 - `check: CheckRecord`
-- `verifier_workspace: WorkspaceRef`
+- `verifier_workspace: VerifierWorkspace`
 - `runtime_config: RuntimeConfig`
 
 Output:
@@ -103,6 +133,12 @@ Effect:
 
 - Converts framework-specific outputs into pass, fail, or invalid with a
   failure label.
+- Requires an exact boolean timeout, an integer-or-null exit code that excludes
+  booleans, and a finite nonnegative duration. Malformed execution state becomes
+  `invalid` with zero duration; it cannot compare equal to a pass exit code.
+- `CheckNormalizationConfig` requires disjoint integer pass/invalid code tuples,
+  nonempty failure labels, a positive excerpt bound, string redaction markers,
+  and an exact boolean raw-text control before normalization.
 
 ### summarize_evidence
 

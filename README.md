@@ -13,7 +13,8 @@ benchmark or research evidence.
 
 Barcarolle keeps the benchmark boundary outside the tested Agent:
 
-- builds or imports a `Task + Check` pool with execution-based task validation;
+- filters or imports a `Task + Check` pool with an auditable source-event frame
+  and execution-based task validation;
 - runs Agents in fresh solver workspaces;
 - replays captured diffs in verifier workspaces with private check material;
 - stores normalized `Result` records with exact cache identity;
@@ -50,6 +51,8 @@ For a target repository run with a real Agent harness, see
 [`docs/real-target-walkthrough.md`](docs/real-target-walkthrough.md).
 For a concrete shell harness example, see
 [`examples/harnesses/codex-cli/`](examples/harnesses/codex-cli/).
+The rolling-origin estimands, censoring, weighting, pairing, and uncertainty
+rules are fixed in [`docs/statistical-protocol.md`](docs/statistical-protocol.md).
 
 ## Install And Test
 
@@ -83,7 +86,12 @@ Paths are resolved relative to the config file:
 ```json
 {
   "task_pool": "records/task_pool.jsonl",
+  "future_task_pools": "records/future-task-pools.jsonl",
   "agents": "records/agents.jsonl",
+  "selectors": "records/selectors.jsonl",
+  "origins": "records/origins.jsonl",
+  "feature_snapshots": "records/feature-snapshots.jsonl",
+  "selector_inputs": "records/selector-inputs.jsonl",
   "selections": "records/selections.jsonl",
   "results": "records/results.jsonl",
   "evaluation_cell_sets": "records/evaluation_cell_sets.jsonl",
@@ -94,14 +102,19 @@ Paths are resolved relative to the config file:
 }
 ```
 
-The task-pool file must contain one `TaskPoolRecord`. `task_pool` and
-`output_dir` are required; omit a record file when that evidence is absent.
+The task-pool file must contain one `TaskPoolRecord`. The optional
+`future_task_pools` file may contain zero or more later snapshots used by
+strict-prospective CellSets. `task_pool` and `output_dir` are required; omit a
+record file when that evidence is absent.
 Included record files contain zero or more records of the type named by the
 key. Task Pool artifact refs resolve under `artifact_root`, which defaults to
 the config-file directory. Coverage is unsupported when referenced Task,
-Check, or certification-evidence files are missing or do not match their
-stored digests. The command writes `report.md` and `report.json` under
-`output_dir`.
+SourceEvent, Check, or certification-evidence files are missing or do not match
+their stored digests. The command writes `report.md` and `report.json` under
+`output_dir`. A supported Selector-performance claim additionally requires the
+Selector, Origin, FeatureSnapshot, SelectorInput, Agent, Result, Selection,
+cell-set, matrix, and metric files shown above; omitting them produces an
+explicit unsupported claim rather than inferring missing provenance.
 
 ## Python Interface
 
@@ -124,4 +137,8 @@ The tests in `tests/` are executable examples of the current contracts.
 - `tests/`: executable examples and regression tests.
 - `examples/minimal/`: offline demo with deterministic fixture Agents.
 - `examples/harnesses/codex-cli/`: optional Codex CLI harness example.
+- `docs/research-improvement-backlog.md`: living research findings, priorities,
+  validation criteria, and deferred algorithm ideas.
+- `docs/design/evidence-storage-and-recovery.md`: artifact roots, Task Pool
+  publication, exact Result reuse, pricing views, and interruption recovery.
 - `docs/design/`: detailed behavior and data-contract reference.

@@ -1,6 +1,6 @@
 # Barcarolle System Design
 
-Status: draft, 2026-07-14.
+Status: current, 2026-07-22.
 
 ## Scope
 
@@ -21,13 +21,13 @@ and who consumes the outputs.
 
 | Module | Owns | Inputs | Input Source | Outputs | Output Consumers |
 | --- | --- | --- | --- | --- | --- |
-| Records | Shared record schemas, identity rules, validation errors, and JSON/JSONL serialization contracts. | Record definitions; record payloads produced by other modules. | Design docs; Task Pool; Verification; Workspace; Result Store; Selection; Reporting; Runner. | Validated `Task`, `Check`, `Feature`, `Result`, `ResultCacheIdentity`, `Selector`, `Benchmark Selection`, metric, and report records; validation errors; stable IDs. | All modules. |
-| Task Pool | Task generation, task import, execution-based task validation, rejected-task summaries, and frozen task-pool records. | Stable repository ID; direct task text; Check fields; certification config; bound Workspace and Verification inputs. | User config; built-in generators; user imports; Verification for check execution; Workspace for checkout/replay. | Frozen `Task Pool`; accepted `Task + Check` records; rejected candidates; sanitized certification evidence; source-event inventory. | Workspace; Result Store; Selection; Reporting. |
+| Records | Shared record schemas, identity rules, validation errors, and JSON/JSONL serialization contracts. | Record definitions; record payloads produced by other modules. | Design docs; Task Pool; Verification; Workspace; Result Store; Selection; Reporting; Runner. | Validated `SourceEvent`, `Task`, `Check`, `Feature`, `Result`, `ResultCacheIdentity`, `Selector`, `Benchmark Selection`, metric, and report records; validation errors; stable IDs. | All modules. |
+| Task Pool | Source-event filtering, task import, execution-based task validation, rejection provenance, and frozen task-pool records. | Stable repository ID; sanitized source events or candidates; direct task text; Check fields; certification config; bound Workspace and Verification inputs. | User config; repository-specific adapters; user imports; Verification for check execution; Workspace for checkout/replay. | Frozen `Task Pool`; accepted `Task + Check` records; sanitized accepted/rejected/excluded SourceEvents; certification evidence. | Workspace; Result Store; Selection; Reporting. |
 | Verification | Check execution interface and normalized check outcomes. | `Check`; verifier workspace path; candidate diff already applied; verification runtime config. | Task Pool provides `Check`; Workspace provides verifier workspace and applied diff. | Normalized check outcome: pass, fail, invalid, failure label, sanitized evidence summary. | Workspace; Result Store; Reporting. |
 | Workspace | Solver workspace creation, Agent invocation, diff capture, verifier workspace creation, diff replay, and verification orchestration. | `Task`; `Check`; Agent config; workspace config; runtime config. | Task Pool provides `Task + Check`; user or run config provides Agent and configs; Verification provides verification runner. | Captured diff digest; execution metadata; check outcome; workspace-level failure classification. | Result Store. |
 | Result Store | Result cache identity, result storage, missing-cell queries, and result matrices. | `Task`; `Check`; Agent config; exact result identity; workspace output; check outcome. | Task Pool; Workspace; Verification; Records. | Reusable `Result` records; result cache state; cell-level result matrix; completeness, exclusion, and abstention metadata; missing Agent-task-check cells. | Selection; Reporting; Runner. |
 | Selection | Selector training, evaluation, production benchmark selection, rolling-origin construction, and feature snapshotting. | Frozen `Task Pool`; `Agent Results`; historical window or origin; budget; candidate Agents; selector config or specified Selector; rolling-origin policy; feature config. | Task Pool; Result Store; user config; selector config; feature config. | `Selector`; `Benchmark Selection`; selected `Task + Check` refs and weights; rolling-origin metrics; feature snapshots; selector notes. | Reporting; Runner. |
-| Reporting | Claim-safe summaries, audit reports, and machine-readable summaries. | `Task Pool`; `Benchmark Selection`; `EvaluationCellSet`; result matrices; `Agent Results`; rolling-origin metrics; artifact digests. | Task Pool; Result Store; Selection; Records. | Human-readable report; machine-readable summary; claim-boundary statement. | Users. |
+| Reporting | Claim-safe summaries, audit reports, and machine-readable summaries. | Selection `Task Pool`; any later prospective `Task Pool`; Selector; RollingOrigin; FeatureSnapshot; SelectorInput; `Benchmark Selection`; `EvaluationCellSet`; result matrices; `Agent Results`; rolling-origin metrics; artifact digests. | Task Pool; Result Store; Selection; Records. | Human-readable report; machine-readable summary; mode-specific claim-boundary statement. | Users. |
 | Runner | Command-level orchestration across modules, including cache reuse and lazy Agent execution. | Run config; target repository; task-source config; Agent set; historical window or origin; budget; selector config or specified Selector; result store; workspace config; runtime config; scoring config; report config. | Users; Task Pool; Result Store; Selection; Workspace; Reporting. | Run summary; references to records produced by owner modules; report paths. | Users. |
 
 ## Canonical Data Flow
@@ -49,12 +49,12 @@ Runner + Task Pool + Agent config + workspace config
   -> Result Store
   -> Agent Results
 
-Task Pool + Agent Results + origin + budget + selector config
-  -> RollingOrigin + Feature Snapshot
-  -> Selection
-  -> frozen Benchmark Selection + rolling-origin metrics
+Task Pool + pre-origin Agent Results + origin + budget + Selector
+  -> RollingOrigin -> Feature Snapshot -> Selector Input
+  -> frozen Benchmark Selection
+  -> Evaluation Cell Set -> Result Matrices -> rolling-origin metrics
 
-Task Pool + Agent Results + Benchmark Selection + metrics
+Task Pool + complete Selector provenance + Agent Results + metrics
   -> Reporting
   -> report + machine-readable summary
 ```
@@ -70,8 +70,9 @@ those modules.
 
 Direct solver-visible task text, optional refs to supporting files in the
 repository checkout, and repository metadata. A `Task` never contains hidden
-check material or future outcome data. An empty cluster ID means that no
-cluster is recorded; the system does not invent a default cluster.
+check material or future outcome data. `dependency_cluster_id` is protocol-only
+blocking metadata; `sampling_stratum` may be used for Selector-visible
+stratification. Empty values remain empty.
 
 ### Check
 
@@ -100,7 +101,10 @@ the result became available for selector use.
 A reusable `Result` is matched by `ResultCacheIdentity`, which stores the
 structured task, check, Agent, workspace, runtime, adapter, and optional
 hardware identity plus a digest. Pricing and scoring are stored on the Result,
-not in execution identity. Results with incomplete identity are not cache hits.
+not in execution identity. Agent identity stores the requested model separately
+from a proven immutable snapshot; an unresolved alias instead binds exact reuse
+to a declared campaign and execution window. Results with incomplete identity
+are not cache hits.
 
 ### Selector
 
@@ -116,8 +120,14 @@ algorithm.
 
 Evaluation protocol that freezes an origin time, selects from pre-origin
 history, and compares selected-benchmark performance with later holdout
-performance. The policy records as-of cutoffs, cluster constraints, eligibility
-mode, and holdout overlap rules.
+performance. Task-material arrival fixes cohort membership; Check availability
+and a fixed lag determine label maturity, with unresolved refs retained as
+censored provenance. The policy records as-of cutoffs, dependency-cluster
+constraints, eligibility mode, and holdout overlap rules. The current modes are strict prospective
+eligibility, which treats refs as known no earlier than Task Pool creation, and
+explicit counterfactual replay from historical material-availability times.
+The complete origin, feature, input, Selector, and selection chain is persisted
+before future results are opened.
 
 ## Result Reuse And Lazy Execution
 

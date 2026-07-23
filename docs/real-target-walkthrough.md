@@ -24,9 +24,11 @@ checkout. Workspace lists those paths in `TASK.md`; it does not inline their
 contents. A ref may use an internal symlink, but its resolved target must remain
 inside the checkout.
 
-`cluster_id` may be empty. Do not replace an absent cluster with a default
-label. `resource_limits` may also be empty: `RuntimeConfig.timeout_seconds` is
-the default Check timeout, and a per-Check timeout only narrows it.
+`dependency_cluster_id` and `sampling_stratum` may be empty. The former is only
+for dependence-aware origin blocking; the latter may support visible sampling
+or coverage features. Do not replace either with a default label.
+`resource_limits` may also be empty: `RuntimeConfig.timeout_seconds` is the
+default Check timeout, and a per-Check timeout only narrows it.
 
 Prepare one check command, hidden-material path, and trusted reference patch for
 every candidate. Private check bundles belong only to
@@ -34,7 +36,8 @@ every candidate. Private check bundles belong only to
 
 Before freezing the pool, run execution-based task validation. The task check
 must fail at the base commit and pass after applying its reference patch.
-Repeat the patched Check when repeatability needs evidence. This certifies one
+When `repeat_count` is greater than one, repeat the whole fresh-workspace
+base-fail/patched-pass pair. This certifies one
 aggregate Check transition. A SWE-bench adapter that needs separate
 `FAIL_TO_PASS` and `PASS_TO_PASS` evidence must execute and distinguish both in
 its Check wrapper.
@@ -118,6 +121,11 @@ bind_agent_harness(agent, ("./run-agent.sh",))
 The binder validates the command argv. When results will be reused, change the
 Agent identity whenever the harness or its behavior-changing configuration
 changes. The harness adapter decides how to compute that identity.
+
+Record the requested model name separately from the immutable snapshot returned
+by a provider. If the adapter cannot prove a snapshot, leave it null and bind
+the Agent to one declared campaign ID and execution window. Paid preflight
+rejects missing cells outside that window; cached evidence remains readable.
 
 For a concrete Codex CLI shell example, see
 `examples/harnesses/codex-cli/`. It is one harness option; Barcarolle does not

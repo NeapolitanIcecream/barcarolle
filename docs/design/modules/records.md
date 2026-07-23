@@ -1,6 +1,6 @@
 # Module Design: Records
 
-Status: draft, 2026-07-14.
+Status: current core records, 2026-07-23.
 
 ## Responsibility
 
@@ -9,6 +9,31 @@ Define shared record shapes and validation helpers for `Task`, `Check`,
 `RollingOrigin` data.
 
 This module should not perform I/O beyond optional serialization helpers.
+
+All evidence timestamps must be timezone-aware ISO datetimes. Records provides
+the single parse/format contract: parsing rejects non-strings and naive values
+and normalizes offsets to UTC; formatting rejects naive `datetime` values and emits
+microsecond-precision `Z` timestamps. Record validators, rolling-origin
+construction, Result queries, Runner schedules, and Reporting comparisons use
+that contract.
+
+Public persisted-record validators first replay the same latest-schema
+dataclass conversion used by JSONL loading. Only a reloadable shape enters
+domain semantics; malformed scalars, containers, or nested records return a
+`ValidationResult` instead of reaching field operations that assume their
+declared types. Valid records run this conversion once, not again after domain
+checks. A Task, Check, Agent, or other evidence record accepted in memory
+therefore has the same field shape as its canonical serialized form.
+
+Canonical JSON has one floating-zero representation. `canonical_data` maps
+both `-0.0` and `0.0` to positive `0.0` recursively before serialization or
+digesting. This applies equally to typed fields and nested JSON values such as
+measurements, features, and Selector parameters; owners do not add local
+signed-zero rules merely to stabilize identity.
+
+Records also owns `make_check_command_digest`, the canonical identity of an
+exact Check argv used by Workspace and Verification. This is distinct from the
+semantic Check manifest digest.
 
 ## Records
 
@@ -55,10 +80,51 @@ modules should not depend on fields that are not recorded here.
 - `result_digest`
 - `cell_state`
 - `exclusion_reason`
+- `outcome`
 
 `ResultCellRef` is a compact cell-level reference used by result matrices and
-evaluation cell sets. `result_id`, `result_digest`, and `exclusion_reason` may
-be null depending on `cell_state`.
+evaluation cell sets. A `result` cell binds both Result fields as nonempty
+strings, carries a normalized outcome, and has a null exclusion reason. An
+`excluded` cell has a nonempty string reason; if it binds a Result, both Result
+fields are nonempty strings and a normalized outcome is present, otherwise all
+three are null. A `missing` cell has no Result, exclusion, or outcome payload.
+Empty strings and truthy non-string values are not alternate null/binding
+representations.
+
+Records also owns the direct cross-record predicate for a bound cell. Its
+Result ID/digest, Agent/Task/Check IDs, required cache-identity digest, and
+outcome must all match the referenced `ResultRecord`. Result Store, Runner,
+Selection, and Reporting use this same field relation.
+
+### SourceEventRecord
+
+- `source_event_id`
+- `repository_id`
+- `source_family`
+- `source_ref`
+- `source_resolved_at`
+- `task_material_available_at`
+- `check_material_available_at`
+- `label_mature_at`
+- `candidate_id`
+- `task_id`
+- `check_id`
+- `disposition`
+- `rejection_stage`
+- `rejection_reasons`
+- `dependency_cluster_id`
+- `sampling_stratum`
+- `source_event_digest`
+
+This is the sanitized source denominator for a Task Pool. `disposition` is
+`accepted`, `certification_rejected`, or `excluded`. Optional material times
+and Task/Check links remain null when an event never reached that stage;
+`label_mature_at=null` is an explicit right-censored label. The self-digest
+binds the whole record. Material timestamps fail validation rather than raising
+during maturity derivation. Rejected and excluded events require non-empty
+reason strings in one tuple. A scalar or mapping reason container fails
+validation without being iterated as a reason sequence. Raw issue bodies,
+patches, and private oracle material do not belong in this record.
 
 ### TaskRecord
 
@@ -73,7 +139,8 @@ be null depending on `cell_state`.
 - `solver_material_digest`
 - `solver_material_refs`
 - `check_ids`
-- `cluster_id`
+- `dependency_cluster_id`
+- `sampling_stratum`
 
 `task_text` is the directly replayable solver instruction.
 `solver_material_refs` optionally names supporting files already present in the
@@ -82,8 +149,10 @@ repository checkout; it does not replace or contain `task_text`.
 text, and ordered refs. Agent-visible rendering changes must change that
 format version so old Results are not exact cache hits.
 
-`cluster_id` may be empty. Records do not replace an absent cluster with a
-default or `unclustered` label.
+Both classification fields may be empty. `dependency_cluster_id` is reserved
+for dependence-aware origin blocking and is not a Selector feature.
+`sampling_stratum` is a visible coverage/stratification label. Records do not
+replace an absent value with a default or `unclustered` label.
 
 Task `known_at` is derived only from `source_resolved_at` and
 `task_material_available_at`. Task/Check `known_at` also includes
@@ -116,7 +185,11 @@ adapter implements them.
 
 - `agent_id`
 - `agent_manifest_digest`
+- `requested_model_id`
 - `model_snapshot_id`
+- `model_resolution_scope_id`
+- `model_resolution_scope_started_at`
+- `model_resolution_scope_ended_at`
 - `harness_digest`
 - `repository_instruction_digest`
 - `prompt_digest`
@@ -126,11 +199,19 @@ adapter implements them.
 - `network_policy_digest`
 - `adapter_digest`
 
-The current Workspace binder checks `harness_digest` against the bound command
-argv. It does not hash files named by that argv. For scoreable runs,
-`agent_manifest_digest` must therefore bind the executable or script contents,
-their behavior-changing configuration, and other harness inputs. Changing any
-of them requires a new Agent identity before Result reuse.
+The Workspace binder always checks `harness_digest` against the bound command
+argv. Offline runs require `agent_manifest_digest` to bind the executable or
+script contents, behavior-changing configuration, and other harness inputs.
+Paid runs additionally hash the declared endpoint-enforcing harness paths and
+bind those content digests into `network_policy_digest`. Changing any bound
+input requires a new Agent identity before Result reuse.
+
+`requested_model_id` is the exact name sent to the Agent harness.
+`model_snapshot_id` is non-null only when the adapter can prove that the name
+resolved to an immutable model snapshot. Otherwise the snapshot is null and
+all three resolution-scope fields are required. The scope identifies one
+declared campaign and a positive, timezone-aware execution window. A resolved
+snapshot and a campaign scope are mutually exclusive.
 
 ### WorkspaceConfig
 
@@ -139,6 +220,9 @@ of them requires a new Agent identity before Result reuse.
 - `submodule_state_digest`
 - `base_image_digest`
 - `dependency_lock_digest`
+
+Every field is a required nonempty string. `validate_workspace_config` applies
+the shared latest-schema type contract before a Workspace identity is consumed.
 
 ### RuntimeConfig
 
@@ -150,7 +234,10 @@ of them requires a new Agent identity before Result reuse.
 - `hardware_profile_digest`
 
 `hardware_profile_digest` may be `null` when hardware is irrelevant to the
-run. If hardware can change scoreability or latency claims, it must be present.
+run; when present it must be nonempty. `timeout_seconds` is a positive integer.
+`validate_runtime_config` applies those semantics after the shared
+latest-schema type contract. If hardware can change scoreability or latency
+claims, its digest must be present.
 
 ### ResultCacheIdentity
 
@@ -162,7 +249,11 @@ run. If hardware can change scoreability or latency claims, it must be present.
 - `solver_material_digest`
 - `check_digest`
 - `agent_manifest_digest`
+- `requested_model_id`
 - `model_snapshot_id`
+- `model_resolution_scope_id`
+- `model_resolution_scope_started_at`
+- `model_resolution_scope_ended_at`
 - `harness_digest`
 - `repository_instruction_digest`
 - `prompt_digest`
@@ -182,6 +273,21 @@ run. If hardware can change scoreability or latency claims, it must be present.
 The structured fields and `identity_digest` are both stored. Cached results
 missing any required identity field are isolated from reuse and may only appear
 in audit reports.
+An unresolved model alias is reusable only under the exact same campaign scope;
+changing the scope changes `identity_digest`.
+
+Records also owns the direct cross-record field projections used to reconstruct
+evidence:
+
+- `agent_record_from_cache_identity` projects exactly the AgentRecord fields
+  frozen inside a Result cache identity;
+- `cache_identity_agent_mismatches` reports the Agent fields that disagree;
+- `cache_identity_task_check_mismatches` reports Task ID, Check ID, repository,
+  base commit, solver material, or Check digest drift.
+
+Result Store construction, Selection replay, Runner preflight, and Reporting
+use these functions rather than maintaining separate field lists. They compare
+records only; they do not load artifacts or create an identity registry.
 
 `check_digest` is derived from the behavior-changing Check fields:
 `check_type`, `check_manifest_digest`, `hidden_check_bundle_digest`,
@@ -207,10 +313,16 @@ must not cause an Agent or Check to run again.
 - `invalid_owner`
 - `failure_label`
 - `usage`
+- `latency`
 - `started_at`
 - `finished_at`
 
-Raw workspaces and transcripts are not stored in this record.
+Raw workspaces and transcripts are not stored in this record. New Workspace
+runs require monotonic `workspace_seconds`, `solver_checkout_seconds`,
+`verifier_checkout_seconds`, `diff_replay_seconds`, `agent_seconds`,
+`verification_seconds`, and `cleanup_seconds` in `latency`. Cleanup occurs
+after run-record construction and is therefore separate from
+`workspace_seconds`.
 
 ### ResultRecord
 
@@ -260,6 +372,12 @@ configuration without rerunning the Agent.
 - `origin_snapshot_digest`
 - `leakage_class`
 
+Task, Check, Agent, Result, and cache-identity links are nullable. When a
+FeatureRecord names a Result, every supplied Task, Check, Agent, and
+cache-identity field must match that exact Result; `source_artifact_digest`
+binds its Result digest. Origin-level pre-origin aggregates instead bind the
+digest of the complete visible Result view.
+
 ### FeatureSnapshotRecord
 
 - `feature_snapshot_id`
@@ -268,6 +386,10 @@ configuration without rerunning the Agent.
 - `feature_records_digest`
 - `leakage_policy_digest`
 - `leakage_lint_status`
+- `feature_records`
+- `result_view_digest`
+- `feature_config_digest`
+- `feature_snapshot_digest`
 
 Records defines the schema. Selection builds snapshots and runs leakage
 linting.
@@ -282,6 +404,7 @@ linting.
 - `parameters`
 - `config_digest`
 - `created_at`
+- `selector_digest`
 
 ### SelectorInput
 
@@ -290,15 +413,30 @@ linting.
 - `task_pool_id`
 - `feature_snapshot_id`
 - `agent_ids`
+- `agent_record_digests`
 - `eligible_task_check_refs`
 - `pre_origin_result_ids`
 - `pre_origin_result_digests`
 - `budget_digest`
 - `leakage_policy_digest`
 - `selector_input_digest`
+- `task_pool_digest`
+- `selection_budget_limit`
+- `feature_records_digest`
+- `feature_snapshot_lint_status`
+- `origin_as_of_cutoff`
+- `origin_history_refs_digest`
+- `eligibility_mode`
 
 `SelectorInput` is the leakage-checked data visible to a Selector for one
-origin. Its digest covers the listed fields and the referenced feature snapshot.
+origin. Its identity and self-digest cover the full Task Pool, origin, feature,
+Agent, chronological history, pre-origin Result, budget, and eligibility
+bindings. The Agent-record digests align with `agent_ids` and freeze the full
+Agent configurations in that order; an ID cannot silently change harness,
+model, prompt, tool, or runtime-binding evidence between Selection and
+evaluation. Validation also requires unique Agent IDs and eligible refs,
+aligned pre-origin Result IDs/digests, a canonical UTC cutoff, and a
+`budget_digest` derived from the positive `selection_budget_limit`.
 
 ### TaskPoolRecord
 
@@ -312,22 +450,42 @@ origin. Its digest covers the listed fields and the referenced feature snapshot.
 - `check_records_ref`
 - `check_records_digest`
 - `certification_evidence_ref`
+- `source_event_records_ref`
+- `source_event_records_digest`
 - `rejected_candidate_ids`
 - `rejection_summary_digest`
 - `certification_evidence_digest`
-- `source_event_inventory_digest`
 - `generator_config_digest`
 - `certification_config_digest`
 - `created_at`
+- `source_window_start`
+- `source_window_end`
 
 `task_pool_digest` is computed from the canonical serialization of the frozen
 task pool, including accepted Task/Check refs and digests, rejected candidate
 IDs, rejection summary digest, certification evidence ref and digest, source
-event inventory digest, and generator/certification config digests.
+event records ref and digest, and generator/certification config digests.
+Its direct validator applies the same latest-schema replay as other persisted
+records before Task Pool performs cross-artifact reconciliation.
+Generated pools persist a canonical source window. Its end cannot be after
+`created_at`; accepted or certification-rejected events cannot fall outside it,
+and an outside event must retain the normalized exclusion reason. Imported
+pools may leave both window fields null, but they cannot support prospective
+future-cohort claims until a source window is supplied by a later concrete
+adapter.
 
 `certification_evidence_ref` points to the exact ordered sanitized evidence
 sequence whose canonical digest is `certification_evidence_digest`. The ref and
 digest are one binding: a different sequence must produce a different digest.
+Each evidence item includes Workspace and Runtime config digests, the exact
+Check execution binding digest, and the built-in Verification adapter digest.
+`source_event_records_ref` points to the exact sanitized source denominator.
+Its digest covers accepted, certification-rejected, and pre-certification
+excluded events, including right-censored label maturity.
+`generator_config_digest` identifies generation behavior, such as generated
+source events versus import mode and source family. Event inventory and local
+import location are not duplicated into that digest; the frozen SourceEvent,
+Task, and Check digests bind the actual data.
 
 ### RollingOriginRecord
 
@@ -337,15 +495,38 @@ digest are one binding: a different sequence must produce a different digest.
 - `origin_time`
 - `policy_digest`
 - `history_task_check_refs`
+- `history_censored_task_check_refs`
 - `future_holdout_task_check_refs`
+- `future_censored_task_check_refs`
 - `as_of_cutoff`
-- `cluster_constraints_digest`
 - `eligibility_mode`
 - `holdout_overlap_policy`
+- `as_of_cutoff_rule`
+- `history_window_start`
+- `future_window_start`
+- `future_window_end`
+- `future_cohort_time_basis`
+- `maturity_lag_seconds`
+- `label_maturity_cutoff`
+- `future_holdout_known`
+- `allowed_dependency_cluster_ids`
+- `origin_digest`
 
-Future holdout `Task + Check` refs may be recorded before scoring, but future
-outcomes must not be available to Selection before a `BenchmarkSelectionRecord`
-is frozen.
+The policy digest is derived from the behavior fields. Strict prospective
+origins cannot claim known future refs; counterfactual replay may persist the
+predeclared holdout refs. `as_of_cutoff` must equal `origin_time` when the rule
+is `origin_time`, or the explicit timestamp named by the rule. The future window
+must start at or after that cutoff. Cohort membership uses
+`task_material_available_at`; Check material determines label maturity.
+Arrived refs whose labels are not mature by the relevant cutoff are retained in
+the censored tuples and do not enter Selector training or future execution.
+Future outcomes must not be available to Selection before a
+`BenchmarkSelectionRecord` is frozen. Dependency-cluster constraints affect
+origin membership but never authorize the Selector to observe cluster IDs.
+`future_holdout_known` is an exact boolean, and
+`allowed_dependency_cluster_ids` is a tuple containing only nonempty strings;
+these types are part of valid persisted Origin evidence rather than truthiness
+conventions.
 
 ### BenchmarkSelectionRecord
 
@@ -354,28 +535,28 @@ is frozen.
 - `task_pool_digest`
 - `origin_id`
 - `selector_id`
+- `selector_digest`
 - `selected_task_check_refs`
 - `selected_weights`
 - `budget_digest`
 - `selection_input_digest`
 - `feature_snapshot_id`
 - `eligibility_mode`
-- `exposure_state`
-- `exposed_at`
-- `exposure_scope_digest`
 - `created_at`
 - `selection_digest`
 
 This record is the frozen benchmark selection. It must be written before future
-holdout outcomes are opened for scoring.
+holdout outcomes are opened for scoring. It has no publication state machine;
+external publication metadata should be added only with an actual publisher.
 
 Selection records are append-only evidence. Corrections, rescoring-policy
 changes, or selector-input changes create a new `selection_id` and
 `selection_digest`; existing frozen selection records are not mutated.
 
-`selected_weights` is a keyed mapping from `TaskCheckRef` to numeric weight.
-Validators must reject weights for unselected refs and missing weights for
-selected refs.
+`selected_weights` is a keyed mapping from `TaskCheckRef` to finite positive
+built-in float weights. Validators reject integer or boolean representations,
+weights for unselected refs, and missing weights for selected refs. This exact
+runtime shape matches latest-schema canonical reload.
 
 ### ResultMatrix
 
@@ -392,6 +573,11 @@ selected refs.
 - `scoreable_state`
 - `matrix_digest`
 
+`scoreable_state` is derived from the cells unless `abstention_reason` is set:
+no missing/excluded cells is `complete`, any missing cell is `incomplete`, any
+excluded cell without a missing cell is `complete_with_exclusions`, and an
+abstention reason requires `abstained`.
+
 ### EvaluationCellSet
 
 - `cell_set_id`
@@ -399,9 +585,17 @@ selected refs.
 - `selection_id`
 - `selected_task_check_refs`
 - `future_task_check_refs`
+- `future_censored_task_check_refs`
+- `future_task_pool_id`
+- `future_task_pool_digest`
 - `cells: Sequence[ResultCellRef]`
 - `abstention_reason`
 - `cell_set_digest`
+
+The CellSet is the post-selection evaluation artifact. Counterfactual replay
+binds the same Task Pool as the Origin. Strict-prospective evaluation binds a
+later immutable Task Pool, retains its mature and censored future refs, and
+creates cells only for selected and mature future refs.
 
 ### MetricRecord
 
@@ -433,12 +627,26 @@ metric records are not mutated.
 
 Metric dimension rules:
 
-- per-Agent metrics must set `metric_scope=agent` and `agent_id`;
-- pairwise metrics must set `metric_scope=pair` and `agent_pair`;
+- per-Agent metrics must set `metric_scope=agent` and one nonempty string
+  `agent_id`; the pair and aggregate dimensions are null;
+- pairwise metrics must set `metric_scope=pair` and a two-element tuple of
+  nonempty string Agent IDs; the single-Agent and aggregate dimensions are
+  null;
 - aggregate metrics must set `metric_scope=aggregate` and
-  `aggregation_level`, and must not set `agent_id` or `agent_pair`;
-- budget-sensitivity metrics must set `budget_digest`;
-- stratum metrics must set `stratum_ref`.
+  a nonempty string `aggregation_level`, while `agent_id` and `agent_pair` are
+  null;
+- budget-sensitivity metrics must set a nonempty string `budget_digest`;
+- stratum metrics must set a nonempty string `stratum_ref`;
+- complete states have a null abstention reason; incomplete, abstained, and
+  invalid states have a nonempty string reason.
+
+Unused optional dimensions and refs use null, not empty strings. Direct
+validation and latest-schema JSONL reload therefore accept the same runtime
+shape.
+
+`metric_value` is a finite built-in float. Integer and boolean representations
+are invalid even when numerically equivalent because latest-schema loading
+normalizes declared float fields before checking canonical JSON.
 
 ## Serialization Rules
 
@@ -447,6 +655,18 @@ Canonical JSON and every digest derived from it use strict JSON numbers.
 instead of being serialized as implementation-specific tokens.
 Mapping keys must be strings at every nesting level. Canonical serialization
 rejects non-string keys instead of coercing them and risking key collisions.
+
+The core JSONL reader accepts only the latest schema. Each record must use the
+canonical JSON representation, contain exactly the declared dataclass fields,
+and match recursive scalar, collection, optional, mapping, and nested-record
+types. Blank records, unknown or missing fields, and type mismatches fail with
+the input line number. Compatibility interpretation belongs only in bounded
+one-off migration tools.
+
+Final-line durability is an owning-module rule rather than a generic record
+rule. Result Store requires a newline-terminated append log and exposes its own
+explicit conservative tail recovery; immutable bundle readers may read a
+canonical final record without adding Result Store recovery semantics.
 
 ## System Boundary
 
@@ -498,6 +718,53 @@ Effect:
 - Validates that the Check has an execution type, a mapping for optional
   per-Check resource overrides, and no solver-visible hidden material.
 
+### validate_agent
+
+Input:
+
+- `agent: AgentRecord`
+
+Output:
+
+- `ValidationResult`
+
+Effect:
+
+- Requires a requested model plus either one resolved immutable snapshot or a
+  complete positive-duration campaign scope, never both.
+- Validates the remaining required Agent identity fields without attempting a
+  provider-specific model lookup.
+
+### validate_workspace_config
+
+Input:
+
+- `config: WorkspaceConfig`
+
+Output:
+
+- `ValidationResult`
+
+Effect:
+
+- Requires the declared Workspace identity fields to be nonempty strings with
+  their exact latest-schema types.
+
+### validate_runtime_config
+
+Input:
+
+- `config: RuntimeConfig`
+
+Output:
+
+- `ValidationResult`
+
+Effect:
+
+- Requires nonempty runtime identity strings, a positive integer timeout, and
+  a null or nonempty hardware-profile digest with exact latest-schema types.
+
 ### validate_workspace_run
 
 Input:
@@ -511,8 +778,8 @@ Output:
 Effect:
 
 - Validates normalized terminal, replay, and Check outcome values, their state
-  transitions, usage shape, failure attribution, and timestamp order without
-  reading raw workspaces.
+  transitions, usage and monotonic latency shape, failure attribution, and
+  timestamp order without reading raw workspaces.
 - `passed` requires applied replay plus a passing Check; `failed` requires
   applied replay plus a failing Check. A non-applied replay cannot carry a pass
   or fail Check outcome.
@@ -538,7 +805,9 @@ Effect:
 - Requires `latency.workspace_seconds` and every known cost/latency/usage value
   to be numeric, finite, and nonnegative. `cost.total_cost` may be `null` only
   to represent an unknown total. An empty usage mapping is valid and leaves
-  total cost unknown.
+  total cost unknown. Newly built Results copy all current Workspace phase
+  timings; older preserved Results may contain only their total Workspace
+  measurement.
 
 ### validate_result_cache_identity
 
@@ -554,6 +823,8 @@ Effect:
 
 - Validates that all required cache identity fields are present and that
   `identity_digest` matches the structured identity.
+- Applies the same resolved-snapshot-or-campaign-scope model contract as
+  `validate_agent`.
 
 ### validate_feature_snapshot
 
@@ -582,8 +853,9 @@ Output:
 Effect:
 
 - Validates origin linkage, task-pool binding, feature snapshot digest,
-  eligible `Task + Check` refs, pre-origin result IDs and digests, budget
-  digest, leakage policy digest, and selector input digest.
+  ordered Agent IDs and aligned full Agent-record digests, eligible
+  `Task + Check` refs, pre-origin result IDs and digests, budget digest,
+  leakage policy digest, and selector input digest.
 
 ### validate_result_matrix
 
@@ -650,7 +922,7 @@ Output:
 Effect:
 
 - Performs local record validation: required fields, normalized exposure state,
-  finite positive keyed weights that exactly cover selected refs, timestamp
+  finite positive built-in float weights that exactly cover selected refs, timestamp
   order, and `selection_digest`.
 - Rejects duplicate selected Task/Check refs before denominator weights are
   interpreted.
@@ -670,7 +942,7 @@ Output:
 
 Effect:
 
-- Performs local record validation: required provenance fields, finite numeric
+- Performs local record validation: required provenance fields, finite built-in float
   value, normalized completeness/abstention state, timestamp shape, metric
   dimension rules, and `metric_digest`.
 - Cross-record matrix, cell-set, Agent-set, and selection linkage is validated
@@ -781,7 +1053,7 @@ Effect:
 
 Input:
 
-- `selector_digest: str`
+- `selector: SelectorRecord`
 
 Output:
 
@@ -789,7 +1061,9 @@ Output:
 
 Effect:
 
-- Builds a stable identifier for a persistent Selector.
+- Builds the stable semantic identifier used by Selector constructors from the
+  family, version, training-source digests, allowed feature classes, and config
+  digest. Observation time and the record self-digest do not enter the ID.
 
 ### load_jsonl_records
 
@@ -804,8 +1078,11 @@ Output:
 
 Effect:
 
-- Reads normalized records. It should not infer module-specific behavior from
-  unrelated file formats.
+- Reads exact latest-schema records from canonical JSONL.
+- Rejects blank records, noncanonical representations, unknown or missing
+  dataclass fields, recursive type mismatches, and non-finite numbers with a
+  line-numbered error.
+- Does not implement schema migration or module-specific durable-tail recovery.
 
 ### write_jsonl_records
 

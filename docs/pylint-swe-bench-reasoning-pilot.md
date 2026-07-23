@@ -126,3 +126,40 @@ it supports only two design decisions:
 
 Do not add a classifier or calibration schema from one discordant observation.
 External resume remains a transport decision; this run did not require it.
+
+The offline follow-up infrastructure is now available in
+`examples/pylint_swe_bench_verified/replicate_schedule.py`. It freezes a
+stratified repeated subset, seeded low/high order, exact Agent and Task Pool
+bindings, campaign-scoped Runtime observation slots, and the full serial cell
+plan before paid execution. Its resolver strictly replays the artifact, joins
+each slot to exact Result identity, and returns at most the first missing slot
+in frozen order. `replicate_campaign.py` adds the separate execution boundary:
+`initialize_replicate_campaign_ledger` records explicit endpoint, model/Agent,
+budget, call-cap, pricing, Workspace, Runtime, Task Pool, and schedule authority;
+`preflight_replicate_campaign` validates every remaining Runtime slot; and
+`run_next_replicate_campaign_cell` can execute only the first missing slot. It
+reconciles a Result written before an interrupted completion event and forbids
+automatic retry for stopped or result-less reservations. Creating the ledger
+requires new authorization and never inherits the historical pilot's budget or
+model window. No new replicate run or run-variation estimate has been produced.
+
+Future preparation also writes
+`records/dependency-evidence.jsonl`. The adapter derives exact changed-path
+overlap edges from trusted certification-side reference patches, assigns
+deterministic connected components, binds the artifact through Task Pool
+generator identity, and replays it before paid stages. On the historical ten
+patches, `pylint-dev__pylint-6528` and `pylint-dev__pylint-7080` form the only
+non-singleton component because both change
+`pylint/lint/expand_modules.py`. Absence of another overlap is not evidence of
+independence. This post-run contract does not relabel the completed historical
+Task Pool or paid Results.
+
+The pilot's resource ledger now uses the shared examples-layer single-writer
+event persistence also used by the boltons experiment. Its historical 2-call
+interrupted ledger and 20-call completed ledger replay to the same calls, spent
+cost, and remaining budget. Pylint-specific endpoint, pricing, scoreability,
+and exact-Result checks remain in the pilot. Summary reconstruction filters to
+the exact Task/Check/Agent/Workspace/Runtime identities of this pilot; results
+from another Runtime slot cannot enter its rates or pairs. The summary is
+`complete` only when all 20 exact Results and 20 completed ledger calls are
+present.

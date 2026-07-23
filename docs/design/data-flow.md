@@ -1,6 +1,6 @@
 # Barcarolle Data Flow
 
-Status: draft, 2026-07-14.
+Status: current, 2026-07-23.
 
 ## Overview
 
@@ -17,9 +17,10 @@ target repository + task source
   -> Workspace execution
   -> Agent Results
 
-Task Pool + Agent Results + origin + budget
-  -> Benchmark Selection
-  -> RollingOrigin metrics
+Task Pool + pre-origin Agent Results + origin + budget + Selector
+  -> RollingOrigin -> FeatureSnapshot -> SelectorInput
+  -> frozen Benchmark Selection
+  -> Evaluation Cell Set -> Result Matrices -> Metrics
   -> Report
 ```
 
@@ -34,24 +35,26 @@ Input:
 
 Steps:
 
-1. Task Pool calls a generator or importer.
-2. Generator emits `TaskCandidate` records with direct task text and Check
-   fields.
+1. Task Pool filters sanitized source events or imports candidates.
+2. The filter/importer emits a `CandidateBatch` with `TaskCandidate` records
+   and any pre-certification excluded SourceEvents.
 3. Runner binds the local repository and each candidate's check command and
    hidden material.
-4. Execution-based task validation confirms that one aggregate Check fails at
-   the base commit and passes after its reference patch. It may repeat the
-   patched Check in fresh verifier Workspaces.
-5. Task Pool constructs the frozen pool record without writing files.
-6. Runner writes the exact accepted Task records, accepted Check records, and
-   ordered sanitized certification evidence referenced and digested by that
+4. Execution-based task validation runs `repeat_count` fresh base/patched
+   pairs, requiring every base Check to fail and every reference-patched Check
+   to pass.
+5. Task Pool joins the batch with all certification decisions into the
+   sanitized SourceEvent frame and constructs the frozen pool record without
+   writing files.
+6. Runner publishes the exact SourceEvent, accepted Task, accepted Check, and
+   ordered sanitized certification sequences referenced and digested by that
    pool record.
 
 Output:
 
 - frozen `Task Pool`.
 - accepted Task/Check record references and digests, rejection summaries,
-  certification evidence ref and digest, and source-event inventory digest.
+  certification evidence ref/digest, and source-event record ref/digest.
 
 Runner entrypoint:
 
@@ -76,14 +79,17 @@ Input:
 
 Steps:
 
-1. Workspace creates solver workspace at the task base commit.
-2. Workspace writes solver-visible task material.
-3. Workspace invokes the configured Agent.
-4. Workspace captures the final diff.
-5. Workspace creates verifier workspace.
-6. Workspace applies the diff.
-7. Verification injects hidden material and executes the Check.
-8. Result Store computes cache identity and writes a normalized `Result`.
+1. Runner computes and validates every requested exact cell identity.
+2. Workspace preflights all repository, Check, timeout, harness, and paid
+   endpoint bindings for the batch before the first Agent invocation.
+3. Workspace creates a solver workspace at the task base commit and writes
+   solver-visible task material.
+4. Workspace revalidates the Agent harness and endpoint proof immediately
+   before invocation, then captures bounded output and the final diff.
+5. Workspace creates a verifier workspace and applies the diff.
+6. Verification injects hidden material and executes the Check with bounded
+   output and process-tree timeout cleanup.
+7. Result Store writes a normalized `Result`.
 
 Output:
 
@@ -102,21 +108,36 @@ Downstream:
 
 Input:
 
-- historical window;
-- historical `Task Pool` subset allowed by the protocol;
-- historical `Agent Results` allowed by the protocol;
-- candidate Agent set;
-- selector config.
+- deployment `RollingOrigin`;
+- the common frozen `Task Pool` and its validated Task/Check records;
+- exact prior training Origins, FeatureSnapshots, SelectorInputs, expert
+  Selectors, frozen Selections, matrices, metrics, and bound Results;
+- one concrete fitted family.
 
 Steps:
 
-1. Runner builds the rolling-origin history boundary at the end of the window
-   and loads only matching historical results from Result Store.
-2. Selection validates the Task, Check, Agent, and time bindings and records
-   the training-source digests.
-3. Selection validates a supplied executable rule Selector or creates one from
-   its persisted rule parameters. A learned method will define its own training
-   data and fitted parameters with its concrete algorithm.
+1. Runner starts from explicit training Selection IDs and loads their exact
+   persisted provenance and Result bindings plus the common validated Task Pool
+   bundle; it does not discover a dataset.
+2. Selection validates and replays every expert Selection, verifies pre-origin
+   feature Results and selected/future matrices, requires one ordered full Agent
+   identity binding across Origins, projects every training Result back to that
+   binding, replays all Origins, Snapshot Task metadata, and Result Task/Check
+   cache identities against the frozen pool, requires each bound Matrix cell's
+   Result ID/digest, Agent/Task/Check, required identity, and outcome to match,
+  including bound excluded cells, and recomputes MAE. Only genuinely unbound
+  excluded or missing cells omit Result evidence. Matrix exclusion states must
+  also derive from benchmark-invalid or agent-invalid Results, and one complete
+  Matrix must match its declared join/denominator policy, including abstention
+  and scoreability. The current fitter ranks expert evidence rather than
+  consuming Task metadata values, but the evidence path is ready for a later
+  feature-consuming model.
+3. Selection requires training origins and future windows before the deployment
+   cutoff. Strict prospective deployment also requires bound outcome Results to
+   have been available strictly before that cutoff.
+4. Selection fits the existing rule-mixture weights and returns one compact,
+   directly executable `SelectorRecord`. Fixed rules use
+   `build_rule_selector`; choosing evaluated Selectors is separate.
 
 Output:
 
@@ -131,50 +152,66 @@ Downstream:
 - Runner can use the Selector for production benchmark selection.
 - Reporting can summarize training sources and selector version.
 
-## Flow 4: Evaluate A Selector
+## Flow 4: Evaluate Selectors
 
 Input:
 
-- specified `Selector`;
+- one or more specified `Selector` records;
 - historical window;
 - historical `Task Pool` subset allowed by the protocol;
 - historical `Agent Results` allowed by the protocol;
 - candidate Agent set;
-- evaluation config containing ISO `origin_times`, selection config, and
-  budget.
+- evaluation config containing ISO `origin_times` and a selection budget, plus
+  a rolling-origin policy.
 
 Steps:
 
+0. The current Runner path accepts only `counterfactual_replay` with a
+   predeclared future holdout. A strict-prospective Selection can be frozen by
+   `select_benchmark`, but its later traffic must come from separately linked
+   post-origin Task Pool or source-frame evidence. The evaluator fails before
+   writes or Agent calls until that linkage exists.
 1. Runner loads historical results from Result Store.
 2. Runner parses the strictly increasing UTC instants in
    `evaluation_config.origin_times` and asks Selection to build a
    `RollingOriginRecord` for each timestamp under the rolling-origin policy.
-   Each future window ends at the next origin; the last ends at the historical
-   window boundary. A Task/Check known exactly at the next origin is in the
-   preceding future holdout and in the next origin's history, never in both
-   future holdouts. Task/Check refs before the historical window start are not
-   included in any origin's history.
-3. Selection builds leakage-safe feature snapshots.
-4. Selection freezes `Benchmark Selection` records for those origins and does
-   not score them.
-5. Runner opens the needed result sets only after selections are frozen.
-6. Runner prepares evaluation cells for the selected benchmark and future
-   holdout under the same identity and denominator policy.
-7. Runner returns metrics for those frozen selections.
+   Each future arrival window ends at the next origin; the last ends at the
+   historical window boundary. Task-material arrival determines cohort
+   membership. Label availability determines mature versus censored refs at the
+   as-of cutoff or fixed maturity-lag cutoff. Refs arriving before the
+   historical window start are not included in that origin's history.
+3. Selection builds and lints leakage-safe feature snapshots, replays their
+   Task Pool-backed `task_count` and `task_stratum` provenance, then builds
+   Selector inputs that bind the complete pre-origin Result view.
+4. Runner computes every Selector/origin Selection and persists all Selectors,
+   Origins, FeatureSnapshots, SelectorInputs, and frozen Selections before
+   future resolution.
+5. Runner validates every Result bound by a reusable CellSet in one batch read,
+   then deduplicates the first-occurrence union of all pending selected and
+   mature future exact cells and resolves, executes, and reprices that union
+   once. Censored refs remain provenance only.
+6. Runner reconstructs each CellSet in its own requested ref order and scores
+   separate matrices and metrics. Partial execution preserves appended Results;
+   valid persisted CellSets are reused on resume.
 
 Output:
 
+- persisted Selector, RollingOrigin, FeatureSnapshot, and SelectorInput
+  provenance;
 - frozen `Benchmark Selection` records;
+- evaluation cell sets and selected/future Result matrices;
 - rolling-origin metrics.
 
 Runner entrypoint:
 
-- `evaluate_selector`
+- `evaluate_selectors` (`evaluate_selector` is its singleton wrapper)
 
 Downstream:
 
 - Maintainers use metrics to compare selector versions.
-- Reporting can summarize Selector performance.
+- Reporting validates and recomputes the complete chain, then derives the
+  predeclared paired MAE summary and interval status. Invalid provenance yields
+  no aggregate summary.
 
 ## Flow 5: Select A Benchmark
 
@@ -186,16 +223,21 @@ Input:
 - candidate Agent set;
 - budget and constraints;
 - selector version.
-- selection config.
 
 Steps:
 
 1. Runner loads pre-origin results from Result Store.
 2. Selection builds the history pool from a `RollingOriginPolicy`.
-3. Selection builds and lints a feature snapshot.
+3. Selection builds and lints a feature snapshot and replays Task metadata
+   values, observation times, and source digests against the frozen Origin and
+   Task Pool records.
 4. Selection builds leakage-safe Selector input.
 5. Selector chooses common `Task + Check` refs and optional weights.
 6. Selection records a frozen `Benchmark Selection`.
+
+For strict-prospective use, the Origin also freezes a future window while
+keeping future refs empty. A later Task Pool is a separate immutable snapshot;
+it never extends or replaces the Selection pool.
 
 Output:
 
@@ -217,25 +259,40 @@ Downstream:
 
 Input:
 
-- `Task Pool`;
+- the Selection `Task Pool` and, for strict-prospective evaluation, one later
+  `Task Pool`;
 - `Agent Results`;
 - `Benchmark Selection`;
 - future holdout window.
 
 Steps:
 
-1. Runner prepares selected-benchmark Agent-task-check cells and
+1. For strict-prospective evidence, Runner reloads Selector, Origin,
+   FeatureSnapshot, SelectorInput, and Selection and proves deterministic
+   inference reproduces the frozen Selection. It then resolves every
+   pre-origin Result ID/digest frozen by SelectorInput and replays Origin scope
+   plus Feature provenance and the cache-identity Agent projection before
+   reading either Task Pool.
+2. Runner validates the selection-time pool, replays the Origin, and checks
+   every pre-origin Result's Task/Check cache identity. Selection then replays
+   exact `task_count` and `task_stratum` provenance from the validated
+   TaskRecords. Only then does Runner validate that the later pool keeps the
+   same source behavior and
+   certification config, covers the planned source window, postdates Selection,
+   and reaches the label-maturity cutoff. It replays mature and censored future
+   refs without changing the Origin.
+3. Runner prepares selected-benchmark Agent-task-check cells and
    future-holdout Agent-task-check cells under the same result identity and
    denominator policy.
-2. Result Store builds cell-level mappings from Agent-task-check cells to
+4. Result Store builds cell-level mappings from Agent-task-check cells to
    required identities, results, exclusions, or missing states.
-3. Result Store builds one selected-benchmark matrix and one future-holdout
+5. Result Store builds one selected-benchmark matrix and one future-holdout
    matrix with explicit matrix roles.
-4. Compute selected-benchmark pass-rate estimates per Agent.
-5. Compute future holdout pass rates per Agent.
-6. Compute MAE as the primary prediction metric, plus pairwise gap MAE, rank
+6. Compute selected-benchmark pass-rate estimates per Agent.
+7. Compute future holdout pass rates per Agent.
+8. Compute MAE as the primary prediction metric, plus pairwise gap MAE, rank
    agreement, recommendation regret, invalid rate, and coverage.
-7. Store metrics keyed by origin, selector version, cell-set digest,
+9. Store metrics keyed by origin, selector version, cell-set digest,
    selected/future matrix digests, join policy, and denominator policy.
 
 Output:
@@ -246,7 +303,8 @@ Output:
 
 Runner entrypoint:
 
-- `score_selection`
+- `score_selection` for a predeclared counterfactual cohort;
+- `evaluate_prospective_selection` for a persisted Selection plus later pool.
 
 Downstream:
 
@@ -261,3 +319,6 @@ Downstream:
 - Ensures selectors consume result tables, not workspaces or unsanitized Agent
   logs.
 - Preserves separation between solving and verification.
+- Makes supported Selector claims replayable from the full persisted evidence
+  chain and labels strict-prospective and counterfactual-replay claims
+  separately.

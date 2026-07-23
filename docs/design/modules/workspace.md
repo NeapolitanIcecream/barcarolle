@@ -1,6 +1,6 @@
 # Module Design: Workspace
 
-Status: draft, 2026-07-14.
+Status: current behavior, 2026-07-22.
 
 ## Responsibility
 
@@ -23,6 +23,8 @@ claim.
 - `AgentRecord`;
 - `WorkspaceConfig`;
 - `RuntimeConfig`.
+- `WorkspaceRunContext` carrying the Repository, Agent harness, and Check
+  material bindings for one certification or execution run.
 
 ## Outputs
 
@@ -48,44 +50,92 @@ Output consumers:
 Functions below define module interfaces. Each function specifies input,
 output, and effect only; it does not prescribe implementation.
 
+`WorkspaceRunContext` is an immutable value, not a service or registry. Binding
+functions return a new context. Repeating an identical binding is idempotent;
+binding a different value under the same semantic key in one context fails.
+Independent runs may use independent contexts without shared execution state.
+The locked process-global owned-workspace table tracks only cleanup ownership.
+
 ## Functions
 
 ### bind_repository_source
 
 Input:
 
+- `context: WorkspaceRunContext`
 - `workspace_config: WorkspaceConfig`
 - `repository_path: Path`
 
 Output:
 
-- `None`
+- `WorkspaceRunContext`
 
 Effect:
 
+- Validates WorkspaceConfig before it can key the immutable run context.
 - Binds a local Git checkout to
-  `workspace_config.repository_checkout_config_digest`. Runner performs this
-  binding before task certification or Agent execution.
+  `workspace_config.repository_checkout_config_digest` in a returned context.
+  Runner performs this binding before task certification or Agent execution.
 
 ### bind_agent_harness
 
 Input:
 
+- `context: WorkspaceRunContext`
 - `agent: AgentRecord`
 - `command: Sequence[str]`
+- `execution_mode: "offline" | "openai_paid" | None`
+- `endpoint_harness_paths: Sequence[Path]`
 
 Output:
 
-- `None`
+- `WorkspaceRunContext`
 
 Effect:
 
-- Binds a harness command whose argv digest matches the Agent record.
+- Binds a harness command in a returned context whose argv digest matches the
+  valid Agent record. Offline mode requires the literal `offline` network-policy
+  value. Paid mode requires
+  declared endpoint-enforcing harness files, direct command linkage to at
+  least one such file, and content digests that match the Agent's canonical
+  endpoint proof.
+
+### preflight_run_bindings
+
+Input:
+
+- `context: WorkspaceRunContext`;
+- complete `Sequence[tuple[TaskRecord, CheckRecord, AgentRecord]]` plan;
+- `WorkspaceConfig`;
+- `RuntimeConfig`.
+
+Output:
+
+- `None`.
+
+Effect:
+
+- Validates the complete WorkspaceConfig and RuntimeConfig even for an empty
+  plan, so config validity does not depend on whether cache resolution found a
+  cell to execute.
+- Fails before workspace creation when the repository, Task/Check relation,
+  Check timeout, hidden material, exact Check command, Agent model identity,
+  harness command/content, or paid endpoint proof is invalid. Paid execution
+  with an unresolved model alias must occur inside its declared campaign
+  window. Paid mode
+  accepts only `OPENAI_BASE_URL` and `OPENAI_API_KEY`, sourcing `~/.zshrc` when
+  either is absent from the current environment. It exposes neither the key nor
+  raw endpoint URL in evidence or errors.
+- Validates every Task/Check/Agent relation in the complete plan, then validates
+  immutable Check bindings and full Agent-record bindings once per unique
+  identity. This batch deduplication does not remove the per-cell rechecks before
+  workspace creation and immediately before Agent invocation.
 
 ### bind_check_material
 
 Input:
 
+- `context: WorkspaceRunContext`
 - `check: CheckRecord`
 - `check_command: Sequence[str]`
 - `hidden_material_source: Path`
@@ -94,16 +144,17 @@ Input:
 
 Output:
 
-- `None`
+- `WorkspaceRunContext`
 
 Effect:
 
 - Verifies the Check manifest and hidden-material digests, then binds the
-  material for verifier preparation. Without an explicit manifest, the exact
-  command remains the manifest. Adapters may instead provide a structured
-  manifest so machine-local executable and output paths do not become Check
-  identity. The exact bound command is still digested and rechecked before
-  execution. Runner performs this binding before certification.
+  material in a returned context for verifier preparation. Without an explicit
+  manifest, the exact command remains the manifest. Adapters may instead
+  provide a structured manifest so machine-local executable and output paths do
+  not become Check identity. The exact bound command is still digested and
+  rechecked before execution. Runner performs this binding before
+  certification.
 
 ### create_solver_workspace
 
@@ -111,6 +162,7 @@ Input:
 
 - `task: TaskRecord`
 - `workspace_config: WorkspaceConfig`
+- `context: WorkspaceRunContext`
 
 Output:
 
@@ -139,6 +191,7 @@ Input:
 - `task: TaskRecord`
 - `agent: AgentRecord`
 - `runtime_config: RuntimeConfig`
+- `context: WorkspaceRunContext`
 
 Output:
 
@@ -146,10 +199,17 @@ Output:
 
 Effect:
 
-- Calls the Agent harness and captures terminal status, duration, usage, and
-  safe output digests. Stdout and stderr may be retained in the in-memory
-  outcome for artifact preservation, but normalized records store only digests
-  and usage.
+- Revalidates the bound harness, model-resolution scope, and paid endpoint
+  proof immediately before execution, then calls the Agent harness and captures terminal status,
+  monotonic duration, usage, bounded stdout/stderr excerpts, and full-stream
+  output digests. Normalized records store only digests and usage; configured
+  ignored artifacts may retain the bounded excerpts.
+- The shared bounded subprocess path validates its finite positive timeout,
+  positive integer capture bound, and finite nonnegative termination grace
+  before process start.
+- On POSIX, owns a process group and escalates timeout or pipe-cleanup failures
+  from TERM to KILL. A containment failure is benchmark-owned rather than an
+  ordinary Agent outcome.
 - Reads optional harness-reported usage from `.barcarolle/usage.json`. The file
   must be a JSON object with finite, nonnegative numeric values. Missing usage
   and malformed usage remain an empty mapping so telemetry cannot change the
@@ -179,6 +239,7 @@ Input:
 
 - `task: TaskRecord`
 - `workspace_config: WorkspaceConfig`
+- `context: WorkspaceRunContext`
 
 Output:
 
@@ -228,6 +289,7 @@ Input:
 - `verifier_workspace: WorkspaceRef`
 - `check: CheckRecord`
 - `runtime_config: RuntimeConfig`
+- `context: WorkspaceRunContext`
 
 Output:
 
@@ -249,6 +311,7 @@ Input:
 - `agent: AgentRecord`
 - `workspace_config: WorkspaceConfig`
 - `runtime_config: RuntimeConfig`
+- `context: WorkspaceRunContext`
 
 Output:
 
@@ -258,9 +321,16 @@ Effect:
 
 - Orchestrates solver workspace, Agent invocation, diff capture, verifier
   workspace, diff replay, and Check execution.
+- Persists monotonic `solver_checkout_seconds`, `verifier_checkout_seconds`,
+  `diff_replay_seconds`, `agent_seconds`, and `verification_seconds` inside the
+  existing latency mapping. `workspace_seconds` covers the high-level run up to
+  record construction; it excludes best-effort artifact preservation and the
+  separately measured cleanup phase.
 - Removes solver and verifier workspaces before returning, after any configured
   summaries or diffs have been preserved. A cleanup failure emits a bounded
-  runtime warning without replacing an already completed run record.
+  runtime warning without replacing an already completed run record. The
+  attempted removal duration is persisted as `cleanup_seconds` even on that
+  warning path.
 - Classifies a passing Check on an empty diff as benchmark-invalid
   (`baseline_check_passed_without_diff`). Post-Agent diff-capture failures,
   including damaged Git metadata or config, are Agent-invalid
@@ -275,6 +345,11 @@ Effect:
 
 ### run_agent_on_task_with_artifacts
 
+`WorkspaceArtifactConfig` always emits relative refs below `output_root`; path
+mode is not configurable. Its stdout/stderr and diff retention controls must be
+exact booleans, and workspace-summary modes must be `never`, `on_failure`, or
+`always`. These checks run when the config is constructed.
+
 Input:
 
 - `task: TaskRecord`
@@ -282,6 +357,7 @@ Input:
 - `agent: AgentRecord`
 - `workspace_config: WorkspaceConfig`
 - `runtime_config: RuntimeConfig`
+- `context: WorkspaceRunContext`
 - `artifact_config: WorkspaceArtifactConfig | None`
 
 Output:
