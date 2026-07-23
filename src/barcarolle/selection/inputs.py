@@ -3,41 +3,42 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, replace
-from typing import Mapping, Sequence
+from typing import Sequence
 
 from barcarolle.records import (
     AgentRecord,
-    CheckRecord,
     FeatureSnapshotRecord,
     ResultRecord,
     RollingOriginRecord,
     SelectorInput,
-    TaskCheckRef,
     TaskPoolRecord,
-    TaskRecord,
+    agent_record_from_cache_identity,
     canonical_digest,
     make_selector_input_id,
     record_with_digest,
-    task_check_ref_key,
     validate_selector_input,
 )
-from barcarolle.task_pool import TimeRange
-
 from .features import (
     LeakagePolicy,
     _ensure_feature_records_match_origin,
-    _ensure_result_identity_matches_current_records,
     _ensure_result_records_valid,
     _ensure_results_allowed,
+    _ensure_results_match_origin_scope,
     lint_feature_snapshot,
 )
-from .origin import RollingOriginPolicy, _instant_gt, _task_check_known_at, _time_range_contains, _training_history_refs
 
 
 @dataclass(frozen=True)
 class SelectionBudget:
-    budget_digest: str
     max_task_checks: int
+
+    def __post_init__(self) -> None:
+        if type(self.max_task_checks) is not int or self.max_task_checks <= 0:
+            raise ValueError("max_task_checks must be a positive integer")
+
+    @property
+    def budget_digest(self) -> str:
+        return canonical_digest({"max_task_checks": self.max_task_checks})
 
 
 def build_selector_input(
@@ -49,24 +50,33 @@ def build_selector_input(
     budget: SelectionBudget,
     leakage_policy: LeakagePolicy,
 ) -> SelectorInput:
-    if origin.task_pool_id != task_pool.task_pool_id or origin.task_pool_digest != task_pool.task_pool_digest:
+    if (
+        origin.task_pool_id != task_pool.task_pool_id
+        or origin.task_pool_digest != task_pool.task_pool_digest
+    ):
         raise ValueError("origin does not match task_pool")
     if feature_snapshot.origin_id != origin.origin_id:
         raise ValueError("feature snapshot origin_id does not match origin")
-    _ensure_results_allowed(pre_origin_results, origin, task_pool, agents, expected_result_view_digest=feature_snapshot.result_view_digest)
-    _ensure_feature_records_match_origin(feature_snapshot, origin, pre_origin_results)
-    lint = lint_feature_snapshot(feature_snapshot, leakage_policy)
-    if not lint.ok:
-        raise ValueError(f"feature snapshot failed leakage lint: {', '.join(lint.errors)}")
+    if feature_snapshot.leakage_lint_status != "passed":
+        raise ValueError("feature snapshot must persist a passed leakage lint status")
+    _ensure_results_allowed(
+        pre_origin_results,
+        origin,
+        task_pool,
+        agents,
+    )
     selector_input = SelectorInput(
         selector_input_id="",
         origin_id=origin.origin_id,
         task_pool_id=task_pool.task_pool_id,
         feature_snapshot_id=feature_snapshot.feature_snapshot_id,
         agent_ids=tuple(agent.agent_id for agent in agents),
+        agent_record_digests=tuple(canonical_digest(agent) for agent in agents),
         eligible_task_check_refs=origin.history_task_check_refs,
         pre_origin_result_ids=tuple(result.result_id for result in pre_origin_results),
-        pre_origin_result_digests=tuple(result.result_digest for result in pre_origin_results),
+        pre_origin_result_digests=tuple(
+            result.result_digest for result in pre_origin_results
+        ),
         budget_digest=budget.budget_digest,
         leakage_policy_digest=leakage_policy.leakage_policy_digest,
         selector_input_digest="",
@@ -76,93 +86,107 @@ def build_selector_input(
         feature_snapshot_lint_status="passed",
         origin_as_of_cutoff=origin.as_of_cutoff,
         origin_history_refs_digest=canonical_digest(origin.history_task_check_refs),
+        eligibility_mode=origin.eligibility_mode,
     )
-    selector_input = replace(selector_input, selector_input_id=make_selector_input_id(selector_input))
+    selector_input = replace(
+        selector_input, selector_input_id=make_selector_input_id(selector_input)
+    )
     selector_input = record_with_digest(selector_input)
-    validation = validate_selector_input(selector_input)
-    if not validation.ok:
-        raise ValueError(f"selector input is invalid: {', '.join(validation.errors)}")
+    ensure_selector_input_result_evidence(
+        selector_input,
+        origin,
+        feature_snapshot,
+        pre_origin_results,
+    )
+    lint = lint_feature_snapshot(feature_snapshot, leakage_policy)
+    if not lint.ok:
+        raise ValueError(
+            f"feature snapshot failed leakage lint: {', '.join(lint.errors)}"
+        )
     return selector_input
+
+
+def ensure_selector_input_result_evidence(
+    selector_input: SelectorInput,
+    origin: RollingOriginRecord,
+    feature_snapshot: FeatureSnapshotRecord,
+    pre_origin_results: Sequence[ResultRecord],
+) -> tuple[ResultRecord, ...]:
+    """Replay the exact pre-origin Result view frozen by a SelectorInput."""
+    _ensure_selector_input_valid(selector_input)
+    if selector_input.origin_id != origin.origin_id:
+        raise ValueError("selector input does not match its origin")
+    if selector_input.eligible_task_check_refs != origin.history_task_check_refs:
+        raise ValueError("selector input does not cover its exact origin history")
+    if selector_input.origin_as_of_cutoff != origin.as_of_cutoff:
+        raise ValueError("selector input cutoff does not match its origin")
+    if selector_input.eligibility_mode != origin.eligibility_mode:
+        raise ValueError("selector input eligibility mode does not match its origin")
+
+    result_by_id: dict[str, ResultRecord] = {}
+    for result in pre_origin_results:
+        if result.result_id in result_by_id:
+            raise ValueError(f"duplicate pre-origin Result record: {result.result_id}")
+        result_by_id[result.result_id] = result
+    bindings = tuple(
+        zip(
+            selector_input.pre_origin_result_ids,
+            selector_input.pre_origin_result_digests,
+            strict=True,
+        )
+    )
+    if len(set(bindings)) != len(bindings):
+        raise ValueError("selector input contains duplicate pre-origin Results")
+    resolved_results: list[ResultRecord] = []
+    for result_id, result_digest in bindings:
+        result = result_by_id.get(result_id)
+        if result is None:
+            raise ValueError(
+                "selector input Result binding is missing from pre_origin_results: "
+                + result_id
+            )
+        if result.result_digest != result_digest:
+            raise ValueError(
+                "selector input Result digest does not match pre_origin_results: "
+                + result_id
+            )
+        resolved_results.append(result)
+
+    _ensure_result_records_valid(resolved_results, "pre_origin_results")
+    _ensure_results_match_origin_scope(
+        resolved_results,
+        origin,
+        allowed_agent_ids=set(selector_input.agent_ids),
+    )
+    frozen_agent_digests = dict(
+        zip(
+            selector_input.agent_ids,
+            selector_input.agent_record_digests,
+            strict=True,
+        )
+    )
+    if any(
+        canonical_digest(
+            agent_record_from_cache_identity(
+                result.agent_id,
+                result.cache_identity,
+            )
+        )
+        != frozen_agent_digests[result.agent_id]
+        for result in resolved_results
+    ):
+        raise ValueError(
+            "pre_origin_results include cache identity that does not match frozen Agent records"
+        )
+    _ensure_feature_records_match_origin(
+        feature_snapshot,
+        origin,
+        resolved_results,
+    )
+    return tuple(resolved_results)
 
 
 def _ensure_selector_input_valid(selector_input: SelectorInput) -> None:
     validation = validate_selector_input(selector_input)
     if not validation.ok:
         raise ValueError(f"selector input is invalid: {', '.join(validation.errors)}")
-    if len(set(selector_input.agent_ids)) != len(selector_input.agent_ids):
-        raise ValueError("selector input agent_ids must be unique")
-    ref_keys = tuple(task_check_ref_key(ref) for ref in selector_input.eligible_task_check_refs)
-    if len(set(ref_keys)) != len(ref_keys):
-        raise ValueError("selector input eligible_task_check_refs must be unique")
-
-
-def _ensure_selector_input_matches_history(
-    selector_input: SelectorInput,
-    task_pool: TaskPoolRecord,
-    tasks: Sequence[TaskRecord],
-    checks: Mapping[str, CheckRecord],
-    agents: Sequence[AgentRecord],
-    history_window: TimeRange,
-    rolling_policy: RollingOriginPolicy,
-) -> None:
-    _ensure_selector_input_valid(selector_input)
-    if selector_input.task_pool_id != task_pool.task_pool_id or selector_input.task_pool_digest != task_pool.task_pool_digest:
-        raise ValueError("selector input task pool binding does not match task_pool")
-    if set(selector_input.agent_ids) != {agent.agent_id for agent in agents}:
-        raise ValueError("selector input Agent set does not match candidate Agents")
-    task_by_id = {task.task_id: task for task in tasks}
-    if selector_input.origin_as_of_cutoff is None:
-        raise ValueError("selector input origin cutoff is required")
-    if not _time_range_contains(history_window, selector_input.origin_as_of_cutoff):
-        raise ValueError("selector input origin cutoff is outside history window")
-    origin_history_window = TimeRange(history_window.start, selector_input.origin_as_of_cutoff)
-    for ref in selector_input.eligible_task_check_refs:
-        if ref.task_id not in task_pool.task_ids or ref.check_id not in task_pool.check_ids:
-            raise ValueError("selector input includes refs outside task_pool")
-        task = task_by_id.get(ref.task_id)
-        check = checks.get(ref.check_id)
-        if task is None or check is None or check.task_id != task.task_id or ref.check_id not in task.check_ids:
-            raise ValueError("selector input includes refs missing from Task/Check records")
-        if rolling_policy.allowed_cluster_ids and task.cluster_id not in rolling_policy.allowed_cluster_ids:
-            raise ValueError("selector input includes refs outside cluster constraints")
-        known_at = _task_check_known_at(task, check)
-        if not _time_range_contains(origin_history_window, known_at):
-            raise ValueError("selector input includes refs outside history window")
-    expected_refs = _training_history_refs(
-        task_pool,
-        tasks,
-        checks,
-        origin_history_window,
-        rolling_policy,
-    )
-    if selector_input.eligible_task_check_refs != expected_refs:
-        raise ValueError(
-            "selector input eligible refs do not match complete chronological history"
-        )
-
-
-def _ensure_training_results_allowed(
-    results: Sequence[ResultRecord],
-    task_pool: TaskPoolRecord,
-    tasks: Sequence[TaskRecord],
-    checks: Mapping[str, CheckRecord],
-    agents: Sequence[AgentRecord],
-    history_window: TimeRange,
-    rolling_policy: RollingOriginPolicy,
-) -> tuple[TaskCheckRef, ...]:
-    _ensure_result_records_valid(results, "training results")
-    _ensure_result_identity_matches_current_records(results, tasks, checks, agents)
-    history_refs = _training_history_refs(task_pool, tasks, checks, history_window, rolling_policy)
-    history_ref_keys = {(ref.task_id, ref.check_id) for ref in history_refs}
-    allowed_agents = {agent.agent_id for agent in agents}
-    leaked = [result.result_id for result in results if _instant_gt(result.result_available_at, history_window.end)]
-    if leaked:
-        raise ValueError("training results include results after the origin cutoff")
-    for result in results:
-        if result.task_id not in task_pool.task_ids or result.check_id not in task_pool.check_ids:
-            raise ValueError("training results include off-pool results")
-        if (result.task_id, result.check_id) not in history_ref_keys:
-            raise ValueError("training results include results outside rolling-origin history")
-        if result.agent_id not in allowed_agents:
-            raise ValueError("training results include results outside candidate Agent set")
-    return history_refs
