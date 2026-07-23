@@ -51,6 +51,9 @@ For a target repository run with a real Agent harness, see
 [`docs/real-target-walkthrough.md`](docs/real-target-walkthrough.md).
 For a concrete shell harness example, see
 [`examples/harnesses/codex-cli/`](examples/harnesses/codex-cli/).
+The Pylint replicate campaign's explicit `authorize`, `preflight`, and
+single-cell execution commands are documented in
+[`docs/pylint-swe-bench-reasoning-pilot.md`](docs/pylint-swe-bench-reasoning-pilot.md).
 The rolling-origin estimands, censoring, weighting, pairing, and uncertainty
 rules are fixed in [`docs/statistical-protocol.md`](docs/statistical-protocol.md).
 

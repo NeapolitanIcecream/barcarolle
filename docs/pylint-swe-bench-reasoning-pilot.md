@@ -143,6 +143,72 @@ automatic retry for stopped or result-less reservations. Creating the ledger
 requires new authorization and never inherits the historical pilot's budget or
 model window. No new replicate run or run-variation estimate has been produced.
 
+### Concrete campaign entry point
+
+`replicate_campaign_cli.py` turns the API into three explicit operations. It
+does not generate a Task Pool, Agent configuration, Runtime configuration,
+pricing decision, or authorization.
+
+The campaign directory is an ignored local artifact root. By default it must
+contain these frozen inputs:
+
+- `records/agents.jsonl`;
+- `records/runtime-config.jsonl`;
+- `records/replicate-schedule.jsonl`.
+
+The Agent records must use IDs ending in `-low` and `-high` and bind the exact
+Codex command, model, reasoning effort, campaign-local Codex home, endpoint,
+and harness content. The Runtime record must describe a budget enforced by the
+actual harness. Generate the schedule with `replicate_schedule.py`; it must use
+the same Agent and Runtime files. An unresolved model alias uses the schedule's
+campaign ID and a positive execution window.
+
+Set `OPENAI_BASE_URL` and `OPENAI_API_KEY`, then create authority with an
+explicit budget and pricing decision:
+
+```bash
+uv run python examples/pylint_swe_bench_verified/replicate_campaign_cli.py \
+  --pilot-output-dir "$PILOT_OUTPUT" \
+  --campaign-dir "$CAMPAIGN_DIR" \
+  authorize \
+  --approved-at "$APPROVED_AT" \
+  --scope "$CAMPAIGN_SCOPE" \
+  --maximum-estimated-cost-usd "$TOTAL_BUDGET_USD" \
+  --maximum-estimated-cost-per-call-usd "$PER_CALL_LIMIT_USD" \
+  --pricing-version "$PRICING_VERSION" \
+  --cost-rate "uncached_input_tokens=$UNCACHED_INPUT_RATE" \
+  --cost-rate "cached_input_tokens=$CACHED_INPUT_RATE" \
+  --cost-rate "output_tokens=$OUTPUT_RATE" \
+  --pricing-source "$PRICING_SOURCE" \
+  --accounting-basis "$ACCOUNTING_BASIS"
+```
+
+Authority creation writes `campaign-ledger.json` and makes no Agent call. The
+next command replays the ledger, schedule, prepared Pylint evidence, current
+endpoint, harness, repository, Check material, pinned verifier-image digest,
+architecture and base commit, and every remaining Runtime slot:
+
+```bash
+uv run python examples/pylint_swe_bench_verified/replicate_campaign_cli.py \
+  --pilot-output-dir "$PILOT_OUTPUT" \
+  --campaign-dir "$CAMPAIGN_DIR" \
+  preflight
+```
+
+Run one cell only after inspecting the JSON preflight summary:
+
+```bash
+uv run python examples/pylint_swe_bench_verified/replicate_campaign_cli.py \
+  --pilot-output-dir "$PILOT_OUTPUT" \
+  --campaign-dir "$CAMPAIGN_DIR" \
+  run-next
+```
+
+Each invocation emits a bounded JSON summary. `run-next` never loops and
+returns to `preflight` after recording one Result. All Agent, Runtime, schedule,
+Result, and ledger paths must stay below `CAMPAIGN_DIR`. A missing ledger makes
+`preflight` and `run-next` fail; neither operation creates authority.
+
 Future preparation also writes
 `records/dependency-evidence.jsonl`. The adapter derives exact changed-path
 overlap edges from trusted certification-side reference patches, assigns

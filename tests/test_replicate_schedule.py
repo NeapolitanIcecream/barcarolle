@@ -2,7 +2,9 @@ from __future__ import annotations
 
 from collections import Counter, defaultdict
 from dataclasses import replace
+import json
 from pathlib import Path
+from types import SimpleNamespace
 from typing import Any, cast
 import subprocess
 import sys
@@ -52,6 +54,7 @@ from examples.pylint_swe_bench_verified.replicate_campaign import (  # noqa: E40
     preflight_replicate_campaign,
     run_next_replicate_campaign_cell,
 )
+from examples.pylint_swe_bench_verified import replicate_campaign_cli  # noqa: E402
 from examples.pylint_swe_bench_verified.replicate_schedule import (  # noqa: E402
     ReplicateSchedule,
     build_replicate_schedule,
@@ -629,10 +632,12 @@ def test_replicate_campaign_stops_before_unfunded_next_call(
         updated_at="2026-07-22T00:00:02Z",
     )
     limits = ledger["limits"]
+    calls = ledger["calls"]
     assert isinstance(limits, dict)
+    assert isinstance(calls, list)
     assert ledger["remaining_usd"] == pytest.approx(0.0005)
     assert limits["maximum_estimated_cost_per_call_usd"] == pytest.approx(0.001)
-    assert len(ledger["calls"]) == 1
+    assert len(calls) == 1
     assert executed == [0]
 
 
@@ -885,6 +890,235 @@ def test_replicate_campaign_does_not_retry_a_failed_paid_cell(
     assert attempts == 1
 
 
+def test_replicate_campaign_cli_authorize_is_explicit_and_auditable(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    context = _campaign_context(tmp_path)
+    monkeypatch.setattr(
+        replicate_campaign_cli,
+        "build_campaign_context",
+        lambda paths, scoring_config: context,
+    )
+    monkeypatch.setattr(
+        replicate_campaign_cli,
+        "resolve_openai_endpoint_digest",
+        lambda *, require_api_key: "endpoint-digest",
+    )
+
+    exit_code = replicate_campaign_cli.main(
+        (
+            *_campaign_cli_common_args(tmp_path, context),
+            "authorize",
+            "--approved-at",
+            "2026-07-22T00:00:00Z",
+            "--scope",
+            "paired replicate test campaign",
+            "--maximum-estimated-cost-usd",
+            "10",
+            "--maximum-estimated-cost-per-call-usd",
+            "1",
+            "--pricing-version",
+            "test-pricing",
+            "--cost-rate",
+            "input_tokens=0.001",
+            "--cost-rate",
+            "output_tokens=0.005",
+            "--pricing-source",
+            "https://example.test/pricing",
+            "--accounting-basis",
+            "test price schedule",
+        )
+    )
+
+    summary = json.loads(capsys.readouterr().out)
+    assert exit_code == 0
+    assert context.ledger_path.exists()
+    assert summary == {
+        "campaign_id": CAMPAIGN_ID,
+        "ledger_path": str(context.ledger_path),
+        "maximum_estimated_cost_per_call_usd": 1.0,
+        "maximum_estimated_cost_usd": 10.0,
+        "maximum_paid_calls": len(context.schedule.cells),
+        "next": "preflight",
+        "stage": "authorized",
+    }
+
+
+def test_replicate_campaign_cli_loads_frozen_execution_inputs(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    task_pool, tasks, checks, agents, runtime = _inputs()
+    campaign_dir = tmp_path / "campaign"
+    records_dir = campaign_dir / "records"
+    records_dir.mkdir(parents=True)
+    bound_agents = tuple(
+        replace(
+            agent,
+            harness_digest=canonical_digest(
+                {
+                    "agent_command": (
+                        "env",
+                        f"BARCAROLLE_CODEX_MODEL={agent.requested_model_id}",
+                        f"BARCAROLLE_CODEX_REASONING_EFFORT={effort}",
+                        "BARCAROLLE_CODEX_HOME="
+                        + str((campaign_dir / f"codex-home-{effort}").resolve()),
+                        str(replicate_campaign_cli.HARNESS),
+                    )
+                }
+            ),
+        )
+        for agent, effort in zip(agents, ("low", "high"), strict=True)
+    )
+    schedule = build_replicate_schedule(
+        task_pool,
+        tasks,
+        checks,
+        bound_agents,
+        runtime,
+        campaign_id=CAMPAIGN_ID,
+        seed=20260722,
+        replicate_fraction=0.20,
+        replicate_count=2,
+    )
+    agents_path = records_dir / "agents.jsonl"
+    runtime_path = records_dir / "runtime-config.jsonl"
+    schedule_path = records_dir / "replicate-schedule.jsonl"
+    write_jsonl_records(agents_path, bound_agents)
+    write_jsonl_records(runtime_path, (runtime,))
+    write_jsonl_records(schedule_path, (schedule,))
+    monkeypatch.setattr(
+        replicate_campaign_cli,
+        "build_pilot_context",
+        lambda paths, ledger_path: SimpleNamespace(
+            run_context=WorkspaceRunContext(),
+            task_pool=task_pool,
+            tasks=tasks,
+            checks={check.check_id: check for check in checks},
+            workspace_config=_workspace_config(),
+        ),
+    )
+    paths = replicate_campaign_cli.CampaignCliPaths(
+        pilot=replicate_campaign_cli.PilotPaths(
+            output_dir=tmp_path / "pilot",
+            target_repo=tmp_path / "repo",
+            dataset=tmp_path / "dataset",
+            supplemental_dataset=tmp_path / "supplemental-dataset",
+            harness_python=tmp_path / "python",
+        ),
+        campaign_dir=campaign_dir,
+        agents_path=agents_path,
+        runtime_config_path=runtime_path,
+        schedule_path=schedule_path,
+        result_store_path=records_dir / "results.jsonl",
+        ledger_path=campaign_dir / "campaign-ledger.json",
+    )
+
+    context = replicate_campaign_cli.build_campaign_context(
+        paths,
+        ScoringConfig("test-pricing", {"input_tokens": 0.001}),
+    )
+
+    assert context.schedule == schedule
+    assert context.agents == bound_agents
+    assert context.base_runtime_config == runtime
+    assert context.result_store.path == records_dir / "results.jsonl"
+    assert context.ledger_path == campaign_dir / "campaign-ledger.json"
+
+
+def test_replicate_campaign_cli_preflight_never_creates_authority(
+    tmp_path: Path,
+) -> None:
+    context = _campaign_context(tmp_path)
+
+    with pytest.raises(FileNotFoundError):
+        replicate_campaign_cli.main(
+            (*_campaign_cli_common_args(tmp_path, context), "preflight")
+        )
+
+    assert not context.ledger_path.exists()
+    assert not ledger_events_path(context.ledger_path).exists()
+
+
+def test_replicate_campaign_cli_preflight_verifies_images_and_reports_next_cell(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    context = _campaign_context(tmp_path)
+    _initialize_campaign_ledger(context)
+    _stub_campaign_preflight(monkeypatch)
+    monkeypatch.setattr(
+        replicate_campaign_cli,
+        "build_campaign_context",
+        lambda paths, scoring_config: context,
+    )
+    verified: list[tuple[str, ...]] = []
+
+    def verify_images(
+        tasks: tuple[TaskRecord, ...],
+    ) -> tuple[dict[str, str], ...]:
+        verified.append(tuple(task.task_id for task in tasks))
+        return ({"image_ref": "first"}, {"image_ref": "second"})
+
+    monkeypatch.setattr(
+        replicate_campaign_cli,
+        "verify_pylint_verifier_images",
+        verify_images,
+    )
+
+    exit_code = replicate_campaign_cli.main(
+        (*_campaign_cli_common_args(tmp_path, context), "preflight")
+    )
+
+    summary = json.loads(capsys.readouterr().out)
+    assert exit_code == 0
+    assert verified == [tuple(task.task_id for task in context.tasks)]
+    assert summary["stage"] == "preflight_passed"
+    assert summary["verified_image_count"] == 2
+    assert summary["next_cell"]["sequence_index"] == 0
+    assert summary["next"] == "run-next"
+    assert context.result_store.path.read_text(encoding="utf-8") == ""
+    assert not ledger_events_path(context.ledger_path).exists()
+
+
+def test_replicate_campaign_cli_run_next_executes_one_cell(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    context = _campaign_context(tmp_path)
+    _initialize_campaign_ledger(context)
+    _stub_campaign_preflight(monkeypatch)
+    executed = _stub_successful_campaign_run(monkeypatch, context)
+    monkeypatch.setattr(
+        replicate_campaign_cli,
+        "build_campaign_context",
+        lambda paths, scoring_config: context,
+    )
+    verified: list[tuple[str, ...]] = []
+    monkeypatch.setattr(
+        replicate_campaign_cli,
+        "verify_pylint_verifier_images",
+        lambda tasks: verified.append(tuple(task.task_id for task in tasks)) or (),
+    )
+
+    exit_code = replicate_campaign_cli.main(
+        (*_campaign_cli_common_args(tmp_path, context), "run-next")
+    )
+
+    summary = json.loads(capsys.readouterr().out)
+    assert exit_code == 0
+    assert executed == [0]
+    assert verified == [tuple(task.task_id for task in context.tasks)]
+    assert summary["stage"] == "cell_recorded"
+    assert summary["task_id"] == context.schedule.cells[0].task_id
+    assert summary["agent_id"] == context.schedule.cells[0].agent_id
+    assert summary["next"] == "preflight"
+
+
 def _campaign_context(tmp_path: Path) -> ReplicateCampaignContext:
     task_pool, tasks, checks, agents, runtime = _inputs()
     schedule = build_replicate_schedule(
@@ -913,6 +1147,20 @@ def _campaign_context(tmp_path: Path) -> ReplicateCampaignContext:
         result_store=ResultStore(tmp_path / "results.jsonl"),
         ledger_path=tmp_path / "resource-ledger.json",
         run_context=WorkspaceRunContext(),
+    )
+
+
+def _campaign_cli_common_args(
+    tmp_path: Path,
+    context: ReplicateCampaignContext,
+) -> tuple[str, ...]:
+    return (
+        "--pilot-output-dir",
+        str(tmp_path / "pilot"),
+        "--campaign-dir",
+        str(tmp_path),
+        "--ledger",
+        str(context.ledger_path),
     )
 
 

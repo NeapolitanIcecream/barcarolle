@@ -431,11 +431,40 @@ def preflight(context: PilotContext) -> Mapping[str, object]:
     )
     if len(context.tasks) != TASK_COUNT or len(context.agents) != 2:
         raise RuntimeError("preflight requires the fixed 10 Task x 2 Agent matrix")
-    configured = _task_source_by_instance()
+    images = verify_pylint_verifier_images(context.tasks)
+    summary = {
+        "stage": "preflight_passed",
+        "task_pool_id": context.task_pool.task_pool_id,
+        "workspace_config_digest": canonical_digest(context.workspace_config),
+        "agent_manifest_digests": tuple(
+            agent.agent_manifest_digest for agent in context.agents
+        ),
+        "verified_images": images,
+        "planned_paid_calls": TASK_COUNT * len(context.agents),
+        "maximum_paid_calls": MAXIMUM_PAID_CALLS,
+        "maximum_estimated_cost_usd": MAXIMUM_ESTIMATED_COST_USD,
+        "paid_call_count": len(calls),
+        "next": "--canary",
+    }
+    _write_json(context.paths.output_dir / "preflight-summary.json", summary)
+    return summary
+
+
+def verify_pylint_verifier_images(
+    tasks: Sequence[TaskRecord],
+) -> tuple[Mapping[str, str], ...]:
+    """Verify every pinned Pylint verifier image without running an Agent."""
+    configured_by_source_ref = {
+        _required_string(config, "issue_url"): config
+        for config in _task_source_by_instance().values()
+    }
     images: list[Mapping[str, str]] = []
-    for task in context.tasks:
-        instance_id = context.instance_by_task_id[task.task_id]
-        image_ref = _image_ref(instance_id, configured[instance_id])
+    for task in tasks:
+        config = configured_by_source_ref.get(task.source_ref)
+        if config is None:
+            raise RuntimeError(f"Pylint Task source is not configured: {task.task_id}")
+        instance_id = _required_string(config, "instance_id")
+        image_ref = _image_ref(instance_id, config)
         inspected = subprocess.run(
             ("docker", "image", "inspect", image_ref),
             text=True,
@@ -485,22 +514,7 @@ def preflight(context: PilotContext) -> Mapping[str, object]:
                 "base_commit": task.base_commit,
             }
         )
-    summary = {
-        "stage": "preflight_passed",
-        "task_pool_id": context.task_pool.task_pool_id,
-        "workspace_config_digest": canonical_digest(context.workspace_config),
-        "agent_manifest_digests": tuple(
-            agent.agent_manifest_digest for agent in context.agents
-        ),
-        "verified_images": tuple(images),
-        "planned_paid_calls": TASK_COUNT * len(context.agents),
-        "maximum_paid_calls": MAXIMUM_PAID_CALLS,
-        "maximum_estimated_cost_usd": MAXIMUM_ESTIMATED_COST_USD,
-        "paid_call_count": len(calls),
-        "next": "--canary",
-    }
-    _write_json(context.paths.output_dir / "preflight-summary.json", summary)
-    return summary
+    return tuple(images)
 
 
 def run_next_cell(context: PilotContext, *, canary: bool) -> Mapping[str, object]:

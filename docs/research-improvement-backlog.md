@@ -99,7 +99,12 @@ endpoint digest, total budget, a per-call estimated-cost limit, the
 schedule-derived call cap, and pricing before any Agent call. Remaining budget
 must cover one per-call limit before reservation. Its concrete dependency
 artifact derives components from trusted reference-patch path overlap and is replayed before
-paid stages. Run-variation and outcome comparisons still require another
+paid stages. A concrete CLI now loads those frozen records and Pylint adapter
+bindings, exposes separate `authorize`, `preflight`, and `run-next` operations,
+and emits bounded summaries without adding a core execution path. Task Pool
+expansion is deferred until a concrete Task Generator is selected; a generator
+may itself require the unavailable model endpoint. Run-variation and outcome
+comparisons still require another
 explicitly authorized evidence-producing paid run; no campaign authority
 ledger was created by this maintenance sprint.
 
@@ -171,7 +176,7 @@ Agent run.
 
 - `uv run ruff check .`: passed.
 - `uv run pyright`: zero errors.
-- `uv run pytest -q`: 832 passed, 2 skipped.
+- `uv run pytest -q`: 837 passed, 2 skipped.
 - Cross-module tests now mutate frozen Task/Check content, rolling-origin future
   and censored refs, source-event artifacts, policy fields, dependency/stratum
   classification, symmetric certification attempts, Agent candidates,
@@ -545,6 +550,8 @@ and rehashes the resulting tree before Check execution.
 | RI-109 | P0 | reproduced, resolved 2026-07-23 | Workspace `preflight_run_bindings` accepted invalid WorkspaceConfig/RuntimeConfig IDs, including with an empty plan, while validating only Runtime timeout through a local branch. Direct Workspace callers could therefore cross the execution preflight with configs rejected by Result Store and Task Pool. | Workspace now applies both full shared validators before repository or plan state, so plan emptiness cannot change config validity. Runner reuses `validate_runtime_config` instead of hand-coding timeout type checks; the existing no-cell preflight remains. Two red public cases and the existing timeout contract pass, and `_run_agent_cells` loses two Lizard branches without hiding orchestration. |
 | RI-110 | P1 | reproduced, resolved 2026-07-23 | Workspace repository binding accepted an invalid WorkspaceConfig and stored its repository source under `repository_checkout_config_digest`; later execution preflight rejected the same object. This made the immutable context boundary weaker than Agent and Check binding and allowed direct workspace construction to start from malformed config state. | `bind_repository_source` now applies the Records-owned WorkspaceConfig validator before examining the repository or returning a new context. Execution preflight retains its just-in-time recheck. One public red case closes the binding boundary without changing context keys or adding a registry. |
 | RI-111 | P1 | reproduced, resolved 2026-07-23 | Runner Task Pool construction resolved candidates and repository commits before discovering malformed WorkspaceConfig/RuntimeConfig during per-candidate certification, repeating the same validation for every candidate. | `build_task_pool` now validates both configs once before candidate resolution; `certify_task_candidate` retains its pre-Check revalidation for direct calls and drift defense. Two public red cases prove candidate resolution is not reached. No TaskPoolConfig wrapper or generic preflight framework was added. |
+| RI-112 | P1 | code-confirmed, resolved 2026-07-23 | The frozen Pylint schedule and campaign authority were executable only by manually assembling `ReplicateCampaignContext` in Python. That left endpoint-time file loading and action selection to ad hoc code immediately before an evidence-producing run. | `replicate_campaign_cli.py` loads the exact Agent, Runtime, schedule, Task Pool, and local Pylint bindings. It provides only explicit authority creation, no-call preflight, and one-cell execution; verifies pinned verifier-image digest, architecture, and base commit before a paid cell; confines campaign artifacts below one directory; and returns bounded JSON summaries. It does not generate experiment inputs or loop over paid cells. |
+| RI-113 | P1 | maintainer decision | future-work | Expanding Task supply before the model endpoint exists assumes a Task Generator. Some intended generators may be LLM-driven, while deterministic importers have different source and certification prerequisites. | Do not build a generic generator or expand a pool without selecting one concrete source. Resume with an adapter-specific generator when its data and, where required, model endpoint are available; reuse the existing candidate, certification, SourceEvent, and immutable publication contracts. |
 
 Decisions from the 2026-07-22 maintainer review:
 
@@ -2283,6 +2290,7 @@ Functionality decisions:
 | DOC-007 | P2 | complete 2026-07-22 | Coverage and invalid rate are labeled holdout-evidence diagnostics, not Selector losses. |
 | DOC-008 | P1 | complete 2026-07-22 | Selection docs distinguish executable paths from deferred learned methods. |
 | DOC-009 | P2 | ongoing | Keep the RI-021 checkout threshold and RI-033 bounded-parallel prerequisites current when new timing evidence replaces the 1.009 serial-pilot estimate. |
+| DOC-010 | P1 | complete 2026-07-23 | The Pylint pilot report documents the frozen campaign inputs and exact `authorize`, `preflight`, and one-cell `run-next` sequence without embedding credentials or campaign-specific values. |
 
 Avoid expanding design documents for fields without a current caller. Update
 `PROCESS.md` only when the active research direction, paid-call boundary, claim
@@ -2449,6 +2457,10 @@ Exit criteria:
   (complete for the later-Task-Pool path; empirical evidence pending);
 - estimands and uncertainty rules are predeclared (offline contract complete;
   empirical calibration pending).
+
+The concrete Pylint campaign entry is complete. Task Pool expansion is not a
+generic prerequisite: select one Task Generator first, and wait for the model
+endpoint when that generator is LLM-driven.
 
 ### Stage 4: Adaptive Algorithms
 
@@ -2742,8 +2754,24 @@ and show material wall-clock or paid-cost improvement.
   create immutable run-context state.
 - RI-111: Runner validates Task Pool build configs once before candidate
   resolution while retaining just-in-time certification checks.
+- RI-112: the Pylint replicate CLI loads frozen campaign evidence and exposes
+  explicit authority, preflight, and one-cell execution operations without a
+  second executor or automatic paid loop.
 
 ## Update Log
+
+- 2026-07-23: closed RI-112 and recorded RI-113. The Pylint replicate campaign
+  now has one concrete CLI over its existing authority and executor APIs. Three
+  actions keep authorization, no-call preflight, and single-cell execution
+  separate; verifier images are replayed before paid execution; campaign
+  artifacts are confined below one local directory and CLI summaries omit
+  credentials and raw endpoint values. Five focused CLI specs
+  cover explicit authority, no implicit ledger creation, exact frozen-input
+  loading, image-verified preflight, and one-cell execution; the full suite
+  passes 837 tests with 2
+  skipped. Task Pool expansion is deferred until a concrete Task Generator and
+  any required model endpoint exist. No campaign ledger, network request, paid
+  call, Task Generator, or core Runner path was added.
 
 - 2026-07-23: closed RI-110, RI-111, and RI-034's ninety-fourth and
   ninety-fifth boundary slices. Workspace repository binding now validates its
