@@ -289,12 +289,17 @@ def harness_content_digest(paths: Sequence[Path]) -> str:
         raise ValueError("harness content paths must not be empty")
     if len(set(normalized)) != len(normalized):
         raise ValueError("harness content paths must not contain duplicates")
-    digests: list[str] = []
-    for path in normalized:
+    files: list[Mapping[str, str]] = []
+    for path in sorted(normalized, key=str):
         if not path.is_file():
             raise ValueError("harness content path must be an existing file")
-        digests.append(hashlib.sha256(path.read_bytes()).hexdigest())
-    return canonical_digest({"file_sha256": tuple(sorted(digests))})
+        files.append(
+            {
+                "path": str(path),
+                "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+            }
+        )
+    return canonical_digest({"files": tuple(files)})
 
 
 def openai_endpoint_digest(base_url: str) -> str:

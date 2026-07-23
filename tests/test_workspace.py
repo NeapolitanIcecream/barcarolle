@@ -579,6 +579,60 @@ def test_paid_preflight_binds_endpoint_and_harness_content(
     assert "test-secret-never-reported" not in str(exc_info.value)
 
 
+def test_paid_preflight_binds_harness_content_to_declared_paths(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    run_context = WorkspaceRunContext()
+    repo, base_commit = _make_repo(tmp_path)
+    task = _task(base_commit=base_commit)
+    workspace_config = _workspace_config(repo)
+    check, run_context = _bind_default_check(tmp_path, run_context)
+    harness = tmp_path / "paid-harness.py"
+    helper = tmp_path / "usage-helper.py"
+    harness.write_text("print('paid harness')\n", encoding="utf-8")
+    helper.write_text("print('usage helper')\n", encoding="utf-8")
+    command = (sys.executable, str(harness))
+    endpoint = "https://example.invalid/v1"
+    harness_digest = canonical_digest({"agent_command": command})
+    agent = replace(
+        _agent(command),
+        network_policy_digest=make_openai_env_network_policy_digest(
+            endpoint_digest=openai_endpoint_digest(endpoint),
+            harness_digest=harness_digest,
+            harness_content_digest=harness_content_digest((harness, helper)),
+        ),
+    )
+    run_context = bind_repository_source(run_context, workspace_config, repo)
+    run_context = bind_agent_harness(
+        run_context,
+        agent,
+        command,
+        execution_mode="openai_paid",
+        endpoint_harness_paths=(harness, helper),
+    )
+    monkeypatch.setenv("OPENAI_BASE_URL", endpoint)
+    monkeypatch.setenv("OPENAI_API_KEY", "test-secret-never-reported")
+
+    preflight_run_bindings(
+        run_context,
+        ((task, check, agent),),
+        workspace_config,
+        _runtime(),
+    )
+
+    harness_bytes = harness.read_bytes()
+    harness.write_bytes(helper.read_bytes())
+    helper.write_bytes(harness_bytes)
+    with pytest.raises(ValueError, match="endpoint or harness proof"):
+        preflight_run_bindings(
+            run_context,
+            ((task, check, agent),),
+            workspace_config,
+            _runtime(),
+        )
+
+
 def test_paid_preflight_rejects_missing_api_key_before_execution(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,

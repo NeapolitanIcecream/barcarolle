@@ -83,9 +83,10 @@ authentication, `LLM_BASE_URL`, `LLM_API_KEY`, OpenRouter variables, or
 provider-specific credentials unless the user changes this rule. Repository
 maintenance and PR review sessions use local Codex authentication instead.
 
-Every paid Agent binding must prove the exact endpoint, command, harness
-content, requested model, immutable snapshot or bounded campaign scope, and
-runtime identity. Raw URLs and credentials are not persisted.
+Every paid Agent binding must prove the exact endpoint, command, each declared
+harness path-to-content binding, requested model, immutable snapshot or bounded
+campaign scope, and runtime identity. Raw URLs and credentials are not
+persisted.
 
 Every replicate campaign authority must bind:
 
