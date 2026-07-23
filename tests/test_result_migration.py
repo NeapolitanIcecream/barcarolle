@@ -9,19 +9,24 @@ from barcarolle.records import (
     CheckRecord,
     ResultRecord,
     canonical_digest,
+    canonical_json,
     load_jsonl_records,
     make_check_digest,
     validate_result,
 )
 
 
-def test_migrate_result_cache_preserves_execution_and_moves_pricing(tmp_path: Path) -> None:
+def test_migrate_result_cache_preserves_execution_and_moves_pricing(
+    tmp_path: Path,
+) -> None:
     check = _check()
     old_result = _old_result(check)
     results_path = tmp_path / "results.v1.jsonl"
     checks_path = tmp_path / "checks.jsonl"
     output_path = tmp_path / "results.latest.jsonl"
-    results_path.write_text(json.dumps(old_result, sort_keys=True) + "\n", encoding="utf-8")
+    results_path.write_text(
+        json.dumps(old_result, sort_keys=True) + "\n", encoding="utf-8"
+    )
     _write_old_check(checks_path, check)
 
     completed = _run_migration(results_path, checks_path, output_path)
@@ -35,12 +40,23 @@ def test_migrate_result_cache_preserves_execution_and_moves_pricing(tmp_path: Pa
     assert result.result_id == old_result["result_id"]
     assert result.scoring_config_digest == "scoring-v1"
     assert result.cache_identity.check_digest == make_check_digest(check)
-    assert result.cache_identity.identity_digest != old_result["cache_identity"]["identity_digest"]
+    assert result.cache_identity.requested_model_id == "model"
+    assert result.cache_identity.model_snapshot_id is None
+    assert result.cache_identity.model_resolution_scope_id.startswith("legacy-result-")
+    assert (
+        result.cache_identity.identity_digest
+        != old_result["cache_identity"]["identity_digest"]
+    )
     assert result.cost["total_cost"] is None
-    assert results_path.read_text(encoding="utf-8") == json.dumps(old_result, sort_keys=True) + "\n"
+    assert (
+        results_path.read_text(encoding="utf-8")
+        == json.dumps(old_result, sort_keys=True) + "\n"
+    )
 
 
-def test_migrate_result_cache_refuses_overwrite_and_corrupt_input(tmp_path: Path) -> None:
+def test_migrate_result_cache_refuses_overwrite_and_corrupt_input(
+    tmp_path: Path,
+) -> None:
     check = _check()
     results_path = tmp_path / "results.v1.jsonl"
     checks_path = tmp_path / "checks.jsonl"
@@ -60,7 +76,9 @@ def test_migrate_result_cache_refuses_overwrite_and_corrupt_input(tmp_path: Path
     assert "refusing to overwrite" in occupied.stderr
 
 
-def test_migrate_result_cache_normalizes_legacy_error_and_empty_complete_usage(tmp_path: Path) -> None:
+def test_migrate_result_cache_normalizes_legacy_error_and_empty_complete_usage(
+    tmp_path: Path,
+) -> None:
     check = _check()
     old_result = _old_result(check)
     old_result.update(
@@ -84,7 +102,12 @@ def test_migrate_result_cache_normalizes_legacy_error_and_empty_complete_usage(t
     result = load_jsonl_records(output_path, ResultRecord)[0]
 
     assert completed.returncode == 0
-    assert (result.terminal_status, result.scoreable_state, result.outcome, result.invalid_owner) == (
+    assert (
+        result.terminal_status,
+        result.scoreable_state,
+        result.outcome,
+        result.invalid_owner,
+    ) == (
         "error",
         "agent_invalid",
         "invalid",
@@ -120,6 +143,51 @@ def test_migrate_result_cache_rejects_benchmark_owned_error(tmp_path: Path) -> N
     assert not output_path.exists()
 
 
+def test_migrate_unscoped_model_results_preserves_source_and_limits_alias_reuse(
+    tmp_path: Path,
+) -> None:
+    old_result = _unscoped_model_result(_check())
+    results_path = tmp_path / "results.unscoped-model.jsonl"
+    output_path = tmp_path / "results.latest.jsonl"
+    source = f"{canonical_json(old_result)}\n"
+    results_path.write_text(source, encoding="utf-8")
+
+    completed = _run_model_identity_migration(results_path, output_path)
+    result = load_jsonl_records(output_path, ResultRecord)[0]
+
+    assert completed.returncode == 0
+    assert result.cache_identity.requested_model_id == "model"
+    assert result.cache_identity.model_snapshot_id is None
+    assert result.cache_identity.model_resolution_scope_id == "historical-campaign"
+    assert result.cache_identity.model_resolution_scope_started_at == (
+        "2025-12-31T00:00:00Z"
+    )
+    assert result.cache_identity.model_resolution_scope_ended_at == (
+        "2026-01-02T00:00:00Z"
+    )
+    assert validate_result(result).ok
+    assert results_path.read_text(encoding="utf-8") == source
+
+
+def test_migrate_unscoped_model_results_rejects_corrupt_input_and_overwrite(
+    tmp_path: Path,
+) -> None:
+    old_result = _unscoped_model_result(_check())
+    old_result["result_digest"] = "corrupt"
+    results_path = tmp_path / "results.unscoped-model.jsonl"
+    output_path = tmp_path / "results.latest.jsonl"
+    results_path.write_text(f"{canonical_json(old_result)}\n", encoding="utf-8")
+
+    corrupt = _run_model_identity_migration(results_path, output_path)
+    assert corrupt.returncode != 0
+    assert "old Result digest" in corrupt.stderr
+
+    output_path.write_text("occupied\n", encoding="utf-8")
+    occupied = _run_model_identity_migration(results_path, output_path)
+    assert occupied.returncode != 0
+    assert "refusing to overwrite" in occupied.stderr
+
+
 def _run_migration(
     results_path: Path,
     checks_path: Path,
@@ -135,6 +203,33 @@ def _run_migration(
             str(checks_path),
             "--output",
             str(output_path),
+        ),
+        cwd=Path(__file__).resolve().parents[1],
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=False,
+    )
+
+
+def _run_model_identity_migration(
+    results_path: Path,
+    output_path: Path,
+) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        (
+            sys.executable,
+            "scripts/migrate_unscoped_model_results.py",
+            "--results",
+            str(results_path),
+            "--output",
+            str(output_path),
+            "--model-scope-id",
+            "historical-campaign",
+            "--model-scope-started-at",
+            "2025-12-31T00:00:00Z",
+            "--model-scope-ended-at",
+            "2026-01-02T00:00:00Z",
         ),
         cwd=Path(__file__).resolve().parents[1],
         text=True,
@@ -220,5 +315,28 @@ def _old_result(check: CheckRecord) -> dict[str, object]:
         "finished_at": "2026-01-01T00:00:10Z",
         "result_available_at": "2026-01-01T00:00:10Z",
     }
+    result["result_digest"] = canonical_digest(result)
+    return result
+
+
+def _unscoped_model_result(check: CheckRecord) -> dict[str, object]:
+    result = _old_result(check)
+    identity = dict(result["cache_identity"])
+    scoring_config_digest = identity.pop("scoring_config_digest")
+    for field in (
+        "check_manifest_digest",
+        "hidden_check_bundle_digest",
+        "verifier_deps_digest",
+        "verifier_image_digest",
+    ):
+        identity.pop(field)
+    identity["check_digest"] = make_check_digest(check)
+    identity.pop("identity_digest")
+    identity["identity_digest"] = canonical_digest(identity)
+
+    result["cache_identity"] = identity
+    result["scoring_config_digest"] = scoring_config_digest
+    result.pop("usage_coverage")
+    result.pop("result_digest")
     result["result_digest"] = canonical_digest(result)
     return result
