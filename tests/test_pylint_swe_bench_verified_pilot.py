@@ -147,21 +147,6 @@ def test_check_binding_keeps_existing_paid_command_identity(tmp_path: Path) -> N
     )
 
 
-def test_generator_config_binds_dependency_evidence_digest() -> None:
-    evidence = pilot.PylintDependencyEvidence(
-        protocol_version=pilot.DEPENDENCY_PROTOCOL_VERSION,
-        repository_id=pilot.REPOSITORY_ID,
-        patch_footprints=(),
-        relations=(),
-        cluster_by_source_event_id={},
-        dependency_evidence_digest="first-digest",
-    )
-
-    assert pilot._generator_config_digest(evidence) != pilot._generator_config_digest(
-        replace(evidence, dependency_evidence_digest="second-digest")
-    )
-
-
 def test_certification_counts_require_base_negative_and_reference_positive() -> None:
     base = {
         "tests": {

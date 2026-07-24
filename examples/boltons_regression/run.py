@@ -217,12 +217,7 @@ def run(target_repo: Path, output_dir: Path) -> dict[str, object]:
             "check_records_ref": "records/checks.jsonl",
             "certification_evidence_ref": "records/certification-evidence.jsonl",
             "source_event_records_ref": "records/source-events.jsonl",
-            "generator_config_digest": canonical_digest(
-                {
-                    "fixture": "boltons-current-schema-regression-v1",
-                    "base_commit": PINNED_COMMIT,
-                }
-            ),
+            "generator_config_digest": None,
             "certification_config_digest": canonical_digest(certification_config),
             "created_at": "2026-07-15T00:00:00Z",
         },

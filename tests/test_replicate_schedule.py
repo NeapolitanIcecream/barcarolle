@@ -1404,7 +1404,7 @@ def _task_pool(
             certification_evidence_digest="certification-evidence",
             generation_provenance_ref=None,
             generation_provenance_digest=None,
-            generator_config_digest="generator",
+            generator_config_digest=None,
             source_protocol_digest=None,
             certification_config_digest="certification-config",
             created_at="2026-07-22T00:00:00Z",

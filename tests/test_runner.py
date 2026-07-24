@@ -4999,7 +4999,7 @@ def _task_pool(
         certification_evidence_digest=canonical_digest(evidence),
         generation_provenance_ref=None,
         generation_provenance_digest=None,
-        generator_config_digest="generator",
+        generator_config_digest=None,
         source_protocol_digest=None,
         certification_config_digest=canonical_digest({"repeat_count": 1}),
         created_at=created_at,

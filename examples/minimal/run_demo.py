@@ -272,7 +272,7 @@ def _build_task_pool(
             "check_records_ref": "records/checks.jsonl",
             "certification_evidence_ref": "records/certification-evidence.jsonl",
             "source_event_records_ref": "records/source-events.jsonl",
-            "generator_config_digest": "generator-fixture",
+            "generator_config_digest": None,
             "certification_config_digest": canonical_digest(certification_config),
             "created_at": "2026-01-11T00:00:00Z",
         },

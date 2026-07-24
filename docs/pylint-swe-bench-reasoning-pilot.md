@@ -212,8 +212,10 @@ Result, and ledger paths must stay below `CAMPAIGN_DIR`. A missing ledger makes
 Future preparation also writes
 `records/dependency-evidence.jsonl`. The adapter derives exact changed-path
 overlap edges from trusted certification-side reference patches, assigns
-deterministic connected components, binds the artifact through Task Pool
-generator identity, and replays it before paid stages. On the historical ten
+deterministic connected components and replays the artifact against the Task
+Pool's digested SourceEvent clusters and reference patches before paid stages.
+It does not claim a Generator identity until the concrete adapter is migrated
+to the generic generation-provenance contract. On the historical ten
 patches, `pylint-dev__pylint-6528` and `pylint-dev__pylint-7080` form the only
 non-singleton component because both change
 `pylint/lint/expand_modules.py`. Absence of another overlap is not evidence of

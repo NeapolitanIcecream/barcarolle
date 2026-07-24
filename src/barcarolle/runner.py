@@ -2159,11 +2159,7 @@ def _task_pool_metadata(
 ) -> dict[str, object]:
     metadata = dict(config.metadata)
     metadata["repository_id"] = config.repository_id
-    metadata["generator_config_digest"] = (
-        config.prepared_package.manifest.generator_behavior_digest
-        if config.prepared_package is not None
-        else None
-    )
+    metadata["generator_config_digest"] = None
     metadata["source_protocol_digest"] = None
     metadata["certification_config_digest"] = canonical_digest(
         config.certification_config

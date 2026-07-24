@@ -34,6 +34,7 @@ from barcarolle.records import (  # noqa: E402
     canonical_digest,
     load_jsonl_records,
     make_source_event_id,
+    validate_task_pool,
     write_jsonl_records,
 )
 from barcarolle.result_store import (  # noqa: E402
@@ -81,7 +82,6 @@ from examples.experiment_ledger import (  # noqa: E402
     write_json as _write_json,
 )
 from examples.pylint_swe_bench_verified.dependency_evidence import (  # noqa: E402
-    DEPENDENCY_PROTOCOL_VERSION,
     PylintDependencyEvidence,
     build_dependency_evidence,
     validate_dependency_evidence_against_patches,
@@ -272,7 +272,7 @@ def prepare(paths: PilotPaths) -> Mapping[str, object]:
             "check_records_ref": "records/checks.jsonl",
             "certification_evidence_ref": "records/certification-evidence.jsonl",
             "source_event_records_ref": "records/source-events.jsonl",
-            "generator_config_digest": _generator_config_digest(dependency_evidence),
+            "generator_config_digest": None,
             "certification_config_digest": canonical_digest(certification_config),
             "created_at": "2026-07-17T00:00:00Z",
         },
@@ -328,6 +328,12 @@ def build_context(paths: PilotPaths, ledger_path: Path | None = None) -> PilotCo
     _require_harness_revision(paths.harness_python)
     records_dir = paths.output_dir / "records"
     (task_pool,) = load_jsonl_records(records_dir / "task_pool.jsonl", TaskPoolRecord)
+    task_pool_validation = validate_task_pool(task_pool)
+    if not task_pool_validation.ok:
+        raise RuntimeError(
+            "prepared Task Pool record is invalid: "
+            + "; ".join(task_pool_validation.errors)
+        )
     tasks = tuple(load_jsonl_records(records_dir / "tasks.jsonl", TaskRecord))
     checks_tuple = tuple(load_jsonl_records(records_dir / "checks.jsonl", CheckRecord))
     source_events = tuple(
@@ -377,12 +383,6 @@ def build_context(paths: PilotPaths, ledger_path: Path | None = None) -> PilotCo
         raise RuntimeError(
             "Pylint dependency evidence does not match SourceEvents: "
             + "; ".join(cluster_validation.errors)
-        )
-    if task_pool.generator_config_digest != _generator_config_digest(
-        dependency_evidence
-    ):
-        raise RuntimeError(
-            "Pylint dependency evidence does not match the prepared Task Pool"
         )
     workspace_config = _workspace_config(extracted, configured)
     runtime_config = _runtime_config()
@@ -1291,25 +1291,6 @@ def _dependency_reference_patches(
             raise RuntimeError("configured tasks contain a duplicate SourceEvent")
         patches[source_event_id] = _reference_patch(paths, instance_id)
     return patches
-
-
-def _generator_config_digest(
-    dependency_evidence: PylintDependencyEvidence,
-) -> str:
-    return canonical_digest(
-        {
-            "pilot": "swe-bench-pylint-10x2-v2",
-            "dataset": _source_config()["dataset"],
-            "supplemental_dataset": _source_config()["supplemental_dataset"],
-            "harness": _source_config()["harness"],
-            "check_sha256": _file_sha256(CHECK),
-            "dependency_evidence_ref": DEPENDENCY_EVIDENCE_REF,
-            "dependency_protocol_version": DEPENDENCY_PROTOCOL_VERSION,
-            "dependency_evidence_digest": (
-                dependency_evidence.dependency_evidence_digest
-            ),
-        }
-    )
 
 
 def _all_refs(context: PilotContext) -> tuple[TaskCheckRef, ...]:

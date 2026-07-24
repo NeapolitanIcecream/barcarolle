@@ -848,7 +848,7 @@ def test_certification_decision_requires_exact_boolean_at_public_boundaries(
                 "check_records_ref": "checks.jsonl",
                 "certification_evidence_ref": "certification-evidence.jsonl",
                 "source_event_records_ref": "source-events.jsonl",
-                "generator_config_digest": "generator",
+                "generator_config_digest": None,
                 "certification_config_digest": canonical_digest(CertificationConfig()),
                 "created_at": "2026-01-31T00:00:00Z",
             },
@@ -873,7 +873,7 @@ def test_freeze_task_pool_records_digests_rejections_and_summary(
             "check_records_ref": "checks.jsonl",
             "certification_evidence_ref": "certification-evidence.jsonl",
             "source_event_records_ref": "source-events.jsonl",
-            "generator_config_digest": "generator",
+            "generator_config_digest": None,
             "certification_config_digest": canonical_digest(CertificationConfig()),
             "created_at": "2026-01-31T00:00:00Z",
         },
@@ -927,7 +927,7 @@ def test_freeze_task_pool_rejects_nonstring_metadata(
         "check_records_ref": "checks.jsonl",
         "certification_evidence_ref": "certification-evidence.jsonl",
         "source_event_records_ref": "source-events.jsonl",
-        "generator_config_digest": "generator",
+        "generator_config_digest": None,
         "certification_config_digest": canonical_digest(CertificationConfig()),
         "created_at": "2026-01-31T00:00:00Z",
     }
@@ -964,7 +964,7 @@ def test_freeze_task_pool_rejects_accepted_event_outside_source_window(
                 "check_records_ref": "checks.jsonl",
                 "certification_evidence_ref": "certification-evidence.jsonl",
                 "source_event_records_ref": "source-events.jsonl",
-                "generator_config_digest": "generator",
+                "generator_config_digest": None,
                 "certification_config_digest": canonical_digest(CertificationConfig()),
                 "created_at": "2026-02-03T00:00:00Z",
                 "source_window_start": "2026-02-01T00:00:00Z",
@@ -992,7 +992,7 @@ def test_freeze_task_pool_rejects_source_window_after_observation(
                 "check_records_ref": "checks.jsonl",
                 "certification_evidence_ref": "certification-evidence.jsonl",
                 "source_event_records_ref": "source-events.jsonl",
-                "generator_config_digest": "generator",
+                "generator_config_digest": None,
                 "certification_config_digest": canonical_digest(CertificationConfig()),
                 "created_at": "2026-01-31T00:00:00Z",
                 "source_window_start": "2026-01-01T00:00:00Z",
@@ -1112,7 +1112,7 @@ def test_task_pool_validation_rejects_unknown_certification_evidence_keys(
             "check_records_ref": "checks.jsonl",
             "certification_evidence_ref": "certification-evidence.jsonl",
             "source_event_records_ref": "source-events.jsonl",
-            "generator_config_digest": "generator",
+            "generator_config_digest": None,
             "certification_config_digest": canonical_digest(CertificationConfig()),
             "created_at": "2026-01-31T00:00:00Z",
         },
@@ -1674,7 +1674,7 @@ def test_load_validated_task_pool_bundle_rejects_member_drift(
             "check_records_ref": "bundle/checks.jsonl",
             "certification_evidence_ref": "bundle/certification-evidence.jsonl",
             "source_event_records_ref": "bundle/source-events.jsonl",
-            "generator_config_digest": "generator",
+            "generator_config_digest": None,
             "certification_config_digest": canonical_digest(CertificationConfig()),
             "created_at": "2026-01-31T00:00:00Z",
         },
@@ -1777,7 +1777,7 @@ def test_load_validated_task_pool_bundle_rejects_task_pool_digest_drift(
             "check_records_ref": "bundle/checks.jsonl",
             "certification_evidence_ref": "bundle/certification-evidence.jsonl",
             "source_event_records_ref": "bundle/source-events.jsonl",
-            "generator_config_digest": "generator",
+            "generator_config_digest": None,
             "certification_config_digest": canonical_digest(CertificationConfig()),
             "created_at": "2026-01-31T00:00:00Z",
         },
@@ -1815,7 +1815,7 @@ def test_load_validated_task_pool_bundle_rejects_source_event_drift(
             "check_records_ref": "bundle/checks.jsonl",
             "certification_evidence_ref": "bundle/certification-evidence.jsonl",
             "source_event_records_ref": "bundle/source-events.jsonl",
-            "generator_config_digest": "generator",
+            "generator_config_digest": None,
             "certification_config_digest": canonical_digest(CertificationConfig()),
             "created_at": "2026-01-31T00:00:00Z",
         },
@@ -2060,6 +2060,46 @@ def test_generation_provenance_binding_requires_ref_and_digest_together(
             bundle.generation_provenance,
             bundle.observed_frame_events,
             bundle.adapter_evidence,
+        )
+
+
+@pytest.mark.parametrize(
+    ("field", "message"),
+    (
+        (
+            "generator_config_digest",
+            "generator behavior digest requires generation provenance",
+        ),
+        (
+            "source_protocol_digest",
+            "source protocol digest requires generation provenance",
+        ),
+    ),
+)
+def test_generation_identity_digest_requires_generation_provenance(
+    accepted_result: CertificationResult,
+    field: str,
+    message: str,
+) -> None:
+    bundle = _published_bundle_fixture(
+        accepted_result,
+        bundle_key=f"orphaned-{field}",
+        created_at="2026-02-05T00:00:00Z",
+    )
+    broken_pool = record_with_digest(
+        replace(
+            bundle.task_pool,
+            **{field: "orphaned-digest", "task_pool_digest": ""},
+        )
+    )
+
+    with pytest.raises(ValueError, match=message):
+        task_pool_module.validated_task_pool_bundle(
+            broken_pool,
+            bundle.tasks,
+            bundle.checks,
+            bundle.certification_evidence,
+            bundle.source_events,
         )
 
 
@@ -2345,7 +2385,7 @@ def test_freeze_task_pool_rejects_broken_task_check_linkage(
                 "check_records_ref": "checks.jsonl",
                 "certification_evidence_ref": "certification-evidence.jsonl",
                 "source_event_records_ref": "source-events.jsonl",
-                "generator_config_digest": "generator",
+                "generator_config_digest": None,
                 "certification_config_digest": canonical_digest(CertificationConfig()),
                 "created_at": "2026-01-31T00:00:00Z",
             },
@@ -2397,7 +2437,7 @@ def test_freeze_task_pool_rejects_missing_accepted_certification_result(
                 "check_records_ref": "checks.jsonl",
                 "certification_evidence_ref": "certification-evidence.jsonl",
                 "source_event_records_ref": "source-events.jsonl",
-                "generator_config_digest": "generator",
+                "generator_config_digest": None,
                 "certification_config_digest": canonical_digest(CertificationConfig()),
                 "created_at": "2026-01-31T00:00:00Z",
             },
@@ -2432,7 +2472,7 @@ def test_freeze_task_pool_rejects_unbound_accepted_certification_result(
                 "check_records_ref": "checks.jsonl",
                 "certification_evidence_ref": "certification-evidence.jsonl",
                 "source_event_records_ref": "source-events.jsonl",
-                "generator_config_digest": "generator",
+                "generator_config_digest": None,
                 "certification_config_digest": canonical_digest(CertificationConfig()),
                 "created_at": "2026-01-31T00:00:00Z",
             },
@@ -2464,7 +2504,7 @@ def test_freeze_task_pool_revalidates_solver_material_digest(
                 "check_records_ref": "checks.jsonl",
                 "certification_evidence_ref": "certification-evidence.jsonl",
                 "source_event_records_ref": "source-events.jsonl",
-                "generator_config_digest": "generator",
+                "generator_config_digest": None,
                 "certification_config_digest": canonical_digest(CertificationConfig()),
                 "created_at": "2026-01-31T00:00:00Z",
             },
@@ -2490,7 +2530,7 @@ def test_freeze_task_pool_rejects_repository_mismatch(
                 "check_records_ref": "checks.jsonl",
                 "certification_evidence_ref": "certification-evidence.jsonl",
                 "source_event_records_ref": "source-events.jsonl",
-                "generator_config_digest": "generator",
+                "generator_config_digest": None,
                 "certification_config_digest": canonical_digest(CertificationConfig()),
                 "created_at": "2026-01-31T00:00:00Z",
             },
@@ -2520,7 +2560,7 @@ def _published_bundle_fixture(
                 bundle_dir / "certification-evidence.jsonl"
             ).as_posix(),
             "source_event_records_ref": (bundle_dir / "source-events.jsonl").as_posix(),
-            "generator_config_digest": "generator",
+            "generator_config_digest": None,
             "certification_config_digest": canonical_digest(CertificationConfig()),
             "created_at": created_at,
         },
@@ -2788,7 +2828,7 @@ def _accepted_evidence_fixture(
             "check_records_ref": "checks.jsonl",
             "certification_evidence_ref": "certification-evidence.jsonl",
             "source_event_records_ref": "source-events.jsonl",
-            "generator_config_digest": "generator",
+            "generator_config_digest": None,
             "certification_config_digest": canonical_digest(CertificationConfig()),
             "created_at": "2026-01-31T00:00:00Z",
         },

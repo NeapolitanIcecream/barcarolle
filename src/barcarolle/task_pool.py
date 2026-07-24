@@ -1423,8 +1423,6 @@ def _generation_provenance_errors(
             errors.append("observed frame events require generation provenance")
         if adapter_evidence is not None:
             errors.append("adapter evidence requires generation provenance")
-        if task_pool.source_protocol_digest is not None:
-            errors.append("source protocol digest requires generation provenance")
         return tuple(errors)
     if not has_binding:
         errors.append("generation provenance is not bound by TaskPoolRecord")

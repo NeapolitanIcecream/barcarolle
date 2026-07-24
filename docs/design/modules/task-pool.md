@@ -215,7 +215,8 @@ Effect:
   trusted concrete adapter may attach those stronger claims only through an
   explicit Barcarolle authority context, not through package data.
 - Allows generation provenance to be entirely absent. It does not invent a
-  dummy Generator for a user-supplied candidate pool.
+  dummy Generator for a user-supplied candidate pool, and the resulting Task
+  Pool carries neither Generator-behavior nor source-protocol identity.
 
 ### bind_task_pool_generation_provenance
 

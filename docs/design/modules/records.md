@@ -560,8 +560,10 @@ Check execution binding digest, and the built-in Verification adapter digest.
 Its digest covers accepted, certification-rejected, and pre-certification
 excluded events, including right-censored label maturity.
 Generation provenance is optional: a user-maintained Task Pool is valid without
-inventing a Generator identity. When present, the ref/digest binds the complete
-manifest, `generator_config_digest` identifies stable behavior, and
+inventing a Generator identity. Without the ref/digest binding, both
+`generator_config_digest` and `source_protocol_digest` must be null. When
+present, the ref/digest binds the complete manifest,
+`generator_config_digest` identifies stable behavior, and
 `source_protocol_digest` identifies how a future source frame is defined.
 Event inventory and machine-local input locations are not duplicated into
 behavior identity; the frozen SourceEvent, Task, and Check digests bind the

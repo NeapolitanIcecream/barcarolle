@@ -1455,6 +1455,11 @@ def validate_task_pool(task_pool: TaskPoolRecord) -> ValidationResult:
         errors.append(
             "generation provenance ref and digest must be both present or both absent"
         )
+    if task_pool.generation_provenance_ref is None:
+        if task_pool.generator_config_digest is not None:
+            errors.append("generator behavior digest requires generation provenance")
+        if task_pool.source_protocol_digest is not None:
+            errors.append("source protocol digest requires generation provenance")
     return _validation(errors)
 
 
