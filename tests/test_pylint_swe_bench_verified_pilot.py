@@ -265,7 +265,8 @@ def test_build_context_rejects_invalid_complete_task_pool_bundle(
     )
     monkeypatch.setattr(pilot, "_require_harness_revision", lambda *_: None)
 
-    def reject_bundle(*_):
+    def reject_bundle(manifest_path: Path):
+        assert manifest_path == tmp_path / "records/task-pool.jsonl"
         raise ValueError("adapter evidence digest does not match content")
 
     monkeypatch.setattr(pilot, "open_task_pool_bundle", reject_bundle)

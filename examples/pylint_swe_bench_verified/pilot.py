@@ -128,6 +128,7 @@ CACHE_CONFIG = ResultCacheConfig(reuse_benchmark_invalid=True)
 REPOSITORY_ID = "pylint-dev/pylint"
 DEPENDENCY_EVIDENCE_REF = "records/adapter-evidence.jsonl"
 GENERATION_PROVENANCE_REF = "records/generation-provenance.jsonl"
+TASK_POOL_MANIFEST_REF = "records/task-pool.jsonl"
 PYLINT_ADAPTER_EVIDENCE_SCHEMA_VERSION = "pylint_adapter_evidence_v1"
 
 
@@ -324,7 +325,7 @@ def prepare(paths: PilotPaths) -> Mapping[str, object]:
         paths.output_dir / GENERATION_PROVENANCE_REF,
         (generation_provenance,),
     )
-    write_jsonl_records(records_dir / "task_pool.jsonl", (task_pool,))
+    write_jsonl_records(paths.output_dir / TASK_POOL_MANIFEST_REF, (task_pool,))
     _write_json(
         records_dir / "task-index.json",
         {
@@ -368,7 +369,7 @@ def build_context(paths: PilotPaths, ledger_path: Path | None = None) -> PilotCo
     _require_harness_revision(paths.harness_python)
     records_dir = paths.output_dir / "records"
     try:
-        bundle = open_task_pool_bundle(records_dir / "task_pool.jsonl")
+        bundle = open_task_pool_bundle(paths.output_dir / TASK_POOL_MANIFEST_REF)
     except ValueError as exc:
         raise RuntimeError(
             f"prepared Task Pool bundle is invalid: {exc}"

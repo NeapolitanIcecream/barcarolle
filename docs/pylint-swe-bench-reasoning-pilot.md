@@ -213,7 +213,8 @@ Preparation also writes the dependency artifact to
 `records/adapter-evidence.jsonl` alongside the sanitized F2P/P2P certification
 summaries. A generation manifest binds that object as run-specific adapter
 evidence while keeping stable adapter behavior independent of the observed
-dependency inventory. Resume opens and validates the complete Task Pool bundle,
+dependency inventory. Preparation writes the canonical Task Pool manifest at
+`records/task-pool.jsonl`. Resume opens and validates that complete bundle,
 checks the current adapter implementation against the frozen behavior section,
 then replays exact changed-path overlap, deterministic components, SourceEvent
 clusters, and trusted reference patches before paid stages. On the historical ten
