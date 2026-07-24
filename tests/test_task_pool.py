@@ -2197,6 +2197,108 @@ def test_generation_provenance_binds_observed_frame_to_pool_window(
         )
 
 
+def test_generation_provenance_rejects_run_after_pool_creation(
+    accepted_result: CertificationResult,
+) -> None:
+    base = _published_bundle_fixture(
+        accepted_result,
+        bundle_key="future-run",
+        created_at="2026-02-05T00:00:00Z",
+    )
+    bundle = _with_generation_provenance(base)
+    assert bundle.generation_provenance is not None
+    run = {
+        **bundle.generation_provenance.run,
+        "started_at": "2026-02-05T00:00:01.000000Z",
+        "finished_at": "2026-02-05T00:00:02.000000Z",
+    }
+    manifest = record_with_digest(
+        replace(
+            bundle.generation_provenance,
+            run=run,
+            run_digest=canonical_digest(run),
+            manifest_digest="",
+        )
+    )
+    task_pool = record_with_digest(
+        replace(
+            bundle.task_pool,
+            generation_provenance_digest=manifest.manifest_digest,
+            task_pool_digest="",
+        )
+    )
+
+    with pytest.raises(
+        ValueError,
+        match="run finished_at must not postdate Task Pool creation",
+    ):
+        task_pool_module.validated_task_pool_bundle(
+            task_pool,
+            bundle.tasks,
+            bundle.checks,
+            bundle.certification_evidence,
+            bundle.source_events,
+            manifest,
+            bundle.observed_frame_events,
+            bundle.adapter_evidence,
+        )
+
+
+def test_generation_provenance_rejects_frame_observation_after_pool_creation(
+    accepted_result: CertificationResult,
+) -> None:
+    base = _published_bundle_fixture(
+        accepted_result,
+        bundle_key="future-frame-observation",
+        created_at="2026-02-05T00:00:00Z",
+    )
+    bundle = _with_generation_provenance(base)
+    assert bundle.generation_provenance is not None
+    assert bundle.generation_provenance.observed_frame is not None
+    future_event = record_with_digest(
+        replace(
+            bundle.observed_frame_events[0],
+            observed_at="2026-02-05T00:00:01.000000Z",
+            frame_event_digest="",
+        )
+    )
+    frame_events = (future_event,)
+    frame = {
+        **bundle.generation_provenance.observed_frame,
+        "event_inventory_digest": canonical_digest(frame_events),
+    }
+    manifest = record_with_digest(
+        replace(
+            bundle.generation_provenance,
+            observed_frame=frame,
+            observed_frame_digest=canonical_digest(frame),
+            manifest_digest="",
+        )
+    )
+    task_pool = record_with_digest(
+        replace(
+            bundle.task_pool,
+            generation_provenance_digest=manifest.manifest_digest,
+            task_pool_digest="",
+        )
+    )
+
+    with pytest.raises(
+        ValueError,
+        match="observed_at must not postdate Task Pool creation",
+    ):
+        task_pool_module.validated_task_pool_bundle(
+            task_pool,
+            bundle.tasks,
+            bundle.checks,
+            bundle.certification_evidence,
+            bundle.source_events,
+            manifest,
+            frame_events,
+            bundle.adapter_evidence,
+        )
+
+
 @pytest.mark.parametrize(
     ("filename", "record_count", "error"),
     (

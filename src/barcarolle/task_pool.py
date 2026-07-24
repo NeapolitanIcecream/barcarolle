@@ -1489,6 +1489,7 @@ def _generation_provenance_errors(
         )
     )
     errors.extend(_generation_run_errors(manifest.run))
+    errors.extend(_generation_run_creation_errors(task_pool, manifest.run))
     errors.extend(
         _generation_section_errors(
             "outputs",
@@ -1646,6 +1647,26 @@ def _generation_run_errors(run: Mapping[str, Any]) -> tuple[str, ...]:
     return tuple(errors)
 
 
+def _generation_run_creation_errors(
+    task_pool: TaskPoolRecord,
+    run: Mapping[str, Any],
+) -> tuple[str, ...]:
+    finished_at_value = run.get("finished_at")
+    if not isinstance(finished_at_value, str):
+        return ()
+    try:
+        finished_at = parse_utc_timestamp(finished_at_value)
+        created_at = parse_utc_timestamp(task_pool.created_at)
+    except (TypeError, ValueError):
+        return ()
+    if finished_at > created_at:
+        return (
+            "generation provenance run finished_at must not postdate "
+            "Task Pool creation",
+        )
+    return ()
+
+
 def _generation_output_errors(
     task_pool: TaskPoolRecord,
     outputs: Mapping[str, Any],
@@ -1765,16 +1786,26 @@ def _observed_frame_event_errors(
             f"observed frame event {event.source_event_id} repository does not match Task Pool"
         )
     try:
-        if event.observed_at != format_utc_timestamp(
-            parse_utc_timestamp(event.observed_at)
-        ):
-            errors.append(
-                f"observed frame event {event.source_event_id} observed_at is not canonical UTC"
-            )
+        observed_at = parse_utc_timestamp(event.observed_at)
     except (TypeError, ValueError):
         errors.append(
             f"observed frame event {event.source_event_id} observed_at is invalid"
         )
+    else:
+        if event.observed_at != format_utc_timestamp(observed_at):
+            errors.append(
+                f"observed frame event {event.source_event_id} observed_at is not canonical UTC"
+            )
+        try:
+            created_at = parse_utc_timestamp(task_pool.created_at)
+        except (TypeError, ValueError):
+            pass
+        else:
+            if observed_at > created_at:
+                errors.append(
+                    f"observed frame event {event.source_event_id} observed_at "
+                    "must not postdate Task Pool creation"
+                )
     try:
         expected_digest = canonical_digest(event, exclude_self_digest=True)
     except (OverflowError, TypeError, ValueError):
