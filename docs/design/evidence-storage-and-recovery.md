@@ -250,7 +250,9 @@ identical or conflicting. Any other same-ID difference fails.
 Before a resumed batch executes any pending cell, Runner resolves all Results
 bound by reusable EvaluationCellSets in one read and verifies the complete
 ResultCell binding. Persisted missing or unbound excluded cells remain frozen
-evidence and require no Result lookup.
+evidence and require no Result lookup. CellSet identity includes the scoring
+config and benchmark-invalid reuse policy used to resolve those cells, so a
+changed policy cannot reuse a snapshot created under another resolution view.
 
 For lazy selected-only execution, Runner first reloads the persisted Selection,
 Origin, SelectorInput, FeatureSnapshot, Selector, frozen pre-origin Results, and

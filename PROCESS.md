@@ -52,7 +52,9 @@ The generic pre-Generator infrastructure is at its stop line:
   cutoff view from it. `fill_results` and `prepare_evaluation_cells` replay the
   persisted Selection, Origin, SelectorInput, FeatureSnapshot, Selector, and
   frozen Agent identities before cache or Agent access. Lazy fill persists an
-  exact `EvaluationCellSet`.
+  exact `EvaluationCellSet`. Its identity binds the requested scoring config
+  and benchmark-invalid reuse policy: changing either creates a new resolution
+  view, while an unchanged policy resumes the frozen cells.
 
 No concrete built-in Generator, Generator registry, plugin host, workflow
 engine, model service, Feature Store, simulator platform, distributed

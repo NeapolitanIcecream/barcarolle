@@ -434,8 +434,11 @@ Effect:
 - Uses the shared evaluation-cell resolver for selected refs only. It reuses
   exact cached executions, appends a current pricing view when needed, executes
   only misses, and persists the resulting `EvaluationCellSet` with the declared
-  join policy. The complete missing plan is preflighted before its first call;
-  cache-only and repricing paths do not require endpoint credentials.
+  join, scoring, and benchmark-invalid reuse policies in its identity. Changing
+  either resolution policy creates a new CellSet and reruns resolution;
+  unchanged policy resumes the frozen cells. The complete missing plan is
+  preflighted before its first call; cache-only and repricing paths do not
+  require endpoint credentials.
 - Holds one Result Store session across resolution, execution, repricing, and
   final lookup. Each produced Result is durable before the next Agent cell, and
   the CellSet is written only after complete resolution.

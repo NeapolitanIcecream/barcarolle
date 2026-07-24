@@ -30,6 +30,11 @@ execution and scoring consume a complete validated bundle rather than parallel
 Task/Check lists. No concrete new Generator or plugin registry is part of this
 boundary.
 
+Reusable EvaluationCellSet identity binds the requested scoring configuration
+and benchmark-invalid Result reuse policy in addition to Selection, Origin,
+future pool, refs, Agents, and join policy. A changed resolution policy creates
+a new frozen view; an unchanged policy resumes the exact persisted cells.
+
 Generated Task Pools bind a canonical source window separately from stable
 Generator behavior and source-protocol digests. Validation requires the window
 to precede pool creation and reconciles every outside-range SourceEvent

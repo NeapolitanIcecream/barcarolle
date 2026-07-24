@@ -1638,7 +1638,13 @@ def _resolve_evaluation_cell_sets(
         raise ValueError("duplicate Agent IDs are not allowed")
 
     cell_set_ids, plan_by_cell_set_id, requested_refs_by_cell_set_id = (
-        _evaluation_cell_set_plan_index(plans, join_config, agents)
+        _evaluation_cell_set_plan_index(
+            plans,
+            join_config,
+            agents,
+            scoring_config,
+            cache_config,
+        )
     )
 
     existing_by_id = _load_existing_evaluation_cell_sets(result_store)
@@ -1655,6 +1661,8 @@ def _resolve_evaluation_cell_sets(
             agents,
             workspace_config,
             runtime_config,
+            scoring_config,
+            cache_config,
             join_config,
         )
         resolved_cell_sets[cell_set_id] = existing
@@ -1727,6 +1735,8 @@ def _resolve_evaluation_cell_sets(
             plan_by_cell_set_id[cell_set_id],
             union_cell_by_key,
             agents,
+            scoring_config,
+            cache_config,
             join_config,
         )
         for cell_set_id in pending_ids
@@ -1742,6 +1752,8 @@ def _evaluation_cell_set_plan_index(
     plans: Sequence[_EvaluationCellSetPlan],
     join_config: result_store_module.ResultJoinConfig,
     agents: Sequence[AgentRecord],
+    scoring_config: result_store_module.ScoringConfig,
+    cache_config: result_store_module.ResultCacheConfig,
 ) -> tuple[
     tuple[str, ...],
     Mapping[str, _EvaluationCellSetPlan],
@@ -1752,7 +1764,13 @@ def _evaluation_cell_set_plan_index(
     cell_set_ids: list[str] = []
     for plan in plans:
         requested_refs = _plan_requested_refs(plan)
-        cell_set_id = _evaluation_cell_set_id(plan, join_config, agents)
+        cell_set_id = _evaluation_cell_set_id(
+            plan,
+            join_config,
+            agents,
+            scoring_config,
+            cache_config,
+        )
         if cell_set_id in requested_refs_by_cell_set_id:
             raise ValueError("duplicate evaluation cell-set identity")
         requested_refs_by_cell_set_id[cell_set_id] = requested_refs
@@ -1799,6 +1817,8 @@ def _build_evaluation_cell_set(
     plan: _EvaluationCellSetPlan,
     cell_by_key: Mapping[tuple[str, str, str], ResultCellRef],
     agents: Sequence[AgentRecord],
+    scoring_config: result_store_module.ScoringConfig,
+    cache_config: result_store_module.ResultCacheConfig,
     join_config: result_store_module.ResultJoinConfig,
 ) -> EvaluationCellSet:
     selection = plan.selection
@@ -1810,7 +1830,13 @@ def _build_evaluation_cell_set(
     )
     cell_set = record_with_digest(
         EvaluationCellSet(
-            cell_set_id=_evaluation_cell_set_id(plan, join_config, agents),
+            cell_set_id=_evaluation_cell_set_id(
+                plan,
+                join_config,
+                agents,
+                scoring_config,
+                cache_config,
+            ),
             origin_id=origin.origin_id,
             selection_id=selection.selection_id,
             selected_task_check_refs=selection.selected_task_check_refs,
@@ -1835,9 +1861,24 @@ def _evaluation_cell_set_id(
     plan: _EvaluationCellSetPlan,
     join_config: result_store_module.ResultJoinConfig,
     agents: Sequence[AgentRecord],
+    scoring_config: result_store_module.ScoringConfig,
+    cache_config: result_store_module.ResultCacheConfig,
 ) -> str:
     requested_refs = _plan_requested_refs(plan)
-    return f"cell_set_{canonical_digest((plan.selection.selection_digest, plan.origin.origin_id, plan.future_task_pool_digest, join_config.join_policy_digest, tuple(_ref_key(ref) for ref in requested_refs), tuple(_ref_key(ref) for ref in plan.future_censored_task_check_refs), tuple(agent.agent_id for agent in agents)))}"
+    identity = {
+        "selection_digest": plan.selection.selection_digest,
+        "origin_id": plan.origin.origin_id,
+        "future_task_pool_digest": plan.future_task_pool_digest,
+        "join_policy_digest": join_config.join_policy_digest,
+        "scoring_config_digest": scoring_config.scoring_config_digest,
+        "cache_policy_digest": canonical_digest(cache_config),
+        "requested_refs": tuple(_ref_key(ref) for ref in requested_refs),
+        "future_censored_refs": tuple(
+            _ref_key(ref) for ref in plan.future_censored_task_check_refs
+        ),
+        "agent_ids": tuple(agent.agent_id for agent in agents),
+    }
+    return f"cell_set_{canonical_digest(identity)}"
 
 
 def _plan_requested_refs(
@@ -1918,6 +1959,8 @@ def _validate_reusable_evaluation_cell_set(
     agents: Sequence[AgentRecord],
     workspace_config: WorkspaceConfig,
     runtime_config: RuntimeConfig,
+    scoring_config: result_store_module.ScoringConfig,
+    cache_config: result_store_module.ResultCacheConfig,
     join_config: result_store_module.ResultJoinConfig,
 ) -> None:
     validation = validate_evaluation_cell_set(cell_set)
@@ -1928,6 +1971,16 @@ def _validate_reusable_evaluation_cell_set(
     selection = plan.selection
     origin = plan.origin
     requested_refs = _plan_requested_refs(plan)
+    if cell_set.cell_set_id != _evaluation_cell_set_id(
+        plan,
+        join_config,
+        agents,
+        scoring_config,
+        cache_config,
+    ):
+        raise ValueError(
+            "persisted evaluation cell set resolution policy has changed"
+        )
     if (
         cell_set.origin_id != origin.origin_id
         or cell_set.selection_id != selection.selection_id

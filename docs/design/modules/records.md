@@ -682,6 +682,12 @@ binds the same Task Pool as the Origin. Strict-prospective evaluation binds a
 later immutable Task Pool, retains its mature and censored future refs, and
 creates cells only for selected and mature future refs.
 
+Runner derives `cell_set_id` from the Selection, Origin, future Task Pool,
+requested refs, Agent set, join policy, scoring config, and benchmark-invalid
+reuse policy. Scoring and cache policy remain outside paid-execution cache
+identity; they identify the frozen resolution view. Repeating the same view
+resumes its exact cells, while changing either policy creates a new CellSet.
+
 ### MetricRecord
 
 - `metric_id`

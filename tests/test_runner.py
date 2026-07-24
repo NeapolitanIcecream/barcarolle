@@ -1649,6 +1649,19 @@ def test_fill_results_reprices_cached_execution_without_rerunning_agent(
         (agent,),
         store,
     )
+    old_cell_set = fill_results(
+        selection,
+        task_pool_bundle,
+        (agent,),
+        workspace_config,
+        runtime_config,
+        old_pricing,
+        ResultCacheConfig(),
+        store,
+        ResultJoinConfig(),
+        WorkspaceRunContext(),
+    )
+    assert old_cell_set.cells[0].result_id == old_result.result_id
 
     def fail_if_agent_runs(*args, **kwargs):
         raise AssertionError("a pricing change must not rerun paid execution")
@@ -1673,6 +1686,8 @@ def test_fill_results_reprices_cached_execution_without_rerunning_agent(
         WorkspaceRunContext(),
     )
 
+    assert cell_set.cell_set_id != old_cell_set.cell_set_id
+    assert cell_set.cells[0].result_id != old_result.result_id
     current_result = next(
         result
         for result in load_results(store, ResultQuery())
@@ -1721,6 +1736,91 @@ def test_fill_results_reprices_cached_execution_without_rerunning_agent(
         == cell_set
     )
     assert load_results(store, ResultQuery()) == (old_result, current_result)
+
+
+def test_fill_results_honors_stricter_cache_policy_after_persisted_cell_set(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    task = _task()
+    check = _check()
+    agent = _agent()
+    workspace_config = _workspace_config()
+    runtime_config = _runtime_config()
+    scoring_config = _scoring_config()
+    store = ResultStore(tmp_path / "results.jsonl")
+    invalid_run = replace(
+        _workspace_run(task, check, agent),
+        workspace_run_id="workspace-run-benchmark-invalid",
+        terminal_status="invalid",
+        check_outcome="invalid",
+        invalid_owner="benchmark",
+        failure_label="verifier_preparation_failed",
+    )
+    invalid_result = build_result_record(
+        task,
+        check,
+        agent,
+        invalid_run,
+        compute_result_cache_identity(
+            task,
+            check,
+            agent,
+            workspace_config,
+            runtime_config,
+        ),
+        scoring_config,
+    )
+    store_result(invalid_result, store)
+    task_pool_bundle = _task_pool_bundle((task,), (check,))
+    selection, _ = _persist_replayable_selection(
+        task_pool_bundle,
+        TaskCheckRef(task.task_id, check.check_id),
+        (agent,),
+        store,
+    )
+    permissive_cell_set = fill_results(
+        selection,
+        task_pool_bundle,
+        (agent,),
+        workspace_config,
+        runtime_config,
+        scoring_config,
+        ResultCacheConfig(reuse_benchmark_invalid=True),
+        store,
+        ResultJoinConfig(),
+        WorkspaceRunContext(),
+    )
+    assert permissive_cell_set.cells[0].result_id == invalid_result.result_id
+    calls: list[str] = []
+
+    def repeat_invalid_run(*args, **kwargs):
+        calls.append("run")
+        return invalid_run
+
+    monkeypatch.setattr(
+        runner_module.workspace_module,
+        "run_agent_on_task",
+        repeat_invalid_run,
+    )
+
+    strict_cell_set = fill_results(
+        selection,
+        task_pool_bundle,
+        (agent,),
+        workspace_config,
+        runtime_config,
+        scoring_config,
+        ResultCacheConfig(),
+        store,
+        ResultJoinConfig(),
+        WorkspaceRunContext(),
+    )
+
+    assert calls == ["run"]
+    assert strict_cell_set.cell_set_id != permissive_cell_set.cell_set_id
+    assert strict_cell_set.cells[0].cell_state == "missing"
+    assert strict_cell_set.cells[0].result_id is None
 
 
 def test_result_id_is_stable_when_repricing_from_a_repriced_result(monkeypatch) -> None:
