@@ -22,19 +22,20 @@ if __package__ is None or __package__ == "":
 from barcarolle.records import (  # noqa: E402
     AgentRecord,
     CheckRecord,
+    GenerationProvenanceManifest,
     ResultCellRef,
     ResultRecord,
     RuntimeConfig,
-    SourceEventRecord,
     TaskCheckRef,
     TaskPoolRecord,
     TaskRecord,
     WorkspaceConfig,
     WorkspaceRunRecord,
+    canonical_data,
     canonical_digest,
-    load_jsonl_records,
     make_source_event_id,
-    validate_task_pool,
+    record_with_digest,
+    utc_now_timestamp,
     write_jsonl_records,
 )
 from barcarolle.result_store import (  # noqa: E402
@@ -51,6 +52,7 @@ from barcarolle.result_store import (  # noqa: E402
 from barcarolle.task_pool import (  # noqa: E402
     CertificationConfig,
     CertificationResult,
+    GENERATION_PROVENANCE_SCHEMA_VERSION,
     TaskCandidate,
     build_check_candidate,
     candidate_batch,
@@ -58,6 +60,8 @@ from barcarolle.task_pool import (  # noqa: E402
     certify_task_candidate,
     finalize_source_event_records,
     freeze_task_pool,
+    open_task_pool_bundle,
+    validated_task_pool_bundle,
 )
 from barcarolle.workspace import (  # noqa: E402
     CapturedDiff,
@@ -82,8 +86,11 @@ from examples.experiment_ledger import (  # noqa: E402
     write_json as _write_json,
 )
 from examples.pylint_swe_bench_verified.dependency_evidence import (  # noqa: E402
+    DEPENDENCY_PROTOCOL_VERSION,
     PylintDependencyEvidence,
     build_dependency_evidence,
+    dependency_evidence_from_mapping,
+    validate_dependency_evidence,
     validate_dependency_evidence_against_patches,
     validate_source_event_clusters,
 )
@@ -119,7 +126,9 @@ OFFICIAL_RATES = {
 SCORING_CONFIG = ScoringConfig(PRICING_VERSION, OFFICIAL_RATES)
 CACHE_CONFIG = ResultCacheConfig(reuse_benchmark_invalid=True)
 REPOSITORY_ID = "pylint-dev/pylint"
-DEPENDENCY_EVIDENCE_REF = "records/dependency-evidence.jsonl"
+DEPENDENCY_EVIDENCE_REF = "records/adapter-evidence.jsonl"
+GENERATION_PROVENANCE_REF = "records/generation-provenance.jsonl"
+PYLINT_ADAPTER_EVIDENCE_SCHEMA_VERSION = "pylint_adapter_evidence_v1"
 
 
 @dataclass(frozen=True)
@@ -170,6 +179,7 @@ def prepare(paths: PilotPaths) -> Mapping[str, object]:
     ):
         path.unlink(missing_ok=True)
 
+    generation_started_at = _now()
     _extract_source(paths)
     extracted = _extracted_tasks(paths.output_dir)
     configured = _task_source_by_instance()
@@ -215,6 +225,7 @@ def prepare(paths: PilotPaths) -> Mapping[str, object]:
 
     certification_config = CertificationConfig(repeat_count=1)
     certified: list[CertificationResult] = []
+    certification_status_by_candidate_id: dict[str, Mapping[str, Any]] = {}
     for candidate, reference_patch in zip(candidates, reference_patches, strict=True):
         started_ns = time.time_ns()
         result = certify_task_candidate(
@@ -227,17 +238,19 @@ def prepare(paths: PilotPaths) -> Mapping[str, object]:
         )
         if result.accepted:
             instance_id = candidate.candidate_id.removeprefix("candidate-")
-            result = _with_swe_bench_counts(
-                result,
-                paths.output_dir / "raw/checks" / instance_id,
-                started_ns,
-                _extracted_by_instance(extracted)[instance_id],
+            certification_status_by_candidate_id[result.candidate_id] = (
+                _swe_bench_certification_status(
+                    paths.output_dir / "raw/checks" / instance_id,
+                    started_ns,
+                    _extracted_by_instance(extracted)[instance_id],
+                )
             )
         certified.append(result)
 
+    certification_evidence = certification_evidence_records(certified)
     write_jsonl_records(
         records_dir / "certification-evidence.jsonl",
-        certification_evidence_records(certified),
+        certification_evidence,
     )
     rejected = tuple(result for result in certified if not result.accepted)
     if rejected:
@@ -261,6 +274,8 @@ def prepare(paths: PilotPaths) -> Mapping[str, object]:
             "Pylint dependency evidence does not match SourceEvents: "
             + "; ".join(cluster_validation.errors)
         )
+    generation_finished_at = _now()
+    task_pool_created_at = _now()
     task_pool = freeze_task_pool(
         tasks,
         checks,
@@ -274,15 +289,40 @@ def prepare(paths: PilotPaths) -> Mapping[str, object]:
             "source_event_records_ref": "records/source-events.jsonl",
             "generator_config_digest": None,
             "certification_config_digest": canonical_digest(certification_config),
-            "created_at": "2026-07-17T00:00:00Z",
+            "created_at": task_pool_created_at,
         },
+    )
+    task_pool, generation_provenance, adapter_evidence = (
+        _bind_dependency_generation_provenance(
+            task_pool,
+            dependency_evidence,
+            certification_status_by_candidate_id,
+            prepared_candidate_records_digest=canonical_digest(tuple(candidates)),
+            input_snapshot_digest=_generation_input_snapshot_digest(paths),
+            started_at=generation_started_at,
+            finished_at=generation_finished_at,
+        )
+    )
+    validated_task_pool_bundle(
+        task_pool,
+        tasks,
+        checks,
+        certification_evidence,
+        source_events,
+        generation_provenance,
+        (),
+        adapter_evidence,
     )
     write_jsonl_records(records_dir / "tasks.jsonl", tasks)
     write_jsonl_records(records_dir / "checks.jsonl", checks)
     write_jsonl_records(records_dir / "source-events.jsonl", source_events)
     write_jsonl_records(
         paths.output_dir / DEPENDENCY_EVIDENCE_REF,
-        (dependency_evidence,),
+        (adapter_evidence,),
+    )
+    write_jsonl_records(
+        paths.output_dir / GENERATION_PROVENANCE_REF,
+        (generation_provenance,),
     )
     write_jsonl_records(records_dir / "task_pool.jsonl", (task_pool,))
     _write_json(
@@ -327,28 +367,30 @@ def prepare(paths: PilotPaths) -> Mapping[str, object]:
 def build_context(paths: PilotPaths, ledger_path: Path | None = None) -> PilotContext:
     _require_harness_revision(paths.harness_python)
     records_dir = paths.output_dir / "records"
-    (task_pool,) = load_jsonl_records(records_dir / "task_pool.jsonl", TaskPoolRecord)
-    task_pool_validation = validate_task_pool(task_pool)
-    if not task_pool_validation.ok:
+    try:
+        bundle = open_task_pool_bundle(records_dir / "task_pool.jsonl")
+    except ValueError as exc:
         raise RuntimeError(
-            "prepared Task Pool record is invalid: "
-            + "; ".join(task_pool_validation.errors)
+            f"prepared Task Pool bundle is invalid: {exc}"
+        ) from exc
+    task_pool = bundle.task_pool
+    tasks = bundle.tasks
+    checks_tuple = bundle.checks
+    source_events = bundle.source_events
+    if bundle.generation_provenance is None or bundle.adapter_evidence is None:
+        raise RuntimeError(
+            "prepared Task Pool is missing bound Pylint dependency evidence"
         )
-    tasks = tuple(load_jsonl_records(records_dir / "tasks.jsonl", TaskRecord))
-    checks_tuple = tuple(load_jsonl_records(records_dir / "checks.jsonl", CheckRecord))
-    source_events = tuple(
-        load_jsonl_records(records_dir / "source-events.jsonl", SourceEventRecord)
+    if canonical_data(bundle.generation_provenance.generator_behavior) != (
+        canonical_data(_pylint_generator_behavior())
+    ):
+        raise RuntimeError(
+            "prepared Task Pool Generator behavior does not match current pilot code"
+        )
+    dependency_evidence = _dependency_evidence_from_adapter(
+        bundle.adapter_evidence,
+        bundle.certification_evidence,
     )
-    (dependency_evidence,) = load_jsonl_records(
-        paths.output_dir / DEPENDENCY_EVIDENCE_REF,
-        PylintDependencyEvidence,
-    )
-    if canonical_digest(tasks) != task_pool.task_records_digest:
-        raise RuntimeError("Task records do not match the prepared Task Pool")
-    if canonical_digest(checks_tuple) != task_pool.check_records_digest:
-        raise RuntimeError("Check records do not match the prepared Task Pool")
-    if canonical_digest(source_events) != task_pool.source_event_records_digest:
-        raise RuntimeError("SourceEvent records do not match the prepared Task Pool")
     index = _load_object(records_dir / "task-index.json")
     index_rows = index.get("tasks")
     if not isinstance(index_rows, list):
@@ -872,12 +914,11 @@ def _candidate(
     )
 
 
-def _with_swe_bench_counts(
-    result: CertificationResult,
+def _swe_bench_certification_status(
     raw_instance_dir: Path,
     started_ns: int,
     source: Mapping[str, Any],
-) -> CertificationResult:
+) -> Mapping[str, Any]:
     summaries: list[Mapping[str, Any]] = []
     for path in raw_instance_dir.glob("*/summary.json"):
         if path.stat().st_mtime_ns < started_ns:
@@ -897,22 +938,10 @@ def _with_swe_bench_counts(
     pass_to_pass = int(source["pass_to_pass_count"])
     _require_test_counts(base[0], fail_to_pass, pass_to_pass, reference=False)
     _require_test_counts(reference[0], fail_to_pass, pass_to_pass, reference=True)
-    evidence = {
-        **result.evidence,
-        "swe_bench_status": {
-            "base_check": _safe_check_summary(base[0]),
-            "reference_patch_check": _safe_check_summary(reference[0]),
-        },
+    return {
+        "base_check": _safe_check_summary(base[0]),
+        "reference_patch_check": _safe_check_summary(reference[0]),
     }
-    return CertificationResult(
-        candidate_id=result.candidate_id,
-        accepted=result.accepted,
-        task=result.task,
-        check=result.check,
-        rejection_reasons=result.rejection_reasons,
-        evidence=evidence,
-        evidence_digest=canonical_digest(evidence),
-    )
 
 
 def _require_test_counts(
@@ -1291,6 +1320,196 @@ def _dependency_reference_patches(
             raise RuntimeError("configured tasks contain a duplicate SourceEvent")
         patches[source_event_id] = _reference_patch(paths, instance_id)
     return patches
+
+
+def _dependency_evidence_from_adapter(
+    adapter_evidence: Mapping[str, Any],
+    certification_evidence: Sequence[Mapping[str, Any]],
+) -> PylintDependencyEvidence:
+    if set(adapter_evidence) != {
+        "schema_version",
+        "dependency_evidence",
+        "certification_status_by_candidate_id",
+    } or adapter_evidence.get(
+        "schema_version"
+    ) != PYLINT_ADAPTER_EVIDENCE_SCHEMA_VERSION:
+        raise RuntimeError("Pylint adapter evidence schema is invalid")
+    dependency_value = adapter_evidence.get("dependency_evidence")
+    if not isinstance(dependency_value, Mapping):
+        raise RuntimeError("Pylint dependency evidence sidecar is invalid")
+    try:
+        dependency_evidence = dependency_evidence_from_mapping(dependency_value)
+    except ValueError as exc:
+        raise RuntimeError(f"Pylint dependency evidence is invalid: {exc}") from exc
+    statuses = adapter_evidence.get("certification_status_by_candidate_id")
+    expected_candidate_ids = {
+        evidence["candidate_id"]
+        for evidence in certification_evidence
+        if evidence.get("accepted") is True
+    }
+    if (
+        not isinstance(statuses, Mapping)
+        or set(statuses) != expected_candidate_ids
+        or any(
+            not isinstance(candidate_id, str)
+            or not candidate_id
+            or not isinstance(status, Mapping)
+            or set(status) != {"base_check", "reference_patch_check"}
+            or not all(isinstance(item, Mapping) for item in status.values())
+            for candidate_id, status in statuses.items()
+        )
+    ):
+        raise RuntimeError("Pylint certification status sidecar is invalid")
+    return dependency_evidence
+
+
+def _generation_input_snapshot_digest(paths: PilotPaths) -> str:
+    return canonical_digest(
+        {
+            "repository_id": REPOSITORY_ID,
+            "dataset_sha256": _file_sha256(paths.dataset),
+            "supplemental_dataset_sha256": _file_sha256(
+                paths.supplemental_dataset
+            ),
+            "task_sources_sha256": _file_sha256(TASK_SOURCES),
+        }
+    )
+
+
+def _pylint_generator_behavior() -> Mapping[str, Any]:
+    implementation_digest = canonical_digest(
+        {
+            "pilot_sha256": _file_sha256(Path(__file__).resolve()),
+            "extract_source_sha256": _file_sha256(EXTRACT_SOURCE),
+            "check_sha256": _file_sha256(CHECK),
+            "dependency_evidence_sha256": _file_sha256(
+                HERE / "dependency_evidence.py"
+            ),
+        }
+    )
+    return {
+        "generator_family": "swe_bench_verified_fixed_instance_adapter",
+        "adapter_version": "pylint_reasoning_pilot_v1",
+        "implementation_digest": implementation_digest,
+        "behavior_config": {
+            "candidate_source": "configured_swe_bench_instances",
+            "task_text_field": "problem_statement",
+            "check_protocol": "fail_to_pass_and_pass_to_pass",
+            "dependency_protocol_version": DEPENDENCY_PROTOCOL_VERSION,
+        },
+    }
+
+
+def _bind_dependency_generation_provenance(
+    task_pool: TaskPoolRecord,
+    dependency_evidence: PylintDependencyEvidence,
+    certification_status_by_candidate_id: Mapping[str, Mapping[str, Any]],
+    *,
+    prepared_candidate_records_digest: str,
+    input_snapshot_digest: str,
+    started_at: str,
+    finished_at: str,
+) -> tuple[
+    TaskPoolRecord,
+    GenerationProvenanceManifest,
+    Mapping[str, Any],
+]:
+    validation = validate_dependency_evidence(dependency_evidence)
+    if not validation.ok:
+        raise ValueError(
+            "Pylint dependency evidence is invalid: "
+            + "; ".join(validation.errors)
+        )
+    if (
+        len(certification_status_by_candidate_id)
+        != len(dependency_evidence.patch_footprints)
+        or any(
+            not isinstance(candidate_id, str)
+            or not candidate_id
+            or set(status) != {"base_check", "reference_patch_check"}
+            or not all(isinstance(item, Mapping) for item in status.values())
+            for candidate_id, status in certification_status_by_candidate_id.items()
+        )
+    ):
+        raise ValueError("Pylint certification status sidecar is invalid")
+    adapter_evidence = canonical_data(
+        {
+            "schema_version": PYLINT_ADAPTER_EVIDENCE_SCHEMA_VERSION,
+            "dependency_evidence": dependency_evidence,
+            "certification_status_by_candidate_id": dict(
+                sorted(certification_status_by_candidate_id.items())
+            ),
+        }
+    )
+    if not isinstance(adapter_evidence, dict):
+        raise TypeError("Pylint dependency evidence must serialize as an object")
+    behavior = _pylint_generator_behavior()
+    behavior_digest = canonical_digest(behavior)
+    producer_id = "barcarolle:pylint-swe-bench-verified-pilot"
+    authority_digest = canonical_digest(
+        {
+            "authority_kind": "barcarolle_managed",
+            "producer_id": producer_id,
+            "implementation_digest": behavior["implementation_digest"],
+        }
+    )
+    run = {
+        "run_id": "pylint_generation_run_"
+        + canonical_digest(
+            {
+                "input_snapshot_digest": input_snapshot_digest,
+                "dependency_evidence_digest": (
+                    dependency_evidence.dependency_evidence_digest
+                ),
+                "started_at": started_at,
+                "finished_at": finished_at,
+            }
+        ),
+        "producer_id": producer_id,
+        "authority_kind": "barcarolle_managed",
+        "authority_digest": authority_digest,
+        "started_at": started_at,
+        "finished_at": finished_at,
+        "input_snapshot_digest": input_snapshot_digest,
+    }
+    outputs = {
+        "prepared_candidate_records_digest": prepared_candidate_records_digest,
+        "adapter_evidence_ref": DEPENDENCY_EVIDENCE_REF,
+        "adapter_evidence_digest": canonical_digest(adapter_evidence),
+        "task_records_digest": task_pool.task_records_digest,
+        "check_records_digest": task_pool.check_records_digest,
+        "source_event_records_digest": task_pool.source_event_records_digest,
+        "certification_evidence_digest": (
+            task_pool.certification_evidence_digest
+        ),
+    }
+    manifest = record_with_digest(
+        GenerationProvenanceManifest(
+            schema_version=GENERATION_PROVENANCE_SCHEMA_VERSION,
+            generator_behavior=behavior,
+            generator_behavior_digest=behavior_digest,
+            source_protocol=None,
+            source_protocol_digest=None,
+            observed_frame=None,
+            observed_frame_digest=None,
+            run=run,
+            run_digest=canonical_digest(run),
+            outputs=outputs,
+            outputs_digest=canonical_digest(outputs),
+            manifest_digest="",
+        )
+    )
+    bound_task_pool = record_with_digest(
+        replace(
+            task_pool,
+            generation_provenance_ref=GENERATION_PROVENANCE_REF,
+            generation_provenance_digest=manifest.manifest_digest,
+            generator_config_digest=manifest.generator_behavior_digest,
+            source_protocol_digest=None,
+            task_pool_digest="",
+        )
+    )
+    return bound_task_pool, manifest, adapter_evidence
 
 
 def _all_refs(context: PilotContext) -> tuple[TaskCheckRef, ...]:
@@ -1870,7 +2089,7 @@ def _fsync_file(path: Path) -> None:
 
 
 def _now() -> str:
-    return datetime.now(UTC).isoformat().replace("+00:00", "Z")
+    return utc_now_timestamp()
 
 
 def _paths(args: argparse.Namespace) -> PilotPaths:

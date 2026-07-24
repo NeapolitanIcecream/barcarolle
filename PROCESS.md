@@ -28,6 +28,11 @@ The generic pre-Generator infrastructure is at its stop line:
   run completion, which must be no later than Task Pool creation. Without the
   manifest, both behavior and source-protocol digests are null; absence remains
   valid but supports no Generator, frame, or population claim.
+- The existing fixed Pylint pilot binds dependency evidence as run-specific
+  adapter sidecar data together with sanitized F2P/P2P summaries, keeps core
+  certification evidence schema-exact and behavior identity
+  inventory-independent, and opens the complete bundle before paid stages.
+  This is migration of an existing adapter, not a new Generator implementation.
 - External Results are admitted through a content-digested source manifest and
   immutable import receipt into the local append-only Result Store. Import
   checks Task/Check membership and Agent/Workspace/Runtime identity, leaves the

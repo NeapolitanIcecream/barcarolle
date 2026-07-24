@@ -2092,6 +2092,29 @@ def test_generation_provenance_round_trips_with_independent_sections(
     }
 
 
+def test_open_task_pool_bundle_rejects_adapter_evidence_drift(
+    tmp_path: Path,
+    accepted_result: CertificationResult,
+) -> None:
+    base = _published_bundle_fixture(
+        accepted_result,
+        bundle_key="adapter-drift",
+        created_at="2026-02-05T00:00:00Z",
+    )
+    bundle = _with_generation_provenance(base)
+    target = task_pool_module.publish_task_pool_bundle(bundle, tmp_path)
+    write_jsonl_records(
+        target / "adapter-evidence.jsonl",
+        ({"schema_version": "fixture_v1", "count": 2},),
+    )
+
+    with pytest.raises(
+        ValueError,
+        match="adapter evidence digest does not match content",
+    ):
+        task_pool_module.open_task_pool_bundle(target / "task-pool.jsonl")
+
+
 @pytest.mark.parametrize(
     "missing_field",
     ("generation_provenance_ref", "generation_provenance_digest"),

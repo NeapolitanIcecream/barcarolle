@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import replace
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -15,6 +16,59 @@ REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPOSITORY_ROOT))
 
 from examples.pylint_swe_bench_verified import pilot  # noqa: E402
+
+
+def _dependency_evidence(changed_path: str):
+    patch_text = (
+        f"diff --git a/{changed_path} b/{changed_path}\n"
+        f"--- a/{changed_path}\n"
+        f"+++ b/{changed_path}\n"
+    )
+    patch = pilot.CapturedDiff(
+        diff_text=patch_text,
+        diff_digest=hashlib.sha256(patch_text.encode("utf-8")).hexdigest(),
+    )
+    return pilot.build_dependency_evidence(
+        pilot.REPOSITORY_ID,
+        {"source-event": patch},
+    )
+
+
+def _unbound_task_pool():
+    return pilot.record_with_digest(
+        pilot.TaskPoolRecord(
+            task_pool_id="task-pool",
+            task_pool_digest="",
+            repository_id=pilot.REPOSITORY_ID,
+            task_ids=("task",),
+            check_ids=("check",),
+            task_records_ref="records/tasks.jsonl",
+            task_records_digest="tasks",
+            check_records_ref="records/checks.jsonl",
+            check_records_digest="checks",
+            certification_evidence_ref="records/certification-evidence.jsonl",
+            source_event_records_ref="records/source-events.jsonl",
+            source_event_records_digest="source-events",
+            rejected_candidate_ids=(),
+            rejection_summary_digest="rejections",
+            certification_evidence_digest="certification",
+            generation_provenance_ref=None,
+            generation_provenance_digest=None,
+            generator_config_digest=None,
+            source_protocol_digest=None,
+            certification_config_digest="certification-config",
+            created_at="2026-07-17T00:00:02.000000Z",
+        )
+    )
+
+
+def _certification_status_by_candidate_id():
+    return {
+        "candidate": {
+            "base_check": {"state": "scored"},
+            "reference_patch_check": {"state": "scored"},
+        }
+    }
 
 
 def test_fixed_task_sources_replace_the_uncertifiable_verified_instance() -> None:
@@ -145,6 +199,82 @@ def test_check_binding_keeps_existing_paid_command_identity(tmp_path: Path) -> N
         pilot.build_check_candidate(existing_candidate),
         configured,
     )
+
+
+def test_dependency_evidence_is_bound_as_run_specific_adapter_evidence() -> None:
+    task_pool = _unbound_task_pool()
+    first = _dependency_evidence("first.py")
+    second = _dependency_evidence("second.py")
+
+    first_pool, first_manifest, first_adapter = (
+        pilot._bind_dependency_generation_provenance(
+            task_pool,
+            first,
+            _certification_status_by_candidate_id(),
+            prepared_candidate_records_digest="candidates",
+            input_snapshot_digest="inputs",
+            started_at="2026-07-17T00:00:00.000000Z",
+            finished_at="2026-07-17T00:00:01.000000Z",
+        )
+    )
+    second_pool, second_manifest, second_adapter = (
+        pilot._bind_dependency_generation_provenance(
+            task_pool,
+            second,
+            _certification_status_by_candidate_id(),
+            prepared_candidate_records_digest="candidates",
+            input_snapshot_digest="inputs",
+            started_at="2026-07-17T00:00:00.000000Z",
+            finished_at="2026-07-17T00:00:01.000000Z",
+        )
+    )
+
+    assert first_pool.generator_config_digest == (
+        first_manifest.generator_behavior_digest
+    )
+    assert first_manifest.generator_behavior_digest == (
+        second_manifest.generator_behavior_digest
+    )
+    assert first_manifest.outputs["adapter_evidence_digest"] == (
+        pilot.canonical_digest(first_adapter)
+    )
+    assert pilot.dependency_evidence_from_mapping(
+        first_adapter["dependency_evidence"]
+    ) == first
+    assert set(first_adapter["certification_status_by_candidate_id"]) == {
+        "candidate"
+    }
+    assert first_manifest.outputs["adapter_evidence_digest"] != (
+        second_manifest.outputs["adapter_evidence_digest"]
+    )
+    assert first_pool.generation_provenance_digest != (
+        second_pool.generation_provenance_digest
+    )
+
+
+def test_build_context_rejects_invalid_complete_task_pool_bundle(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    paths = pilot.PilotPaths(
+        output_dir=tmp_path,
+        target_repo=tmp_path / "target",
+        dataset=tmp_path / "dataset",
+        supplemental_dataset=tmp_path / "supplemental-dataset",
+        harness_python=tmp_path / "harness-env/bin/python",
+    )
+    monkeypatch.setattr(pilot, "_require_harness_revision", lambda *_: None)
+
+    def reject_bundle(*_):
+        raise ValueError("adapter evidence digest does not match content")
+
+    monkeypatch.setattr(pilot, "open_task_pool_bundle", reject_bundle)
+
+    with pytest.raises(
+        RuntimeError,
+        match="prepared Task Pool bundle is invalid: adapter evidence digest",
+    ):
+        pilot.build_context(paths)
 
 
 def test_certification_counts_require_base_negative_and_reference_positive() -> None:

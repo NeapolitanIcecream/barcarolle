@@ -101,9 +101,10 @@ The fixed Pylint adapter implements the first concrete dependency protocol as
 reference patches, persists only each SourceEvent's patch digest and exact
 repository-relative changed paths, creates an undirected edge for exact path
 overlap, and assigns deterministic connected-component IDs. The evidence is a
-self-digested adapter artifact at `records/dependency-evidence.jsonl`; its
-protocol, ref, and digest enter the Task Pool generator-config digest. Loading
-the pilot re-derives the artifact from the local patches and checks every
+self-digested adapter artifact at `records/adapter-evidence.jsonl`. Generation
+provenance binds its ref and digest as run-specific sidecar evidence while
+keeping stable behavior inventory-independent. Loading validates the complete
+Task Pool bundle, re-derives the artifact from local patches, and checks every
 persisted SourceEvent cluster before any paid stage.
 
 Exact path overlap is a conservative, coarse relation: overlap is evidence of

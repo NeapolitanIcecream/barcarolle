@@ -2,10 +2,11 @@
 
 from __future__ import annotations
 
+from collections.abc import Mapping as MappingABC, Sequence as SequenceABC
 from dataclasses import dataclass
 from itertools import combinations
 from pathlib import PurePosixPath
-from typing import Mapping, Sequence
+from typing import Any, Mapping, Sequence
 import hashlib
 
 from barcarolle.records import (
@@ -145,6 +146,115 @@ def validate_dependency_evidence(
     return ValidationResult.fail(errors) if errors else ValidationResult.pass_()
 
 
+def dependency_evidence_from_mapping(
+    value: Mapping[str, Any],
+) -> PylintDependencyEvidence:
+    expected_fields = {
+        "protocol_version",
+        "repository_id",
+        "patch_footprints",
+        "relations",
+        "cluster_by_source_event_id",
+        "dependency_evidence_digest",
+    }
+    if set(value) != expected_fields:
+        raise ValueError("dependency evidence fields are invalid")
+    footprints_value = value["patch_footprints"]
+    if not isinstance(footprints_value, SequenceABC) or isinstance(
+        footprints_value, str
+    ):
+        raise ValueError("dependency patch footprints must be an array")
+    footprints: list[PatchFootprint] = []
+    for item in footprints_value:
+        if not isinstance(item, MappingABC) or set(item) != {
+            "source_event_id",
+            "reference_patch_digest",
+            "changed_paths",
+        }:
+            raise ValueError("dependency patch footprint fields are invalid")
+        changed_paths = _string_tuple(item["changed_paths"], "changed_paths")
+        footprints.append(
+            PatchFootprint(
+                source_event_id=_required_string(item, "source_event_id"),
+                reference_patch_digest=_required_string(
+                    item,
+                    "reference_patch_digest",
+                ),
+                changed_paths=changed_paths,
+            )
+        )
+    relations_value = value["relations"]
+    if not isinstance(relations_value, SequenceABC) or isinstance(
+        relations_value, str
+    ):
+        raise ValueError("dependency relations must be an array")
+    relations: list[DependencyRelation] = []
+    relation_fields = {
+        "relation_id",
+        "left_source_event_id",
+        "right_source_event_id",
+        "relation_type",
+        "overlapping_paths",
+        "left_reference_patch_digest",
+        "right_reference_patch_digest",
+    }
+    for item in relations_value:
+        if not isinstance(item, MappingABC) or set(item) != relation_fields:
+            raise ValueError("dependency relation fields are invalid")
+        relations.append(
+            DependencyRelation(
+                relation_id=_required_string(item, "relation_id"),
+                left_source_event_id=_required_string(
+                    item,
+                    "left_source_event_id",
+                ),
+                right_source_event_id=_required_string(
+                    item,
+                    "right_source_event_id",
+                ),
+                relation_type=_required_string(item, "relation_type"),
+                overlapping_paths=_string_tuple(
+                    item["overlapping_paths"],
+                    "overlapping_paths",
+                ),
+                left_reference_patch_digest=_required_string(
+                    item,
+                    "left_reference_patch_digest",
+                ),
+                right_reference_patch_digest=_required_string(
+                    item,
+                    "right_reference_patch_digest",
+                ),
+            )
+        )
+    clusters_value = value["cluster_by_source_event_id"]
+    if not isinstance(clusters_value, MappingABC) or any(
+        not isinstance(source_event_id, str)
+        or not source_event_id
+        or not isinstance(cluster_id, str)
+        or not cluster_id
+        for source_event_id, cluster_id in clusters_value.items()
+    ):
+        raise ValueError("dependency clusters must map nonempty strings")
+    evidence = PylintDependencyEvidence(
+        protocol_version=_required_string(value, "protocol_version"),
+        repository_id=_required_string(value, "repository_id"),
+        patch_footprints=tuple(footprints),
+        relations=tuple(relations),
+        cluster_by_source_event_id=dict(clusters_value),
+        dependency_evidence_digest=_required_string(
+            value,
+            "dependency_evidence_digest",
+        ),
+    )
+    validation = validate_dependency_evidence(evidence)
+    if not validation.ok:
+        raise ValueError(
+            "dependency evidence is invalid: " + "; ".join(validation.errors)
+        )
+    return evidence
+
+
 def validate_dependency_evidence_against_patches(
     evidence: PylintDependencyEvidence,
     reference_patches: Mapping[str, CapturedDiff],
@@ -161,6 +271,21 @@ def validate_dependency_evidence_against_patches(
             ("dependency evidence does not replay from reference patches",)
         )
     return ValidationResult.pass_()
+
+
+def _required_string(value: Mapping[str, Any], key: str) -> str:
+    item = value.get(key)
+    if not isinstance(item, str) or not item:
+        raise ValueError(f"dependency evidence {key} must be a nonempty string")
+    return item
+
+
+def _string_tuple(value: Any, label: str) -> tuple[str, ...]:
+    if not isinstance(value, SequenceABC) or isinstance(value, str) or any(
+        not isinstance(item, str) or not item for item in value
+    ):
+        raise ValueError(f"dependency evidence {label} must be a string array")
+    return tuple(value)
 
 
 def validate_source_event_clusters(
