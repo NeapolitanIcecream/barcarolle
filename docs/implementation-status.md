@@ -51,6 +51,9 @@ External Result admission now validates one immutable source manifest against
 the complete Task Pool, Agent, Workspace, and Runtime identities. It writes
 per-row decisions and an idempotent receipt, defaults availability to an
 import-time floor, and rejects different executions sharing one cache identity.
+Store- and receipt-scoped import locks serialize the first local observation,
+Result admission, and receipt publication without creating an empty Result
+Store.
 Runner lazy fill replays the persisted Selection chain before cache access, and
 multi-origin evaluation derives all origin views from one physical Result
 snapshot.

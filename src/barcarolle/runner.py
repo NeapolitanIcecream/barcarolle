@@ -200,6 +200,35 @@ def import_result_bundle(
         raise ValueError(
             "Result source availability semantics do not match import policy"
         )
+    with result_store_module.open_result_import_transaction(
+        local_result_store,
+        receipt_path,
+    ):
+        return _import_result_bundle_locked(
+            source,
+            bundle,
+            agents,
+            workspace_config,
+            runtime_config,
+            local_result_store,
+            receipt_path,
+            accepted_authority_digest=accepted_authority_digest,
+            availability_policy=availability_policy,
+        )
+
+
+def _import_result_bundle_locked(
+    source: result_store_module.ResultSourceBundle,
+    bundle: task_pool_module.TaskPoolBundle,
+    agents: Sequence[AgentRecord],
+    workspace_config: WorkspaceConfig,
+    runtime_config: RuntimeConfig,
+    local_result_store: result_store_module.ResultStore,
+    receipt_path: Path,
+    *,
+    accepted_authority_digest: str,
+    availability_policy: str,
+) -> ResultImportReceipt:
     existing_receipt = result_store_module.load_result_import_receipt(receipt_path)
     if existing_receipt is not None:
         _ensure_result_import_receipt_matches(

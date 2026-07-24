@@ -150,7 +150,10 @@ time. `producer_attested_historical_v1` preserves source availability only as
 an explicit external attestation. Import time is the implementation-owned first
 local observation; a receipt or prior valid local row recovers it on retry.
 Receipt replay recomputes admission without opening a writer, and local Result
-and receipt paths must stay outside the read-only source root.
+and receipt paths must stay outside the read-only source root. Imports sharing
+either a Result Store or receipt take deterministic coordination locks from the
+first local-state read through durable Result append and receipt publication;
+the hidden lock sidecars contain no evidence.
 
 ## Execution Views And Pricing Views
 

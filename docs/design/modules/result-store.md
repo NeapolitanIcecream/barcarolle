@@ -191,6 +191,27 @@ Effect:
 - Runner requires exact replay to use the same canonical observation time and
   rejects an observation before source-manifest creation.
 
+### open_result_import_transaction
+
+Input:
+
+- `store: ResultStore`;
+- `receipt_path: Path`.
+
+Output:
+
+- one context-managed import transaction.
+
+Effect:
+
+- Acquires deterministic store- and receipt-scoped POSIX advisory locks before
+  reading local Result or receipt state and holds them through Result append and
+  immutable receipt publication.
+- Serializes imports sharing either destination without creating an empty
+  Result Store. Persistent hidden lock sidecars contain no evidence.
+- Does not replace the Result Store's exclusive append lock; import takes that
+  lock only when it has normalized rows to admit.
+
 ### compute_result_cache_identity
 
 Input:

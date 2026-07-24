@@ -628,6 +628,43 @@ def ensure_unique_result_ids(results: Sequence[ResultRecord]) -> None:
 
 
 @contextmanager
+def open_result_import_transaction(
+    store: ResultStore,
+    receipt_path: Path,
+) -> Iterator[None]:
+    """Serialize one Result Store import through immutable receipt publication."""
+    lock_paths = tuple(
+        sorted(
+            {
+                _result_import_lock_path(store.path),
+                _result_import_lock_path(receipt_path),
+            },
+            key=str,
+        )
+    )
+    handles: list[TextIO] = []
+    try:
+        for lock_path in lock_paths:
+            lock_path.parent.mkdir(parents=True, exist_ok=True)
+            handle = lock_path.open("a+", encoding="utf-8", newline="")
+            try:
+                _lock_store_file(handle, exclusive=True)
+            except BaseException:
+                handle.close()
+                raise
+            handles.append(handle)
+        yield
+    finally:
+        for handle in reversed(handles):
+            _unlock_store_file(handle)
+            handle.close()
+
+
+def _result_import_lock_path(path: Path) -> Path:
+    return (path.parent / f".{path.name}.import.lock").resolve()
+
+
+@contextmanager
 def open_result_store_session(
     store: ResultStore,
 ) -> Iterator[ResultStoreSession]:

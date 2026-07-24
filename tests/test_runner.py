@@ -1,9 +1,11 @@
 from __future__ import annotations
 
 from collections import Counter
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import replace
 from datetime import UTC, datetime
 from pathlib import Path
+from threading import Barrier, Event, Lock
 import hashlib
 import json
 import os
@@ -500,6 +502,74 @@ def test_import_result_bundle_applies_import_time_floor_and_is_idempotent(
         path.name: path.read_bytes()
         for path in (source_manifest, source_manifest.parent / "results.jsonl")
     } == source_bytes
+
+
+def test_concurrent_result_imports_share_one_observation_and_receipt(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    task = _task()
+    check = _check()
+    agent = _agent()
+    workspace_config = _workspace_config()
+    runtime_config = _runtime_config()
+    source_manifest = _write_result_source_bundle(
+        tmp_path / "source",
+        (
+            _result(
+                task,
+                check,
+                agent,
+                workspace_config,
+                runtime_config,
+                _scoring_config(),
+            ),
+        ),
+        availability_semantics="import_time_floor_v1",
+    )
+    bundle = _task_pool_bundle((task,), (check,))
+    store = ResultStore(tmp_path / "local" / "results.jsonl")
+    receipt_path = tmp_path / "local" / "receipt.jsonl"
+    start = Barrier(2)
+    second_observation = Event()
+    observation_lock = Lock()
+    observation_count = 0
+
+    def concurrent_now() -> str:
+        nonlocal observation_count
+        with observation_lock:
+            observation_count += 1
+            observation_number = observation_count
+        if observation_number == 1:
+            second_observation.wait(timeout=1)
+            return "2026-01-20T00:00:00Z"
+        second_observation.set()
+        return "2026-01-21T00:00:00Z"
+
+    monkeypatch.setattr(runner_module, "_now", concurrent_now)
+
+    def run_import() -> ResultImportReceipt:
+        start.wait()
+        return import_result_bundle(
+            source_manifest,
+            bundle,
+            (agent,),
+            workspace_config,
+            runtime_config,
+            store,
+            receipt_path,
+            accepted_authority_digest="trusted-authority",
+            availability_policy="import_time_floor_v1",
+        )
+
+    with ThreadPoolExecutor(max_workers=2) as executor:
+        receipts = tuple(executor.map(lambda _: run_import(), range(2)))
+
+    assert receipts[0] == receipts[1]
+    assert receipts[0].imported_at == "2026-01-20T00:00:00.000000Z"
+    imported = tuple(load_results(store, ResultQuery()))
+    assert len(imported) == 1
+    assert imported[0].evidence_imported_at == receipts[0].imported_at
 
 
 def test_import_result_bundle_rejects_ambiguous_incoming_executions_as_a_group(

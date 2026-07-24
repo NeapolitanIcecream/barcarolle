@@ -40,7 +40,9 @@ The generic pre-Generator infrastructure is at its stop line:
   checks Task/Check membership and Agent/Workspace/Runtime identity, leaves the
   source byte-identical, labels external attestation, and applies an explicit
   availability policy. The implementation records the first local observation
-  time; receipt replay is read-only and reuses that time.
+  time; receipt replay is read-only and reuses that time. Store- and
+  receipt-scoped import locks serialize observation lookup, Result admission,
+  and receipt publication.
 - Default external availability is
   `max(source_result_available_at, evidence_imported_at)`. Historical
   availability requires the explicit producer-attested policy and is labeled
