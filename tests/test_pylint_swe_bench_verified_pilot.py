@@ -250,6 +250,15 @@ def test_dependency_evidence_is_bound_as_run_specific_adapter_evidence() -> None
     assert first_pool.generation_provenance_digest != (
         second_pool.generation_provenance_digest
     )
+    assert first_pool.task_pool_id != second_pool.task_pool_id
+    unidentified_pool = replace(
+        first_pool,
+        task_pool_id="",
+        task_pool_digest="",
+    )
+    assert first_pool.task_pool_id == (
+        f"task_pool_{pilot.canonical_digest(unidentified_pool)}"
+    )
 
 
 def test_build_context_rejects_invalid_complete_task_pool_bundle(

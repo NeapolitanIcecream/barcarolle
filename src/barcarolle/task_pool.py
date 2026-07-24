@@ -515,17 +515,10 @@ def bind_task_pool_generation_provenance(
             manifest_digest="",
         )
     )
-    bound_task_pool = record_with_digest(
-        replace(
-            task_pool,
-            generation_provenance_ref=(
-                bundle_dir / "generation-provenance.jsonl"
-            ).as_posix(),
-            generation_provenance_digest=provenance.manifest_digest,
-            generator_config_digest=provenance.generator_behavior_digest,
-            source_protocol_digest=provenance.source_protocol_digest,
-            task_pool_digest="",
-        )
+    bound_task_pool = bind_task_pool_generation_manifest(
+        task_pool,
+        (bundle_dir / "generation-provenance.jsonl").as_posix(),
+        provenance,
     )
     return (
         bound_task_pool,
@@ -533,6 +526,26 @@ def bind_task_pool_generation_provenance(
         frame_events,
         package.adapter_evidence,
     )
+
+
+def bind_task_pool_generation_manifest(
+    task_pool: TaskPoolRecord,
+    provenance_ref: str,
+    provenance: GenerationProvenanceManifest,
+) -> TaskPoolRecord:
+    if not isinstance(provenance_ref, str) or not provenance_ref:
+        raise ValueError("generation provenance ref must be a nonempty string")
+    bound = replace(
+        task_pool,
+        task_pool_id="",
+        generation_provenance_ref=provenance_ref,
+        generation_provenance_digest=provenance.manifest_digest,
+        generator_config_digest=provenance.generator_behavior_digest,
+        source_protocol_digest=provenance.source_protocol_digest,
+        task_pool_digest="",
+    )
+    bound = replace(bound, task_pool_id=_automatic_task_pool_id(bound))
+    return record_with_digest(bound)
 
 
 def _load_prepared_records(
@@ -1238,12 +1251,7 @@ def freeze_task_pool(
         source_window_end=source_window_end,
     )
     if not record.task_pool_id:
-        record = TaskPoolRecord(
-            **{
-                **record.__dict__,
-                "task_pool_id": f"task_pool_{canonical_digest(record)}",
-            }
-        )
+        record = replace(record, task_pool_id=_automatic_task_pool_id(record))
     record = record_with_digest(record)
     validation = validate_task_pool_artifacts(
         record,
@@ -1257,6 +1265,15 @@ def freeze_task_pool(
             "task pool artifacts failed validation: " + "; ".join(validation.errors)
         )
     return record
+
+
+def _automatic_task_pool_id(task_pool: TaskPoolRecord) -> str:
+    unidentified = replace(
+        task_pool,
+        task_pool_id="",
+        task_pool_digest="",
+    )
+    return f"task_pool_{canonical_digest(unidentified)}"
 
 
 def certification_evidence_records(

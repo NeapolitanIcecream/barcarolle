@@ -380,6 +380,14 @@ def test_build_task_pool_from_prepared_package_publishes_complete_provenance(
     )
 
     assert bundle.task_pool == task_pool
+    unidentified_pool = replace(
+        task_pool,
+        task_pool_id="",
+        task_pool_digest="",
+    )
+    assert task_pool.task_pool_id == (
+        f"task_pool_{canonical_digest(unidentified_pool)}"
+    )
     assert bundle.generation_provenance is not None
     assert bundle.generation_provenance.generator_behavior_digest == (
         package.manifest.generator_behavior_digest

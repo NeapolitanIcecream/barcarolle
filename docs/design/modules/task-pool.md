@@ -236,6 +236,9 @@ Effect:
 - Independently binds stable Generator behavior, stable source protocol, exact
   observed frame, run authority/input snapshot, Task Pool outputs, and adapter
   evidence.
+- Clears any pre-binding Task Pool ID, derives the final semantic ID from the
+  complete bound record, and then derives the record digest. An explicit ID on
+  the pre-binding record is not a final generated-pool identity.
 - Requires a declared v1 frame to cover the finalized SourceEvent ledger
   exactly and use the exact Task Pool source window.
   Inventory/run/output changes do not change the stable behavior digest;

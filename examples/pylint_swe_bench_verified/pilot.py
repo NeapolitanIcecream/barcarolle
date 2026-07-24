@@ -55,6 +55,7 @@ from barcarolle.task_pool import (  # noqa: E402
     GENERATION_PROVENANCE_SCHEMA_VERSION,
     TaskCandidate,
     build_check_candidate,
+    bind_task_pool_generation_manifest,
     candidate_batch,
     certification_evidence_records,
     certify_task_candidate,
@@ -1500,15 +1501,10 @@ def _bind_dependency_generation_provenance(
             manifest_digest="",
         )
     )
-    bound_task_pool = record_with_digest(
-        replace(
-            task_pool,
-            generation_provenance_ref=GENERATION_PROVENANCE_REF,
-            generation_provenance_digest=manifest.manifest_digest,
-            generator_config_digest=manifest.generator_behavior_digest,
-            source_protocol_digest=None,
-            task_pool_digest="",
-        )
+    bound_task_pool = bind_task_pool_generation_manifest(
+        task_pool,
+        GENERATION_PROVENANCE_REF,
+        manifest,
     )
     return bound_task_pool, manifest, adapter_evidence
 

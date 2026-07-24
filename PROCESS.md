@@ -23,11 +23,12 @@ The generic pre-Generator infrastructure is at its stop line:
   does not generate, copy, recertify, or republish it.
 - Generation provenance is optional. When present it independently digests
   Generator behavior, source protocol, observed frame, run authority, outputs,
-  and adapter evidence. A frame must have an exact sorted event inventory and
-  receipt/attestation semantics. Every frame observation must be no later than
-  run completion, which must be no later than Task Pool creation. Without the
-  manifest, both behavior and source-protocol digests are null; absence remains
-  valid but supports no Generator, frame, or population claim.
+  and adapter evidence. Binding it replaces any pre-binding Task Pool ID with
+  the final content-derived ID. A frame must have an exact sorted event
+  inventory and receipt/attestation semantics. Every frame observation must be
+  no later than run completion, which must be no later than Task Pool creation.
+  Without the manifest, both behavior and source-protocol digests are null;
+  absence remains valid but supports no Generator, frame, or population claim.
 - The existing fixed Pylint pilot binds dependency evidence as run-specific
   adapter sidecar data together with sanitized F2P/P2P summaries, keeps core
   certification evidence schema-exact and behavior identity

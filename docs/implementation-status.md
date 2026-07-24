@@ -25,7 +25,9 @@ from an arbitrary external Generator and an existing complete user-maintained
 Task Pool. Optional generation provenance separates stable behavior and source
 protocol from run, observed frame, and output inventory. Pools without a
 Generator remain valid, but cannot retain either Generator-behavior or
-source-protocol digests without the manifest that supports them. High-level
+source-protocol digests without the manifest that supports them. Attaching a
+manifest replaces the pre-binding Task Pool ID with the final content-derived
+identity, so run and output differences cannot retain one semantic ID. High-level
 execution and scoring consume a complete validated bundle rather than parallel
 Task/Check lists. No concrete new Generator or plugin registry is part of this
 boundary.
