@@ -240,9 +240,10 @@ Effect:
   exactly and use the exact Task Pool source window.
   Inventory/run/output changes do not change the stable behavior digest;
   behavior changes do.
-- Rejects a generation run that finishes after Task Pool creation and any
-  observed-frame event recorded after Task Pool creation. The immutable pool
-  cannot bind evidence from its own future.
+- Rejects an observed-frame event recorded after its generation run completes,
+  a run that finishes after Task Pool creation, or an observation recorded
+  after Task Pool creation. The chronology is observation, run completion,
+  then immutable pool creation.
 - Keeps adapter-specific zero/one/many derivation or classic-paper fields in the
   sidecar. Core v1 retains one candidate projection per SourceEvent.
 

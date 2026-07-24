@@ -361,6 +361,72 @@ def test_load_prepared_candidate_package_rejects_invalid_frame_semantics(
         task_pool_module.load_prepared_candidate_package(manifest_path)
 
 
+def test_load_prepared_candidate_package_rejects_observation_after_run(
+    tmp_path: Path,
+) -> None:
+    source_root = tmp_path / "source"
+    source_root.mkdir()
+    candidate, _, _, reference_patch, run_context = _executable_candidate(source_root)
+    candidate = replace(
+        candidate,
+        source_resolved_at="2026-01-10T00:00:00.000000Z",
+        task_material_available_at="2026-01-11T00:00:00.000000Z",
+        check_material_available_at="2026-01-12T00:00:00.000000Z",
+    )
+    check_binding = next(iter(dict(run_context._check_materials).values()))
+    package_root = tmp_path / "package"
+    manifest_path = _write_prepared_candidate_package(
+        package_root,
+        candidate,
+        reference_patch,
+        check_binding.check_command,
+        source_root / "private-check.txt",
+    )
+    (event,) = load_jsonl_records(
+        package_root / "observed-frame-events.jsonl",
+        ObservedFrameEventRecord,
+    )
+    late_event = record_with_digest(
+        replace(
+            event,
+            observed_at="2026-01-30T00:00:02.000000Z",
+            frame_event_digest="",
+        )
+    )
+    write_jsonl_records(
+        package_root / "observed-frame-events.jsonl",
+        (late_event,),
+    )
+    (manifest,) = load_jsonl_records(
+        manifest_path,
+        PreparedCandidatePackageManifest,
+    )
+    assert manifest.observed_frame is not None
+    frame = {
+        **manifest.observed_frame,
+        "event_inventory_digest": canonical_digest((late_event,)),
+    }
+    write_jsonl_records(
+        manifest_path,
+        (
+            record_with_digest(
+                replace(
+                    manifest,
+                    observed_frame=frame,
+                    observed_frame_digest=canonical_digest(frame),
+                    manifest_digest="",
+                )
+            ),
+        ),
+    )
+
+    with pytest.raises(
+        ValueError,
+        match="observed_at must not postdate generation run completion",
+    ):
+        task_pool_module.load_prepared_candidate_package(manifest_path)
+
+
 def test_load_prepared_candidate_package_rejects_managed_authority(
     tmp_path: Path,
 ) -> None:
@@ -2280,6 +2346,61 @@ def test_generation_provenance_rejects_run_after_pool_creation(
             bundle.source_events,
             manifest,
             bundle.observed_frame_events,
+            bundle.adapter_evidence,
+        )
+
+
+def test_generation_provenance_rejects_frame_observation_after_run(
+    accepted_result: CertificationResult,
+) -> None:
+    base = _published_bundle_fixture(
+        accepted_result,
+        bundle_key="post-run-frame-observation",
+        created_at="2026-02-05T00:00:00Z",
+    )
+    bundle = _with_generation_provenance(base)
+    assert bundle.generation_provenance is not None
+    assert bundle.generation_provenance.observed_frame is not None
+    late_event = record_with_digest(
+        replace(
+            bundle.observed_frame_events[0],
+            observed_at="2026-01-30T00:00:02.000000Z",
+            frame_event_digest="",
+        )
+    )
+    frame_events = (late_event,)
+    frame = {
+        **bundle.generation_provenance.observed_frame,
+        "event_inventory_digest": canonical_digest(frame_events),
+    }
+    manifest = record_with_digest(
+        replace(
+            bundle.generation_provenance,
+            observed_frame=frame,
+            observed_frame_digest=canonical_digest(frame),
+            manifest_digest="",
+        )
+    )
+    task_pool = record_with_digest(
+        replace(
+            bundle.task_pool,
+            generation_provenance_digest=manifest.manifest_digest,
+            task_pool_digest="",
+        )
+    )
+
+    with pytest.raises(
+        ValueError,
+        match="observed_at must not postdate generation run completion",
+    ):
+        task_pool_module.validated_task_pool_bundle(
+            task_pool,
+            bundle.tasks,
+            bundle.checks,
+            bundle.certification_evidence,
+            bundle.source_events,
+            manifest,
+            frame_events,
             bundle.adapter_evidence,
         )
 

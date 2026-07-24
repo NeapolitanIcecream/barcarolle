@@ -24,10 +24,10 @@ The generic pre-Generator infrastructure is at its stop line:
 - Generation provenance is optional. When present it independently digests
   Generator behavior, source protocol, observed frame, run authority, outputs,
   and adapter evidence. A frame must have an exact sorted event inventory and
-  receipt/attestation semantics. Its run completion and every frame observation
-  must be no later than Task Pool creation. Without the manifest, both behavior
-  and source-protocol digests are null; absence remains valid but supports no
-  Generator, frame, or population claim.
+  receipt/attestation semantics. Every frame observation must be no later than
+  run completion, which must be no later than Task Pool creation. Without the
+  manifest, both behavior and source-protocol digests are null; absence remains
+  valid but supports no Generator, frame, or population claim.
 - External Results are admitted through a content-digested source manifest and
   immutable import receipt into the local append-only Result Store. Import
   checks Task/Check membership and Agent/Workspace/Runtime identity, leaves the

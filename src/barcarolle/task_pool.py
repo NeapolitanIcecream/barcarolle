@@ -899,11 +899,13 @@ def _prepared_observed_frame_errors(
         errors.append(
             "prepared observed frame must exactly cover candidates and excluded events"
         )
+    run_finished_at = _generation_run_finished_at(package.manifest.run)
     for event in package.observed_frame_events:
         errors.extend(
             _observed_frame_event_errors_for_repository(
                 package.manifest.repository_id,
                 event,
+                run_finished_at,
             )
         )
     return tuple(errors)
@@ -957,6 +959,7 @@ def _observed_frame_metadata_errors(
 def _observed_frame_event_errors_for_repository(
     repository_id: str,
     event: ObservedFrameEventRecord,
+    run_finished_at: datetime | None,
 ) -> tuple[str, ...]:
     errors: list[str] = []
     if event.repository_id != repository_id:
@@ -982,6 +985,11 @@ def _observed_frame_event_errors_for_repository(
         if event.observed_at != format_utc_timestamp(observed):
             errors.append(
                 f"observed frame event {event.source_event_id} observed_at is not canonical UTC"
+            )
+        if run_finished_at is not None and observed > run_finished_at:
+            errors.append(
+                f"observed frame event {event.source_event_id} observed_at "
+                "must not postdate generation run completion"
             )
     if event.frame_event_digest != canonical_digest(event, exclude_self_digest=True):
         errors.append(
@@ -1760,14 +1768,18 @@ def _observed_frame_errors(
         errors.append(
             "observed frame inventory must exactly cover SourceEvent outcomes"
         )
+    run_finished_at = _generation_run_finished_at(manifest.run)
     for event in frame_events:
-        errors.extend(_observed_frame_event_errors(task_pool, event))
+        errors.extend(
+            _observed_frame_event_errors(task_pool, event, run_finished_at)
+        )
     return tuple(errors)
 
 
 def _observed_frame_event_errors(
     task_pool: TaskPoolRecord,
     event: ObservedFrameEventRecord,
+    run_finished_at: datetime | None,
 ) -> tuple[str, ...]:
     errors: list[str] = []
     expected_id = make_source_event_id(
@@ -1794,6 +1806,11 @@ def _observed_frame_event_errors(
             errors.append(
                 f"observed frame event {event.source_event_id} observed_at is not canonical UTC"
             )
+        if run_finished_at is not None and observed_at > run_finished_at:
+            errors.append(
+                f"observed frame event {event.source_event_id} observed_at "
+                "must not postdate generation run completion"
+            )
         try:
             created_at = parse_utc_timestamp(task_pool.created_at)
         except (TypeError, ValueError):
@@ -1816,6 +1833,20 @@ def _observed_frame_event_errors(
                 f"observed frame event {event.source_event_id} digest does not match"
             )
     return tuple(errors)
+
+
+def _generation_run_finished_at(
+    run: Mapping[str, Any] | None,
+) -> datetime | None:
+    if run is None:
+        return None
+    value = run.get("finished_at")
+    if not isinstance(value, str):
+        return None
+    try:
+        return parse_utc_timestamp(value)
+    except ValueError:
+        return None
 
 
 def _ordered_generation_timestamps(

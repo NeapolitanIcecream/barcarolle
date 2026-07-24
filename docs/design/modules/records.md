@@ -156,7 +156,8 @@ patches, and private oracle material do not belong in this record.
 - `frame_event_digest`
 
 It says that a source event was inside an observed frame; it does not claim
-that the frame is population-complete.
+that the frame is population-complete. When generation provenance is present,
+every observation must exist no later than the bound run's completion.
 
 `GenerationProvenanceManifest` separates stable Generator behavior and source
 protocol from run identity, observed frame, and output inventory. Strict
