@@ -1,13 +1,14 @@
 # Barcarolle System Design
 
-Status: current, 2026-07-22.
+Status: current, 2026-07-24.
 
 ## Scope
 
-Barcarolle compiles target-repository benchmarks for coding Agents. It
-generates or imports `Task + Check`, validates them by execution, stores them in
-a `Task Pool`, runs Agents in fresh `Workspace`s, stores reusable `Result`s, and
-evaluates `Selector`s with `RollingOrigin`.
+Barcarolle compiles target-repository benchmarks for coding Agents. It accepts
+direct candidate sources, prepared output from arbitrary Generators, or an
+existing user-maintained `Task Pool`; validates `Task + Check` by execution;
+runs Agents in fresh `Workspace`s; admits managed or explicitly attested
+external `Result`s; and evaluates `Selector`s with `RollingOrigin`.
 
 Agent tuning is outside this system design. A predictive benchmark may later be
 used by a tuner, but tuning utility is not the same claim as predictive
@@ -21,14 +22,14 @@ and who consumes the outputs.
 
 | Module | Owns | Inputs | Input Source | Outputs | Output Consumers |
 | --- | --- | --- | --- | --- | --- |
-| Records | Shared record schemas, identity rules, validation errors, and JSON/JSONL serialization contracts. | Record definitions; record payloads produced by other modules. | Design docs; Task Pool; Verification; Workspace; Result Store; Selection; Reporting; Runner. | Validated `SourceEvent`, `Task`, `Check`, `Feature`, `Result`, `ResultCacheIdentity`, `Selector`, `Benchmark Selection`, metric, and report records; validation errors; stable IDs. | All modules. |
-| Task Pool | Source-event filtering, task import, execution-based task validation, rejection provenance, and frozen task-pool records. | Stable repository ID; sanitized source events or candidates; direct task text; Check fields; certification config; bound Workspace and Verification inputs. | User config; repository-specific adapters; user imports; Verification for check execution; Workspace for checkout/replay. | Frozen `Task Pool`; accepted `Task + Check` records; sanitized accepted/rejected/excluded SourceEvents; certification evidence. | Workspace; Result Store; Selection; Reporting. |
+| Records | Shared record schemas, identity rules, validation errors, and JSON/JSONL serialization contracts. | Record definitions; record payloads produced by other modules. | Design docs; Task Pool; Verification; Workspace; Result Store; Selection; Reporting; Runner. | Validated source-frame, generation-provenance, prepared-package, `Task`, `Check`, `Feature`, managed/external `Result`, import-receipt, cache-identity, `Selector`, `Benchmark Selection`, metric, and report records; validation errors; stable IDs. | All modules. |
+| Task Pool | Source-event filtering, prepared-candidate admission, task import, execution-based task validation, rejection provenance, and frozen task-pool records. | Stable repository ID; sanitized source events or candidates; a language-neutral prepared package; direct task text; Check fields; certification config; bound Workspace and Verification inputs. | User config; arbitrary Generator outputs; repository-specific adapters; user imports; Verification for check execution; Workspace for checkout/replay. | Frozen `Task Pool`; accepted `Task + Check` records; sanitized accepted/rejected/excluded SourceEvents; optional generation provenance and observed-frame binding; certification evidence. | Workspace; Result Store; Selection; Reporting. |
 | Verification | Check execution interface and normalized check outcomes. | `Check`; verifier workspace path; candidate diff already applied; verification runtime config. | Task Pool provides `Check`; Workspace provides verifier workspace and applied diff. | Normalized check outcome: pass, fail, invalid, failure label, sanitized evidence summary. | Workspace; Result Store; Reporting. |
 | Workspace | Solver workspace creation, Agent invocation, diff capture, verifier workspace creation, diff replay, and verification orchestration. | `Task`; `Check`; Agent config; workspace config; runtime config. | Task Pool provides `Task + Check`; user or run config provides Agent and configs; Verification provides verification runner. | Captured diff digest; execution metadata; check outcome; workspace-level failure classification. | Result Store. |
-| Result Store | Result cache identity, result storage, missing-cell queries, and result matrices. | `Task`; `Check`; Agent config; exact result identity; workspace output; check outcome. | Task Pool; Workspace; Verification; Records. | Reusable `Result` records; result cache state; cell-level result matrix; completeness, exclusion, and abstention metadata; missing Agent-task-check cells. | Selection; Reporting; Runner. |
+| Result Store | Result cache identity, managed-result storage, external-source normalization, ambiguity detection, missing-cell queries, and result matrices. | `Task`; `Check`; Agent config; exact result identity; workspace output; check outcome; or an immutable external Result source with authority and availability semantics. | Task Pool; Workspace; Verification; users; Records. | Reusable evidence-provenance-aware `Result` records; import decisions and receipts; result cache state; cell-level result matrix; completeness, exclusion, and abstention metadata; missing Agent-task-check cells. | Selection; Reporting; Runner. |
 | Selection | Selector training, evaluation, production benchmark selection, rolling-origin construction, and feature snapshotting. | Frozen `Task Pool`; `Agent Results`; historical window or origin; budget; candidate Agents; selector config or specified Selector; rolling-origin policy; feature config. | Task Pool; Result Store; user config; selector config; feature config. | `Selector`; `Benchmark Selection`; selected `Task + Check` refs and weights; rolling-origin metrics; feature snapshots; selector notes. | Reporting; Runner. |
 | Reporting | Claim-safe summaries, audit reports, and machine-readable summaries. | Selection `Task Pool`; any later prospective `Task Pool`; Selector; RollingOrigin; FeatureSnapshot; SelectorInput; `Benchmark Selection`; `EvaluationCellSet`; result matrices; `Agent Results`; rolling-origin metrics; artifact digests. | Task Pool; Result Store; Selection; Records. | Human-readable report; machine-readable summary; mode-specific claim-boundary statement. | Users. |
-| Runner | Command-level orchestration across modules, including cache reuse and lazy Agent execution. | Run config; target repository; task-source config; Agent set; historical window or origin; budget; selector config or specified Selector; result store; workspace config; runtime config; scoring config; report config. | Users; Task Pool; Result Store; Selection; Workspace; Reporting. | Run summary; references to records produced by owner modules; report paths. | Users. |
+| Runner | Command-level orchestration across modules, including complete-bundle validation, external Result admission, cache reuse, persisted-selection replay, and lazy Agent execution. | Run config; target repository; task-source config or prepared package; Agent set; historical window or origin; budget; selector config or specified Selector; result source/store; workspace config; runtime config; scoring config; report config. | Users; Task Pool; Result Store; Selection; Workspace; Reporting. | Run summary; references to records produced by owner modules; Result-import receipt; report paths. | Users. |
 
 ## Canonical Data Flow
 
@@ -39,7 +40,7 @@ frozen origin and budget.
 Runner receives user config and calls the owner modules:
 
 ```text
-User config or task source
+User config, task source, or prepared-candidate package
   -> Task Pool
   -> frozen Task + Check records
 
@@ -48,6 +49,10 @@ Runner + Task Pool + Agent config + workspace config
   -> Verification
   -> Result Store
   -> Agent Results
+
+External Result manifest + authority + Task Pool + local identities
+  -> Result admission
+  -> normalized Agent Results + immutable import receipt
 
 Task Pool + pre-origin Agent Results + origin + budget + Selector
   -> RollingOrigin -> Feature Snapshot -> Selector Input
@@ -106,6 +111,15 @@ from a proven immutable snapshot; an unresolved alias instead binds exact reuse
 to a declared campaign and execution window. Results with incomplete identity
 are not cache hits.
 
+The Result also identifies whether Barcarolle observed the execution or an
+external producer attested it, the source manifest, import time, source
+availability time, and policy used to derive effective availability. The
+default external policy prevents evidence imported today from appearing in
+yesterday's Selector history. A producer-attested historical policy is allowed
+only as an explicit weaker provenance claim. Multiple different executions
+sharing one cache identity are ambiguous and cannot be selected or reported as
+one cache hit.
+
 ### Selector
 
 A function that chooses benchmark tasks from a pre-origin history pool under a
@@ -127,7 +141,12 @@ constraints, eligibility mode, and holdout overlap rules. The current modes are 
 eligibility, which treats refs as known no earlier than Task Pool creation, and
 explicit counterfactual replay from historical material-availability times.
 The complete origin, feature, input, Selector, and selection chain is persisted
-before future results are opened.
+before future results are opened. A later strict-prospective Task Pool must
+preserve the bound Generator behavior, source protocol, repository, and
+certification configuration while covering the planned future source interval;
+it may be incremental or cumulative. A changed run or output inventory alone
+does not break continuity, while overlapping same-ID Task/Check records cannot
+change.
 
 ## Result Reuse And Lazy Execution
 
@@ -151,6 +170,24 @@ whose results are missing from the cache. Runner is the module that calls
 Result Store to find missing results, Workspace to execute them, and Result
 Store again to store them. The same completeness and denominator policy is
 applied when scoring the selected benchmark against the future holdout.
+
+Before cache access, Runner validates the complete Task Pool bundle and reloads
+the persisted Origin, FeatureSnapshot, SelectorInput, Selector, Selection,
+frozen pre-origin Results, and Agent identities. It deterministically replays
+selection and then stores the resolved selected cells as an
+`EvaluationCellSet`; an unpersisted in-memory choice cannot silently become paid
+benchmark evidence.
+
+## Evidence Claim Lattice
+
+Evidence strength is not one total ladder. Independent axes include supplied
+bundle consistency, observed source-frame authority, Generator behavior and
+source-protocol continuity, executable Check certification, Result execution
+identity, Result availability provenance, rolling-origin chronology, and
+field/tuning outcomes. Reports support only claims whose required axes replay;
+for example, an internally consistent user pool does not imply population
+coverage, and producer-attested historical availability is not a Barcarolle
+observation-time claim.
 
 ## Module Boundary Rules
 

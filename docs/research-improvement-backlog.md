@@ -109,13 +109,13 @@ strict prepared-candidate package; Barcarolle then owns certification and
 immutable publication. A user-maintained complete `TaskPoolBundle` is a
 separate, read-only input that must be validated in place without generator
 execution or republication. Runner, Selection, Reporting, and Workspace should
-not know a generator type. This boundary is not yet complete: standard Runner
-construction accepts only import or caller-provided source events, generator
-behavior identity is under-bound, the Pylint adapter over-binds inventory, and
-some execution entry points validate only Task/Check members rather than the
-complete bundle. Static classic paradigms can converge through adapter-specific
-evidence; interactive paradigms require a later episode-execution contract,
-not a larger generator abstraction.
+not know a generator type. This generic boundary is now complete: prepared
+packages preserve exclusions and local material digests, optional provenance
+separates stable behavior/protocol from frame/run/output identity, high-level
+Runner paths preflight complete bundles, and existing bundles open read-only.
+Static classic paradigms can now converge through adapter-specific evidence;
+interactive paradigms still require a later episode-execution contract, not a
+larger Generator abstraction.
 
 The Generator-validity sprint further narrows the scientific claim.
 `SourceEventRecord` is currently a complete ledger only for events supplied to
@@ -126,10 +126,12 @@ an end-to-end real-work quality score or a pure Selector-error component.
 Generator behavior and the observed source frame therefore need independent
 identities and receipts. Interactive user simulation is additionally a
 benchmark-side environment policy whose counterfactual responses are not
-identified by one logged trajectory. It must pass a held-out human branch
-pilot before a core episode contract is justified. Real-work calibration stays
-a prospective field experiment, not an inference from bundle integrity,
-conversion yield, distribution similarity, or simulator difficulty.
+identified by one logged trajectory. A concrete adapter may implement one
+narrow treatment-conditional episode contract, but a held-out human branch
+pilot must pass before simulator outcomes can support human-interaction claims.
+Real-work calibration stays a prospective field experiment, not an inference
+from bundle integrity, conversion yield, distribution similarity, or simulator
+difficulty.
 
 Run-variation and outcome comparisons still require another
 explicitly authorized evidence-producing paid run; no campaign authority
@@ -163,9 +165,9 @@ behind that boundary until a concrete caller exists.
 
 ## Infrastructure Closure Sprint Contract
 
-The active sprint completes the generator-agnostic infrastructure that is
-already justified by RI-120 through RI-140. It stops before implementing,
-running, or optimizing a concrete Generator.
+The 2026-07-24 sprint completed the generator-agnostic infrastructure justified
+by RI-120 through RI-142. It stopped before implementing, running, or
+optimizing a concrete Generator.
 
 Success requires all of the following:
 
@@ -179,8 +181,9 @@ Success requires all of the following:
   conflict;
 - Generator behavior, source protocol, observed-frame inventory, run authority,
   and outputs are independently bound without adding a Generator runtime;
-- Reporting names bundle integrity, generated-pool prediction, Generator bridge,
-  and field calibration as different evidence levels;
+- Reporting treats bundle consistency, generated-pool prediction, observed
+  frame, Generator bridge, Check/semantic calibration, and field calibration as
+  separate evidence axes;
 - latest-schema migration, public red/green contract tests, the full quality
   suite, documentation replay, and an independent adversarial audit pass.
 
@@ -195,9 +198,9 @@ The working route registry is:
 
 | Route | Thesis and decisive test | Status / reopening condition |
 | --- | --- | --- |
-| A. Task-supply boundary | One strict prepared package plus one read-only bundle handle is sufficient. A damaged certification or SourceEvent artifact must stop every high-level execution path before side effects. | Active: RI-120–RI-124 and RI-137/RI-138. |
-| B. Result admission and phase order | Existing Result Store and cache identity are sufficient if provenance, effective availability, conflict classification, one physical snapshot, and Selection replay are enforced. The source artifact must remain byte-identical. | Active: RI-131–RI-135. |
-| C. Scientific evidence identity | Independently digested manifest sections can support observed-frame and behavior claims without a registry or service. Pools without a frame remain usable but cannot claim frame coverage. | Active: RI-121, RI-136, RI-137, DOC-006/DOC-015. Promote a shared frame record only if two concrete adapters need it. |
+| A. Task-supply boundary | One strict prepared package plus one read-only bundle handle is sufficient. A damaged certification or SourceEvent artifact must stop every high-level execution path before side effects. | Complete: RI-120–RI-124 and the infrastructure part of RI-137/RI-138. |
+| B. Result admission and phase order | Existing Result Store and cache identity are sufficient if provenance, effective availability, canonical Result identity, conflict classification, one physical snapshot, and Selection replay are enforced. The source artifact must remain byte-identical and receipt replay must be read-only. | Complete: RI-131–RI-135 and RI-141/RI-142. |
+| C. Scientific evidence identity | Independently digested manifest sections can support observed-frame and behavior claims without a registry or service. Pools without a frame remain usable but cannot claim frame coverage. | Complete at the generic boundary: RI-121, RI-136, RI-137, DOC-006/DOC-015. Promote a shared frame record only if two concrete adapters need it. |
 | D. Concrete and interactive Generators | Common infrastructure should not guess adapter behavior, episode semantics, field utility, or mixture weights. | Retired for this sprint. Reopen only with a concrete adapter, branch-policy pilot, authorized field protocol, or calibrated outer holdout as specified in RI-125–RI-130 and RI-139/RI-140. |
 
 The allowed terminal states are verified completion, a demonstrated
@@ -463,7 +466,7 @@ unrelated single-plus SWE-Bench+ work.
 | [SWE-Bench++](https://arxiv.org/html/2512.17419) | Its final tasks fit, but ordinary base-fail/reference-pass evidence does not prove the Base/Before/After classification or distinguish an expected feature-request build failure from a broken environment/parser. | Retain three-state, environment-synthesis, parser, repeatability, and QA evidence in a sidecar. The public repository currently documents evaluation of the released dataset, not the paper's full generator, so call an implementation a dataset importer or paper-paradigm reimplementation unless exact official code is available. |
 | [SWE-smith](https://swesmith.com/guides/create_instances/) | Fits after the bugged solver state has an immutable identity. Its `patch` introduces the bug; it is not the solver's gold repair. | First materialize the final solver state as a full Git commit and retain upstream/overlay lineage. Add a commit-plus-overlay core model only if a concrete adapter cannot materialize a commit. Keep mutation, issue-generation, F2P/P2P, environment, and combination lineage in sidecars. |
 | [SWE-Future](https://arxiv.org/html/2606.18733) | A final executable task of the described form can fit. The missing contract is generation-time causal evidence, not the final Check. | Bind the pre-forecast cutoff and inputs, frozen forecast, later retrospective-validation window, task-generation snapshot, leakage audit, and family-to-task lineage. Later PR patches cannot become hidden generation inputs merely because they were used to validate a forecast family. |
-| [SWE-Together](https://github.com/Togetherbench/SWE-Together) and [SWE-Interact](https://github.com/scaleapi/SWE-Interact) | Do not fit faithfully. The solver receives requirements over multiple turns and the benchmark-side simulator observes evolving work. A source trajectory does not identify human responses on a new Agent's branches. | First pass RI-127's held-out human branch-policy pilot. Then, if justified, add a separate episode-execution contract with pre-interaction/dynamic state, simulator/scenario identity and seed, disclosure and termination, persistent Workspace interaction, separate simulator usage/cost, sanitized event evidence, final verification, and interaction metrics. Do not build a generator workflow DAG. |
+| [SWE-Together](https://github.com/Togetherbench/SWE-Together) and [SWE-Interact](https://github.com/scaleapi/SWE-Interact) | Do not fit the static contract faithfully. The solver receives requirements over multiple turns and the benchmark-side simulator observes evolving work. A source trajectory does not identify human responses on a new Agent's branches. | A concrete adapter may add one separate episode-execution contract with pre-interaction/dynamic state, simulator/scenario identity and seed, disclosure and termination, persistent Workspace interaction, separate simulator usage/cost, sanitized event evidence, final verification, and interaction metrics. RI-127's held-out human branch-policy pilot gates human-proxy claims, not implementation of that adapter. Do not build a generator workflow DAG. |
 
 Built-in names must state fidelity, for example `swebench_dataset_import`,
 `swebench_miner`, `swebench_pp_paper_reimplementation`, or
@@ -480,9 +483,10 @@ generator additionally binds training evidence and cutoff in its behavior/run
 provenance. This needs an experiment-specific comparison over ordinary Task
 Pools, not a generator-training framework in the core.
 
-### Current counterexamples
+### Counterexamples closed at the generic boundary
 
-The audit found four concrete gaps:
+The audit found four concrete gaps, all closed at the generic boundary by this
+sprint:
 
 1. `Runner._candidate_batch` supports only file import or caller-provided
    source events; a programmatic adapter must duplicate the certification and
@@ -500,29 +504,33 @@ The audit found four concrete gaps:
    counterexample reports an unknown `swe_bench_status` key, and the adapter's
    historical load path does not use the complete bundle loader.
 
-The fourth gap should be fixed by moving SWE-bench-specific counts into a
-Task-Pool-bound adapter evidence sidecar, not by allowing arbitrary keys in
-core certification evidence.
+The fourth gap is closed for new generic evidence by moving adapter-specific
+counts to a Task-Pool-bound sidecar rather than allowing arbitrary keys in core
+certification evidence. Migrating the frozen Pylint example waits until that
+adapter is next changed.
 
-### Implementation order before the model API
+### Implemented order and remaining adapter work
 
-1. Require a completely loaded `TaskPoolBundle` before every
+1. Completed: require a completely loaded `TaskPoolBundle` before every
    evidence-producing Runner side effect.
-2. Add a read-only `open/validate/use` path for a complete external bundle and
-   a separate ignored local execution-binding file.
-3. Add one strict prepared-candidate package and a direct
+2. Completed: add a read-only `open/validate/use` path for a complete external
+   bundle. Existing programmatic Workspace binders remain the local execution
+   boundary; a binding-file CLI waits for a concrete command.
+3. Completed: add one strict prepared-candidate package and a direct
    `CandidateBatch + materials + provenance -> certify -> publish` path.
-4. Separate generator behavior, input/run evidence, and output identities;
-   repair the Pylint adapter and reject unknown candidate fields.
-5. Implement a SWE-bench dataset importer/miner with golden fixtures, then use
-   SWE-smith as the second contract test for synthetic base state, lineage, and
-   procedural/LLM provenance.
+4. Completed at the generic boundary: separate Generator behavior, source
+   protocol, observed frame, run, output, and adapter identities, and reject
+   unknown candidate fields. Pylint-sidecar migration remains adapter work.
+5. Deferred by this sprint boundary: choose and implement the first concrete
+   classic adapter with golden fixtures, then use a genuinely different
+   synthetic/base-state adapter as the second contract test before extracting
+   shared adapter code.
 
 Managed LLM Generators and large-pool certification can wait for their concrete
-adapter, API, and authority. An interactive episode Runner additionally waits
-for the held-out human branch-policy pilot. Adapter-specific named gates do not
-need a generic workflow engine, and third-party interoperability does not need
-a plugin host.
+adapter, API, and authority. A concrete interactive adapter may later implement
+one narrow episode boundary; the held-out human branch-policy pilot gates
+human-proxy claims. Adapter-specific named gates do not need a generic workflow
+engine, and third-party interoperability does not need a plugin host.
 
 ## Generator Validity And End-To-End Estimand Decision
 
@@ -766,24 +774,20 @@ executed, selected, and reported, but it supports only pool-conditional claims.
 The frame receipt, not a Boolean, records whether the input was a census,
 probability sample, or opportunistic sample.
 
-Reporting needs a claim ladder:
-
-```text
-bundle integrity
-  < generated-pool prospective prediction
-  < observed-frame Generator bridge
-  < prospective real-work field calibration
-```
-
-Each higher rung requires independent evidence; lower-rung success never
-implies it. The current `task_pool_coverage` claim should be renamed to bundle
-integrity or explicitly narrowed because it only validates the supplied
-artifacts. Generator digest equality remains a necessary prospective gate, not
-evidence of temporal measurement invariance.
+Reporting needs a claim lattice. Bundle consistency, Result-cell completeness,
+generated-pool prospective prediction, observed-frame inclusion, Generator
+bridge validity, Check/semantic calibration, and prospective field calibration
+are separately supported axes. Some studies need several axes at once, but no
+total ordering is valid: for example, a source-authoritative frame does not
+imply a valid Check, and a calibrated Check does not imply representative
+source capture. The former `task_pool_coverage` claim is now
+`task_pool_bundle_internal_consistency`; it validates only supplied artifacts
+and links. Generator behavior/protocol equality remains a necessary
+strict-prospective gate, not evidence of temporal measurement invariance.
 
 Do not widen current static `Task`, `Check`, or `Result` for interactive data.
-After a branch-policy pilot succeeds, the first concrete interactive adapter
-may add a narrow episode contract:
+When a concrete interactive source is selected, its adapter may add a narrow
+episode contract:
 
 - an episode specification binding initial solver-visible material, base state,
   hidden pre-interaction intent, step-wise user-policy state, simulator
@@ -820,17 +824,18 @@ telemetry or online-experiment system.
    old and a later frame. This `2 x 2` design separates version drift, source
    population drift, and their interaction. Merely comparing old/old with
    new/new cannot.
-4. **Interactive branch-policy pilot.** Before core episode work, choose 10–20
-   scenarios and construct held-out correct, mistaken, clarification, partial,
-   alternative, and abandonment branches. Compare trajectory-grounded,
-   deterministic progressive-disclosure, and generic role-play policies
-   against responses from the original user or qualified developers. Predeclare
-   response-action macro-F1, hidden-fact disclosure precision/recall, correction,
-   no-op and abandonment calibration, simulator-model sensitivity, and
-   Agent-gap/rank agreement. Proceed only if the grounded policy improves on
-   simple baselines on held-out branches and does not materially reverse
+4. **Interactive branch-policy pilot.** Before interpreting simulator evidence
+   as human-interaction evidence, choose 10–20 scenarios and construct held-out
+   correct, mistaken, clarification, partial, alternative, and abandonment
+   branches. Compare trajectory-grounded, deterministic
+   progressive-disclosure, and generic role-play policies against responses
+   from the original user or qualified developers. Predeclare response-action
+   macro-F1, hidden-fact disclosure precision/recall, correction, no-op and
+   abandonment calibration, simulator-model sensitivity, and Agent-gap/rank
+   agreement. Support a human-proxy claim only if the grounded policy improves
+   on simple baselines on held-out branches and does not materially reverse
    predeclared Agent-gap directions relative to human responses. This is a
-   feasibility gate, not field-validity evidence.
+   claim gate, not field-validity evidence.
 5. **Prospective field calibration.** Freeze the benchmark predictions first,
    then collect later eligible real work. Randomize the complete Agent treatment
    when feasible and analyze intention-to-treat, including abandonment and
@@ -855,8 +860,9 @@ Generator-diverse but jointly biased mixture remains biased.
   experiment service in Barcarolle;
 - no inverse-propensity, doubly robust, or learned inclusion correction before
   sampling probabilities, support, and audit outcomes exist;
-- no interactive core expansion before the branch-policy pilot and one
-  concrete adapter establish the required turn boundary.
+- no generic interactive platform or human-proxy claim; one concrete adapter
+  must establish the required turn boundary, and the branch-policy pilot must
+  calibrate it before human-interaction interpretation.
 
 ## Verification Snapshot
 
@@ -1179,7 +1185,7 @@ and rehashes the resulting tree before Check execution.
 | RI-042 | P1 | reproduced, resolved 2026-07-22 | A self-consistent SelectorInput could declare a `selection_budget_limit` that disagreed with `budget_digest`; intrinsic uniqueness and cutoff checks lived only in Selection. Reporting also treated the order of separately supplied Agent records as evidence, so reordering an identical Agent set revoked a valid claim. | Records now owns SelectorInput membership, budget, cutoff, identity, and self-digest validation through direct helpers; Selection delegates to that one contract. Reporting compares the supplied Agent records as a set while preserving exact frozen SelectorInput/ResultMatrix order. |
 | RI-043 | P1 | reproduced, resolved 2026-07-23 | Task Pool artifact validation first rejected a scalar certification `rejection_reasons` value, then raised `TypeError` while linking the same malformed evidence to SourceEvents. Independently, accepted evidence could claim `pass` together with `timed_out=true` or a failure label, or `fail` without a failure label. | Cross-record SourceEvent reconciliation now normalizes only sequence-shaped reasons after the record-level validator reports malformed input. Attempt evidence enforces the normalized Verification state machine: passing attempts have no failure label, non-passing attempts have a non-empty failure label, and timeouts are invalid outcomes. Validation returns errors instead of raising. |
 | RI-045 | P1 | reproduced, resolved 2026-07-23 | `evaluate_selectors` accepted `strict_prospective`, although that mode must freeze an Origin with no future refs. The Runner then persisted selection evidence and could invoke Agents for selected cells even though the same immutable Task Pool could never supply post-origin traffic, leaving no valid future denominator. | Batch evaluation now rejects strict mode before side effects. `evaluate_prospective_selection` separately reloads the frozen strict chain, links a later Task Pool through `EvaluationCellSet`, materializes mature/censored refs, and reuses the one Result/matrix/scoring path. Reporting and the offline CLI require and replay both snapshots. |
-| RI-046 | P1 | reproduced, resolved 2026-07-23 | A later Task Pool carried creation time and member digests but not the source interval it had observed, so it could not prove complete coverage of a planned future window. Treating event inventory as generator configuration would also make every later observation look like behavior drift. | Task Pools now persist canonical source-window bounds, reject accepted or certified events outside them, and bind the bounds into pool identity. Generator digest is behavior-only; SourceEvent/Task/Check digests bind inventory. Prospective replay requires the later window to preserve the earlier start and cover the planned future end. |
+| RI-046 | P1 | reproduced, resolved 2026-07-24 after audit refinement | A later Task Pool carried creation time and member digests but not the source interval it had observed, so it could not prove complete coverage of a planned future window. Treating event inventory as generator configuration would also make every later observation look like behavior drift. The first repair unnecessarily required every later pool to repeat the earlier window. | Task Pools persist canonical source-window bounds, reject accepted or certified events outside them, and bind the bounds into pool identity. Generator digest is behavior-only; SourceEvent/Task/Check digests bind inventory. Prospective replay requires the later window to cover the complete declared future interval; the pool may be incremental or cumulative, and overlapping same-ID Task/Check records cannot drift. |
 | RI-047 | P0 | reproduced, resolved 2026-07-23 | `SelectorInput` froze only Agent IDs. Between strict Selection and later evaluation, a caller could reuse an ID with changed harness/model/prompt/tool evidence and reach future-pool validation or execution. | `SelectorInput` now binds full canonical `AgentRecord` digests in Agent order. Runner rejects ID/order or record-digest drift before Task Pool reads and Agent calls; Reporting rechecks the same binding while treating separately supplied Agent records as an unordered container. |
 | RI-048 | P0 | reproduced, resolved 2026-07-23 | Strict prospective evaluation reloaded Selection, Origin, and SelectorInput but did not reload Selector/FeatureSnapshot or replay deterministic inference before opening Task Pools. A self-digested Selection could change to another eligible history ref and reach the execution path; Reporting rejected it only later. | Selection now owns one semantic replay assertion. Prospective Runner loads and validates the complete Selector→Origin→FeatureSnapshot→SelectorInput→Selection chain and replays it before Task Pool reads or Agent calls. Reporting, training, and stratified diagnostics reuse the same assertion. |
 | RI-049 | P0 | reproduced, resolved 2026-07-23 | Strict prospective replay did not resolve the pre-origin Results frozen by SelectorInput. Missing or drifted Result evidence could therefore reach Task Pool reads, while Reporting rejected the same chain only after execution. | Selection now owns one ordered SelectorInput Result-evidence assertion covering exact ID/digest resolution, Origin Agent/history/cutoff scope, and FeatureSnapshot Result provenance. Input construction, training, and prospective Runner reuse it before supply reads. |
@@ -1241,34 +1247,36 @@ and rehashes the resulting tree before Check execution.
 | RI-110 | P1 | reproduced, resolved 2026-07-23 | Workspace repository binding accepted an invalid WorkspaceConfig and stored its repository source under `repository_checkout_config_digest`; later execution preflight rejected the same object. This made the immutable context boundary weaker than Agent and Check binding and allowed direct workspace construction to start from malformed config state. | `bind_repository_source` now applies the Records-owned WorkspaceConfig validator before examining the repository or returning a new context. Execution preflight retains its just-in-time recheck. One public red case closes the binding boundary without changing context keys or adding a registry. |
 | RI-111 | P1 | reproduced, resolved 2026-07-23 | Runner Task Pool construction resolved candidates and repository commits before discovering malformed WorkspaceConfig/RuntimeConfig during per-candidate certification, repeating the same validation for every candidate. | `build_task_pool` now validates both configs once before candidate resolution; `certify_task_candidate` retains its pre-Check revalidation for direct calls and drift defense. Two public red cases prove candidate resolution is not reached. No TaskPoolConfig wrapper or generic preflight framework was added. |
 | RI-112 | P1 | code-confirmed, resolved 2026-07-23 | The frozen Pylint schedule and campaign authority were executable only by manually assembling `ReplicateCampaignContext` in Python. That left endpoint-time file loading and action selection to ad hoc code immediately before an evidence-producing run. | `replicate_campaign_cli.py` loads the exact Agent, Runtime, schedule, Task Pool, and local Pylint bindings. It provides only explicit authority creation, no-call preflight, and one-cell execution; verifies pinned verifier-image digest, architecture, and base commit before a paid cell; confines campaign artifacts below one directory; and returns bounded JSON summaries. It does not generate experiment inputs or loop over paid cells. |
-| RI-113 | P1 | maintainer decision revised 2026-07-24 | superseded by RI-120 through RI-140 | The earlier stop rule treated selection of one Task Generator as a prerequisite to any Task-supply work. The final architecture is now explicit: several built-in and user Generators share one data handoff, while a user-maintained Task Pool and user-supplied Results have separate validated paths. Generator behavior, observed source frames, and field validity are separate scientific evidence levels. | Complete the common data and trust boundaries before the endpoint arrives, starting with a static SWE-bench adapter and its observed-frame receipt. Continue to defer LLM execution and large pool certification until their concrete adapter and authority exist. Gate interactive core work on the branch-policy pilot and real-work claims on prospective field evidence. Do not build a generic Generator runtime, simulator platform, or composite storage layer. |
+| RI-113 | P1 | maintainer decision revised 2026-07-24 | superseded by RI-120 through RI-142; common boundary complete | The earlier stop rule treated selection of one Task Generator as a prerequisite to any Task-supply work. The final architecture is now explicit: several built-in and user Generators share one data handoff, while a user-maintained Task Pool and user-supplied Results have separate validated paths. Generator behavior, observed source frames, and field validity are separate scientific evidence axes. | The common data and trust boundaries are complete without choosing or implementing a concrete Generator. Resume only from an actual source/adapter decision; defer LLM execution and large-pool certification until that adapter and authority exist. A narrow interactive adapter may be implemented from a concrete source, but human-proxy claims require the branch-policy pilot and real-work claims require prospective field evidence. Do not build a generic Generator runtime, simulator platform, or composite storage layer. |
 | RI-114 | P2 | PR-review reproduced, resolved 2026-07-23 | Multi-file paid-harness evidence retained only a sorted multiset of content hashes. Swapping the executable and helper bytes therefore kept both the harness-content digest and unchanged command paths valid, allowing paid preflight to accept different code at the executable path. | `harness_content_digest` now hashes canonical resolved-path/content-digest pairs in path order. A red preflight regression swaps two declared files and proves the endpoint/harness proof fails. The same-mode search found no other endpoint-harness content digest path. |
 | RI-115 | P1 | external-review hypothesis, reproduced and resolved 2026-07-23; PR-review gap closed 2026-07-24 | `JSONValue = Any` gave Pyright no recursive payload contract. Direct validators accepted unsupported objects in Check limits, Selector validation could raise while digesting them, tuple payloads could persist as lists, and cyclic payloads could recurse indefinitely. Finite execution states were also plain strings; the first implementation checked a `Literal`'s scalar type but not membership during JSONL loading. | `JSONValue` is now recursive; shared `Literal` aliases cover finite Result, Workspace, Check, and matrix states. Latest-schema conversion enforces each Literal member set, while domain validators own valid cross-field combinations. Canonicalization rejects cycles and unsupported leaves, and the three arbitrary JSON payload boundaries reject tuples and non-finite numbers before digesting. Fourteen new or strengthened contract cases cover the counterexamples. |
 | RI-116 | P1 | external-review hypothesis, reproduced and resolved 2026-07-23 | Workspace and Task Pool derived stable benchmark labels by searching exception-message substrings. A changed Git or preparation message could silently reclassify the same failure. | Missing repository binding and verifier preparation now use thin `ValueError`-compatible typed failures carrying stable labels; checkout uses one internal typed failure. Workspace and Task Pool dispatch by type and fall back to generic labels for unexpected errors. No broad exception framework or cross-module taxonomy was added. |
 | RI-117 | P1 | code-confirmed, resolved 2026-07-24 | The repository had no PR workflow and Pyright used `basic` over only `src`, so local commands were documented but not continuously exercised and executable examples/migrations were outside the static contract. | The minimal `quality` workflow performs `uv sync --frozen`, Ruff, Pyright, and the full suite with pinned actions, read-only permissions, cancellation, and a timeout. Pyright now uses `standard` over `src`, `examples`, and `scripts`; target-repository hidden-check fixtures are excluded, and the optional SWE-bench adapter suppresses only unavailable local dependency reports. Formatting and coverage remain excluded. The first `main` run succeeded, and the active `main-quality` repository rule requires its stable `quality` status. |
 | RI-118 | P2 | external-review example, resolved 2026-07-23 | A Runner ordering test patched `_resolved_task_pool_candidate_batch`, coupling the contract to a private helper name. | The test now supplies a nonexistent public import path and asserts malformed configs fail before that path is read or the artifact directory is created. Other private patches remain until a concrete refactor or brittle failure shows that replacing them improves a public contract. |
 | RI-119 | P2 | calibrated structural audit and maintainer decision | active routing policy; no broad split | File length and Cremona hotspots identify navigation candidates but do not by themselves prove a responsibility boundary. The 34-file full-signal scan reports `strained`/`investigate_soon`, 115 hotspots (0 now / 37 soon / 78 monitor), nine investigate-soon files, and no dead-code candidates. With no baseline, it cannot establish trend. A separate `tests/test_runner.py` scan labels 18 pytest tests/helpers as high-confidence dead code because Vulture cannot see pytest discovery; that false signal alone raises the file to `investigate_now`. | Keep the current public module vocabulary. Split an internal submodule only when one coherent responsibility can move with a public characterization test or when measured change coupling/navigation cost justifies it. Default Cremona scope, exclusions, history window, and bulk-commit cutoff are stored in `pyproject.toml`; tests are scanned only for a concrete maintenance question and Vulture findings there require pytest-aware confirmation. Do not make Cremona a CI gate or initialize a baseline yet. |
-| RI-120 | P0 | code-confirmed | complete-contract | Public `run_agents` and `fill_results` accept a Task Pool record plus parallel Task/Check values and validate only those members. Certification and SourceEvent artifacts can be missing or damaged while Agent execution and Result writes still begin. | Make the existing validated `TaskPoolBundle` the high-level consumption boundary, or require every evidence-producing entry point to load that complete bundle before repository, Agent, or Result side effects. Preserve low-level member helpers only as internal characterized steps. |
-| RI-121 | P0 | code-confirmed with two counterexamples | complete-contract | Standard Runner generator identity hashes only mode and source family, allowing behaviorally different generators to collide. The Pylint adapter includes inventory-dependent dependency evidence, causing unchanged behavior over a later window to split. Strict-prospective evaluation compares this digest directly. | Persist one small generator-provenance sidecar and derive `generator_config_digest` only from stable behavior. Bind input snapshot, run authority, adapter evidence, and output inventory separately. Add both collision and later-window regression tests. |
-| RI-122 | P0 | reproduced | complete-contract | The Pylint adapter adds `swe_bench_status` to core certification evidence, but the latest core schema rejects every unknown key. A local schema probe reports the unknown `swe_bench_status` key; the adapter's historical context loader does not use the complete bundle loader. | Keep the fixed generic certification schema. Move F2P/P2P counts and SWE-bench-specific summaries into a Task-Pool-bound adapter evidence sidecar, then require `prepare -> freeze -> publish/load complete bundle` to pass end to end. |
-| RI-123 | P1 | code-confirmed and classic-paradigm audit | complete-contract | `CandidateBatch` is an in-memory value but Runner accepts only import or source-event modes. Material mappings remain in `TaskPoolConfig`, the public batch constructor cannot carry excluded SourceEvents, and candidate import silently ignores unknown fields. A user adapter must duplicate orchestration, lose denominator evidence, or risk silent semantic degradation. | Define one strict versioned prepared-candidate package carrying candidates, excluded/censored events, material refs/digests, provenance, and optional adapter evidence. Expose one direct certify-and-publish path over that package; make existing import/filter paths thin producers and reject unknown fields. |
-| RI-124 | P1 | code-confirmed and maintainer decision | complete-contract | A complete user-maintained Task Pool can be loaded read-only only after callers separately locate its manifest and construct the record. Execution additionally needs machine-local repository, Check, hidden-material, and environment bindings, while the current CLI has only `report`. Candidate import and complete-pool use are not named as distinct operations. | Add an `open/validate/use` path that reads exactly one bundle manifest, validates all artifacts in place, preserves identity, and performs no generation or publication. For execution, accept a separate ignored local binding file and prove each binding against stored digests before an Agent call. Reporting/Selection-only use needs no execution binding. |
-| RI-125 | P1 | primary-source audit and maintainer decision | future-work with ordered implementation | No core built-in generator exists; the Pylint pilot is a fixed experiment adapter. Paper names also hide whether Barcarolle imports a dataset, wraps official code, reimplements a published paradigm, or runs a native research generator. | Implement explicit adapter modules and CLI commands, not a registry: SWE-bench import/mining first, SWE-smith second, then SWE-Bench++ and SWE-Future when their concrete API and evidence inputs exist. Native research generators use the same package contract. Names, docs, revisions, and golden fixtures must state origin and fidelity. Partition multi-repository sources into one-repository pools. |
-| RI-126 | P1 | SWE-smith counterexample | complete with second built-in | Synthetic generators can start the solver from `upstream commit + generated bug overlay`; their published `patch` may introduce the bug rather than repair it, and combined tasks have multi-parent lineage. Treating the upstream commit as `Task.base_commit` would identify the wrong workspace. | Prefer the boring adapter-owned solution: materialize the final solver state as an immutable full Git commit and retain upstream/overlay/derivation evidence in a sidecar. Add a core commit-plus-overlay snapshot only after a concrete adapter proves materialization insufficient. Project exact lineage to the existing conservative dependency cluster for Selection. |
-| RI-127 | P1 | primary-source, identifiability, and SWE-Together/SWE-Interact audit | future-work; require branch-policy pilot before a core adapter | Current Workspace writes one static task, invokes one Agent harness, and captures one final diff. Interactive benchmarks need a persistent user-policy environment. One logged trajectory observes human responses only on the behavior Agent's path, so a simulator's responses to a new Agent are counterfactual extrapolations. Post-hoc trajectory labels can also encode future Agent actions. Encoding the simulator inside Agent identity would mix treatments, usage, cost, and cache identity. | First run the held-out human branch-policy pilot defined above against deterministic disclosure and generic role-play baselines. Only if it passes, add one narrow episode specification/result contract with pre-interaction versus dynamic state, simulator behavior and seed, disclosure/termination, persistent turns, separate Agent/simulator usage and cost, sanitized trace, final Check, and final workspace Result. Do not add a generic stage graph, event-sourcing framework, or simulator platform. |
+| RI-120 | P0 | resolved 2026-07-24 | complete | Public `run_agents` and `fill_results` accepted a Task Pool record plus parallel Task/Check values and validated only those members. Certification and SourceEvent artifacts could be missing or damaged while Agent execution and Result writes still began. | High-level execution, fill, evaluation, scoring, and selection paths now consume or load a complete validated `TaskPoolBundle` before repository, Agent, cache, or Result side effects. Low-level member operations remain internal characterized steps. |
+| RI-121 | P0 | resolved 2026-07-24 | complete | Standard Runner generator identity hashed only mode and source family, allowing behaviorally different generators to collide. The Pylint adapter included inventory-dependent evidence, causing unchanged behavior over a later window to split. | One Task-Pool-bound generation manifest independently digests stable Generator behavior, source protocol, observed frame, run authority, outputs, and optional adapter evidence. A declared frame window must exactly match its Task Pool source window. Strict prospective comparison uses behavior plus protocol, not frame/run/output inventory. Regression tests cover behavior stability and behavior drift. |
+| RI-122 | P0 | resolved 2026-07-24 | complete infrastructure; adapter migration deferred | Adapter-specific fields could not enter the fixed generic certification schema. | The prepared package and generation manifest carry an optional content-digested adapter sidecar while certification evidence remains fixed. The full prepare/certify/publish/open path validates the sidecar. Moving Pylint-specific legacy summaries is deferred until that example is next changed; it cannot affect new generic evidence. |
+| RI-123 | P1 | resolved 2026-07-24 | complete | `CandidateBatch` was in-memory-only, excluded SourceEvents could not enter through its public constructor, material mappings lived outside a portable handoff, and candidate import ignored unknown fields. | `candidate_batch` accepts candidates plus exclusions. A strict versioned prepared-candidate package carries exact candidates, exclusions, certification material refs/digests, optional generation provenance, frame inventory, and adapter evidence. Generic packages are producer-attested external input and cannot self-claim a Barcarolle-managed run or source-authoritative observation. Runner certifies and publishes them without executing Generator code; unknown candidate fields fail. |
+| RI-124 | P1 | resolved 2026-07-24 | complete at programmatic boundary; binding-file CLI deferred | A complete user-maintained Task Pool lacked a named read-only open/validate path. Execution also needs machine-local repository, Check, hidden-material, and environment bindings. | `open_task_pool_bundle` reads exactly one canonical manifest, validates the complete bundle in place, and preserves bytes and timestamps; `barcarolle task-pool validate` exposes the operation. Existing Workspace context binders prove local repository, command, manifest, and hidden-material digests before Agent execution. A separate binding-file CLI is deferred until a concrete execution command needs it. |
+| RI-125 | P1 | primary-source audit and maintainer decision | future-work; concrete source decision required | No core built-in Generator exists; the Pylint pilot is a fixed experiment adapter. Paper names also hide whether Barcarolle imports a dataset, wraps official code, reimplements a published paradigm, or runs a native research Generator. | When Generator work resumes, choose an actual locally/API-available source and implement one explicit adapter module, not a registry. State whether it imports a dataset, wraps official code, or reimplements a paradigm; bind revision and golden fixtures, emit the prepared package, and partition multi-repository sources into one-repository pools. Choose the second adapter to test a genuinely different material/lineage contract before extracting shared code. |
+| RI-126 | P1 | SWE-smith counterexample | future-work with first concrete synthetic/base-overlay adapter | Synthetic Generators can start the solver from `upstream commit + generated bug overlay`; their published `patch` may introduce the bug rather than repair it, and combined tasks have multi-parent lineage. Treating the upstream commit as `Task.base_commit` would identify the wrong workspace. | Prefer the boring adapter-owned solution: materialize the final solver state as an immutable full Git commit and retain upstream/overlay/derivation evidence in a sidecar. Add a core commit-plus-overlay snapshot only after a concrete adapter proves materialization insufficient. Project exact lineage to the existing conservative dependency cluster for Selection. |
+| RI-127 | P1 | primary-source, identifiability, and SWE-Together/SWE-Interact audit | future-work; concrete adapter and human-claim gates are separate | Current Workspace writes one static task, invokes one static Agent harness, and captures one final diff. Interactive benchmarks need a persistent user-policy environment. One logged trajectory observes human responses only on the behavior Agent's path, so a simulator's responses to a new Agent are counterfactual extrapolations. Post-hoc trajectory labels can also encode future Agent actions. Encoding the simulator inside Agent identity would mix treatments, usage, cost, and cache identity. | With a concrete source, implement at most one narrow episode specification/result contract with pre-interaction versus dynamic state, simulator behavior and seed, disclosure/termination, persistent turns, separate Agent/simulator usage and cost, sanitized trace, final Check, and final workspace Result. Treat results as simulator-treatment-conditional. Run the held-out human branch-policy pilot before claiming that policy represents human interaction. Do not add a generic stage graph, event-sourcing framework, or simulator platform. |
 | RI-128 | P1 | policy-confirmed | future-work; reopen with the first managed LLM generator | Built-in SWE-smith, SWE-Bench++, or SWE-Future variants may make paid evidence-producing LLM calls. A general subprocess cannot prove endpoint, authority, prompt/model identity, retries, or spend, and external generator output cannot be upgraded to managed evidence by import. | Apply the existing paid endpoint, immutable identity, authorization, reservation, and sanitized-artifact principles inside each concrete adapter. Persist their digests in generator provenance. Do not create a generic model service; externally run generators remain producer-attested data unless separately replayed. |
 | RI-129 | P2 | code-confirmed and scale hypothesis | future-work; measurement required | Task Pool certification is serial and publishes only after the full batch. Large classic pools may lose a long run's progress on interruption, but no current measured campaign establishes the need for streaming, parallelism, or a checkpoint protocol. | After a concrete adapter produces a measured long-running certification workload, add the smallest resumable single-writer checkpoint keyed by exact candidate and config identity. Reuse RI-033's bounded-concurrency gate; do not add streaming or parallel certification from anticipated scale alone. |
 | RI-130 | P1 | research-design and estimand audit | future-work; reopen after the first classic built-in exposes a measured failure | Sharing an intake contract does not establish that a Barcarolle-native Generator improves on a classic paradigm. Without a frozen observed frame, common upstream event identity, event weighting, zero/one/many derivations, compute budget, and downstream outcome, better yield can mean easier, multiplied, leaked, or less representative tasks. Task-level comparisons can overweight events that produce more variants. | For each native Generator, predeclare the targeted classic failure, same-frame classic baselines, event aggregation/weights, LLM/compute budget, training cutoff when learned, ablations, funnel, later invalid rate, leakage/dependence, semantic/Check audit, diversity, difficulty mix, and generated-pool predictive error. Run crossed Generator-by-Agent analysis with event blocking and both task-level and event-normalized results. Add only the algorithm-specific training code the first Generator needs. |
-| RI-131 | P0 | code-confirmed | complete-contract | Result Store has no external-evidence authority or import timestamp. A latest-schema external Result can self-declare an old `result_available_at` and enter a pre-origin query, even when Barcarolle learned of it only after that origin. This can turn imported target outcomes into backfilled Selector evidence. | Add managed versus `external_attested` Result provenance plus a content-digested source manifest/import receipt. Default effective availability to `max(source availability, import time)`. Preserve an earlier producer timestamp only in an explicit historical-evidence mode whose manifest and Reporting claim bind that attestation. Put effective availability and evidence-source identity in Result record identity/digest, not execution cache identity. |
-| RI-132 | P1 | code-confirmed | complete-contract | There is no Result import operation. Pointing `ResultStore` at a user JSONL validates records but later sessions append pricing views and new Results to the user's file; it also provides no complete Task Pool membership check or immutable receipt. | Validate the complete Task Pool, normalize admitted external Results into the existing local append-only Result Store, and leave the source artifact untouched. Bind source/local IDs and digests, exact Task/Check membership, Agent and config projections, authority, availability policy, and rejection reasons in one small receipt. Do not build a mounted-source overlay until measured size or shared-storage needs justify it. |
-| RI-133 | P0 | code-confirmed by the existing duplicate-identity test | complete-contract | Cache resolution indexes `(Agent, Task, Check, ResultCacheIdentity)` with `setdefault`, so the first eligible append wins even when another Result with that exact identity has a different execution digest or outcome. External import makes that silent conflict a normal failure mode rather than a local anomaly. | Make import and resolution classify duplicates: identical record/digest is idempotent; equal execution digest may supply another pricing/evidence view; different execution digests under one cache identity are ambiguous and cannot be auto-reused. Intentional replicates retain distinct frozen stochastic or observation-slot identity. Reject an ambiguous import with a receipt reason and leave its source untouched. |
-| RI-134 | P0 | code-confirmed, preserve and complete | phase-contract | `evaluate_selectors` persists all Selections before target-cell resolution, and `fill_results` resolves only selected cache cells before running misses. However, public `fill_results` accepts any self-consistent in-memory Selection; it does not prove that the Selection and its Origin/Input/Snapshot were durably recorded and replayable before opening the writable Result session. | Give Selection only the admitted cutoff-safe history view; import alone cannot bypass its origin/query policy or write directly into SelectorInput. Require `fill_results` to resolve the exact persisted Selection and replay its frozen upstream evidence against a complete Task Pool bundle before cache access. Then resolve selected exact cells, execute and append only misses, and freeze their `EvaluationCellSet`. Agent-by-pool coverage remains a derived view; Task Pool identity stays out of `ResultCacheIdentity`. |
-| RI-135 | P1 | code-confirmed by read-order audit | complete-contract | `evaluate_selectors` reloads Result Store separately for each origin while building SelectorInputs. A concurrent import or append with an attested historical availability can therefore make later origins in one evaluation observe a different physical Result inventory from earlier origins, even though all Selections belong to one operation. | Read and validate one immutable Result tuple at evaluation start, then derive every origin's time-filtered history view from that snapshot. Release the read lock after materialization; do not add MVCC, a database transaction layer, or a long-held cross-module lock. Freeze the exact Result IDs/digests in each SelectorInput as today. |
-| RI-136 | P0 | code-confirmed claim audit | complete-contract | Reporting's `task_pool_coverage` claim calls complete Task Pool artifact validation. It proves the supplied SourceEvent/Task/Check/certification bundle is intact, not that the source adapter covered an observed frame or that the frame represents real work. The broad name can upgrade bundle integrity into an unsupported population claim. | Rename the latest claim to `task_pool_bundle_integrity` and update report text/config migration, or otherwise make the machine-readable name equally narrow before another evidence claim depends on it. Keep source-frame and field validity unsupported unless their separate evidence exists. |
-| RI-137 | P0 | code-confirmed plus two-world non-identifiability counterexample | complete-contract with RI-121 and RI-123 | `SourceEventRecord` has no independently frozen source protocol or frame inventory. A real window with 100 observable events and a Generator package containing one event can produce the same valid Task Pool evidence as a one-event window. Combining source frame and Generator behavior would also prevent same-frame cross-Generator or same-behavior later-window comparisons. | Give the generation-provenance manifest independently digested `generator_behavior`, `source_protocol`, `observed_frame`, `run`, and `outputs` sections; bind its ref/digest and stable behavior/protocol identities from the Task Pool. When a frame is declared, require SourceEvent outcomes to exactly cover its event IDs. Bind query/dataset revision, window, sampling/deduplication, observation receipt, inventory digest, and known blind spots; never infer completeness from `is_complete=true`. |
-| RI-138 | P1 | formal multiplicity counterexample | complete in prepared-package/first bridge evidence; core relation deferred | One SourceEvent currently binds at most one candidate, but a real event can yield several task representations and several Generators need one shared upstream identity. Merging task rows weights high-output Generators and multiply represented events more heavily, even when target work is event-weighted. | Let adapter evidence carry common upstream event IDs and exact `(event, Generator) -> zero/one/many candidates` derivation edges. Require bridge reports to deduplicate overlap and show event-normalized alongside task-level results. Keep the current core one-candidate projection until two concrete adapters prove that a common many-to-many record is simpler than the sidecar. |
+| RI-131 | P0 | resolved 2026-07-24 | complete | External Results could self-declare old availability and backfill Selector history without authority or import-time evidence. | `ResultRecord` now distinguishes managed and external-attested evidence, binds source manifest/import time/source availability/policy, and includes evidence identity in Result record identity while leaving execution cache identity unchanged. Import-time floor is the default; producer-attested history is explicit and Reporting labels its claim limit. |
+| RI-132 | P1 | resolved 2026-07-24 | complete | Pointing Result Store at a user JSONL risked writing into that source and provided no admission receipt. | `import_result_bundle` first validates the complete Task Pool and source manifest, then records a decision for every source row after authority, membership, Agent/config, and Task/Check admission. It normalizes admitted records into the local append-only store and writes one immutable receipt. Source, local store, and receipt roots cannot alias, including through hardlinks. Receipt replay is a read-only verification with no empty-store side effect, and the source remains byte-identical. A mounted overlay remains unjustified. |
+| RI-133 | P0 | resolved 2026-07-24 | complete | Cache resolution silently used the first Result when equal cache identity had different execution evidence. | Import rejects ambiguous incoming groups and local conflicts with explicit receipt reasons before pricing or policy filtering. Cache, pre-origin resolution, and Reporting claims fail on different execution digests under one cache identity; identical executions choose the lowest canonical Result ID independent of JSONL order. Same execution may retain pricing/evidence views. Intentional replicates must carry distinct frozen stochastic/observation-slot identity. |
+| RI-134 | P0 | resolved 2026-07-24 | complete | Public lazy fill accepted an in-memory Selection without proving durable upstream evidence. | `fill_results` and `prepare_evaluation_cells` validate the complete bundle, reload and deterministically replay the persisted Selection, Origin, SelectorInput, FeatureSnapshot, Selector, pre-origin Results, and Agent identities before cache access. Fill reuses the shared cell resolver, executes only selected misses, reprices exact hits, and persists an `EvaluationCellSet`. |
+| RI-135 | P1 | resolved 2026-07-24 | complete | Multi-origin evaluation reloaded Result Store per origin, allowing one operation to see changing physical inventories. | `evaluate_selectors` performs one locked physical read through the maximum cutoff, releases it, and derives each origin's filtered, conflict-checked immutable view from that tuple. SelectorInputs continue to freeze exact Result IDs/digests. |
+| RI-136 | P0 | resolved 2026-07-24 | complete | `task_pool_coverage` named supplied-bundle validation like a population-coverage claim. | The only latest name is `task_pool_bundle_internal_consistency`; the old name is rejected rather than aliased. It proves complete artifact and cross-record consistency only. Frame, Generator bridge, Check/semantic, and field claims remain separate lattice axes. |
+| RI-137 | P0 | resolved 2026-07-24 | complete v1 | SourceEvent evidence lacked an independently frozen source protocol and frame inventory. | Optional generation provenance independently digests `generator_behavior`, `source_protocol`, `observed_frame`, `run`, and `outputs`; Task Pool binds stable behavior/protocol identities. A declared frame requires normalized authority/receipt, window, revision, blind spots, exact sorted inventory, and exact SourceEvent coverage. Producer attestation remains distinct from source authority; no `is_complete` assertion exists. |
+| RI-138 | P1 | formal multiplicity counterexample | infrastructure complete; concrete bridge study deferred | One core SourceEvent still binds at most one candidate, while real adapters may have zero/one/many derivations and shared upstream identities. | The strict package supports an adapter evidence sidecar for common upstream IDs and derivation edges without changing downstream modules. Core v1 deliberately retains its simple zero/one projection. A concrete bridge must report task- and event-normalized outcomes; promote a shared many-to-many record only after two adapters prove it simpler. |
 | RI-139 | P1 | primary-source and causal-identifiability audit | future-work; external experiment rather than core service | Current generated-pool MAE, conversion yield, distribution similarity, difficulty, and human-like language cannot establish benchmark calibration to future real work. Logged field outcomes are also policy-selected: abandonment and missing logs are informative, and stronger Agents may change which work users attempt. | Define a prospective field protocol per campaign: freeze predictions and eligible population first; randomize the complete Agent treatment where feasible; analyze intention-to-treat with user/event clusters, missingness, and future holdout; otherwise label results predictive/associational. Report completion, human effort, correction, cost, satisfaction, regression/security, and patch survival separately unless stakeholder weights are predeclared. Keep raw field evidence private and import only sanitized reports, not a telemetry platform. |
 | RI-140 | P2 | mixture identifiability counterexample | future-work; no automatic mixture before outer calibration | Several biased Generators can share one blind spot. Their task counts do not reveal target mixture weights, and overlap/multiplicity can cause rank reversal or Simpson effects. Cross-Generator agreement is robustness evidence, not proof of real-work validity. | Report Generator strata separately by default. Consider a weighted union only with a declared target frame, common event IDs, overlap and positivity, event-level target weights, calibrated semantic/Check evidence, and a prospective outer holdout. Do not learn weights from the same future Agent outcomes used to evaluate the mixture. |
+| RI-141 | P0 | independent-audit counterexample, resolved 2026-07-24 | complete | Result IDs were caller-controlled labels. An otherwise valid Result could retain an arbitrary or stale ID, so semantically identical evidence could fork identity and migrations could preserve IDs that no longer matched the latest schema. | Records derives and validates the canonical Result ID from execution, scoring, and evidence digests. All Result migrations recompute it, reject duplicate migrated identities, and require rebuilding FeatureSnapshots, SelectorInputs, Selections, fitted Selectors, CellSets, matrices, and metrics that bind changed Result IDs/digests. |
+| RI-142 | P0 | independent-audit counterexamples, resolved 2026-07-24 | complete | Receipt replay could create an empty Result Store, import paths could alias their immutable source through hardlinks or a nested source root, and local load/query paths did not uniformly fail closed on invalid rows. | Result admission resolves file identity and source-root containment before writing, computes the implementation-owned first observation time only for a new import, verifies existing receipts against a read-only store view, and creates no store when every first-import row is rejected. Local load/append validates every Result before query or mutation. |
 
 Decisions from the 2026-07-22 maintainer review:
 
@@ -2203,7 +2211,8 @@ the repository does not yet contain a sufficiently large real paired history.
 ### RI-026: Build An Auditable Supplied-Event Ledger
 
 Priority: P1. Evidence: code-confirmed. State: supplied-ledger contract resolved
-2026-07-22; observed-frame evidence pending under RI-137.
+2026-07-22; optional generic observed-frame contract resolved 2026-07-24 under
+RI-137, with concrete frame evidence pending.
 
 Before this fix, core Task supply filtered caller-provided source events but did
 not collect issues, pull requests, or commits, and a frozen pool retained only
@@ -2380,7 +2389,8 @@ was added.
 ### RI-046: Bind Task Pools To Their Declared Source Time Window
 
 Priority: P1. Evidence: reproduced. State: time-window contract resolved
-2026-07-23; observed-frame capture evidence pending under RI-137.
+2026-07-23 and refined 2026-07-24; optional generic observed-frame contract
+resolved under RI-137, with concrete capture evidence pending.
 
 A counterexample used a later pool whose accepted inventory was internally
 valid but whose records could not establish whether collection covered the
@@ -2400,8 +2410,9 @@ Resolution:
 - generator configuration now describes collection mode and source family;
   SourceEvent, Task, Check, and certification digests describe supplied
   inventory;
-- prospective replay requires the later source window to begin no later than
-  the selection-pool window and end no earlier than the planned future window.
+- prospective replay requires the later source window to cover the complete
+  planned future interval. It may be incremental or cumulative; if the two
+  pools overlap, same-ID Task/Check records must be unchanged.
 
 This is the minimum temporal evidence needed for two immutable snapshots. It is
 not an observed-frame inventory or completeness receipt.
@@ -3025,16 +3036,16 @@ Functionality decisions:
 | DOC-003 | P1 | complete 2026-07-22 | Selection behavior and documentation now agree on overlap and eligibility enforcement. |
 | DOC-004 | P1 | complete 2026-07-22 | Reporting and data flow now name the complete supported provenance chain and exact Result inputs. |
 | DOC-005 | P2 | current, ongoing | Records field lists and Check identity match current dataclasses; add a schema-contract test only when manual drift recurs. |
-| DOC-006 | P2 | decision revised 2026-07-24; pending with RI-136 and RI-137 | Task Pool documentation currently describes validated source-frame summaries too broadly. Rename the current evidence as the supplied Generator-outcome ledger, reserve observed-source-frame language for an independently bound protocol/inventory receipt, and distinguish both from a target real-work population. |
+| DOC-006 | P2 | complete 2026-07-24 | Task Pool and claim documentation now calls SourceEvents the supplied Generator-outcome ledger, treats the optional observed frame as separately bound protocol/inventory evidence, and distinguishes both from a target work population. |
 | DOC-007 | P2 | complete 2026-07-22 | Coverage and invalid rate are labeled holdout-evidence diagnostics, not Selector losses. |
 | DOC-008 | P1 | complete 2026-07-22 | Selection docs distinguish executable paths from deferred learned methods. |
 | DOC-009 | P2 | ongoing | Keep the RI-021 checkout threshold and RI-033 bounded-parallel prerequisites current when new timing evidence replaces the 1.009 serial-pilot estimate. |
 | DOC-010 | P1 | complete 2026-07-23 | The Pylint pilot report documents the frozen campaign inputs and exact `authorize`, `preflight`, and one-cell `run-next` sequence without embedding credentials or campaign-specific values. |
-| DOC-011 | P1 | pending with RI-120 through RI-124 | Update Task Pool and data-flow design docs when the contract lands: distinguish candidate build from read-only complete-pool open/use, define full-bundle preflight and local execution bindings, and state managed versus external producer claims. |
+| DOC-011 | P1 | complete 2026-07-24 | Task Pool, Runner, data-flow, Records, and system docs distinguish strict package build from read-only complete-pool open/use, require full-bundle preflight, retain local Workspace bindings, and state managed versus producer-attested claims. |
 | DOC-012 | P1 | pending with the first built-in | Document adapter fidelity names, primary-source/code revisions, independently digested Generator behavior/source protocol/observed frame/run/output provenance, sidecar evidence, single-repository partitioning, and golden-fixture expectations. |
-| DOC-013 | P2 | future with RI-127 | After the human branch-policy gate passes, document the first episode adapter's pre-interaction/dynamic state, persistent turn boundary, simulator identity/seed/cost, event evidence, and metrics separately from Agent identity and static Task generation. |
-| DOC-014 | P1 | pending with RI-131 through RI-135 | Document external Result admission, effective availability, evidence authority, duplicate/conflict behavior, one-snapshot multi-origin evaluation, and the strict `history view -> frozen Selection -> full cache -> selected misses` phase order. |
-| DOC-015 | P1 | pending with RI-136 through RI-140 | Add the four-rung claim ladder and campaign estimand sheet to system, Selection, Reporting, and statistical docs. Name `future_pass_rate_mae` as Generator-conditional future Task/Check prediction error; distinguish Result-cell coverage, certification yield, observed-frame inclusion, Generator bridge evidence, and prospective field calibration. |
+| DOC-013 | P2 | future with RI-127 | When the first concrete episode adapter is implemented, document pre-interaction/dynamic state, persistent turns, simulator identity/seed/cost, event evidence, and metrics separately from Agent identity and static Task generation. Label its evidence simulator-treatment-conditional; add human-proxy interpretation only after the branch-policy pilot. |
+| DOC-014 | P1 | complete 2026-07-24 | Result Store, Runner, data-flow, Records, and migration docs define external admission, effective availability, authority, conflicts, one-snapshot multi-origin evaluation, and persisted `history view -> Selection -> cache -> selected misses -> CellSet` order. |
+| DOC-015 | P1 | complete 2026-07-24 | System, Reporting, statistical, and process docs use a claim lattice rather than a false total ladder. They name `future_pass_rate_mae` as Generator-conditional future Task/Check prediction error and separate Result cells, certification yield, observed-frame inclusion, Generator bridge, Check/semantic calibration, and field calibration. |
 
 Avoid expanding design documents for fields without a current caller. Update
 `PROCESS.md` only when the active research direction, paid-call boundary, claim
@@ -3191,10 +3202,10 @@ training frameworks.
 
 ### Stage 3: Research Protocol And Data
 
-The arrival/maturity, repeated-cell, dependency, and supplied-SourceEvent
-contracts for RI-025 through RI-030 and RI-032 are complete. Complete the
-independent observed-frame and claim-boundary work in RI-136 through RI-138,
-then run empirical parts only with authorized evidence.
+The arrival/maturity, repeated-cell, dependency, supplied-SourceEvent,
+observed-frame, and claim-boundary contracts are complete at the generic
+boundary. Run adapter-specific or empirical parts only with a concrete source
+and authorized evidence.
 
 Exit criteria:
 
@@ -3204,7 +3215,7 @@ Exit criteria:
   concrete Pylint adapter;
 - Generator behavior, source protocol, and exact observed-frame inventory have
   independent identities, and a frame-bound Task Pool accounts for every frame
-  event (pending);
+  event (generic contract complete; concrete frame evidence pending);
 - a larger paired history includes randomized repeated cells (paid experiment
   pending);
 - all baselines share frozen origins and common future evidence (complete);
@@ -3212,20 +3223,21 @@ Exit criteria:
   original frozen Origin without rewriting either snapshot (complete;
   empirical evidence pending);
 - campaign estimands distinguish task-level generated-pool loss, event-level
-  Generator validity, and field outcomes (research decision complete;
-  design-document update pending);
+  Generator validity, and field outcomes (research and documentation complete;
+  empirical evidence pending);
 - same-frame, Generator/time bridge, semantic/Check audit, interactive branch,
   and prospective field protocols are predeclared before their evidence is
   collected (research decision complete; empirical calibration pending).
 
-The concrete Pylint campaign entry is complete. Before the endpoint arrives,
-complete the narrow supply/admission contracts, RI-136's claim correction, and
-RI-137/RI-138's frame/lineage evidence through the first static adapter.
-LLM Generator execution and large-pool certification retain their concrete
-adapter and authority gates. RI-127 requires a held-out human branch-policy
-pilot in addition to a concrete interactive adapter before core episode work.
-RI-139 field calibration remains an external prospective study, and RI-140
-forbids automatic Generator mixtures without that outer evidence.
+The concrete Pylint campaign entry and the generic supply/admission boundary
+are complete. The next Task-supply step begins only after selecting a concrete
+source and adapter; observed-frame and lineage evidence then obtain real
+fixtures. LLM Generator execution and large-pool certification retain their
+adapter and authority gates. RI-127 permits one narrow concrete interactive
+adapter while requiring a held-out human branch-policy pilot before
+human-interaction claims. RI-139 field calibration remains an external
+prospective study, and RI-140 forbids automatic Generator mixtures without that
+outer evidence.
 
 ### Stage 4: Adaptive Algorithms
 
@@ -3541,6 +3553,31 @@ and show material wall-clock or paid-cost improvement.
 
 ## Update Log
 
+- 2026-07-24: closed the generic pre-Generator infrastructure slice
+  (RI-120–RI-124, RI-131–RI-138, and RI-141/RI-142, with concrete-adapter
+  portions explicitly deferred). Runner now consumes complete Task Pool
+  bundles; strict prepared packages carry candidates, exclusions,
+  certification material, optional generation/frame provenance, and adapter
+  evidence; user-maintained bundles open read-only and have a validation CLI.
+  Generic packages cannot self-claim managed generation or source authority,
+  and frame windows exactly match their Task Pool windows. External Results
+  enter through authority-bound manifests and receipts with conservative
+  availability, source preservation, membership/identity admission, canonical
+  Result IDs, deterministic execution views, and fail-closed conflict handling.
+  Receipt replay is read-only; migrations recompute Result identity and require
+  rebuilding every derived binding. Multi-origin Selection uses one physical
+  Result snapshot, lazy fill replays persisted upstream evidence before cache
+  access and freezes an EvaluationCellSet, and strict prospective evaluation
+  accepts either an incremental or cumulative later pool covering the complete
+  future interval. Reporting uses
+  `task_pool_bundle_internal_consistency`, labels Result evidence authority,
+  and treats claims as a lattice. Added a non-destructive migration for the
+  immediately preceding managed-Result schema. Three independent final audits
+  found no remaining blocker. The full suite passed 901 tests with 2
+  environment-dependent skips; Ruff, Pyright, repeated minimal-demo execution,
+  and `git diff --check` passed. No concrete Generator, Generator registry,
+  network call, campaign authority, or paid call was added.
+
 - 2026-07-24: opened RI-136 through RI-140 and DOC-015 after treating
   `bc-r.md` as hypotheses rather than requirements and running independent
   formal-estimand, current-contract, and adversarial simulator audits. The
@@ -3556,10 +3593,12 @@ and show material wall-clock or paid-cost improvement.
   simulator utility, causal controls, direct Sim2Real comparisons, PULSE, and
   RealHumanEval show that interaction changes capability and real-user
   grounding can help, but one logged trajectory does not identify responses on
-  a new Agent's branches. A held-out human branch-policy pilot now gates the
-  episode contract; prospective field calibration gates real-work claims and
-  Generator mixtures. No source code, Task Pool, Result, campaign authority,
-  private trajectory, field evidence, or paid call was changed.
+  a new Agent's branches. A concrete episode contract may be implemented for
+  simulator-treatment-conditional evidence; a held-out human branch-policy
+  pilot gates human-interaction claims, while prospective field calibration
+  gates real-work claims and Generator mixtures. No source code, Task Pool,
+  Result, campaign authority, private trajectory, field evidence, or paid call
+  was changed.
 
 - 2026-07-24: opened RI-131 through RI-135 and DOC-014 after the maintainer
   clarified that a user-maintained Task Pool may arrive with cached Agent

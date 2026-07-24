@@ -1,19 +1,21 @@
 # Module Design: Task Pool
 
-Status: current behavior and planned boundaries, 2026-07-23.
+Status: current behavior and deferred concrete adapters, 2026-07-24.
 
 ## Responsibility
 
-Filter or import `Task + Check` candidates, retain a sanitized source-event
+Load or construct `Task + Check` candidates, retain a sanitized source-event
 denominator, validate candidates by execution, and freeze the complete evidence
-bundle into a `Task Pool`.
+bundle into a `Task Pool`. It also validates an existing immutable Task Pool
+read-only and binds optional Generator/source-frame provenance without running
+Generator code.
 
 Task Pool does not run Agents and does not select benchmarks.
 
 ## Inputs
 
-- candidates carrying a stable target `repository_id`, or a generator config
-  or user import path that produces them;
+- candidates carrying a stable target `repository_id`, a user import path, or
+  one strict prepared-candidate package emitted by any Generator/adapter;
 - origin or time range;
 - per-candidate reference patch;
 - `WorkspaceConfig`, `RuntimeConfig`, certification config, and the repository
@@ -25,6 +27,12 @@ describes generation behavior; the SourceEvent digest describes the observed
 inventory. Keeping those identities separate lets a later pool use the same
 source behavior while adding post-origin events.
 
+The SourceEvent sequence is complete for inputs supplied to that build. It is
+not proof that an adapter observed every event in a source or target work
+population. Only an optional independently bound observed-frame protocol,
+inventory, and receipt can support a frame claim, and that still does not prove
+population representativeness.
+
 ## Outputs
 
 - `TaskPoolRecord`;
@@ -32,7 +40,9 @@ source behavior while adding post-origin events.
 - accepted `CheckRecord` records;
 - accepted, rejected, and excluded `SourceEventRecord` records;
 - rejected candidates;
-- sanitized certification evidence.
+- sanitized certification evidence;
+- optional Task-Pool-bound generation provenance, observed-frame inventory, and
+  adapter evidence.
 
 ## System Boundary
 
@@ -165,6 +175,7 @@ Effect:
 Input:
 
 - `candidates: Sequence[TaskCandidate]`
+- `excluded_source_events: Sequence[SourceEventRecord] = ()`
 
 Output:
 
@@ -172,8 +183,86 @@ Output:
 
 Effect:
 
-- Wraps already constructed candidates with no excluded events. This is the
-  direct path used by import and programmatic adapters.
+- Wraps already constructed candidates and their pre-certification exclusions.
+  This is the direct in-process handoff used by import and programmatic
+  adapters.
+
+### load_prepared_candidate_package
+
+Input:
+
+- the canonical `prepared-candidate-package.jsonl` path.
+
+Output:
+
+- `PreparedCandidatePackage`.
+
+Effect:
+
+- Loads a strict, language-neutral handoff without importing or executing
+  Generator code. The package contains exact candidate and excluded-event
+  records, one material record per candidate, and optional generation/frame
+  provenance plus one adapter-evidence object.
+- Rejects unknown record fields, path escape, wrong filenames, non-full Git
+  commits, missing or drifted patches/check manifests/hidden material, duplicate
+  candidates, and digest mismatch before certification.
+- If an observed frame is declared, validates behavior/protocol/run section
+  schemas; frame authority and receipt; canonical window, revision, and blind
+  spots; sorted unique inventory; and exact coverage of candidate plus excluded
+  source identities. Because the package is untrusted input, its run must be
+  `external_attested` and its frame must be `producer_attested`; it cannot
+  self-upgrade to `barcarolle_managed` or `source_authoritative`. A future
+  trusted concrete adapter may attach those stronger claims only through an
+  explicit Barcarolle authority context, not through package data.
+- Allows generation provenance to be entirely absent. It does not invent a
+  dummy Generator for a user-supplied candidate pool.
+
+### bind_task_pool_generation_provenance
+
+Input:
+
+- a certified `TaskPoolRecord`;
+- its content-addressed bundle directory;
+- the validated prepared package.
+
+Output:
+
+- the Task Pool with provenance refs/digests plus its generation manifest,
+  observed-frame events, and optional adapter evidence.
+
+Effect:
+
+- Independently binds stable Generator behavior, stable source protocol, exact
+  observed frame, run authority/input snapshot, Task Pool outputs, and adapter
+  evidence.
+- Requires a declared v1 frame to cover the finalized SourceEvent ledger
+  exactly and use the exact Task Pool source window.
+  Inventory/run/output changes do not change the stable behavior digest;
+  behavior changes do.
+- Keeps adapter-specific zero/one/many derivation or classic-paper fields in the
+  sidecar. Core v1 retains one candidate projection per SourceEvent.
+
+### open_task_pool_bundle
+
+Input:
+
+- a canonical published `task-pool.jsonl` path.
+
+Output:
+
+- validated `TaskPoolBundle`.
+
+Effect:
+
+- Requires exactly one manifest at that filename, resolves every referenced
+  member from the existing bundle, and runs complete artifact/provenance
+  validation.
+- Is read-only: it does not generate, certify, copy, republish, change file
+  bytes, or update timestamps.
+- Is exposed by `barcarolle task-pool validate`. Reporting/Selection use needs
+  no machine-local execution binding; Agent execution separately binds the
+  repository, Check command/manifest, hidden material, and runtime through
+  `WorkspaceRunContext`.
 
 ### finalize_source_event_records
 
@@ -298,7 +387,8 @@ Effect:
   separately from per-event disposition and outside-range-reason alignment,
   then returns their one ordered error sequence.
 - Performs no file I/O. Runner publishes the exact SourceEvent, Task, Check, and
-  sanitized certification sequences as one immutable content-addressed bundle.
+  sanitized certification sequences as one immutable content-addressed bundle,
+  then binds optional prepared-package provenance before final validation.
 - Publication writes and validates a sibling staging directory, fsyncs every
   member and that directory, renames it to an absent target, and fsyncs the
   target parent. An existing target is reusable only when all members match.
@@ -349,7 +439,11 @@ Effect:
 - Requires a declared source window to end no later than Task Pool creation.
   Events outside it must be excluded with `outside_source_time_range`; accepted
   or certification-rejected events outside it fail validation.
-- Is used by freeze and Reporting; it does not execute Checks again.
+- Validates optional generation provenance as an all-or-nothing Task Pool
+  binding. A pool with no provenance remains usable and supports only
+  pool-conditional claims. A declared frame must exactly cover SourceEvents.
+- Is used by freeze, open, Runner, and Reporting; it does not execute Checks
+  again.
 
 ### summarize_task_pool
 
@@ -369,10 +463,12 @@ Effect:
 
 ## Related-Work Mapping
 
-This module receives sanitized candidates from SWE-bench-style or repository-
-specific adapters and user imports. Adapter-specific issue/PR collection,
-environment construction, and forecast-conditioned synthesis remain outside
-the core until a concrete adapter needs them.
+This module receives sanitized candidates from classic-paradigm,
+repository-specific, native-research, or user adapters through the same package
+contract. No concrete built-in Generator is implemented by the generic
+infrastructure. Adapter-specific collection, environment construction,
+derivation evidence, and paid generation remain outside the core until a
+concrete adapter and source are selected.
 
 ## Design Consistency Check
 

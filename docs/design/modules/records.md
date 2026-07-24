@@ -1,6 +1,6 @@
 # Module Design: Records
 
-Status: current core records, 2026-07-23.
+Status: current core records, 2026-07-24.
 
 ## Responsibility
 
@@ -49,6 +49,11 @@ semantic Check manifest digest.
 
 - `TaskRecord`
 - `CheckRecord`
+- `SourceEventRecord`
+- `ObservedFrameEventRecord`
+- `GenerationProvenanceManifest`
+- `PreparedCandidateMaterialRecord`
+- `PreparedCandidatePackageManifest`
 - `ResultCellRef`
 - `AgentRecord`
 - `WorkspaceConfig`
@@ -60,6 +65,9 @@ semantic Check manifest digest.
 - `FeatureSnapshotRecord`
 - `SelectorInput`
 - `ResultRecord`
+- `ResultSourceManifest`
+- `ResultImportDecision`
+- `ResultImportReceipt`
 - `ResultMatrix`
 - `EvaluationCellSet`
 - `TaskPoolRecord`
@@ -135,6 +143,33 @@ during maturity derivation. Rejected and excluded events require non-empty
 reason strings in one tuple. A scalar or mapping reason container fails
 validation without being iterated as a reason sequence. Raw issue bodies,
 patches, and private oracle material do not belong in this record.
+
+### Generator-boundary records
+
+`ObservedFrameEventRecord` is a minimal source-frame inventory row:
+
+- `source_event_id`
+- `repository_id`
+- `source_family`
+- `source_ref`
+- `observed_at`
+- `frame_event_digest`
+
+It says that a source event was inside an observed frame; it does not claim
+that the frame is population-complete.
+
+`GenerationProvenanceManifest` separates stable Generator behavior and source
+protocol from run identity, observed frame, and output inventory. Strict
+prospective continuation compares the behavior and protocol digests, while a
+new run, frame, or output may legitimately change the other digests.
+
+`PreparedCandidateMaterialRecord` binds one candidate to a reference patch,
+exact Check command, semantic Check manifest, and hidden material through
+content digests. `PreparedCandidatePackageManifest` binds the ordered candidate,
+exclusion, and material ledgers plus optional Generator behavior, source
+protocol, observed-frame, run, and adapter evidence. These records define an
+artifact handoff; they do not prescribe how a Generator is implemented or
+invoked.
 
 ### TaskRecord
 
@@ -356,6 +391,11 @@ after run-record construction and is therefore separate from
 - `verifier_metadata_digest`
 - `started_at`
 - `finished_at`
+- `evidence_source_kind`
+- `evidence_source_manifest_digest`
+- `evidence_imported_at`
+- `source_result_available_at`
+- `availability_policy`
 - `result_available_at`
 
 `invalid_owner` distinguishes Agent-attributable invalid outcomes from
@@ -363,6 +403,29 @@ benchmark infrastructure failures.
 `cost.total_cost=null` means the total cost is unknown; it must not be replaced
 with zero. Usage is retained so cost can be recomputed under another pricing
 configuration without rerunning the Agent.
+
+The execution digest excludes evidence-source, availability, and pricing-view
+fields, so an exact execution can be repriced or admitted from a named source
+without becoming another execution. The Result record identity includes the
+scoring and evidence bindings; public validation recomputes it and rejects an
+arbitrary or stale `result_id`. Barcarolle-managed records use
+`managed_observation_v1`. External records name their source manifest and
+implementation-owned local import-observation time; `import_time_floor_v1`
+makes the effective availability no earlier than that observation, while
+`producer_attested_historical_v1` preserves the source timestamp as an explicit
+producer attestation rather than a Barcarolle observation-time claim.
+
+### Result admission records
+
+`ResultSourceManifest` binds producer and authority identity, an immutable
+Result JSONL digest, declared availability semantics, and creation time.
+
+`ResultImportDecision` records an `admitted`, `idempotent`, or `rejected`
+disposition for every source Result, including the local normalized identity or
+concrete rejection reasons. `ResultImportReceipt` binds the complete decision
+sequence to the source manifest, target Task Pool, accepted authority, Agent
+records, Workspace and Runtime configs, policy, and implementation-owned first
+local observation time. Exact receipt replay is read-only and idempotent.
 
 ### FeatureRecord
 
@@ -465,7 +528,10 @@ aligned pre-origin Result IDs/digests, a canonical UTC cutoff, and a
 - `rejected_candidate_ids`
 - `rejection_summary_digest`
 - `certification_evidence_digest`
+- `generation_provenance_ref`
+- `generation_provenance_digest`
 - `generator_config_digest`
+- `source_protocol_digest`
 - `certification_config_digest`
 - `created_at`
 - `source_window_start`
@@ -474,7 +540,8 @@ aligned pre-origin Result IDs/digests, a canonical UTC cutoff, and a
 `task_pool_digest` is computed from the canonical serialization of the frozen
 task pool, including accepted Task/Check refs and digests, rejected candidate
 IDs, rejection summary digest, certification evidence ref and digest, source
-event records ref and digest, and generator/certification config digests.
+event records ref and digest, optional generation-provenance bindings, source
+protocol, and generator/certification config digests.
 Its direct validator applies the same latest-schema replay as other persisted
 records before Task Pool performs cross-artifact reconciliation.
 Generated pools persist a canonical source window. Its end cannot be after
@@ -492,10 +559,15 @@ Check execution binding digest, and the built-in Verification adapter digest.
 `source_event_records_ref` points to the exact sanitized source denominator.
 Its digest covers accepted, certification-rejected, and pre-certification
 excluded events, including right-censored label maturity.
-`generator_config_digest` identifies generation behavior, such as generated
-source events versus import mode and source family. Event inventory and local
-import location are not duplicated into that digest; the frozen SourceEvent,
-Task, and Check digests bind the actual data.
+Generation provenance is optional: a user-maintained Task Pool is valid without
+inventing a Generator identity. When present, the ref/digest binds the complete
+manifest, `generator_config_digest` identifies stable behavior, and
+`source_protocol_digest` identifies how a future source frame is defined.
+Event inventory and machine-local input locations are not duplicated into
+behavior identity; the frozen SourceEvent, Task, and Check digests bind the
+actual supplied data. Strict prospective continuation requires both stable
+behavior and source protocol rather than treating a changed run or output
+inventory as a changed Generator.
 
 ### RollingOriginRecord
 

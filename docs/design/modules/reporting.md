@@ -1,6 +1,6 @@
 # Module Design: Reporting
 
-Status: current, 2026-07-23.
+Status: current, 2026-07-24.
 
 ## Responsibility
 
@@ -60,12 +60,14 @@ Output:
 
 Effect:
 
-- Summarizes task count, check count, generator families, execution-based task
-  validation coverage, and rejection reasons.
+- Summarizes task count, check count, optional generation-provenance state,
+  observed-frame authority, execution-based task validation, and rejection
+  reasons.
 - Loads the referenced SourceEvent, Task, Check, and certification-evidence
   files and compares their canonical digests and cross-record links with the
-  frozen Task Pool. Missing, malformed, or mismatched artifacts make coverage
-  claims unsupported. It does not re-certify tasks.
+  frozen Task Pool. Missing, malformed, or mismatched artifacts make the bundle
+  consistency claim unsupported. It does not re-certify tasks or infer
+  population coverage.
 - Reports source dispositions, right-censored event count, label-delay
   distribution, and exact source-event ref/digest from evidence rather than
   inferring a source denominator from accepted Tasks.
@@ -100,6 +102,13 @@ Effect:
 - Reports later benchmark-invalid execution rate and the fraction of observed
   Task/Check pairs affected. Pricing views are deduplicated by execution digest
   before these rates are computed; absent Result evidence produces null rates.
+- Reports record and execution counts by evidence-source kind and availability
+  policy, external source-manifest digests, and the number of
+  producer-attested historical executions. It explicitly notes that such
+  history is not a Barcarolle observation-time claim.
+- Refuses result-summary claims when different executions share one cache
+  identity. Repricing and evidence-source views of the same execution remain
+  one execution.
 
 ### build_selector_report
 
@@ -185,11 +194,16 @@ Effect:
 ### build_claim_boundary
 
 `ClaimConfig` contains only requested claims. They are one unique tuple drawn
-from the supported claim names and are canonicalized to the stable claim order.
+from the supported claim names and are canonicalized to a stable display order.
 Matrix completeness and Metric validity are fixed claim semantics, not
 caller-configurable weakening axes. The config digest is derived from the
 canonical requested claims, so callers cannot assign a claim label that
 disagrees with the enforced boundary.
+
+The display order is not a total evidence ladder. Task Pool bundle consistency,
+source-frame authority, Generator/source-protocol continuity, Check
+certification, Result availability, execution identity, rolling-origin replay,
+and field outcomes are independent claim axes.
 
 Input:
 
@@ -211,16 +225,17 @@ Output:
 
 Effect:
 
-- Separates supported claims from unsupported claims using task-pool coverage,
-  rejection and task-validation evidence, cache completeness, abstentions,
-  frozen Selection state, and Agent/result identity drift.
+- Separates supported claims from unsupported claims using Task Pool bundle
+  consistency, rejection and task-validation evidence, cache completeness,
+  abstentions, frozen Selection state, and Agent/Result identity drift.
 - Evaluates only requested claim predicates while preserving the stable claim
   order.
-- Supports `task_pool_coverage` only when the referenced SourceEvent, Task,
-  Check, and certification-evidence files are available, match their stored
-  digests, pass cross-record validation, and completely cover accepted
-  Task/Check and rejected candidate decisions with valid certification
-  transitions.
+- Supports `task_pool_bundle_internal_consistency` only when the referenced
+  SourceEvent, Task, Check, and certification-evidence files are available,
+  match their stored digests, pass cross-record validation, and completely
+  cover accepted Task/Check and rejected candidate decisions with valid
+  certification transitions. It makes no source-frame or population-coverage
+  claim.
 - Supports Selector metric claims only when the complete provenance chain also
   validates against the frozen Task Pool bundle and exact Agent/Result
   identities.

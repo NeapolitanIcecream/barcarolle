@@ -1,6 +1,6 @@
 # Module Design: Selection
 
-Status: current behavior and planned boundaries, 2026-07-23.
+Status: current behavior and planned boundaries, 2026-07-24.
 
 ## Responsibility
 
@@ -458,8 +458,10 @@ Effect:
 
 - Requires the Selection to predate its declared future window and the later
   Task Pool. The later pool must be observed through the label-maturity cutoff,
-  use the same repository, generator behavior, and certification config, and
-  retain source coverage from the Selection pool through the future-window end.
+  use the same repository, stable Generator behavior, source protocol, and
+  certification config, and cover the complete planned future source window.
+  The later pool may contain only that incremental interval or a wider
+  cumulative interval. Run, observed-frame, and output identities may change.
 - Rejects changed same-ID Task or Check records across snapshots and replays
   dependency-cluster filtering and overlap policy.
 - Derives arrival and maturity from the later pool without changing the frozen
