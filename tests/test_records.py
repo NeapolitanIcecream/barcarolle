@@ -35,6 +35,7 @@ from barcarolle.records import (
     make_feature_snapshot_id,
     make_result_cache_identity,
     make_result_cache_key,
+    make_result_id,
     make_source_event_id,
     make_solver_material_digest,
     make_task_id,
@@ -1828,16 +1829,31 @@ def test_result_validation_enforces_normalized_measurements_and_state(
 
 
 def test_result_validation_allows_empty_usage_with_unknown_cost() -> None:
+    result = replace(
+        _result(),
+        result_id="",
+        result_digest="",
+        usage={},
+        cost={"total_cost": None},
+    )
+    result = record_with_digest(replace(result, result_id=make_result_id(result)))
+
+    assert validate_result(result).ok
+
+
+def test_result_validation_rejects_noncanonical_result_id() -> None:
     result = record_with_digest(
         replace(
             _result(),
+            result_id="result_tampered",
             result_digest="",
-            usage={},
-            cost={"total_cost": None},
         )
     )
 
-    assert validate_result(result).ok
+    assert (
+        "result_id does not match canonical Result identity"
+        in validate_result(result).errors
+    )
 
 
 def test_result_cell_record_mismatch_contract_covers_the_complete_binding() -> None:
@@ -1906,7 +1922,13 @@ def test_result_cell_record_mismatch_contract_covers_the_complete_binding() -> N
 def test_result_validation_accepts_normalized_state_combinations(
     changes: dict[str, object],
 ) -> None:
-    result = record_with_digest(replace(_result(), result_digest="", **changes))
+    result = replace(
+        _result(),
+        result_id="",
+        result_digest="",
+        **changes,
+    )
+    result = record_with_digest(replace(result, result_id=make_result_id(result)))
 
     assert validate_result(result).ok
 
@@ -1959,31 +1981,35 @@ def _result() -> ResultRecord:
         _workspace_config(),
         _runtime_config(),
     )
-    return record_with_digest(
-        ResultRecord(
-            result_id="result",
-            result_digest="",
-            cache_identity=identity,
-            agent_id="agent",
-            task_id=task.task_id,
-            check_id=check.check_id,
-            terminal_status="passed",
-            scoreable_state="scoreable",
-            outcome="pass",
-            invalid_owner=None,
-            failure_label=None,
-            cost={"total_cost": 0.0},
-            scoring_config_digest="scoring:v1",
-            pricing_version="test",
-            usage={"input_tokens": 1},
-            latency={"workspace_seconds": 1.0},
-            diff_digest="diff",
-            verifier_metadata_digest="verifier",
-            started_at="2026-06-01T00:00:00Z",
-            finished_at="2026-06-01T00:00:01Z",
-            result_available_at="2026-06-01T00:00:02Z",
-        )
+    result = ResultRecord(
+        result_id="",
+        result_digest="",
+        cache_identity=identity,
+        agent_id="agent",
+        task_id=task.task_id,
+        check_id=check.check_id,
+        terminal_status="passed",
+        scoreable_state="scoreable",
+        outcome="pass",
+        invalid_owner=None,
+        failure_label=None,
+        cost={"total_cost": 0.0},
+        scoring_config_digest="scoring:v1",
+        pricing_version="test",
+        usage={"input_tokens": 1},
+        latency={"workspace_seconds": 1.0},
+        diff_digest="diff",
+        verifier_metadata_digest="verifier",
+        started_at="2026-06-01T00:00:00Z",
+        finished_at="2026-06-01T00:00:01Z",
+        evidence_source_kind="barcarolle_managed",
+        evidence_source_manifest_digest=None,
+        evidence_imported_at=None,
+        source_result_available_at="2026-06-01T00:00:02Z",
+        availability_policy="managed_observation_v1",
+        result_available_at="2026-06-01T00:00:02Z",
     )
+    return record_with_digest(replace(result, result_id=make_result_id(result)))
 
 
 def _task() -> TaskRecord:

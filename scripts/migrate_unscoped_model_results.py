@@ -3,12 +3,15 @@
 The source schema used ``model_snapshot_id`` for both immutable snapshots and
 moving aliases. This one-off migration makes no immutability claim: it treats
 that value as the requested model and binds every Result to one caller-declared
-campaign scope. The source file is never modified.
+campaign scope. It assigns current Result identities, so derived
+FeatureSnapshots, SelectorInputs, Selections, fitted Selectors, CellSets,
+matrices, and metrics must be rebuilt. The source file is never modified.
 """
 
 from __future__ import annotations
 
 import argparse
+from dataclasses import replace
 import json
 from pathlib import Path
 from typing import Any, Mapping, Sequence, cast
@@ -27,6 +30,7 @@ from barcarolle.records import (
     validate_result,
     write_jsonl_records,
 )
+from barcarolle.result_store import compute_result_id, ensure_unique_result_ids
 
 
 _OLD_RESULT_FIELDS = frozenset(
@@ -116,6 +120,7 @@ def migrate_unscoped_model_results(
         )
         for row in rows
     )
+    ensure_unique_result_ids(migrated)
     write_jsonl_records(output_path, migrated)
     return migrated
 
@@ -241,51 +246,56 @@ def _migrate_result(
             identity_digest="",
         )
     )
-    result = record_with_digest(
-        ResultRecord(
-            result_id=_string(old_result["result_id"], "result_id"),
-            result_digest="",
-            cache_identity=identity,
-            agent_id=_string(old_result["agent_id"], "agent_id"),
-            task_id=task_id,
-            check_id=check_id,
-            terminal_status=cast(
-                WorkspaceTerminalStatus,
-                _string(old_result["terminal_status"], "terminal_status"),
-            ),
-            scoreable_state=cast(
-                ResultScoreableState,
-                _string(old_result["scoreable_state"], "scoreable_state"),
-            ),
-            outcome=cast(
-                CheckOutcomeValue,
-                _string(old_result["outcome"], "outcome"),
-            ),
-            invalid_owner=cast(
-                InvalidOwner | None,
-                _optional_string(old_result["invalid_owner"], "invalid_owner"),
-            ),
-            failure_label=_optional_string(
-                old_result["failure_label"], "failure_label"
-            ),
-            cost=dict(_mapping(old_result["cost"], "cost")),
-            scoring_config_digest=_string(
-                old_result["scoring_config_digest"], "scoring_config_digest"
-            ),
-            pricing_version=_string(old_result["pricing_version"], "pricing_version"),
-            usage=dict(_mapping(old_result["usage"], "usage")),
-            latency=dict(_mapping(old_result["latency"], "latency")),
-            diff_digest=_string(old_result["diff_digest"], "diff_digest"),
-            verifier_metadata_digest=_string(
-                old_result["verifier_metadata_digest"], "verifier_metadata_digest"
-            ),
-            started_at=_string(old_result["started_at"], "started_at"),
-            finished_at=_string(old_result["finished_at"], "finished_at"),
-            result_available_at=_string(
-                old_result["result_available_at"], "result_available_at"
-            ),
-        )
+    result = ResultRecord(
+        result_id="",
+        result_digest="",
+        cache_identity=identity,
+        agent_id=_string(old_result["agent_id"], "agent_id"),
+        task_id=task_id,
+        check_id=check_id,
+        terminal_status=cast(
+            WorkspaceTerminalStatus,
+            _string(old_result["terminal_status"], "terminal_status"),
+        ),
+        scoreable_state=cast(
+            ResultScoreableState,
+            _string(old_result["scoreable_state"], "scoreable_state"),
+        ),
+        outcome=cast(
+            CheckOutcomeValue,
+            _string(old_result["outcome"], "outcome"),
+        ),
+        invalid_owner=cast(
+            InvalidOwner | None,
+            _optional_string(old_result["invalid_owner"], "invalid_owner"),
+        ),
+        failure_label=_optional_string(old_result["failure_label"], "failure_label"),
+        cost=dict(_mapping(old_result["cost"], "cost")),
+        scoring_config_digest=_string(
+            old_result["scoring_config_digest"], "scoring_config_digest"
+        ),
+        pricing_version=_string(old_result["pricing_version"], "pricing_version"),
+        usage=dict(_mapping(old_result["usage"], "usage")),
+        latency=dict(_mapping(old_result["latency"], "latency")),
+        diff_digest=_string(old_result["diff_digest"], "diff_digest"),
+        verifier_metadata_digest=_string(
+            old_result["verifier_metadata_digest"], "verifier_metadata_digest"
+        ),
+        started_at=_string(old_result["started_at"], "started_at"),
+        finished_at=_string(old_result["finished_at"], "finished_at"),
+        evidence_source_kind="barcarolle_managed",
+        evidence_source_manifest_digest=None,
+        evidence_imported_at=None,
+        source_result_available_at=_string(
+            old_result["result_available_at"], "result_available_at"
+        ),
+        availability_policy="managed_observation_v1",
+        result_available_at=_string(
+            old_result["result_available_at"], "result_available_at"
+        ),
     )
+    result = replace(result, result_id=compute_result_id(result))
+    result = record_with_digest(result)
     validation = validate_result(result)
     if not validation.ok:
         raise ValueError(f"migrated Result is invalid: {', '.join(validation.errors)}")

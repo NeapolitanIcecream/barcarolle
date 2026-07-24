@@ -9,15 +9,22 @@ from typing import Any
 import pytest
 
 import barcarolle.task_pool as task_pool_module
+from barcarolle.cli import main as cli_main
 from barcarolle.records import (
     CheckRecord,
+    GenerationProvenanceManifest,
+    ObservedFrameEventRecord,
+    PreparedCandidateMaterialRecord,
+    PreparedCandidatePackageManifest,
     RuntimeConfig,
     SourceEventRecord,
     TaskPoolRecord,
     TaskRecord,
     WorkspaceConfig,
     canonical_digest,
+    canonical_json,
     format_utc_timestamp,
+    load_jsonl_records,
     make_source_event_id,
     make_check_digest,
     parse_utc_timestamp,
@@ -151,6 +158,254 @@ def test_import_task_candidates_loads_json_and_applies_import_family(
 
     assert len(candidates) == 1
     assert candidates[0].source_family == "user_import"
+
+
+def test_import_task_candidates_rejects_unknown_candidate_fields(
+    tmp_path: Path,
+) -> None:
+    source = tmp_path / "pool.json"
+    source.write_text(
+        json.dumps(
+            {
+                "candidates": [
+                    {
+                        **_candidate_payload(),
+                        "interaction_protocol": {"turns": 3},
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(
+        ValueError,
+        match="candidate has unknown fields: interaction_protocol",
+    ):
+        import_task_candidates(source, ImportConfig())
+
+
+def test_candidate_batch_preserves_explicit_excluded_source_events() -> None:
+    included = filter_history_candidates(
+        "repo",
+        TimeRange("2026-01-01T00:00:00Z", "2026-01-31T23:59:59Z"),
+        TaskSourceConfig(source_family="issue", source_events=(_candidate_payload(),)),
+    )
+    excluded = filter_history_candidates(
+        "repo",
+        TimeRange("2026-01-01T00:00:00Z", "2026-01-31T23:59:59Z"),
+        TaskSourceConfig(
+            source_family="issue",
+            source_events=(
+                _candidate_payload(
+                    source_ref="issue-excluded",
+                    source_resolved_at="2026-02-10T00:00:00Z",
+                    task_material_available_at="2026-02-11T00:00:00Z",
+                    check_material_available_at="2026-02-12T00:00:00Z",
+                ),
+            ),
+        ),
+    )
+
+    batch = task_pool_module.candidate_batch(
+        included.candidates,
+        excluded.excluded_source_events,
+    )
+
+    assert batch.candidates == included.candidates
+    assert batch.excluded_source_events == excluded.excluded_source_events
+
+
+def test_load_prepared_candidate_package_validates_materials_and_provenance(
+    tmp_path: Path,
+) -> None:
+    source_root = tmp_path / "source"
+    source_root.mkdir()
+    (
+        candidate,
+        _,
+        _,
+        reference_patch,
+        run_context,
+    ) = _executable_candidate(source_root)
+    candidate = replace(
+        candidate,
+        source_resolved_at="2026-01-10T00:00:00.000000Z",
+        task_material_available_at="2026-01-11T00:00:00.000000Z",
+        check_material_available_at="2026-01-12T00:00:00.000000Z",
+    )
+    check_binding = next(iter(dict(run_context._check_materials).values()))
+    manifest_path = _write_prepared_candidate_package(
+        tmp_path / "package",
+        candidate,
+        reference_patch,
+        check_binding.check_command,
+        source_root / "private-check.txt",
+    )
+
+    package = task_pool_module.load_prepared_candidate_package(manifest_path)
+    (
+        reference_patches,
+        check_commands,
+        hidden_paths,
+        check_manifests,
+    ) = task_pool_module.prepared_candidate_build_inputs(package)
+
+    assert package.batch.candidates == (candidate,)
+    assert package.manifest.generator_behavior_digest == canonical_digest(
+        package.manifest.generator_behavior
+    )
+    assert reference_patches[candidate.candidate_id] == reference_patch
+    assert check_commands[candidate.candidate_id] == check_binding.check_command
+    assert hidden_material_digest(hidden_paths[candidate.candidate_id]) == (
+        candidate.hidden_check_bundle_digest
+    )
+    assert canonical_digest(check_manifests[candidate.candidate_id]) == (
+        candidate.check_manifest_digest
+    )
+
+
+def test_load_prepared_candidate_package_rejects_material_drift(
+    tmp_path: Path,
+) -> None:
+    source_root = tmp_path / "source"
+    source_root.mkdir()
+    candidate, _, _, reference_patch, run_context = _executable_candidate(source_root)
+    candidate = replace(
+        candidate,
+        source_resolved_at="2026-01-10T00:00:00.000000Z",
+        task_material_available_at="2026-01-11T00:00:00.000000Z",
+        check_material_available_at="2026-01-12T00:00:00.000000Z",
+    )
+    check_binding = next(iter(dict(run_context._check_materials).values()))
+    package_root = tmp_path / "package"
+    manifest_path = _write_prepared_candidate_package(
+        package_root,
+        candidate,
+        reference_patch,
+        check_binding.check_command,
+        source_root / "private-check.txt",
+    )
+    (package_root / "artifacts" / "reference.patch").write_text(
+        "drifted patch",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError, match="reference patch digest does not match"):
+        task_pool_module.load_prepared_candidate_package(manifest_path)
+
+
+@pytest.mark.parametrize(
+    ("frame_updates", "message"),
+    (
+        (
+            {
+                "observation_authority": "source_authoritative",
+                "observation_receipt_digest": None,
+            },
+            "requires an observation receipt",
+        ),
+        (
+            {"observation_authority": "self_declared"},
+            "observation_authority is not normalized",
+        ),
+        (
+            {"window_start": "2026-02-01T00:00:00.000000Z"},
+            "timestamps are out of order",
+        ),
+        (
+            {"known_blind_spots": [7]},
+            "known_blind_spots must contain nonempty strings",
+        ),
+    ),
+)
+def test_load_prepared_candidate_package_rejects_invalid_frame_semantics(
+    tmp_path: Path,
+    frame_updates: dict[str, object],
+    message: str,
+) -> None:
+    source_root = tmp_path / "source"
+    source_root.mkdir()
+    candidate, _, _, reference_patch, run_context = _executable_candidate(source_root)
+    candidate = replace(
+        candidate,
+        source_resolved_at="2026-01-10T00:00:00.000000Z",
+        task_material_available_at="2026-01-11T00:00:00.000000Z",
+        check_material_available_at="2026-01-12T00:00:00.000000Z",
+    )
+    check_binding = next(iter(dict(run_context._check_materials).values()))
+    manifest_path = _write_prepared_candidate_package(
+        tmp_path / "package",
+        candidate,
+        reference_patch,
+        check_binding.check_command,
+        source_root / "private-check.txt",
+    )
+    (manifest,) = load_jsonl_records(
+        manifest_path,
+        PreparedCandidatePackageManifest,
+    )
+    assert manifest.observed_frame is not None
+    frame = {**manifest.observed_frame, **frame_updates}
+    manifest = record_with_digest(
+        replace(
+            manifest,
+            observed_frame=frame,
+            observed_frame_digest=canonical_digest(frame),
+            manifest_digest="",
+        )
+    )
+    write_jsonl_records(manifest_path, (manifest,))
+
+    with pytest.raises(ValueError, match=message):
+        task_pool_module.load_prepared_candidate_package(manifest_path)
+
+
+def test_load_prepared_candidate_package_rejects_managed_authority(
+    tmp_path: Path,
+) -> None:
+    source_root = tmp_path / "source"
+    source_root.mkdir()
+    candidate, _, _, reference_patch, run_context = _executable_candidate(source_root)
+    candidate = replace(
+        candidate,
+        source_resolved_at="2026-01-10T00:00:00.000000Z",
+        task_material_available_at="2026-01-11T00:00:00.000000Z",
+        check_material_available_at="2026-01-12T00:00:00.000000Z",
+    )
+    check_binding = next(iter(dict(run_context._check_materials).values()))
+    manifest_path = _write_prepared_candidate_package(
+        tmp_path / "package",
+        candidate,
+        reference_patch,
+        check_binding.check_command,
+        source_root / "private-check.txt",
+    )
+    (manifest,) = load_jsonl_records(
+        manifest_path,
+        PreparedCandidatePackageManifest,
+    )
+    assert manifest.run is not None
+    run = {**manifest.run, "authority_kind": "barcarolle_managed"}
+    write_jsonl_records(
+        manifest_path,
+        (
+            record_with_digest(
+                replace(
+                    manifest,
+                    run=run,
+                    run_digest=canonical_digest(run),
+                    manifest_digest="",
+                )
+            ),
+        ),
+    )
+
+    with pytest.raises(
+        ValueError,
+        match="prepared generation run must use external_attested authority",
+    ):
+        task_pool_module.load_prepared_candidate_package(manifest_path)
 
 
 @pytest.mark.parametrize(
@@ -648,7 +903,7 @@ def test_freeze_task_pool_records_digests_rejections_and_summary(
         ),
         (
             "generator_config_digest",
-            "metadata fields must be strings: generator_config_digest",
+            "generator_config_digest must be a string",
         ),
         (
             "certification_config_digest",
@@ -1711,6 +1966,237 @@ def test_open_task_pool_bundle_rejects_noncanonical_manifest_location(
         task_pool_module.open_task_pool_bundle(wrong_location)
 
 
+def test_task_pool_validate_cli_reports_complete_bundle_summary(
+    tmp_path: Path,
+    accepted_result: CertificationResult,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    bundle = _published_bundle_fixture(
+        accepted_result,
+        bundle_key="cli",
+        created_at="2026-02-05T00:00:00Z",
+    )
+    target = task_pool_module.publish_task_pool_bundle(bundle, tmp_path)
+
+    assert cli_main(("task-pool", "validate", str(target / "task-pool.jsonl"))) == 0
+
+    summary = json.loads(capsys.readouterr().out)
+    assert summary == {
+        "certification_evidence_count": 1,
+        "check_count": 1,
+        "repository_id": "repo",
+        "source_event_count": 1,
+        "task_count": 1,
+        "task_pool_digest": bundle.task_pool.task_pool_digest,
+        "task_pool_id": bundle.task_pool.task_pool_id,
+    }
+
+
+def test_generation_provenance_round_trips_with_independent_sections(
+    tmp_path: Path,
+    accepted_result: CertificationResult,
+) -> None:
+    base = _published_bundle_fixture(
+        accepted_result,
+        bundle_key="provenance",
+        created_at="2026-02-05T00:00:00Z",
+    )
+    bundle = _with_generation_provenance(base)
+
+    target = task_pool_module.publish_task_pool_bundle(bundle, tmp_path)
+    opened = task_pool_module.open_task_pool_bundle(target / "task-pool.jsonl")
+
+    assert opened == bundle
+    assert opened.generation_provenance is not None
+    assert opened.task_pool.generator_config_digest == (
+        opened.generation_provenance.generator_behavior_digest
+    )
+    assert opened.task_pool.source_protocol_digest == (
+        opened.generation_provenance.source_protocol_digest
+    )
+    assert {path.name for path in target.iterdir()} == {
+        "adapter-evidence.jsonl",
+        "certification-evidence.jsonl",
+        "checks.jsonl",
+        "generation-provenance.jsonl",
+        "observed-frame-events.jsonl",
+        "source-events.jsonl",
+        "task-pool.jsonl",
+        "tasks.jsonl",
+    }
+
+
+@pytest.mark.parametrize(
+    "missing_field",
+    ("generation_provenance_ref", "generation_provenance_digest"),
+)
+def test_generation_provenance_binding_requires_ref_and_digest_together(
+    accepted_result: CertificationResult,
+    missing_field: str,
+) -> None:
+    base = _published_bundle_fixture(
+        accepted_result,
+        bundle_key=f"missing-{missing_field}",
+        created_at="2026-02-05T00:00:00Z",
+    )
+    bundle = _with_generation_provenance(base)
+    broken_pool = record_with_digest(
+        replace(
+            bundle.task_pool,
+            **{missing_field: None, "task_pool_digest": ""},
+        )
+    )
+
+    with pytest.raises(
+        ValueError,
+        match="generation provenance ref and digest must be both present or both absent",
+    ):
+        task_pool_module.validated_task_pool_bundle(
+            broken_pool,
+            bundle.tasks,
+            bundle.checks,
+            bundle.certification_evidence,
+            bundle.source_events,
+            bundle.generation_provenance,
+            bundle.observed_frame_events,
+            bundle.adapter_evidence,
+        )
+
+
+def test_generator_behavior_identity_excludes_frame_run_and_adapter_evidence(
+    accepted_result: CertificationResult,
+) -> None:
+    base = _published_bundle_fixture(
+        accepted_result,
+        bundle_key="identity",
+        created_at="2026-02-05T00:00:00Z",
+    )
+    original = _with_generation_provenance(base)
+    later_frame = _with_generation_provenance(
+        base,
+        frame_window_end="2026-01-31T00:00:00.000000Z",
+        run_id="later-run",
+        adapter_evidence={"schema_version": "fixture_v1", "count": 2},
+    )
+    changed_behavior = _with_generation_provenance(
+        base,
+        behavior_config={"strategy": "different"},
+    )
+
+    assert original.task_pool.generator_config_digest == (
+        later_frame.task_pool.generator_config_digest
+    )
+    assert original.task_pool.generation_provenance_digest != (
+        later_frame.task_pool.generation_provenance_digest
+    )
+    assert original.task_pool.task_pool_digest != later_frame.task_pool.task_pool_digest
+    assert original.task_pool.generator_config_digest != (
+        changed_behavior.task_pool.generator_config_digest
+    )
+
+
+def test_generation_provenance_rejects_self_attested_completeness_flag(
+    accepted_result: CertificationResult,
+) -> None:
+    base = _published_bundle_fixture(
+        accepted_result,
+        bundle_key="unknown-frame-field",
+        created_at="2026-02-05T00:00:00Z",
+    )
+    bundle = _with_generation_provenance(base)
+    assert bundle.generation_provenance is not None
+    assert bundle.generation_provenance.observed_frame is not None
+    frame = {**bundle.generation_provenance.observed_frame, "is_complete": True}
+    manifest = record_with_digest(
+        replace(
+            bundle.generation_provenance,
+            observed_frame=frame,
+            observed_frame_digest=canonical_digest(frame),
+            manifest_digest="",
+        )
+    )
+    task_pool = record_with_digest(
+        replace(
+            bundle.task_pool,
+            generation_provenance_digest=manifest.manifest_digest,
+            task_pool_digest="",
+        )
+    )
+
+    with pytest.raises(
+        ValueError, match="observed_frame has unknown keys: is_complete"
+    ):
+        task_pool_module.validated_task_pool_bundle(
+            task_pool,
+            bundle.tasks,
+            bundle.checks,
+            bundle.certification_evidence,
+            bundle.source_events,
+            manifest,
+            bundle.observed_frame_events,
+            bundle.adapter_evidence,
+        )
+
+
+def test_generation_provenance_requires_exact_observed_frame_outcomes(
+    accepted_result: CertificationResult,
+) -> None:
+    base = _published_bundle_fixture(
+        accepted_result,
+        bundle_key="frame-coverage",
+        created_at="2026-02-05T00:00:00Z",
+    )
+    bundle = _with_generation_provenance(base)
+
+    with pytest.raises(
+        ValueError,
+        match="observed frame inventory must exactly cover SourceEvent outcomes",
+    ):
+        task_pool_module.validated_task_pool_bundle(
+            bundle.task_pool,
+            bundle.tasks,
+            bundle.checks,
+            bundle.certification_evidence,
+            bundle.source_events,
+            bundle.generation_provenance,
+            (),
+            bundle.adapter_evidence,
+        )
+
+
+def test_generation_provenance_binds_observed_frame_to_pool_window(
+    accepted_result: CertificationResult,
+) -> None:
+    base = _published_bundle_fixture(
+        accepted_result,
+        bundle_key="frame-window",
+        created_at="2026-02-05T00:00:00Z",
+    )
+    bundle = _with_generation_provenance(base)
+    mismatched_pool = record_with_digest(
+        replace(
+            bundle.task_pool,
+            source_window_start="2026-01-02T00:00:00.000000Z",
+            task_pool_digest="",
+        )
+    )
+
+    with pytest.raises(
+        ValueError,
+        match="observed frame window does not match Task Pool source window",
+    ):
+        task_pool_module.validated_task_pool_bundle(
+            mismatched_pool,
+            bundle.tasks,
+            bundle.checks,
+            bundle.certification_evidence,
+            bundle.source_events,
+            bundle.generation_provenance,
+            bundle.observed_frame_events,
+            bundle.adapter_evidence,
+        )
+
+
 @pytest.mark.parametrize(
     ("filename", "record_count", "error"),
     (
@@ -1944,6 +2430,237 @@ def _published_bundle_fixture(
         evidence,
         _accepted_source_events(accepted),
     )
+
+
+def _with_generation_provenance(
+    bundle: task_pool_module.TaskPoolBundle,
+    *,
+    behavior_config: dict[str, object] | None = None,
+    frame_window_end: str = "2026-01-30T00:00:00.000000Z",
+    run_id: str = "fixture-run",
+    adapter_evidence: dict[str, object] | None = None,
+) -> task_pool_module.TaskPoolBundle:
+    bundle_dir = Path(bundle.task_pool.task_records_ref).parent
+    behavior = {
+        "generator_family": "fixture",
+        "adapter_version": "1",
+        "implementation_digest": "fixture-implementation",
+        "behavior_config": behavior_config or {"strategy": "stable"},
+    }
+    protocol = {
+        "source_kind": "issue",
+        "target_definition": "all fixture issues in the declared window",
+        "query_semantics": {"state": "resolved"},
+        "sampling_policy": {"mode": "all"},
+        "deduplication_policy": {"key": "source_ref"},
+    }
+    frame_events = tuple(
+        record_with_digest(
+            ObservedFrameEventRecord(
+                source_event_id=event.source_event_id,
+                repository_id=event.repository_id,
+                source_family=event.source_family,
+                source_ref=event.source_ref,
+                observed_at="2026-01-30T00:00:00.000000Z",
+                frame_event_digest="",
+            )
+        )
+        for event in bundle.source_events
+    )
+    protocol_digest = canonical_digest(protocol)
+    frame = {
+        "frame_id": "fixture-frame",
+        "source_protocol_digest": protocol_digest,
+        "source_revision": "fixture-revision",
+        "window_start": "2026-01-01T00:00:00.000000Z",
+        "window_end": frame_window_end,
+        "event_inventory_ref": (bundle_dir / "observed-frame-events.jsonl").as_posix(),
+        "event_inventory_digest": canonical_digest(frame_events),
+        "observation_authority": "source_authoritative",
+        "observation_receipt_digest": "fixture-receipt",
+        "known_blind_spots": [],
+        "coverage_mode": "one_source_event_per_frame_unit_v1",
+    }
+    run = {
+        "run_id": run_id,
+        "producer_id": "fixture-producer",
+        "authority_kind": "barcarolle_managed",
+        "authority_digest": "fixture-authority",
+        "started_at": "2026-01-30T00:00:00.000000Z",
+        "finished_at": "2026-01-30T00:00:01.000000Z",
+        "input_snapshot_digest": "fixture-input",
+    }
+    adapter = adapter_evidence or {
+        "schema_version": "fixture_v1",
+        "count": 1,
+    }
+    outputs = {
+        "prepared_candidate_records_digest": "fixture-candidates",
+        "adapter_evidence_ref": (bundle_dir / "adapter-evidence.jsonl").as_posix(),
+        "adapter_evidence_digest": canonical_digest(adapter),
+        "task_records_digest": bundle.task_pool.task_records_digest,
+        "check_records_digest": bundle.task_pool.check_records_digest,
+        "source_event_records_digest": bundle.task_pool.source_event_records_digest,
+        "certification_evidence_digest": (
+            bundle.task_pool.certification_evidence_digest
+        ),
+    }
+    manifest = record_with_digest(
+        GenerationProvenanceManifest(
+            schema_version=task_pool_module.GENERATION_PROVENANCE_SCHEMA_VERSION,
+            generator_behavior=behavior,
+            generator_behavior_digest=canonical_digest(behavior),
+            source_protocol=protocol,
+            source_protocol_digest=protocol_digest,
+            observed_frame=frame,
+            observed_frame_digest=canonical_digest(frame),
+            run=run,
+            run_digest=canonical_digest(run),
+            outputs=outputs,
+            outputs_digest=canonical_digest(outputs),
+            manifest_digest="",
+        )
+    )
+    task_pool = record_with_digest(
+        replace(
+            bundle.task_pool,
+            generation_provenance_ref=(
+                bundle_dir / "generation-provenance.jsonl"
+            ).as_posix(),
+            generation_provenance_digest=manifest.manifest_digest,
+            generator_config_digest=manifest.generator_behavior_digest,
+            source_protocol_digest=manifest.source_protocol_digest,
+            source_window_start=frame["window_start"],
+            source_window_end=frame["window_end"],
+            task_pool_digest="",
+        )
+    )
+    return task_pool_module.validated_task_pool_bundle(
+        task_pool,
+        bundle.tasks,
+        bundle.checks,
+        bundle.certification_evidence,
+        bundle.source_events,
+        manifest,
+        frame_events,
+        adapter,
+    )
+
+
+def _write_prepared_candidate_package(
+    root: Path,
+    candidate: TaskCandidate,
+    reference_patch: CapturedDiff,
+    check_command: tuple[str, ...],
+    hidden_material_source: Path,
+) -> Path:
+    artifacts = root / "artifacts"
+    artifacts.mkdir(parents=True)
+    patch_ref = "artifacts/reference.patch"
+    check_manifest_ref = "artifacts/check-manifest.json"
+    hidden_ref = "artifacts/hidden-check.txt"
+    (root / patch_ref).write_text(reference_patch.diff_text, encoding="utf-8")
+    check_manifest = {"check_command": check_command}
+    (root / check_manifest_ref).write_text(
+        canonical_json(check_manifest),
+        encoding="utf-8",
+    )
+    (root / hidden_ref).write_bytes(hidden_material_source.read_bytes())
+    material = record_with_digest(
+        PreparedCandidateMaterialRecord(
+            candidate_id=candidate.candidate_id,
+            reference_patch_ref=patch_ref,
+            reference_patch_digest=reference_patch.diff_digest,
+            check_command=check_command,
+            check_manifest_ref=check_manifest_ref,
+            check_manifest_digest=canonical_digest(check_manifest),
+            hidden_material_ref=hidden_ref,
+            hidden_material_digest=hidden_material_digest(root / hidden_ref),
+            material_digest="",
+        )
+    )
+    frame_event = record_with_digest(
+        ObservedFrameEventRecord(
+            source_event_id=make_source_event_id(
+                candidate.repository_id,
+                candidate.source_family,
+                candidate.source_ref,
+            ),
+            repository_id=candidate.repository_id,
+            source_family=candidate.source_family,
+            source_ref=candidate.source_ref,
+            observed_at="2026-01-30T00:00:00.000000Z",
+            frame_event_digest="",
+        )
+    )
+    behavior = {
+        "generator_family": "fixture",
+        "adapter_version": "1",
+        "implementation_digest": "fixture-implementation",
+        "behavior_config": {"strategy": "stable"},
+    }
+    protocol = {
+        "source_kind": "issue",
+        "target_definition": "fixture issue frame",
+        "query_semantics": {"state": "resolved"},
+        "sampling_policy": {"mode": "all"},
+        "deduplication_policy": {"key": "source_ref"},
+    }
+    protocol_digest = canonical_digest(protocol)
+    frame = {
+        "frame_id": "fixture-frame",
+        "source_protocol_digest": protocol_digest,
+        "source_revision": "fixture-revision",
+        "window_start": "2026-01-01T00:00:00.000000Z",
+        "window_end": "2026-01-30T00:00:00.000000Z",
+        "event_inventory_ref": "observed-frame-events.jsonl",
+        "event_inventory_digest": canonical_digest((frame_event,)),
+        "observation_authority": "producer_attested",
+        "observation_receipt_digest": "fixture-receipt",
+        "known_blind_spots": [],
+        "coverage_mode": "one_source_event_per_frame_unit_v1",
+    }
+    run = {
+        "run_id": "fixture-run",
+        "producer_id": "fixture-producer",
+        "authority_kind": "external_attested",
+        "authority_digest": "fixture-authority",
+        "started_at": "2026-01-30T00:00:00.000000Z",
+        "finished_at": "2026-01-30T00:00:01.000000Z",
+        "input_snapshot_digest": "fixture-input",
+    }
+    adapter_evidence = {"schema_version": "fixture_v1", "count": 1}
+    manifest = record_with_digest(
+        PreparedCandidatePackageManifest(
+            schema_version=(task_pool_module.PREPARED_CANDIDATE_PACKAGE_SCHEMA_VERSION),
+            repository_id=candidate.repository_id,
+            candidate_records_ref="candidates.jsonl",
+            candidate_records_digest=canonical_digest((candidate,)),
+            excluded_source_event_records_ref="excluded-source-events.jsonl",
+            excluded_source_event_records_digest=canonical_digest(()),
+            material_records_ref="materials.jsonl",
+            material_records_digest=canonical_digest((material,)),
+            generator_behavior=behavior,
+            generator_behavior_digest=canonical_digest(behavior),
+            source_protocol=protocol,
+            source_protocol_digest=protocol_digest,
+            observed_frame=frame,
+            observed_frame_digest=canonical_digest(frame),
+            run=run,
+            run_digest=canonical_digest(run),
+            adapter_evidence_ref="adapter-evidence.jsonl",
+            adapter_evidence_digest=canonical_digest(adapter_evidence),
+            manifest_digest="",
+        )
+    )
+    write_jsonl_records(root / "candidates.jsonl", (candidate,))
+    write_jsonl_records(root / "excluded-source-events.jsonl", ())
+    write_jsonl_records(root / "materials.jsonl", (material,))
+    write_jsonl_records(root / "observed-frame-events.jsonl", (frame_event,))
+    write_jsonl_records(root / "adapter-evidence.jsonl", (adapter_evidence,))
+    manifest_path = root / "prepared-candidate-package.jsonl"
+    write_jsonl_records(manifest_path, (manifest,))
+    return manifest_path
 
 
 def _accepted_evidence_fixture(

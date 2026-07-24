@@ -14,6 +14,7 @@ from barcarolle.records import (
     make_check_digest,
     validate_result,
 )
+from barcarolle.result_store import compute_result_id
 
 
 def test_migrate_result_cache_preserves_execution_and_moves_pricing(
@@ -37,7 +38,8 @@ def test_migrate_result_cache_preserves_execution_and_moves_pricing(
     assert len(loaded) == 1
     result = loaded[0]
     assert validate_result(result).ok
-    assert result.result_id == old_result["result_id"]
+    assert result.result_id == compute_result_id(result)
+    assert result.result_id != old_result["result_id"]
     assert result.scoring_config_digest == "scoring-v1"
     assert result.cache_identity.check_digest == make_check_digest(check)
     assert result.cache_identity.requested_model_id == "model"
@@ -165,6 +167,8 @@ def test_migrate_unscoped_model_results_preserves_source_and_limits_alias_reuse(
     assert result.cache_identity.model_resolution_scope_ended_at == (
         "2026-01-02T00:00:00Z"
     )
+    assert result.result_id == compute_result_id(result)
+    assert result.result_id != old_result["result_id"]
     assert validate_result(result).ok
     assert results_path.read_text(encoding="utf-8") == source
 
@@ -184,6 +188,53 @@ def test_migrate_unscoped_model_results_rejects_corrupt_input_and_overwrite(
 
     output_path.write_text("occupied\n", encoding="utf-8")
     occupied = _run_model_identity_migration(results_path, output_path)
+    assert occupied.returncode != 0
+    assert "refusing to overwrite" in occupied.stderr
+
+
+def test_migrate_result_evidence_provenance_preserves_managed_observation(
+    tmp_path: Path,
+) -> None:
+    old_result = _pre_evidence_result(_check())
+    results_path = tmp_path / "results.pre-provenance.jsonl"
+    output_path = tmp_path / "results.latest.jsonl"
+    source = f"{canonical_json(old_result)}\n"
+    results_path.write_text(source, encoding="utf-8")
+
+    completed = _run_evidence_provenance_migration(results_path, output_path)
+    result = load_jsonl_records(output_path, ResultRecord)[0]
+
+    assert completed.returncode == 0
+    assert result.result_id == compute_result_id(result)
+    assert result.result_id != old_result["result_id"]
+    assert result.evidence_source_kind == "barcarolle_managed"
+    assert result.evidence_source_manifest_digest is None
+    assert result.evidence_imported_at is None
+    assert (
+        result.source_result_available_at
+        == old_result["result_available_at"]
+        == result.result_available_at
+    )
+    assert result.availability_policy == "managed_observation_v1"
+    assert validate_result(result).ok
+    assert results_path.read_text(encoding="utf-8") == source
+
+
+def test_migrate_result_evidence_provenance_rejects_corruption_and_overwrite(
+    tmp_path: Path,
+) -> None:
+    old_result = _pre_evidence_result(_check())
+    old_result["result_digest"] = "corrupt"
+    results_path = tmp_path / "results.pre-provenance.jsonl"
+    output_path = tmp_path / "results.latest.jsonl"
+    results_path.write_text(f"{canonical_json(old_result)}\n", encoding="utf-8")
+
+    corrupt = _run_evidence_provenance_migration(results_path, output_path)
+    assert corrupt.returncode != 0
+    assert "old Result digest" in corrupt.stderr
+
+    output_path.write_text("occupied\n", encoding="utf-8")
+    occupied = _run_evidence_provenance_migration(results_path, output_path)
     assert occupied.returncode != 0
     assert "refusing to overwrite" in occupied.stderr
 
@@ -230,6 +281,27 @@ def _run_model_identity_migration(
             "2025-12-31T00:00:00Z",
             "--model-scope-ended-at",
             "2026-01-02T00:00:00Z",
+        ),
+        cwd=Path(__file__).resolve().parents[1],
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=False,
+    )
+
+
+def _run_evidence_provenance_migration(
+    results_path: Path,
+    output_path: Path,
+) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        (
+            sys.executable,
+            "scripts/migrate_result_evidence_provenance.py",
+            "--results",
+            str(results_path),
+            "--output",
+            str(output_path),
         ),
         cwd=Path(__file__).resolve().parents[1],
         text=True,
@@ -337,6 +409,22 @@ def _unscoped_model_result(check: CheckRecord) -> dict[str, object]:
     result["cache_identity"] = identity
     result["scoring_config_digest"] = scoring_config_digest
     result.pop("usage_coverage")
+    result.pop("result_digest")
+    result["result_digest"] = canonical_digest(result)
+    return result
+
+
+def _pre_evidence_result(check: CheckRecord) -> dict[str, object]:
+    result = _unscoped_model_result(check)
+    identity = dict(result["cache_identity"])
+    model_id = identity["model_snapshot_id"]
+    identity["requested_model_id"] = model_id
+    identity["model_resolution_scope_id"] = None
+    identity["model_resolution_scope_started_at"] = None
+    identity["model_resolution_scope_ended_at"] = None
+    identity.pop("identity_digest")
+    identity["identity_digest"] = canonical_digest(identity)
+    result["cache_identity"] = identity
     result.pop("result_digest")
     result["result_digest"] = canonical_digest(result)
     return result

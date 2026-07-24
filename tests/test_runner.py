@@ -6,6 +6,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 import hashlib
 import json
+import os
 import subprocess
 import sys
 from typing import Any
@@ -21,9 +22,17 @@ from barcarolle.records import (
     CheckRecord,
     EvaluationCellSet,
     FeatureSnapshotRecord,
+    GenerationProvenanceManifest,
     MetricRecord,
+    ObservedFrameEventRecord,
+    PreparedCandidateMaterialRecord,
+    PreparedCandidatePackageManifest,
     ResultCellRef,
+    ResultImportDecision,
+    ResultImportReceipt,
     ResultMatrix,
+    ResultRecord,
+    ResultSourceManifest,
     RollingOriginRecord,
     RuntimeConfig,
     SourceEventRecord,
@@ -41,6 +50,7 @@ from barcarolle.records import (
     make_feature_snapshot_id,
     make_rolling_origin_id,
     make_rolling_origin_policy_digest,
+    make_result_id,
     make_selector_input_id,
     make_source_event_id,
     make_solver_material_digest,
@@ -64,9 +74,11 @@ from barcarolle.runner import (
     ReportConfig,
     TaskPoolConfig,
     build_task_pool,
+    build_task_pool_from_package,
     evaluate_selector,
     evaluate_selectors,
     fill_results,
+    import_result_bundle,
     prepare_evaluation_cells,
     run_agents,
     score_selection,
@@ -263,9 +275,8 @@ def test_build_task_pool_accepts_semantic_manifest_and_writes_resolvable_records
     assert evidence[0]["accepted"] is True
     assert task_pool.certification_evidence_digest == canonical_digest(evidence)
     assert task_pool.source_event_records_digest == canonical_digest(source_events)
-    assert task_pool.generator_config_digest == canonical_digest(
-        {"mode": "source_events", "source_family": "user_import"}
-    )
+    assert task_pool.generator_config_digest is None
+    assert task_pool.generation_provenance_ref is None
     assert task_pool.source_window_start == "2026-01-01T00:00:00.000000Z"
     assert task_pool.source_window_end == "2026-01-31T00:00:00.000000Z"
     source_events_by_ref = {event.source_ref: event for event in source_events}
@@ -274,6 +285,711 @@ def test_build_task_pool_accepts_semantic_manifest_and_writes_resolvable_records
     assert source_events_by_ref["unmatured"].rejection_reasons == (
         "check_material_unavailable",
     )
+
+
+def test_build_task_pool_from_prepared_package_publishes_complete_provenance(
+    tmp_path: Path,
+) -> None:
+    repository = tmp_path / "repository"
+    repository.mkdir()
+    _git(repository, "init", "--quiet")
+    _git(repository, "config", "user.email", "tests@example.invalid")
+    _git(repository, "config", "user.name", "Tests")
+    (repository / "value.txt").write_text("broken\n", encoding="utf-8")
+    _git(repository, "add", "value.txt")
+    _git(repository, "commit", "--quiet", "-m", "base")
+    base_commit = _git(repository, "rev-parse", "HEAD").stdout.strip()
+    hidden_material = tmp_path / "private-check.txt"
+    hidden_material.write_text("private\n", encoding="utf-8")
+    check_command = (
+        sys.executable,
+        "-c",
+        "from pathlib import Path; "
+        "ok = Path('value.txt').read_text() == 'fixed\\n'; "
+        "private = Path('.barcarolle/check_bundle').read_text() == 'private\\n'; "
+        "raise SystemExit(0 if ok and private else 1)",
+    )
+    check_manifest = {"check_command": check_command}
+    patch_text = (
+        "diff --git a/value.txt b/value.txt\n"
+        "--- a/value.txt\n"
+        "+++ b/value.txt\n"
+        "@@ -1 +1 @@\n"
+        "-broken\n"
+        "+fixed\n"
+    )
+    reference_patch = CapturedDiff(
+        patch_text,
+        hashlib.sha256(patch_text.encode("utf-8")).hexdigest(),
+    )
+    candidate = task_pool_module.TaskCandidate(
+        candidate_id="candidate",
+        repository_id="repo",
+        base_commit=base_commit,
+        source_family="issue",
+        source_ref="issue-1",
+        source_resolved_at="2026-01-10T00:00:00.000000Z",
+        task_material_available_at="2026-01-11T00:00:00.000000Z",
+        check_material_available_at="2026-01-12T00:00:00.000000Z",
+        task_text="Fix the issue.",
+        solver_material_refs=(),
+        dependency_cluster_id="cluster",
+        sampling_stratum="stratum",
+        check_manifest_digest=canonical_digest(check_manifest),
+        hidden_check_bundle_digest=hidden_material_digest(hidden_material),
+        resource_limits={"timeout_seconds": 30},
+        oracle_source="private",
+        check_type="pytest",
+    )
+    package_manifest = _write_runner_prepared_package(
+        tmp_path / "prepared",
+        candidate,
+        reference_patch,
+        check_command,
+        check_manifest,
+        hidden_material,
+    )
+    package = task_pool_module.load_prepared_candidate_package(package_manifest)
+    workspace_config = WorkspaceConfig(
+        "workspace",
+        canonical_digest({"repository": str(repository)}),
+        "submodules",
+        "image",
+        "deps",
+    )
+
+    task_pool = build_task_pool_from_package(
+        package,
+        TaskPoolConfig(
+            repository_id="repo",
+            repository_path=repository,
+            artifact_root=tmp_path / "published",
+            workspace_config=workspace_config,
+            runtime_config=_runtime_config(),
+            reference_patches={},
+            check_commands={},
+            hidden_material_paths={},
+            metadata={"created_at": "2026-02-01T00:00:00Z"},
+        ),
+    )
+    bundle = task_pool_module.open_task_pool_bundle(
+        tmp_path
+        / "published"
+        / Path(task_pool.task_records_ref).parent
+        / "task-pool.jsonl"
+    )
+
+    assert bundle.task_pool == task_pool
+    assert bundle.generation_provenance is not None
+    assert bundle.generation_provenance.generator_behavior_digest == (
+        package.manifest.generator_behavior_digest
+    )
+    assert (
+        bundle.generation_provenance.outputs["prepared_candidate_records_digest"]
+        == package.manifest.candidate_records_digest
+    )
+    assert bundle.observed_frame_events == package.observed_frame_events
+    assert bundle.adapter_evidence == package.adapter_evidence
+
+
+def test_import_result_bundle_applies_import_time_floor_and_is_idempotent(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    task = _task()
+    check = _check()
+    agent = _agent()
+    workspace_config = _workspace_config()
+    runtime_config = _runtime_config()
+    source_result = _redigest_result(
+        _result(
+            task,
+            check,
+            agent,
+            workspace_config,
+            runtime_config,
+            _scoring_config(),
+        ),
+        source_result_available_at="2026-01-10T00:00:05.000000Z",
+        result_available_at="2026-01-10T00:00:05.000000Z",
+    )
+    source_manifest = _write_result_source_bundle(
+        tmp_path / "source",
+        (source_result,),
+        availability_semantics="import_time_floor_v1",
+    )
+    source_bytes = {
+        path.name: path.read_bytes()
+        for path in (source_manifest, source_manifest.parent / "results.jsonl")
+    }
+    store = ResultStore(tmp_path / "local" / "results.jsonl")
+    receipt_path = tmp_path / "local" / "import-receipt.jsonl"
+    bundle = _task_pool_bundle((task,), (check,))
+    monkeypatch.setattr(
+        runner_module,
+        "_now",
+        lambda: "2026-01-20T00:00:00Z",
+    )
+
+    receipt = import_result_bundle(
+        source_manifest,
+        bundle,
+        (agent,),
+        workspace_config,
+        runtime_config,
+        store,
+        receipt_path,
+        accepted_authority_digest="trusted-authority",
+        availability_policy="import_time_floor_v1",
+    )
+    monkeypatch.setattr(
+        runner_module,
+        "_now",
+        lambda: "2026-01-21T00:00:00Z",
+    )
+    resumed = import_result_bundle(
+        source_manifest,
+        bundle,
+        (agent,),
+        workspace_config,
+        runtime_config,
+        store,
+        receipt_path,
+        accepted_authority_digest="trusted-authority",
+        availability_policy="import_time_floor_v1",
+    )
+
+    (imported,) = load_results(store, ResultQuery())
+    assert resumed == receipt
+    assert receipt.decisions[0].status == "admitted"
+    assert imported.evidence_source_kind == "external_attested"
+    assert imported.evidence_source_manifest_digest == receipt.source_manifest_digest
+    assert imported.source_result_available_at == "2026-01-10T00:00:05.000000Z"
+    assert imported.result_available_at == "2026-01-20T00:00:00.000000Z"
+    assert imported.cache_identity == source_result.cache_identity
+    assert runner_module.result_store_module.result_execution_digest(
+        imported
+    ) == runner_module.result_store_module.result_execution_digest(source_result)
+    assert (
+        load_results(
+            store,
+            ResultQuery(result_available_before="2026-01-15T00:00:00Z"),
+        )
+        == ()
+    )
+    (resolved,) = runner_module.result_store_module.resolve_result_cells(
+        (TaskCheckRef(task.task_id, check.check_id),),
+        (task,),
+        {check.check_id: check},
+        (agent,),
+        workspace_config,
+        runtime_config,
+        store,
+        ResultCacheConfig(),
+    )
+    assert resolved.result_id == imported.result_id
+    assert {
+        path.name: path.read_bytes()
+        for path in (source_manifest, source_manifest.parent / "results.jsonl")
+    } == source_bytes
+
+
+def test_import_result_bundle_rejects_ambiguous_incoming_executions_as_a_group(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    task = _task()
+    check = _check()
+    agent = _agent()
+    workspace_config = _workspace_config()
+    runtime_config = _runtime_config()
+    source_results = tuple(
+        _redigest_result(
+            _result(
+                task,
+                check,
+                agent,
+                workspace_config,
+                runtime_config,
+                _scoring_config(),
+                outcome=outcome,
+            ),
+            source_result_available_at="2026-01-10T00:00:05.000000Z",
+            result_available_at="2026-01-10T00:00:05.000000Z",
+        )
+        for outcome in ("pass", "fail")
+    )
+    source_manifest = _write_result_source_bundle(
+        tmp_path / "source",
+        source_results,
+        availability_semantics="import_time_floor_v1",
+    )
+    store = ResultStore(tmp_path / "local" / "results.jsonl")
+    monkeypatch.setattr(
+        runner_module,
+        "_now",
+        lambda: "2026-01-20T00:00:00Z",
+    )
+
+    receipt = import_result_bundle(
+        source_manifest,
+        _task_pool_bundle((task,), (check,)),
+        (agent,),
+        workspace_config,
+        runtime_config,
+        store,
+        tmp_path / "local" / "receipt.jsonl",
+        accepted_authority_digest="trusted-authority",
+        availability_policy="import_time_floor_v1",
+    )
+
+    assert {decision.status for decision in receipt.decisions} == {"rejected"}
+    assert {decision.rejection_reasons for decision in receipt.decisions} == {
+        ("ambiguous_incoming_execution",)
+    }
+    assert not store.path.exists()
+
+
+def test_import_result_bundle_rejects_authority_before_local_writes(
+    tmp_path: Path,
+) -> None:
+    task = _task()
+    check = _check()
+    agent = _agent()
+    source_result = _result(
+        task,
+        check,
+        agent,
+        _workspace_config(),
+        _runtime_config(),
+        _scoring_config(),
+    )
+    source_manifest = _write_result_source_bundle(
+        tmp_path / "source",
+        (source_result,),
+        availability_semantics="import_time_floor_v1",
+    )
+    store = ResultStore(tmp_path / "local" / "results.jsonl")
+    receipt_path = tmp_path / "local" / "receipt.jsonl"
+
+    with pytest.raises(ValueError, match="authority is not accepted"):
+        import_result_bundle(
+            source_manifest,
+            _task_pool_bundle((task,), (check,)),
+            (agent,),
+            _workspace_config(),
+            _runtime_config(),
+            store,
+            receipt_path,
+            accepted_authority_digest="other-authority",
+            availability_policy="import_time_floor_v1",
+        )
+
+    assert not store.path.exists()
+    assert not receipt_path.exists()
+
+
+@pytest.mark.parametrize("receipt_kind", ("missing_decisions", "false_rejection"))
+def test_import_result_bundle_replays_existing_receipt_decisions(
+    tmp_path: Path,
+    receipt_kind: str,
+) -> None:
+    task = _task()
+    check = _check()
+    agent = _agent()
+    workspace_config = _workspace_config()
+    runtime_config = _runtime_config()
+    source_result = _result(
+        task,
+        check,
+        agent,
+        workspace_config,
+        runtime_config,
+        _scoring_config(),
+    )
+    source_manifest_path = _write_result_source_bundle(
+        tmp_path / "source",
+        (source_result,),
+        availability_semantics="import_time_floor_v1",
+    )
+    source_manifest = load_jsonl_records(
+        source_manifest_path,
+        ResultSourceManifest,
+    )[0]
+    bundle = _task_pool_bundle((task,), (check,))
+    imported_at = "2026-01-20T00:00:00.000000Z"
+    decisions = (
+        ()
+        if receipt_kind == "missing_decisions"
+        else (
+            ResultImportDecision(
+                source_result_id=source_result.result_id,
+                source_result_digest=source_result.result_digest,
+                status="rejected",
+                local_result_id=None,
+                local_result_digest=None,
+                rejection_reasons=("made_up_rejection",),
+            ),
+        )
+    )
+    receipt_identity = {
+        "source_manifest_digest": source_manifest.manifest_digest,
+        "target_task_pool_digest": bundle.task_pool.task_pool_digest,
+        "imported_at": imported_at,
+        "availability_policy": "import_time_floor_v1",
+    }
+    forged = record_with_digest(
+        ResultImportReceipt(
+            receipt_id=f"result_import_{canonical_digest(receipt_identity)}",
+            source_manifest_digest=source_manifest.manifest_digest,
+            source_result_records_digest=source_manifest.result_records_digest,
+            target_task_pool_id=bundle.task_pool.task_pool_id,
+            target_task_pool_digest=bundle.task_pool.task_pool_digest,
+            accepted_authority_digest="trusted-authority",
+            imported_at=imported_at,
+            availability_policy="import_time_floor_v1",
+            agent_record_digests=(canonical_digest(agent),),
+            workspace_config_digest=canonical_digest(workspace_config),
+            runtime_config_digest=canonical_digest(runtime_config),
+            decisions=decisions,
+            receipt_digest="",
+        )
+    )
+    receipt_path = tmp_path / "local" / "receipt.jsonl"
+    write_jsonl_records(receipt_path, (forged,))
+    store = ResultStore(tmp_path / "local" / "results.jsonl")
+
+    with pytest.raises(
+        ValueError,
+        match="receipt decisions do not (cover source Results|replay)",
+    ):
+        import_result_bundle(
+            source_manifest_path,
+            bundle,
+            (agent,),
+            workspace_config,
+            runtime_config,
+            store,
+            receipt_path,
+            accepted_authority_digest="trusted-authority",
+            availability_policy="import_time_floor_v1",
+        )
+
+    assert not store.path.exists()
+
+
+def test_import_result_bundle_rejects_clock_before_source_manifest(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    task = _task()
+    check = _check()
+    agent = _agent()
+    workspace_config = _workspace_config()
+    runtime_config = _runtime_config()
+    source_manifest = _write_result_source_bundle(
+        tmp_path / "source",
+        (
+            _result(
+                task,
+                check,
+                agent,
+                workspace_config,
+                runtime_config,
+                _scoring_config(),
+            ),
+        ),
+        availability_semantics="import_time_floor_v1",
+    )
+    store = ResultStore(tmp_path / "local" / "results.jsonl")
+    receipt_path = tmp_path / "local" / "import-receipt.jsonl"
+    monkeypatch.setattr(
+        runner_module,
+        "_now",
+        lambda: "2026-01-09T23:59:59Z",
+    )
+
+    with pytest.raises(
+        ValueError,
+        match="import observation precedes source manifest creation",
+    ):
+        import_result_bundle(
+            source_manifest,
+            _task_pool_bundle((task,), (check,)),
+            (agent,),
+            workspace_config,
+            runtime_config,
+            store,
+            receipt_path,
+            accepted_authority_digest="trusted-authority",
+            availability_policy="import_time_floor_v1",
+        )
+
+    assert not store.path.exists()
+    assert not receipt_path.exists()
+
+
+def test_import_result_bundle_rejects_hardlink_to_source_results(
+    tmp_path: Path,
+) -> None:
+    task = _task()
+    check = _check()
+    agent = _agent()
+    workspace_config = _workspace_config()
+    runtime_config = _runtime_config()
+    source_manifest = _write_result_source_bundle(
+        tmp_path / "source",
+        (
+            _result(
+                task,
+                check,
+                agent,
+                workspace_config,
+                runtime_config,
+                _scoring_config(),
+            ),
+        ),
+        availability_semantics="import_time_floor_v1",
+    )
+    source_results = source_manifest.parent / "results.jsonl"
+    source_bytes = source_results.read_bytes()
+    aliased_store_path = tmp_path / "local" / "results.jsonl"
+    aliased_store_path.parent.mkdir(parents=True)
+    os.link(source_results, aliased_store_path)
+
+    with pytest.raises(
+        ValueError,
+        match="local Result Store must not alias source Results",
+    ):
+        import_result_bundle(
+            source_manifest,
+            _task_pool_bundle((task,), (check,)),
+            (agent,),
+            workspace_config,
+            runtime_config,
+            ResultStore(aliased_store_path),
+            tmp_path / "local" / "receipt.jsonl",
+            accepted_authority_digest="trusted-authority",
+            availability_policy="import_time_floor_v1",
+        )
+
+    assert source_results.read_bytes() == source_bytes
+
+
+@pytest.mark.parametrize("write_kind", ("store", "receipt"))
+def test_import_result_bundle_keeps_source_root_read_only(
+    tmp_path: Path,
+    write_kind: str,
+) -> None:
+    task = _task()
+    check = _check()
+    agent = _agent()
+    workspace_config = _workspace_config()
+    runtime_config = _runtime_config()
+    source_root = tmp_path / "source"
+    source_manifest = _write_result_source_bundle(
+        source_root,
+        (
+            _result(
+                task,
+                check,
+                agent,
+                workspace_config,
+                runtime_config,
+                _scoring_config(),
+            ),
+        ),
+        availability_semantics="import_time_floor_v1",
+    )
+    store_path = (
+        source_root / "local-results.jsonl"
+        if write_kind == "store"
+        else tmp_path / "local" / "results.jsonl"
+    )
+    receipt_path = (
+        source_root / "receipt.jsonl"
+        if write_kind == "receipt"
+        else tmp_path / "local" / "receipt.jsonl"
+    )
+
+    with pytest.raises(ValueError, match="must be outside the Result source root"):
+        import_result_bundle(
+            source_manifest,
+            _task_pool_bundle((task,), (check,)),
+            (agent,),
+            workspace_config,
+            runtime_config,
+            ResultStore(store_path),
+            receipt_path,
+            accepted_authority_digest="trusted-authority",
+            availability_policy="import_time_floor_v1",
+        )
+
+    assert not store_path.exists()
+    assert not receipt_path.exists()
+
+
+def test_import_result_bundle_rejects_duplicate_source_result_ids(
+    tmp_path: Path,
+) -> None:
+    task = _task()
+    check = _check()
+    agent = _agent()
+    workspace_config = _workspace_config()
+    runtime_config = _runtime_config()
+    source_result = _result(
+        task,
+        check,
+        agent,
+        workspace_config,
+        runtime_config,
+        _scoring_config(),
+    )
+    source_manifest = _write_result_source_bundle(
+        tmp_path / "source",
+        (source_result, source_result),
+        availability_semantics="import_time_floor_v1",
+    )
+    store = ResultStore(tmp_path / "local" / "results.jsonl")
+
+    with pytest.raises(ValueError, match="duplicate result IDs"):
+        import_result_bundle(
+            source_manifest,
+            _task_pool_bundle((task,), (check,)),
+            (agent,),
+            workspace_config,
+            runtime_config,
+            store,
+            tmp_path / "local" / "receipt.jsonl",
+            accepted_authority_digest="trusted-authority",
+            availability_policy="import_time_floor_v1",
+        )
+
+    assert not store.path.exists()
+
+
+def test_import_result_bundle_preserves_explicit_historical_attestation_and_reports_it(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    task = _task()
+    check = _check()
+    agent = _agent()
+    workspace_config = _workspace_config()
+    runtime_config = _runtime_config()
+    monkeypatch.setattr(
+        runner_module,
+        "_now",
+        lambda: "2026-01-20T00:00:00Z",
+    )
+    monkeypatch.setattr(
+        runner_module.result_store_module,
+        "_now",
+        lambda: "2026-01-12T00:00:00Z",
+    )
+    source_result = _result(
+        task,
+        check,
+        agent,
+        workspace_config,
+        runtime_config,
+        _scoring_config(),
+    )
+    source_manifest = _write_result_source_bundle(
+        tmp_path / "source",
+        (source_result,),
+        availability_semantics="producer_attested_historical_v1",
+    )
+    store = ResultStore(tmp_path / "local" / "results.jsonl")
+
+    receipt = import_result_bundle(
+        source_manifest,
+        _task_pool_bundle((task,), (check,)),
+        (agent,),
+        workspace_config,
+        runtime_config,
+        store,
+        tmp_path / "local" / "receipt.jsonl",
+        accepted_authority_digest="trusted-authority",
+        availability_policy="producer_attested_historical_v1",
+    )
+
+    (imported,) = load_results(store, ResultQuery())
+    assert imported.evidence_imported_at == "2026-01-20T00:00:00.000000Z"
+    assert imported.result_available_at == source_result.source_result_available_at
+    assert load_results(
+        store,
+        ResultQuery(result_available_before="2026-01-15T00:00:00Z"),
+    ) == (imported,)
+    section = runner_module.reporting_module.build_result_report(
+        (imported,),
+        (agent,),
+    )
+    evidence = section.summary["result_evidence"]
+    assert evidence["historical_attestation_execution_count"] == 1
+    assert "not a Barcarolle observation-time claim" in evidence["notes"][0]
+    assert section.source_digests["external_source_manifest_digests"] == (
+        receipt.source_manifest_digest,
+    )
+    assert "result_evidence_provenance_summary" in section.supported_claims
+
+
+def test_import_result_bundle_rejects_conflict_with_local_execution(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    task = _task()
+    check = _check()
+    agent = _agent()
+    workspace_config = _workspace_config()
+    runtime_config = _runtime_config()
+    scoring_config = _scoring_config()
+    monkeypatch.setattr(
+        runner_module,
+        "_now",
+        lambda: "2026-01-20T00:00:00Z",
+    )
+    existing = _result(
+        task,
+        check,
+        agent,
+        workspace_config,
+        runtime_config,
+        scoring_config,
+        outcome="pass",
+    )
+    source_result = _result(
+        task,
+        check,
+        agent,
+        workspace_config,
+        runtime_config,
+        scoring_config,
+        outcome="fail",
+    )
+    store = ResultStore(tmp_path / "local" / "results.jsonl")
+    store_result(existing, store)
+    source_manifest = _write_result_source_bundle(
+        tmp_path / "source",
+        (source_result,),
+        availability_semantics="import_time_floor_v1",
+    )
+
+    receipt = import_result_bundle(
+        source_manifest,
+        _task_pool_bundle((task,), (check,)),
+        (agent,),
+        workspace_config,
+        runtime_config,
+        store,
+        tmp_path / "local" / "receipt.jsonl",
+        accepted_authority_digest="trusted-authority",
+        availability_policy="import_time_floor_v1",
+    )
+
+    assert receipt.decisions[0].status == "rejected"
+    assert receipt.decisions[0].rejection_reasons == ("ambiguous_local_execution",)
+    assert load_results(store, ResultQuery()) == (existing,)
 
 
 @pytest.mark.parametrize(
@@ -348,9 +1064,11 @@ def test_fill_results_runs_only_missing_agent_task_check_cells(
         store,
     )
     task_pool_bundle = _task_pool_bundle((task,), (check,))
-    selection = _selection(
-        task_pool_bundle.task_pool,
+    selection, _ = _persist_replayable_selection(
+        task_pool_bundle,
         TaskCheckRef(task.task_id, check.check_id),
+        (agent, other_agent),
+        store,
     )
     calls: list[str] = []
 
@@ -369,7 +1087,7 @@ def test_fill_results_runs_only_missing_agent_task_check_cells(
         "barcarolle.runner.workspace_module.run_agent_on_task", fake_run_agent_on_task
     )
 
-    new_results = fill_results(
+    cell_set = fill_results(
         selection,
         task_pool_bundle,
         (agent, other_agent),
@@ -378,15 +1096,84 @@ def test_fill_results_runs_only_missing_agent_task_check_cells(
         scoring_config,
         ResultCacheConfig(),
         store,
+        ResultJoinConfig(),
         WorkspaceRunContext(),
     )
 
     assert calls == ("other-agent",) or calls == ["other-agent"]
-    assert tuple(result.agent_id for result in new_results) == ("other-agent",)
+    assert tuple(cell.agent_id for cell in cell_set.cells) == (
+        "agent",
+        "other-agent",
+    )
+    assert all(cell.cell_state == "result" for cell in cell_set.cells)
     assert {result.agent_id for result in load_results(store, ResultQuery())} == {
         "agent",
         "other-agent",
     }
+
+
+@pytest.mark.parametrize("entrypoint", ("fill", "prepare"))
+def test_lazy_result_entrypoints_require_persisted_selection_evidence_before_cache(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    entrypoint: str,
+) -> None:
+    task = _task()
+    check = _check()
+    bundle = _task_pool_bundle((task,), (check,))
+    ref = TaskCheckRef(task.task_id, check.check_id)
+    origin = _origin(bundle.task_pool, ref, ref)
+    selection = record_with_digest(
+        replace(
+            _selection(bundle.task_pool, ref),
+            origin_id=origin.origin_id,
+            selection_digest="",
+        )
+    )
+    store = ResultStore(tmp_path / "results.jsonl")
+    calls: list[str] = []
+
+    def fail_if_cache_opens(*args, **kwargs):
+        calls.append("cache")
+        raise AssertionError("cache must not open before Selection replay")
+
+    monkeypatch.setattr(
+        runner_module.result_store_module,
+        "open_result_store_session",
+        fail_if_cache_opens,
+    )
+
+    with pytest.raises(ValueError, match="persisted Selection log does not exist"):
+        if entrypoint == "fill":
+            fill_results(
+                selection,
+                bundle,
+                (_agent(),),
+                _workspace_config(),
+                _runtime_config(),
+                _scoring_config(),
+                ResultCacheConfig(),
+                store,
+                ResultJoinConfig(),
+                WorkspaceRunContext(),
+            )
+        else:
+            prepare_evaluation_cells(
+                selection,
+                origin,
+                bundle,
+                (_agent(),),
+                _workspace_config(),
+                _runtime_config(),
+                _scoring_config(),
+                ResultCacheConfig(),
+                store,
+                ResultJoinConfig(),
+                WorkspaceRunContext(),
+            )
+
+    assert calls == []
+    assert not store.path.exists()
 
 
 @pytest.mark.parametrize(
@@ -407,9 +1194,12 @@ def test_fill_results_rejects_tampered_scoring_before_agent_runs(
     check = _check()
     agent = _agent()
     task_pool_bundle = _task_pool_bundle((task,), (check,))
-    selection = _selection(
-        task_pool_bundle.task_pool,
+    store = ResultStore(tmp_path / "results.jsonl")
+    selection, _ = _persist_replayable_selection(
+        task_pool_bundle,
         TaskCheckRef(task.task_id, check.check_id),
+        (agent,),
+        store,
     )
     scoring_config = ScoringConfig("valid-pricing", {})
     object.__setattr__(scoring_config, field_name, invalid_value)
@@ -432,7 +1222,8 @@ def test_fill_results_rejects_tampered_scoring_before_agent_runs(
             _runtime_config(),
             scoring_config,
             ResultCacheConfig(),
-            ResultStore(tmp_path / "results.jsonl"),
+            store,
+            ResultJoinConfig(),
             WorkspaceRunContext(),
         )
 
@@ -739,6 +1530,13 @@ def test_fill_results_rejects_source_event_drift_before_opening_result_store(
     )
     drifted_bundle = replace(bundle, source_events=(drifted_event,))
     result_path = tmp_path / "results.jsonl"
+    store = ResultStore(result_path)
+    selection, _ = _persist_replayable_selection(
+        bundle,
+        TaskCheckRef(task.task_id, check.check_id),
+        (_agent(),),
+        store,
+    )
 
     def fail_if_store_opens(*args, **kwargs):
         raise AssertionError("invalid Task Pool must fail before opening Result Store")
@@ -751,14 +1549,15 @@ def test_fill_results_rejects_source_event_drift_before_opening_result_store(
 
     with pytest.raises(ValueError, match="source event records digest"):
         fill_results(
-            _selection(bundle.task_pool, TaskCheckRef(task.task_id, check.check_id)),
+            selection,
             drifted_bundle,
             (_agent(),),
             _workspace_config(),
             _runtime_config(),
             _scoring_config(),
             ResultCacheConfig(),
-            ResultStore(result_path),
+            store,
+            ResultJoinConfig(),
             WorkspaceRunContext(),
         )
 
@@ -844,9 +1643,11 @@ def test_fill_results_reprices_cached_execution_without_rerunning_agent(
     )
     store_result(old_result, store)
     task_pool_bundle = _task_pool_bundle((task,), (check,))
-    selection = _selection(
-        task_pool_bundle.task_pool,
+    selection, _ = _persist_replayable_selection(
+        task_pool_bundle,
         TaskCheckRef(task.task_id, check.check_id),
+        (agent,),
+        store,
     )
 
     def fail_if_agent_runs(*args, **kwargs):
@@ -859,7 +1660,7 @@ def test_fill_results_reprices_cached_execution_without_rerunning_agent(
         runner_module.result_store_module, "_now", lambda: "2026-02-01T00:00:00Z"
     )
 
-    repriced = fill_results(
+    cell_set = fill_results(
         selection,
         task_pool_bundle,
         (agent,),
@@ -868,11 +1669,15 @@ def test_fill_results_reprices_cached_execution_without_rerunning_agent(
         current_pricing,
         ResultCacheConfig(),
         store,
+        ResultJoinConfig(),
         WorkspaceRunContext(),
     )
 
-    assert len(repriced) == 1
-    current_result = repriced[0]
+    current_result = next(
+        result
+        for result in load_results(store, ResultQuery())
+        if result.scoring_config_digest == current_pricing.scoring_config_digest
+    )
     assert current_result.result_id != old_result.result_id
     assert current_result.scoring_config_digest == current_pricing.scoring_config_digest
     assert current_result.pricing_version == "current-pricing"
@@ -898,6 +1703,7 @@ def test_fill_results_reprices_cached_execution_without_rerunning_agent(
     )
     assert cells[0].result_id == current_result.result_id
     assert cells[0].result_digest == current_result.result_digest
+    assert cell_set.cells[0].result_id == current_result.result_id
 
     assert (
         fill_results(
@@ -909,9 +1715,10 @@ def test_fill_results_reprices_cached_execution_without_rerunning_agent(
             current_pricing,
             ResultCacheConfig(),
             store,
+            ResultJoinConfig(),
             WorkspaceRunContext(),
         )
-        == ()
+        == cell_set
     )
     assert load_results(store, ResultQuery()) == (old_result, current_result)
 
@@ -941,7 +1748,7 @@ def test_result_id_is_stable_when_repricing_from_a_repriced_result(monkeypatch) 
     assert direct_final.result_id == chained_final.result_id
 
 
-def test_pre_origin_results_count_repricing_once_and_distinct_executions_separately(
+def test_pre_origin_results_dedupe_repricing_and_reject_ambiguous_executions(
     tmp_path: Path,
     monkeypatch,
 ) -> None:
@@ -979,6 +1786,27 @@ def test_pre_origin_results_count_repricing_once_and_distinct_executions_separat
         ResultCacheConfig(),
         current_pricing,
     )[0]
+    pre_origin_results = runner_module._load_results_for_refs(
+        store,
+        (TaskCheckRef(task.task_id, check.check_id),),
+        (agent,),
+        result_available_after="2026-01-01T00:00:00Z",
+        result_available_before="2026-01-20T00:00:00Z",
+    )
+    canonical_view = min((original, repriced), key=lambda result: result.result_id)
+    assert pre_origin_results == (canonical_view,)
+    assert runner_module._distinct_unambiguous_results(
+        (repriced, original),
+        {(task.task_id, check.check_id)},
+    ) == (canonical_view,)
+    discarded_view = max((original, repriced), key=lambda result: result.result_id)
+    assert discarded_view.result_id not in {
+        result.result_id for result in pre_origin_results
+    }
+    assert runner_module.result_store_module.result_execution_digest(original) == (
+        runner_module.result_store_module.result_execution_digest(repriced)
+    )
+
     distinct_workspace_run = replace(
         _workspace_run(task, check, agent),
         workspace_run_id="workspace-run-distinct",
@@ -993,42 +1821,18 @@ def test_pre_origin_results_count_repricing_once_and_distinct_executions_separat
     )
     store_result(distinct_result, store)
 
-    pre_origin_results = runner_module._load_results_for_refs(
-        store,
-        (TaskCheckRef(task.task_id, check.check_id),),
-        (agent,),
-        result_available_after="2026-01-01T00:00:00Z",
-        result_available_before="2026-01-20T00:00:00Z",
-    )
-    task_pool = _task_pool((task,), (check,))
-    ref = TaskCheckRef(task.task_id, check.check_id)
-    origin = replace(
-        _origin(task_pool, ref, ref),
-        origin_time="2026-01-20T00:00:00Z",
-        as_of_cutoff="2026-01-20T00:00:00Z",
-    )
-    snapshot = runner_module.selection_module.build_feature_snapshot(
-        origin,
-        task_pool,
-        (task,),
-        {check.check_id: check},
-        pre_origin_results,
-        FeatureConfig(("pre_origin_result_count",)),
-    )
-
-    assert repriced.result_id not in {result.result_id for result in pre_origin_results}
-    assert tuple(result.result_id for result in pre_origin_results) == (
-        original.result_id,
-        distinct_result.result_id,
-    )
-    assert runner_module.result_store_module.result_execution_digest(original) == (
-        runner_module.result_store_module.result_execution_digest(repriced)
-    )
+    with pytest.raises(ValueError, match="conflicting Result executions"):
+        runner_module._load_results_for_refs(
+            store,
+            (TaskCheckRef(task.task_id, check.check_id),),
+            (agent,),
+            result_available_after="2026-01-01T00:00:00Z",
+            result_available_before="2026-01-20T00:00:00Z",
+        )
     assert runner_module.result_store_module.result_execution_digest(original) != (
         runner_module.result_store_module.result_execution_digest(distinct_result)
     )
     assert original.verifier_metadata_digest != distinct_result.verifier_metadata_digest
-    assert snapshot.feature_records[0].value == 2
     assert (
         runner_module._load_results_for_refs(
             store,
@@ -1048,21 +1852,19 @@ def test_select_benchmark_loads_only_allowed_pre_origin_results_and_appends_sele
     check = _check()
     task_pool = _task_pool_with_refs(tmp_path, (task,), (check,))
     agent = _agent()
-    pre_origin_result = record_with_digest(
-        replace(
-            _result(
-                task,
-                check,
-                agent,
-                _workspace_config(),
-                _runtime_config(),
-                _scoring_config(),
-            ),
-            started_at="2026-01-03T00:00:00Z",
-            finished_at="2026-01-03T00:00:05Z",
-            result_available_at="2026-01-04T00:00:00Z",
-            result_digest="",
-        )
+    pre_origin_result = _redigest_result(
+        _result(
+            task,
+            check,
+            agent,
+            _workspace_config(),
+            _runtime_config(),
+            _scoring_config(),
+        ),
+        started_at="2026-01-03T00:00:00Z",
+        finished_at="2026-01-03T00:00:05Z",
+        source_result_available_at="2026-01-04T00:00:00Z",
+        result_available_at="2026-01-04T00:00:00Z",
     )
     queries = []
 
@@ -1192,12 +1994,12 @@ def test_prepare_evaluation_cells_and_score_selection_keep_selected_future_linka
     selected_ref = TaskCheckRef("selected-task", "selected-check")
     future_ref = TaskCheckRef("future-task", "future-check")
     origin = _origin(task_pool, selected_ref, future_ref)
-    selection = record_with_digest(
-        replace(
-            _selection(task_pool, selected_ref),
-            origin_id=origin.origin_id,
-            selection_digest="",
-        )
+    selection, _ = _persist_replayable_selection(
+        task_pool_bundle,
+        selected_ref,
+        (agent,),
+        store,
+        origin=origin,
     )
 
     def fail_if_workspace_runs(*args, **kwargs):
@@ -1353,15 +2155,17 @@ def test_evaluate_prospective_selection_links_later_pool_and_retains_censoring(
         task_pool_id="selection-pool",
         created_at="2026-01-04T00:00:00Z",
         source_window=TimeRange("2026-01-01T00:00:00Z", "2026-01-04T00:00:00Z"),
+        generation_evidence=True,
     )
     future_pool = _task_pool_with_refs(
         tmp_path,
-        (selected_task, future_task, censored_task),
-        (selected_check, future_check, censored_check),
+        (future_task, censored_task),
+        (future_check, censored_check),
         bundle_name="future-pool",
         task_pool_id="future-pool",
         created_at="2026-01-21T00:00:00Z",
-        source_window=TimeRange("2026-01-01T00:00:00Z", "2026-01-10T00:00:00Z"),
+        source_window=TimeRange("2026-01-06T00:00:00Z", "2026-01-10T00:00:00Z"),
+        generation_evidence=True,
     )
     monkeypatch.setattr(
         "barcarolle.selection.algorithms._now",
@@ -1948,12 +2752,9 @@ def test_evaluate_prospective_selection_replays_pre_origin_cache_identity_before
             **identity_updates,
         )
     )
-    tampered_result = record_with_digest(
-        replace(
-            pre_origin_result,
-            cache_identity=tampered_identity,
-            result_digest="",
-        )
+    tampered_result = _redigest_result(
+        pre_origin_result,
+        cache_identity=tampered_identity,
     )
     tampered_snapshot = replace(
         snapshot,
@@ -1978,6 +2779,7 @@ def test_evaluate_prospective_selection_replays_pre_origin_cache_identity_before
         selector_input,
         selector_input_id="",
         feature_snapshot_id=tampered_snapshot.feature_snapshot_id,
+        pre_origin_result_ids=(tampered_result.result_id,),
         pre_origin_result_digests=(tampered_result.result_digest,),
         leakage_policy_digest=tampered_snapshot.leakage_policy_digest,
         feature_records_digest=tampered_snapshot.feature_records_digest,
@@ -2674,14 +3476,14 @@ def test_prepare_evaluation_cells_reuses_persisted_missing_cell_set(
         selected_ref,
         TaskCheckRef("future-task", "future-check"),
     )
-    selection = record_with_digest(
-        replace(
-            _selection(task_pool, selected_ref),
-            origin_id=origin.origin_id,
-            selection_digest="",
-        )
-    )
     store = ResultStore(tmp_path / "results.jsonl")
+    selection, _ = _persist_replayable_selection(
+        task_pool_bundle,
+        selected_ref,
+        (_agent(),),
+        store,
+        origin=origin,
+    )
     monkeypatch.setattr(
         runner_module.result_store_module,
         "find_missing_results",
@@ -2856,12 +3658,12 @@ def test_score_selection_uses_exact_result_binding_frozen_in_evaluation_cells(
     selected_ref = TaskCheckRef("selected-task", "selected-check")
     future_ref = TaskCheckRef("future-task", "future-check")
     origin = _origin(task_pool, selected_ref, future_ref)
-    selection = record_with_digest(
-        replace(
-            _selection(task_pool, selected_ref),
-            origin_id=origin.origin_id,
-            selection_digest="",
-        )
+    selection, _ = _persist_replayable_selection(
+        task_pool_bundle,
+        selected_ref,
+        (agent,),
+        store,
+        origin=origin,
     )
     cell_set = prepare_evaluation_cells(
         selection,
@@ -3038,6 +3840,24 @@ def test_evaluate_selector_assigns_each_future_task_to_one_origin(
     )
 
     result_store = ResultStore(tmp_path / "results.jsonl")
+    selection_snapshot_queries = []
+    original_load_results = runner_module.result_store_module.load_results
+
+    def track_selection_snapshot(store, query):
+        if (
+            query.agent_ids == ("agent",)
+            and query.result_available_after == "2026-01-01T00:00:00Z"
+            and query.task_ids == ()
+            and query.check_ids == ()
+        ):
+            selection_snapshot_queries.append(query)
+        return original_load_results(store, query)
+
+    monkeypatch.setattr(
+        runner_module.result_store_module,
+        "load_results",
+        track_selection_snapshot,
+    )
     selections, cell_sets, matrices, metrics = evaluate_selector(
         _selector(),
         task_pool,
@@ -3063,6 +3883,11 @@ def test_evaluate_selector_assigns_each_future_task_to_one_origin(
         WorkspaceRunContext(),
     )
 
+    assert len(selection_snapshot_queries) == 1
+    assert (
+        selection_snapshot_queries[0].result_available_before
+        == "2026-01-07T00:00:00.000000Z"
+    )
     assert tuple(cell_set.future_task_check_refs for cell_set in cell_sets) == (
         (
             TaskCheckRef("first-future-task", "first-future-check"),
@@ -3588,21 +4413,19 @@ def test_evaluate_selector_does_not_open_post_origin_results_before_freeze(
         (selected_check, future_check),
     )
     agent = _agent()
-    pre_origin_result = record_with_digest(
-        replace(
-            _result(
-                selected_task,
-                selected_check,
-                agent,
-                _workspace_config(),
-                _runtime_config(),
-                _scoring_config(),
-            ),
-            started_at="2026-01-03T00:00:00Z",
-            finished_at="2026-01-03T00:00:05Z",
-            result_available_at="2026-01-04T00:00:00Z",
-            result_digest="",
-        )
+    pre_origin_result = _redigest_result(
+        _result(
+            selected_task,
+            selected_check,
+            agent,
+            _workspace_config(),
+            _runtime_config(),
+            _scoring_config(),
+        ),
+        started_at="2026-01-03T00:00:00Z",
+        finished_at="2026-01-03T00:00:05Z",
+        source_result_available_at="2026-01-04T00:00:00Z",
+        result_available_at="2026-01-04T00:00:00Z",
     )
     freeze_called = False
     pre_freeze_queries = []
@@ -3694,8 +4517,9 @@ def test_evaluate_selector_does_not_open_post_origin_results_before_freeze(
         query.result_available_before <= "2026-01-05T00:00:00.500000Z"
         for query in pre_freeze_queries
     )
-    assert pre_freeze_queries[0].task_ids == ("selected-task",)
-    assert pre_freeze_queries[0].check_ids == ("selected-check",)
+    assert len(pre_freeze_queries) == 1
+    assert pre_freeze_queries[0].task_ids == ()
+    assert pre_freeze_queries[0].check_ids == ()
     assert pre_freeze_queries[0].result_available_after == "2026-01-01T00:00:00Z"
     assert captured_selector_inputs[0].budget_digest == canonical_digest(
         {"max_task_checks": 7}
@@ -3786,10 +4610,156 @@ def test_report_cli_reads_relative_jsonl_paths_and_writes_reports(
         future_task_pool.task_pool_digest
     ]
     assert any(
-        claim.startswith("task_pool_coverage:")
+        claim.startswith("task_pool_bundle_internal_consistency:")
         for claim in claim_section["unsupported_claims"]
     )
     assert '"section_ids"' in capsys.readouterr().out
+
+
+def _write_runner_prepared_package(
+    root: Path,
+    candidate: task_pool_module.TaskCandidate,
+    reference_patch: CapturedDiff,
+    check_command: tuple[str, ...],
+    check_manifest: dict[str, object],
+    hidden_material: Path,
+) -> Path:
+    artifacts = root / "artifacts"
+    artifacts.mkdir(parents=True)
+    (artifacts / "reference.patch").write_text(
+        reference_patch.diff_text,
+        encoding="utf-8",
+    )
+    (artifacts / "check-manifest.json").write_text(
+        canonical_json(check_manifest),
+        encoding="utf-8",
+    )
+    (artifacts / "hidden-check.txt").write_bytes(hidden_material.read_bytes())
+    material = record_with_digest(
+        PreparedCandidateMaterialRecord(
+            candidate_id=candidate.candidate_id,
+            reference_patch_ref="artifacts/reference.patch",
+            reference_patch_digest=reference_patch.diff_digest,
+            check_command=check_command,
+            check_manifest_ref="artifacts/check-manifest.json",
+            check_manifest_digest=canonical_digest(check_manifest),
+            hidden_material_ref="artifacts/hidden-check.txt",
+            hidden_material_digest=hidden_material_digest(
+                artifacts / "hidden-check.txt"
+            ),
+            material_digest="",
+        )
+    )
+    frame_event = record_with_digest(
+        ObservedFrameEventRecord(
+            source_event_id=make_source_event_id(
+                candidate.repository_id,
+                candidate.source_family,
+                candidate.source_ref,
+            ),
+            repository_id=candidate.repository_id,
+            source_family=candidate.source_family,
+            source_ref=candidate.source_ref,
+            observed_at="2026-01-31T00:00:00.000000Z",
+            frame_event_digest="",
+        )
+    )
+    behavior = {
+        "generator_family": "fixture",
+        "adapter_version": "1",
+        "implementation_digest": "fixture-implementation",
+        "behavior_config": {"strategy": "stable"},
+    }
+    protocol = {
+        "source_kind": "issue",
+        "target_definition": "fixture issue frame",
+        "query_semantics": {"state": "resolved"},
+        "sampling_policy": {"mode": "all"},
+        "deduplication_policy": {"key": "source_ref"},
+    }
+    protocol_digest = canonical_digest(protocol)
+    frame = {
+        "frame_id": "fixture-frame",
+        "source_protocol_digest": protocol_digest,
+        "source_revision": "fixture-revision",
+        "window_start": "2026-01-01T00:00:00.000000Z",
+        "window_end": "2026-01-31T00:00:00.000000Z",
+        "event_inventory_ref": "observed-frame-events.jsonl",
+        "event_inventory_digest": canonical_digest((frame_event,)),
+        "observation_authority": "producer_attested",
+        "observation_receipt_digest": "fixture-receipt",
+        "known_blind_spots": [],
+        "coverage_mode": "one_source_event_per_frame_unit_v1",
+    }
+    run = {
+        "run_id": "fixture-run",
+        "producer_id": "fixture-producer",
+        "authority_kind": "external_attested",
+        "authority_digest": "fixture-authority",
+        "started_at": "2026-01-31T00:00:00.000000Z",
+        "finished_at": "2026-01-31T00:00:01.000000Z",
+        "input_snapshot_digest": "fixture-input",
+    }
+    adapter = {"schema_version": "fixture_v1", "count": 1}
+    manifest = record_with_digest(
+        PreparedCandidatePackageManifest(
+            schema_version=(task_pool_module.PREPARED_CANDIDATE_PACKAGE_SCHEMA_VERSION),
+            repository_id=candidate.repository_id,
+            candidate_records_ref="candidates.jsonl",
+            candidate_records_digest=canonical_digest((candidate,)),
+            excluded_source_event_records_ref="excluded-source-events.jsonl",
+            excluded_source_event_records_digest=canonical_digest(()),
+            material_records_ref="materials.jsonl",
+            material_records_digest=canonical_digest((material,)),
+            generator_behavior=behavior,
+            generator_behavior_digest=canonical_digest(behavior),
+            source_protocol=protocol,
+            source_protocol_digest=protocol_digest,
+            observed_frame=frame,
+            observed_frame_digest=canonical_digest(frame),
+            run=run,
+            run_digest=canonical_digest(run),
+            adapter_evidence_ref="adapter-evidence.jsonl",
+            adapter_evidence_digest=canonical_digest(adapter),
+            manifest_digest="",
+        )
+    )
+    write_jsonl_records(root / "candidates.jsonl", (candidate,))
+    write_jsonl_records(root / "excluded-source-events.jsonl", ())
+    write_jsonl_records(root / "materials.jsonl", (material,))
+    write_jsonl_records(root / "observed-frame-events.jsonl", (frame_event,))
+    write_jsonl_records(root / "adapter-evidence.jsonl", (adapter,))
+    manifest_path = root / "prepared-candidate-package.jsonl"
+    write_jsonl_records(manifest_path, (manifest,))
+    return manifest_path
+
+
+def _write_result_source_bundle(
+    root: Path,
+    results: tuple[ResultRecord, ...],
+    *,
+    availability_semantics: str,
+) -> Path:
+    root.mkdir(parents=True)
+    result_path = root / "results.jsonl"
+    write_jsonl_records(result_path, results)
+    manifest = record_with_digest(
+        ResultSourceManifest(
+            schema_version=(
+                runner_module.result_store_module.RESULT_SOURCE_MANIFEST_SCHEMA_VERSION
+            ),
+            producer_id="fixture-producer",
+            authority_digest="trusted-authority",
+            result_records_ref="results.jsonl",
+            result_records_digest=canonical_digest(results),
+            availability_semantics=availability_semantics,
+            created_at="2026-01-10T00:00:00.000000Z",
+            manifest_digest="",
+        )
+    )
+    manifest_path = root / "result-source-manifest.jsonl"
+    write_jsonl_records(manifest_path, (manifest,))
+    return manifest_path
 
 
 def _candidate_event(**overrides: object) -> dict[str, object]:
@@ -3975,6 +4945,19 @@ def _result(
     )
 
 
+def _redigest_result(
+    result: ResultRecord,
+    **changes: object,
+) -> ResultRecord:
+    draft = replace(
+        result,
+        result_id="",
+        result_digest="",
+        **changes,
+    )
+    return record_with_digest(replace(draft, result_id=make_result_id(draft)))
+
+
 def _task_pool(
     tasks: tuple[TaskRecord, ...],
     checks: tuple[CheckRecord, ...],
@@ -4014,7 +4997,10 @@ def _task_pool(
         rejected_candidate_ids=(),
         rejection_summary_digest=canonical_digest({"rejected_count": 0, "reasons": {}}),
         certification_evidence_digest=canonical_digest(evidence),
+        generation_provenance_ref=None,
+        generation_provenance_digest=None,
         generator_config_digest="generator",
+        source_protocol_digest=None,
         certification_config_digest=canonical_digest({"repeat_count": 1}),
         created_at=created_at,
         source_window_start=(
@@ -4064,6 +5050,7 @@ def _task_pool_with_refs(
     task_pool_id: str = "task-pool",
     created_at: str | None = None,
     source_window: TimeRange | None = None,
+    generation_evidence: bool = False,
 ) -> TaskPoolRecord:
     bundle_root = tmp_path if bundle_name is None else tmp_path / bundle_name
     bundle_root.mkdir(parents=True, exist_ok=True)
@@ -4071,11 +5058,13 @@ def _task_pool_with_refs(
     check_ref = bundle_root / "checks.jsonl"
     evidence_ref = bundle_root / "certification-evidence.jsonl"
     source_event_ref = bundle_root / "source-events.jsonl"
+    evidence = _certification_evidence(tasks, checks)
+    source_events = _source_events(tasks, checks)
     write_jsonl_records(task_ref, tasks)
     write_jsonl_records(check_ref, checks)
-    write_jsonl_records(evidence_ref, _certification_evidence(tasks, checks))
-    write_jsonl_records(source_event_ref, _source_events(tasks, checks))
-    return record_with_digest(
+    write_jsonl_records(evidence_ref, evidence)
+    write_jsonl_records(source_event_ref, source_events)
+    task_pool = record_with_digest(
         replace(
             _task_pool(
                 tasks,
@@ -4088,6 +5077,101 @@ def _task_pool_with_refs(
             check_records_ref=str(check_ref),
             certification_evidence_ref=str(evidence_ref),
             source_event_records_ref=str(source_event_ref),
+            task_pool_digest="",
+        )
+    )
+    if not generation_evidence:
+        return task_pool
+    if source_window is None:
+        raise ValueError("test generation evidence requires a source_window")
+    behavior = {
+        "generator_family": "test-fixture",
+        "adapter_version": "1",
+        "implementation_digest": "test-fixture-implementation",
+        "behavior_config": {"mode": "stable"},
+    }
+    protocol = {
+        "source_kind": "fixture",
+        "target_definition": "fixture source frame",
+        "query_semantics": {"mode": "all"},
+        "sampling_policy": {"mode": "all"},
+        "deduplication_policy": {"key": "source_ref"},
+    }
+    protocol_digest = canonical_digest(protocol)
+    observed_at = format_utc_timestamp(
+        parse_utc_timestamp(created_at or task_pool.created_at)
+    )
+    frame_events = tuple(
+        record_with_digest(
+            ObservedFrameEventRecord(
+                source_event_id=event.source_event_id,
+                repository_id=event.repository_id,
+                source_family=event.source_family,
+                source_ref=event.source_ref,
+                observed_at=observed_at,
+                frame_event_digest="",
+            )
+        )
+        for event in source_events
+    )
+    frame_ref = bundle_root / "observed-frame-events.jsonl"
+    frame = {
+        "frame_id": f"{task_pool_id}-frame",
+        "source_protocol_digest": protocol_digest,
+        "source_revision": "fixture-revision",
+        "window_start": format_utc_timestamp(parse_utc_timestamp(source_window.start)),
+        "window_end": format_utc_timestamp(parse_utc_timestamp(source_window.end)),
+        "event_inventory_ref": str(frame_ref),
+        "event_inventory_digest": canonical_digest(frame_events),
+        "observation_authority": "source_authoritative",
+        "observation_receipt_digest": "fixture-receipt",
+        "known_blind_spots": [],
+        "coverage_mode": "one_source_event_per_frame_unit_v1",
+    }
+    run = {
+        "run_id": f"{task_pool_id}-run",
+        "producer_id": "fixture",
+        "authority_kind": "barcarolle_managed",
+        "authority_digest": "fixture-authority",
+        "started_at": observed_at,
+        "finished_at": observed_at,
+        "input_snapshot_digest": "fixture-input",
+    }
+    outputs = {
+        "prepared_candidate_records_digest": "fixture-candidates",
+        "adapter_evidence_ref": None,
+        "adapter_evidence_digest": None,
+        "task_records_digest": task_pool.task_records_digest,
+        "check_records_digest": task_pool.check_records_digest,
+        "source_event_records_digest": task_pool.source_event_records_digest,
+        "certification_evidence_digest": task_pool.certification_evidence_digest,
+    }
+    manifest = record_with_digest(
+        GenerationProvenanceManifest(
+            schema_version=task_pool_module.GENERATION_PROVENANCE_SCHEMA_VERSION,
+            generator_behavior=behavior,
+            generator_behavior_digest=canonical_digest(behavior),
+            source_protocol=protocol,
+            source_protocol_digest=protocol_digest,
+            observed_frame=frame,
+            observed_frame_digest=canonical_digest(frame),
+            run=run,
+            run_digest=canonical_digest(run),
+            outputs=outputs,
+            outputs_digest=canonical_digest(outputs),
+            manifest_digest="",
+        )
+    )
+    provenance_ref = bundle_root / "generation-provenance.jsonl"
+    write_jsonl_records(frame_ref, frame_events)
+    write_jsonl_records(provenance_ref, (manifest,))
+    return record_with_digest(
+        replace(
+            task_pool,
+            generation_provenance_ref=str(provenance_ref),
+            generation_provenance_digest=manifest.manifest_digest,
+            generator_config_digest=manifest.generator_behavior_digest,
+            source_protocol_digest=manifest.source_protocol_digest,
             task_pool_digest="",
         )
     )
@@ -4234,6 +5318,61 @@ def _selection_for_origin(
             selection_digest="",
         )
     )
+
+
+def _persist_replayable_selection(
+    task_pool_bundle: task_pool_module.TaskPoolBundle,
+    selected_ref: TaskCheckRef,
+    agents: tuple[AgentRecord, ...],
+    store: ResultStore,
+    *,
+    origin: RollingOriginRecord | None = None,
+) -> tuple[BenchmarkSelectionRecord, RollingOriginRecord]:
+    task_pool = task_pool_bundle.task_pool
+    if origin is None:
+        effective_origin = replace(
+            _origin(task_pool, selected_ref, selected_ref),
+            origin_id="",
+            future_holdout_task_check_refs=(),
+            origin_digest="",
+        )
+        effective_origin = replace(
+            effective_origin,
+            origin_id=make_rolling_origin_id(effective_origin),
+        )
+        effective_origin = record_with_digest(effective_origin)
+    else:
+        effective_origin = origin
+    feature_config = FeatureConfig(("task_count",))
+    snapshot = runner_module.selection_module.build_feature_snapshot(
+        effective_origin,
+        task_pool,
+        task_pool_bundle.tasks,
+        task_pool_bundle.checks_by_id,
+        (),
+        feature_config,
+    )
+    selector_input = runner_module.selection_module.build_selector_input(
+        effective_origin,
+        task_pool,
+        snapshot,
+        (),
+        agents,
+        SelectionBudget(1),
+        feature_config.leakage_policy(effective_origin.as_of_cutoff),
+    )
+    selector = _selector()
+    selection = runner_module.selection_module.select_with_selector(
+        selector_input,
+        snapshot,
+        selector,
+    )
+    runner_module._append_selector_record(selector, store)
+    runner_module._append_origin_record(effective_origin, store)
+    runner_module._append_feature_snapshot_record(snapshot, store)
+    runner_module._append_selector_input_record(selector_input, store)
+    persisted = runner_module._append_selection_record(selection, store)
+    return persisted, effective_origin
 
 
 def _origin(

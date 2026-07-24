@@ -43,6 +43,7 @@ from barcarolle.records import (
     validate_selector_input,
 )
 from barcarolle.result_store import (
+    ambiguous_result_execution_keys,
     result_execution_digest,
     result_matrix_evidence_errors,
 )
@@ -71,7 +72,7 @@ from barcarolle.task_pool import (
 
 
 _CLAIM_NAMES = (
-    "task_pool_coverage",
+    "task_pool_bundle_internal_consistency",
     "benchmark_selection_frozen",
     "cache_completeness",
     "selector_metrics",
@@ -157,7 +158,10 @@ def build_task_pool_report(
         "source_event_records_digest": task_pool.source_event_records_digest,
         "certification_evidence_digest": task_pool.certification_evidence_digest,
         "rejection_summary_digest": task_pool.rejection_summary_digest,
+        "generation_provenance_ref": task_pool.generation_provenance_ref,
+        "generation_provenance_digest": task_pool.generation_provenance_digest,
         "generator_config_digest": task_pool.generator_config_digest,
+        "source_protocol_digest": task_pool.source_protocol_digest,
         "certification_config_digest": task_pool.certification_config_digest,
         "source_window_start": task_pool.source_window_start,
         "source_window_end": task_pool.source_window_end,
@@ -172,6 +176,7 @@ def build_task_pool_report(
             "task_records_digest": task_pool.task_records_digest,
             "check_records_digest": task_pool.check_records_digest,
             "source_event_records_digest": task_pool.source_event_records_digest,
+            "generation_provenance_digest": (task_pool.generation_provenance_digest),
         },
         artifact_paths=_task_pool_artifact_paths((task_pool,)),
         supported_claims=supported_claims,
@@ -203,6 +208,7 @@ def build_result_report(
         "pricing_versions": tuple(
             sorted({result.pricing_version for result in results})
         ),
+        "result_evidence": _result_evidence_summary(results),
         "cache_coverage": {
             "result_count": len(execution_results),
             "pricing_view_count": pricing_view_count,
@@ -210,7 +216,11 @@ def build_result_report(
             "unique_cache_identity_count": len(set(cache_identity_digests)),
         },
     }
-    supported_claims = ("agent_results_summary",) if results and not limitations else ()
+    supported_claims = (
+        ("agent_results_summary", "result_evidence_provenance_summary")
+        if results and not limitations
+        else ()
+    )
     return ReportSection(
         section_id="agent_results",
         heading="Agent Results",
@@ -218,6 +228,15 @@ def build_result_report(
         source_digests={
             "result_digests": tuple(sorted(result.result_digest for result in results)),
             "cache_identity_digests": cache_identity_digests,
+            "external_source_manifest_digests": tuple(
+                sorted(
+                    {
+                        result.evidence_source_manifest_digest
+                        for result in results
+                        if result.evidence_source_manifest_digest is not None
+                    }
+                )
+            ),
             "agent_manifest_digests": tuple(
                 sorted(agent.agent_manifest_digest for agent in agents)
             ),
@@ -226,6 +245,67 @@ def build_result_report(
         unsupported_claims=limitations,
         limitations=limitations,
     )
+
+
+def _result_evidence_summary(
+    results: Sequence[ResultRecord],
+) -> Mapping[str, Any]:
+    execution_digests_by_source: dict[str, set[str]] = {}
+    execution_digests_by_policy: dict[str, set[str]] = {}
+    for result in results:
+        execution_digest = result_execution_digest(result)
+        execution_digests_by_source.setdefault(
+            result.evidence_source_kind,
+            set(),
+        ).add(execution_digest)
+        execution_digests_by_policy.setdefault(
+            result.availability_policy,
+            set(),
+        ).add(execution_digest)
+    historical_count = len(
+        execution_digests_by_policy.get(
+            "producer_attested_historical_v1",
+            set(),
+        )
+    )
+    notes = []
+    if historical_count:
+        notes.append(
+            "producer_attested_historical_v1 preserves producer-declared "
+            "availability and is not a Barcarolle observation-time claim"
+        )
+    if execution_digests_by_policy.get("import_time_floor_v1"):
+        notes.append(
+            "import_time_floor_v1 makes external evidence available no earlier "
+            "than its recorded import time"
+        )
+    return {
+        "source_kind_record_counts": dict(
+            sorted(Counter(result.evidence_source_kind for result in results).items())
+        ),
+        "source_kind_execution_counts": {
+            source: len(digests)
+            for source, digests in sorted(execution_digests_by_source.items())
+        },
+        "availability_policy_record_counts": dict(
+            sorted(Counter(result.availability_policy for result in results).items())
+        ),
+        "availability_policy_execution_counts": {
+            policy: len(digests)
+            for policy, digests in sorted(execution_digests_by_policy.items())
+        },
+        "external_source_manifest_digests": tuple(
+            sorted(
+                {
+                    result.evidence_source_manifest_digest
+                    for result in results
+                    if result.evidence_source_manifest_digest is not None
+                }
+            )
+        ),
+        "historical_attestation_execution_count": historical_count,
+        "notes": tuple(notes),
+    }
 
 
 def _result_report_limitations(
@@ -238,11 +318,30 @@ def _result_report_limitations(
         *_validation_errors("result", results, validate_result),
         *_result_agent_identity_errors(results, agents),
         *_result_measurement_errors(results),
+        *_result_execution_conflict_errors(results),
         *_pricing_view_errors(results),
     )
     if not results:
         limitations = (*limitations, "result evidence is absent")
     return limitations
+
+
+def _result_execution_conflict_errors(
+    results: Sequence[ResultRecord],
+) -> tuple[str, ...]:
+    return tuple(
+        "conflicting Result executions share cache identity "
+        f"{cache_identity.identity_digest}"
+        for _, _, _, cache_identity in sorted(
+            ambiguous_result_execution_keys(results),
+            key=lambda key: (
+                key[0],
+                key[1],
+                key[2],
+                key[3].identity_digest,
+            ),
+        )
+    )
 
 
 def _result_execution_summary(
@@ -1081,12 +1180,12 @@ def build_claim_boundary(
     supported: list[str] = []
     unsupported: list[str] = []
     requested = set(claim_config.requested_claims)
-    if "task_pool_coverage" in requested:
+    if "task_pool_bundle_internal_consistency" in requested:
         _claim(
             supported,
             unsupported,
-            "task_pool_coverage",
-            *_task_pool_coverage_claim(task_pool, artifact_root),
+            "task_pool_bundle_internal_consistency",
+            *_task_pool_bundle_internal_consistency_claim(task_pool, artifact_root),
         )
     if "benchmark_selection_frozen" in requested:
         _claim(
@@ -1207,11 +1306,13 @@ def _task_pool_artifact_paths(
             task_pool.check_records_ref,
             task_pool.certification_evidence_ref,
             task_pool.source_event_records_ref,
+            task_pool.generation_provenance_ref,
         )
+        if ref is not None
     )
 
 
-def _task_pool_coverage_claim(
+def _task_pool_bundle_internal_consistency_claim(
     task_pool: TaskPoolRecord,
     artifact_root: Path | None,
 ) -> tuple[bool, str]:
@@ -1430,6 +1531,7 @@ def _agent_result_identity_claim(
         *matrix_identity_errors,
         *_record_identity_errors(results, "result_id", "result"),
         *_record_identity_errors(agents, "agent_id", "Agent"),
+        *_result_execution_conflict_errors(results),
         *_result_agent_identity_errors(results, agents),
         *_result_identity_trace_errors(result_matrices, results),
         *_result_matrix_trace_errors(result_matrices, results),
@@ -1611,7 +1713,6 @@ def _task_pool_validation_errors(
         "check_records_digest",
         "rejection_summary_digest",
         "source_event_records_digest",
-        "generator_config_digest",
         "certification_config_digest",
     ):
         if not getattr(task_pool, field):
@@ -1669,6 +1770,27 @@ def _task_pool_source_event_summary(
             bundle.source_events,
             bundle.certification_evidence,
         ),
+        **_task_pool_generation_summary(bundle),
+    }
+
+
+def _task_pool_generation_summary(bundle: TaskPoolBundle) -> Mapping[str, Any]:
+    provenance = getattr(bundle, "generation_provenance", None)
+    if provenance is None:
+        return {
+            "generation_evidence_state": "absent",
+            "generation_authority_kind": None,
+            "observed_frame_authority": None,
+            "observed_frame_event_count": 0,
+        }
+    frame = provenance.observed_frame
+    return {
+        "generation_evidence_state": "bound",
+        "generation_authority_kind": provenance.run.get("authority_kind"),
+        "observed_frame_authority": (
+            None if frame is None else frame.get("observation_authority")
+        ),
+        "observed_frame_event_count": len(getattr(bundle, "observed_frame_events", ())),
     }
 
 
@@ -2196,6 +2318,7 @@ def _selector_provenance_errors(
         indexes,
     )
 
+    errors.extend(_result_execution_conflict_errors(results))
     errors.extend(_result_identity_trace_errors(result_matrices, results))
     errors.extend(_result_matrix_trace_errors(result_matrices, results))
     if agents:

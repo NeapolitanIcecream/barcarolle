@@ -226,10 +226,26 @@ def materialize_prospective_future_cohort(
         raise ValueError(
             "future Task Pool repository does not match selection Task Pool"
         )
+    if (
+        selection_task_pool.generation_provenance_digest is None
+        or future_task_pool.generation_provenance_digest is None
+        or selection_task_pool.generator_config_digest is None
+        or future_task_pool.generator_config_digest is None
+        or selection_task_pool.source_protocol_digest is None
+        or future_task_pool.source_protocol_digest is None
+    ):
+        raise ValueError(
+            "prospective evaluation requires bound Generator behavior and "
+            "source protocol evidence"
+        )
     if selection_task_pool.generator_config_digest != (
         future_task_pool.generator_config_digest
     ):
         raise ValueError("future Task Pool generator config has changed")
+    if selection_task_pool.source_protocol_digest != (
+        future_task_pool.source_protocol_digest
+    ):
+        raise ValueError("future Task Pool source protocol has changed")
     if selection_task_pool.certification_config_digest != (
         future_task_pool.certification_config_digest
     ):
@@ -308,8 +324,12 @@ def _validate_prospective_source_windows(
     assert isinstance(selection_start, str)
     assert isinstance(future_start, str)
     assert isinstance(future_end, str)
-    if parse_utc_timestamp(future_start) > parse_utc_timestamp(selection_start):
-        raise ValueError("future Task Pool source window drops prior source coverage")
+    if parse_utc_timestamp(future_start) > parse_utc_timestamp(
+        origin.future_window_start
+    ):
+        raise ValueError(
+            "future Task Pool does not cover the prospective future window start"
+        )
     if parse_utc_timestamp(future_end) < parse_utc_timestamp(origin.future_window_end):
         raise ValueError(
             "future Task Pool does not cover the prospective future window"

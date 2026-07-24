@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import Mapping as MappingABC, Sequence as SequenceABC
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import datetime
 from pathlib import Path
 from tempfile import mkdtemp
@@ -16,6 +16,10 @@ import shutil
 
 from barcarolle.records import (
     CheckRecord,
+    GenerationProvenanceManifest,
+    ObservedFrameEventRecord,
+    PreparedCandidateMaterialRecord,
+    PreparedCandidatePackageManifest,
     RuntimeConfig,
     SourceEventRecord,
     TaskPoolRecord,
@@ -43,6 +47,7 @@ from barcarolle.records import (
 from barcarolle.verification import (
     VERIFICATION_ADAPTER_DIGEST,
     CheckOutcome,
+    hidden_material_digest,
     summarize_evidence,
 )
 from barcarolle.workspace import (
@@ -93,6 +98,52 @@ _CERTIFICATION_EVIDENCE_FIELDS = (
     "check_execution_binding_digest",
     "verification_adapter_digest",
 )
+GENERATION_PROVENANCE_SCHEMA_VERSION = "barcarolle_generation_provenance_v1"
+PREPARED_CANDIDATE_PACKAGE_SCHEMA_VERSION = "barcarolle_prepared_candidate_package_v1"
+_GENERATOR_BEHAVIOR_FIELDS = {
+    "generator_family",
+    "adapter_version",
+    "implementation_digest",
+    "behavior_config",
+}
+_SOURCE_PROTOCOL_FIELDS = {
+    "source_kind",
+    "target_definition",
+    "query_semantics",
+    "sampling_policy",
+    "deduplication_policy",
+}
+_OBSERVED_FRAME_FIELDS = {
+    "frame_id",
+    "source_protocol_digest",
+    "source_revision",
+    "window_start",
+    "window_end",
+    "event_inventory_ref",
+    "event_inventory_digest",
+    "observation_authority",
+    "observation_receipt_digest",
+    "known_blind_spots",
+    "coverage_mode",
+}
+_GENERATION_RUN_FIELDS = {
+    "run_id",
+    "producer_id",
+    "authority_kind",
+    "authority_digest",
+    "started_at",
+    "finished_at",
+    "input_snapshot_digest",
+}
+_GENERATION_OUTPUT_FIELDS = {
+    "prepared_candidate_records_digest",
+    "adapter_evidence_ref",
+    "adapter_evidence_digest",
+    "task_records_digest",
+    "check_records_digest",
+    "source_event_records_digest",
+    "certification_evidence_digest",
+}
 
 
 @dataclass(frozen=True)
@@ -155,6 +206,16 @@ class CandidateBatch:
 
 
 @dataclass(frozen=True)
+class PreparedCandidatePackage:
+    manifest: PreparedCandidatePackageManifest
+    batch: CandidateBatch
+    materials: tuple[PreparedCandidateMaterialRecord, ...]
+    observed_frame_events: tuple[ObservedFrameEventRecord, ...]
+    adapter_evidence: Mapping[str, Any] | None
+    package_root: Path
+
+
+@dataclass(frozen=True)
 class CertificationResult:
     candidate_id: str
     accepted: bool
@@ -172,6 +233,9 @@ class TaskPoolBundle:
     tasks: tuple[TaskRecord, ...]
     checks: tuple[CheckRecord, ...]
     certification_evidence: tuple[Mapping[str, Any], ...]
+    generation_provenance: GenerationProvenanceManifest | None = None
+    observed_frame_events: tuple[ObservedFrameEventRecord, ...] = ()
+    adapter_evidence: Mapping[str, Any] | None = None
 
     @property
     def checks_by_id(self) -> Mapping[str, CheckRecord]:
@@ -249,8 +313,681 @@ def import_task_candidates(
     return _candidate_batch(candidates, ())
 
 
-def candidate_batch(candidates: Sequence[TaskCandidate]) -> CandidateBatch:
-    return _candidate_batch(candidates, ())
+def candidate_batch(
+    candidates: Sequence[TaskCandidate],
+    excluded_source_events: Sequence[SourceEventRecord] = (),
+) -> CandidateBatch:
+    return _candidate_batch(candidates, excluded_source_events)
+
+
+def load_prepared_candidate_package(
+    manifest_path: Path,
+) -> PreparedCandidatePackage:
+    """Load one strict, language-neutral Generator handoff without executing it."""
+    manifest_file = manifest_path.resolve()
+    if manifest_file.name != "prepared-candidate-package.jsonl":
+        raise ValueError(
+            "prepared candidate manifest must be named prepared-candidate-package.jsonl"
+        )
+    try:
+        manifests = tuple(
+            load_jsonl_records(manifest_file, PreparedCandidatePackageManifest)
+        )
+    except (KeyError, OSError, TypeError, ValueError) as exc:
+        raise ValueError(
+            "prepared candidate manifest is unavailable or invalid"
+        ) from exc
+    if len(manifests) != 1:
+        raise ValueError("prepared candidate manifest must contain exactly one record")
+    manifest = manifests[0]
+    root = manifest_file.parent
+    candidates = _load_prepared_records(
+        root,
+        manifest.candidate_records_ref,
+        "candidates.jsonl",
+        TaskCandidate,
+        "candidate records",
+    )
+    excluded = _load_prepared_records(
+        root,
+        manifest.excluded_source_event_records_ref,
+        "excluded-source-events.jsonl",
+        SourceEventRecord,
+        "excluded source event records",
+    )
+    materials = _load_prepared_records(
+        root,
+        manifest.material_records_ref,
+        "materials.jsonl",
+        PreparedCandidateMaterialRecord,
+        "candidate material records",
+    )
+    frame_events: tuple[ObservedFrameEventRecord, ...] = ()
+    if manifest.observed_frame is not None:
+        frame_ref = manifest.observed_frame.get("event_inventory_ref")
+        if not isinstance(frame_ref, str) or not frame_ref:
+            raise ValueError("prepared observed frame event_inventory_ref is invalid")
+        frame_events = _load_prepared_records(
+            root,
+            frame_ref,
+            "observed-frame-events.jsonl",
+            ObservedFrameEventRecord,
+            "observed frame events",
+        )
+    adapter_evidence = None
+    if manifest.adapter_evidence_ref is not None:
+        adapter_path = _prepared_package_ref_path(
+            root,
+            manifest.adapter_evidence_ref,
+            "adapter-evidence.jsonl",
+        )
+        try:
+            adapter_records = _load_mapping_records(adapter_path)
+        except (OSError, TypeError, ValueError) as exc:
+            raise ValueError("adapter evidence is unavailable or invalid") from exc
+        if len(adapter_records) != 1:
+            raise ValueError("adapter evidence must contain exactly one object")
+        adapter_evidence = adapter_records[0]
+    batch = _candidate_batch(candidates, excluded)
+    package = PreparedCandidatePackage(
+        manifest=manifest,
+        batch=batch,
+        materials=materials,
+        observed_frame_events=frame_events,
+        adapter_evidence=adapter_evidence,
+        package_root=root,
+    )
+    errors = _prepared_candidate_package_errors(package)
+    if errors:
+        raise ValueError("prepared candidate package is invalid: " + "; ".join(errors))
+    return package
+
+
+def prepared_candidate_build_inputs(
+    package: PreparedCandidatePackage,
+) -> tuple[
+    Mapping[str, CapturedDiff],
+    Mapping[str, tuple[str, ...]],
+    Mapping[str, Path],
+    Mapping[str, Mapping[str, object]],
+]:
+    """Resolve already-validated package material for Task Pool certification."""
+    errors = _prepared_candidate_package_errors(package)
+    if errors:
+        raise ValueError("prepared candidate package is invalid: " + "; ".join(errors))
+    reference_patches: dict[str, CapturedDiff] = {}
+    check_commands: dict[str, tuple[str, ...]] = {}
+    hidden_material_paths: dict[str, Path] = {}
+    check_manifests: dict[str, Mapping[str, object]] = {}
+    for material in package.materials:
+        patch_path = _prepared_material_ref_path(
+            package.package_root,
+            material.reference_patch_ref,
+        )
+        patch_text = patch_path.read_text(encoding="utf-8")
+        reference_patches[material.candidate_id] = CapturedDiff(
+            diff_text=patch_text,
+            diff_digest=material.reference_patch_digest,
+        )
+        check_commands[material.candidate_id] = material.check_command
+        hidden_material_paths[material.candidate_id] = _prepared_material_ref_path(
+            package.package_root,
+            material.hidden_material_ref,
+        )
+        manifest_path = _prepared_material_ref_path(
+            package.package_root,
+            material.check_manifest_ref,
+        )
+        check_manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        if not isinstance(check_manifest, MappingABC):
+            raise ValueError("prepared check manifest must be an object")
+        check_manifests[material.candidate_id] = dict(check_manifest)
+    return (
+        reference_patches,
+        check_commands,
+        hidden_material_paths,
+        check_manifests,
+    )
+
+
+def bind_task_pool_generation_provenance(
+    task_pool: TaskPoolRecord,
+    bundle_dir: Path,
+    package: PreparedCandidatePackage,
+) -> tuple[
+    TaskPoolRecord,
+    GenerationProvenanceManifest | None,
+    tuple[ObservedFrameEventRecord, ...],
+    Mapping[str, Any] | None,
+]:
+    errors = _prepared_candidate_package_errors(package)
+    if errors:
+        raise ValueError("prepared candidate package is invalid: " + "; ".join(errors))
+    prepared = package.manifest
+    if prepared.generator_behavior is None:
+        return task_pool, None, (), None
+    if prepared.generator_behavior_digest is None or prepared.run is None:
+        raise ValueError("prepared generation evidence is incomplete")
+    frame = None
+    frame_digest = None
+    frame_events: tuple[ObservedFrameEventRecord, ...] = ()
+    if prepared.observed_frame is not None:
+        frame = {
+            **prepared.observed_frame,
+            "event_inventory_ref": (
+                bundle_dir / "observed-frame-events.jsonl"
+            ).as_posix(),
+        }
+        frame_digest = canonical_digest(frame)
+        frame_events = package.observed_frame_events
+    adapter_ref = (
+        (bundle_dir / "adapter-evidence.jsonl").as_posix()
+        if package.adapter_evidence is not None
+        else None
+    )
+    adapter_digest = (
+        canonical_digest(package.adapter_evidence)
+        if package.adapter_evidence is not None
+        else None
+    )
+    outputs = {
+        "prepared_candidate_records_digest": prepared.candidate_records_digest,
+        "adapter_evidence_ref": adapter_ref,
+        "adapter_evidence_digest": adapter_digest,
+        "task_records_digest": task_pool.task_records_digest,
+        "check_records_digest": task_pool.check_records_digest,
+        "source_event_records_digest": task_pool.source_event_records_digest,
+        "certification_evidence_digest": task_pool.certification_evidence_digest,
+    }
+    provenance = record_with_digest(
+        GenerationProvenanceManifest(
+            schema_version=GENERATION_PROVENANCE_SCHEMA_VERSION,
+            generator_behavior=prepared.generator_behavior,
+            generator_behavior_digest=prepared.generator_behavior_digest,
+            source_protocol=prepared.source_protocol,
+            source_protocol_digest=prepared.source_protocol_digest,
+            observed_frame=frame,
+            observed_frame_digest=frame_digest,
+            run=prepared.run,
+            run_digest=cast(str, prepared.run_digest),
+            outputs=outputs,
+            outputs_digest=canonical_digest(outputs),
+            manifest_digest="",
+        )
+    )
+    bound_task_pool = record_with_digest(
+        replace(
+            task_pool,
+            generation_provenance_ref=(
+                bundle_dir / "generation-provenance.jsonl"
+            ).as_posix(),
+            generation_provenance_digest=provenance.manifest_digest,
+            generator_config_digest=provenance.generator_behavior_digest,
+            source_protocol_digest=provenance.source_protocol_digest,
+            task_pool_digest="",
+        )
+    )
+    return (
+        bound_task_pool,
+        provenance,
+        frame_events,
+        package.adapter_evidence,
+    )
+
+
+def _load_prepared_records(
+    root: Path,
+    ref: str,
+    expected_name: str,
+    record_type: type,
+    label: str,
+) -> tuple[Any, ...]:
+    path = _prepared_package_ref_path(root, ref, expected_name)
+    try:
+        return tuple(load_jsonl_records(path, record_type))
+    except (KeyError, OSError, TypeError, ValueError) as exc:
+        raise ValueError(f"{label} are unavailable or invalid") from exc
+
+
+def _prepared_package_ref_path(
+    root: Path,
+    ref: str,
+    expected_name: str,
+) -> Path:
+    if not isinstance(ref, str) or not ref:
+        raise ValueError(f"prepared package {expected_name} ref is invalid")
+    path = Path(ref)
+    if path.is_absolute() or path.name != expected_name:
+        raise ValueError(
+            f"prepared package ref must be relative and named {expected_name}"
+        )
+    resolved = (root / path).resolve()
+    if not resolved.is_relative_to(root.resolve()):
+        raise ValueError("prepared package ref escapes package root")
+    return resolved
+
+
+def _prepared_material_ref_path(root: Path, ref: str) -> Path:
+    if not isinstance(ref, str) or not ref:
+        raise ValueError("prepared material ref is invalid")
+    path = Path(ref)
+    if path.is_absolute():
+        raise ValueError("prepared material ref must be relative")
+    resolved = (root / path).resolve()
+    if not resolved.is_relative_to(root.resolve()):
+        raise ValueError("prepared material ref escapes package root")
+    return resolved
+
+
+def _prepared_candidate_package_errors(
+    package: PreparedCandidatePackage,
+) -> tuple[str, ...]:
+    manifest = package.manifest
+    errors: list[str] = []
+    if manifest.schema_version != PREPARED_CANDIDATE_PACKAGE_SCHEMA_VERSION:
+        errors.append("prepared candidate schema_version is not supported")
+    try:
+        expected_manifest_digest = canonical_digest(manifest, exclude_self_digest=True)
+    except (OverflowError, TypeError, ValueError):
+        errors.append("prepared candidate manifest is not strict canonical JSON")
+    else:
+        if manifest.manifest_digest != expected_manifest_digest:
+            errors.append("prepared candidate manifest digest does not match")
+    candidates = package.batch.candidates
+    excluded = package.batch.excluded_source_events
+    if manifest.repository_id == "":
+        errors.append("prepared candidate repository_id is required")
+    if any(
+        candidate.repository_id != manifest.repository_id for candidate in candidates
+    ):
+        errors.append("prepared candidates must use the manifest repository")
+    if canonical_digest(candidates) != manifest.candidate_records_digest:
+        errors.append("prepared candidate records digest does not match")
+    if canonical_digest(excluded) != manifest.excluded_source_event_records_digest:
+        errors.append("prepared excluded source event records digest does not match")
+    if canonical_digest(package.materials) != manifest.material_records_digest:
+        errors.append("prepared candidate material records digest does not match")
+    errors.extend(_prepared_candidate_record_errors(candidates))
+    errors.extend(
+        _prepared_material_errors(
+            package,
+            candidates,
+        )
+    )
+    errors.extend(_prepared_generation_evidence_errors(package))
+    return tuple(errors)
+
+
+def _prepared_candidate_record_errors(
+    candidates: Sequence[TaskCandidate],
+) -> tuple[str, ...]:
+    errors: list[str] = []
+    for candidate in candidates:
+        if not (
+            isinstance(candidate.base_commit, str)
+            and len(candidate.base_commit) in {40, 64}
+            and all(
+                character in "0123456789abcdef" for character in candidate.base_commit
+            )
+        ):
+            errors.append(
+                f"prepared candidate {candidate.candidate_id} base_commit must be a full Git object ID"
+            )
+        for field_name in (
+            "source_resolved_at",
+            "task_material_available_at",
+            "check_material_available_at",
+        ):
+            value = getattr(candidate, field_name)
+            try:
+                instant = parse_utc_timestamp(value)
+            except (TypeError, ValueError):
+                errors.append(
+                    f"prepared candidate {candidate.candidate_id} {field_name} is invalid"
+                )
+                continue
+            if value != format_utc_timestamp(instant):
+                errors.append(
+                    f"prepared candidate {candidate.candidate_id} {field_name} is not canonical UTC"
+                )
+        if any(not ref for ref in candidate.solver_material_refs):
+            errors.append(
+                f"prepared candidate {candidate.candidate_id} solver material refs must be nonempty"
+            )
+    return tuple(errors)
+
+
+def _prepared_material_errors(
+    package: PreparedCandidatePackage,
+    candidates: Sequence[TaskCandidate],
+) -> tuple[str, ...]:
+    errors: list[str] = []
+    candidate_by_id = {candidate.candidate_id: candidate for candidate in candidates}
+    material_ids = tuple(material.candidate_id for material in package.materials)
+    if material_ids != tuple(sorted(material_ids)):
+        errors.append("prepared candidate materials must be ordered by candidate_id")
+    if len(material_ids) != len(set(material_ids)):
+        errors.append("prepared candidate materials contain duplicate candidate IDs")
+    if set(material_ids) != set(candidate_by_id):
+        errors.append("prepared candidate materials must exactly cover candidates")
+    for material in package.materials:
+        try:
+            expected_digest = canonical_digest(material, exclude_self_digest=True)
+        except (OverflowError, TypeError, ValueError):
+            errors.append(
+                f"prepared candidate material {material.candidate_id} is not canonical"
+            )
+            continue
+        if material.material_digest != expected_digest:
+            errors.append(
+                f"prepared candidate material {material.candidate_id} digest does not match"
+            )
+        candidate = candidate_by_id.get(material.candidate_id)
+        if candidate is None:
+            continue
+        if not material.check_command or any(
+            not isinstance(item, str) or not item for item in material.check_command
+        ):
+            errors.append(
+                f"prepared candidate material {material.candidate_id} check command is invalid"
+            )
+        try:
+            patch_path = _prepared_material_ref_path(
+                package.package_root,
+                material.reference_patch_ref,
+            )
+            patch_text = patch_path.read_text(encoding="utf-8")
+        except (OSError, TypeError, ValueError) as exc:
+            errors.append(
+                f"prepared candidate material {material.candidate_id} reference patch is unavailable: {exc}"
+            )
+        else:
+            if hashlib.sha256(patch_text.encode("utf-8")).hexdigest() != (
+                material.reference_patch_digest
+            ):
+                errors.append(
+                    f"prepared candidate material {material.candidate_id} reference patch digest does not match"
+                )
+        try:
+            manifest_path = _prepared_material_ref_path(
+                package.package_root,
+                material.check_manifest_ref,
+            )
+            check_manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        except (json.JSONDecodeError, OSError, TypeError, ValueError) as exc:
+            errors.append(
+                f"prepared candidate material {material.candidate_id} check manifest is unavailable: {exc}"
+            )
+        else:
+            if not isinstance(check_manifest, MappingABC):
+                errors.append(
+                    f"prepared candidate material {material.candidate_id} check manifest must be an object"
+                )
+            elif canonical_digest(check_manifest) != material.check_manifest_digest:
+                errors.append(
+                    f"prepared candidate material {material.candidate_id} check manifest digest does not match"
+                )
+        if material.check_manifest_digest != candidate.check_manifest_digest:
+            errors.append(
+                f"prepared candidate material {material.candidate_id} check manifest does not match candidate"
+            )
+        try:
+            hidden_path = _prepared_material_ref_path(
+                package.package_root,
+                material.hidden_material_ref,
+            )
+            observed_hidden_digest = hidden_material_digest(hidden_path)
+        except (OSError, TypeError, ValueError) as exc:
+            errors.append(
+                f"prepared candidate material {material.candidate_id} hidden material is unavailable: {exc}"
+            )
+        else:
+            if observed_hidden_digest != material.hidden_material_digest:
+                errors.append(
+                    f"prepared candidate material {material.candidate_id} hidden material digest does not match"
+                )
+        if material.hidden_material_digest != candidate.hidden_check_bundle_digest:
+            errors.append(
+                f"prepared candidate material {material.candidate_id} hidden material does not match candidate"
+            )
+    return tuple(errors)
+
+
+def _prepared_generation_evidence_errors(
+    package: PreparedCandidatePackage,
+) -> tuple[str, ...]:
+    manifest = package.manifest
+    errors: list[str] = []
+    if manifest.generator_behavior is None:
+        if any(
+            value is not None
+            for value in (
+                manifest.generator_behavior_digest,
+                manifest.source_protocol,
+                manifest.source_protocol_digest,
+                manifest.observed_frame,
+                manifest.observed_frame_digest,
+                manifest.run,
+                manifest.run_digest,
+                manifest.adapter_evidence_ref,
+                manifest.adapter_evidence_digest,
+                package.adapter_evidence,
+            )
+        ):
+            errors.append(
+                "prepared generation evidence must be entirely absent without generator_behavior"
+            )
+        if package.observed_frame_events:
+            errors.append("prepared observed frame events require generator_behavior")
+        return tuple(errors)
+    errors.extend(
+        _generation_section_errors(
+            "generator_behavior",
+            manifest.generator_behavior,
+            _GENERATOR_BEHAVIOR_FIELDS,
+            manifest.generator_behavior_digest,
+        )
+    )
+    errors.extend(_generator_behavior_errors(manifest.generator_behavior))
+    if manifest.run is None:
+        errors.append("prepared generation run is required")
+    else:
+        errors.extend(
+            _generation_section_errors(
+                "run",
+                manifest.run,
+                _GENERATION_RUN_FIELDS,
+                manifest.run_digest,
+            )
+        )
+        errors.extend(_generation_run_errors(manifest.run))
+        if manifest.run.get("authority_kind") != "external_attested":
+            errors.append(
+                "prepared generation run must use external_attested authority"
+            )
+    errors.extend(
+        _optional_generation_section_errors(
+            "source_protocol",
+            manifest.source_protocol,
+            _SOURCE_PROTOCOL_FIELDS,
+            manifest.source_protocol_digest,
+        )
+    )
+    if manifest.source_protocol is not None:
+        errors.extend(_source_protocol_errors(manifest.source_protocol))
+    errors.extend(
+        _optional_generation_section_errors(
+            "observed_frame",
+            manifest.observed_frame,
+            _OBSERVED_FRAME_FIELDS,
+            manifest.observed_frame_digest,
+        )
+    )
+    if manifest.observed_frame is None:
+        if package.observed_frame_events:
+            errors.append("prepared observed frame events exist without observed_frame")
+    else:
+        if manifest.observed_frame.get("observation_authority") != "producer_attested":
+            errors.append(
+                "prepared observed frame must use producer_attested authority"
+            )
+        errors.extend(_prepared_observed_frame_errors(package))
+    if package.adapter_evidence is None:
+        if (
+            manifest.adapter_evidence_ref is not None
+            or manifest.adapter_evidence_digest is not None
+        ):
+            errors.append("prepared adapter evidence is absent but still referenced")
+    else:
+        if (
+            not isinstance(manifest.adapter_evidence_ref, str)
+            or not manifest.adapter_evidence_ref
+        ):
+            errors.append("prepared adapter_evidence_ref is required")
+        if canonical_digest(package.adapter_evidence) != (
+            manifest.adapter_evidence_digest
+        ):
+            errors.append("prepared adapter evidence digest does not match")
+    return tuple(errors)
+
+
+def _prepared_observed_frame_errors(
+    package: PreparedCandidatePackage,
+) -> tuple[str, ...]:
+    frame = package.manifest.observed_frame
+    if frame is None:
+        return ()
+    errors = list(
+        _observed_frame_metadata_errors(
+            frame,
+            package.manifest.source_protocol_digest,
+            "prepared observed_frame",
+        )
+    )
+    if canonical_digest(package.observed_frame_events) != frame.get(
+        "event_inventory_digest"
+    ):
+        errors.append("prepared observed frame inventory digest does not match")
+    expected_ids = tuple(
+        sorted(
+            (
+                *(
+                    make_source_event_id(
+                        candidate.repository_id,
+                        candidate.source_family,
+                        candidate.source_ref,
+                    )
+                    for candidate in package.batch.candidates
+                ),
+                *(
+                    event.source_event_id
+                    for event in package.batch.excluded_source_events
+                ),
+            )
+        )
+    )
+    observed_ids = tuple(
+        event.source_event_id for event in package.observed_frame_events
+    )
+    if observed_ids != tuple(sorted(observed_ids)) or len(observed_ids) != len(
+        set(observed_ids)
+    ):
+        errors.append(
+            "prepared observed frame events must have unique sorted identities"
+        )
+    if observed_ids != expected_ids:
+        errors.append(
+            "prepared observed frame must exactly cover candidates and excluded events"
+        )
+    for event in package.observed_frame_events:
+        errors.extend(
+            _observed_frame_event_errors_for_repository(
+                package.manifest.repository_id,
+                event,
+            )
+        )
+    return tuple(errors)
+
+
+def _observed_frame_metadata_errors(
+    frame: Mapping[str, object],
+    source_protocol_digest: str | None,
+    label: str,
+) -> tuple[str, ...]:
+    errors: list[str] = []
+    if source_protocol_digest is None:
+        errors.append(f"{label} requires source_protocol evidence")
+    if frame.get("source_protocol_digest") != source_protocol_digest:
+        errors.append(f"{label} source_protocol_digest does not match manifest")
+    if frame.get("coverage_mode") != "one_source_event_per_frame_unit_v1":
+        errors.append(f"{label} coverage_mode is not supported")
+    authority = frame.get("observation_authority")
+    if authority not in {"source_authoritative", "producer_attested"}:
+        errors.append(f"{label} observation_authority is not normalized")
+    receipt = frame.get("observation_receipt_digest")
+    if authority == "source_authoritative" and (
+        not isinstance(receipt, str) or not receipt
+    ):
+        errors.append(f"source-authoritative {label} requires an observation receipt")
+    elif receipt is not None and (not isinstance(receipt, str) or not receipt):
+        errors.append(f"{label} observation_receipt_digest must be nonempty or null")
+    for field_name in ("frame_id", "event_inventory_ref", "event_inventory_digest"):
+        if not isinstance(frame.get(field_name), str) or not frame.get(field_name):
+            errors.append(f"{label} {field_name} is required")
+    source_revision = frame.get("source_revision")
+    if source_revision is not None and (
+        not isinstance(source_revision, str) or not source_revision
+    ):
+        errors.append(f"{label} source_revision must be nonempty or null")
+    blind_spots = frame.get("known_blind_spots")
+    if not isinstance(blind_spots, SequenceABC) or isinstance(blind_spots, str):
+        errors.append(f"{label} known_blind_spots must be an array")
+    elif any(not isinstance(item, str) or not item for item in blind_spots):
+        errors.append(f"{label} known_blind_spots must contain nonempty strings")
+    errors.extend(
+        _ordered_generation_timestamps(
+            frame,
+            ("window_start", "window_end"),
+            label,
+        )
+    )
+    return tuple(errors)
+
+
+def _observed_frame_event_errors_for_repository(
+    repository_id: str,
+    event: ObservedFrameEventRecord,
+) -> tuple[str, ...]:
+    errors: list[str] = []
+    if event.repository_id != repository_id:
+        errors.append(
+            f"observed frame event {event.source_event_id} repository does not match package"
+        )
+    expected_id = make_source_event_id(
+        event.repository_id,
+        event.source_family,
+        event.source_ref,
+    )
+    if event.source_event_id != expected_id:
+        errors.append(
+            f"observed frame event {event.source_event_id} identity does not match source"
+        )
+    try:
+        observed = parse_utc_timestamp(event.observed_at)
+    except (TypeError, ValueError):
+        errors.append(
+            f"observed frame event {event.source_event_id} observed_at is invalid"
+        )
+    else:
+        if event.observed_at != format_utc_timestamp(observed):
+            errors.append(
+                f"observed frame event {event.source_event_id} observed_at is not canonical UTC"
+            )
+    if event.frame_event_digest != canonical_digest(event, exclude_self_digest=True):
+        errors.append(
+            f"observed frame event {event.source_event_id} digest does not match"
+        )
+    return tuple(errors)
 
 
 def finalize_source_event_records(
@@ -442,7 +1179,6 @@ def freeze_task_pool(
             "check_records_ref",
             "certification_evidence_ref",
             "source_event_records_ref",
-            "generator_config_digest",
             "certification_config_digest",
             "created_at",
         ),
@@ -482,7 +1218,12 @@ def freeze_task_pool(
         ),
         rejection_summary_digest=canonical_digest(rejection_summary),
         certification_evidence_digest=canonical_digest(certification_evidence),
-        generator_config_digest=required_metadata["generator_config_digest"],
+        generation_provenance_ref=_optional_str(metadata, "generation_provenance_ref"),
+        generation_provenance_digest=_optional_str(
+            metadata, "generation_provenance_digest"
+        ),
+        generator_config_digest=_optional_str(metadata, "generator_config_digest"),
+        source_protocol_digest=_optional_str(metadata, "source_protocol_digest"),
         certification_config_digest=required_metadata["certification_config_digest"],
         created_at=required_metadata["created_at"],
         source_window_start=source_window_start,
@@ -536,6 +1277,9 @@ def validate_task_pool_artifacts(
     checks: Sequence[CheckRecord],
     certification_evidence: Sequence[Mapping[str, Any]],
     source_events: Sequence[SourceEventRecord],
+    generation_provenance: GenerationProvenanceManifest | None = None,
+    observed_frame_events: Sequence[ObservedFrameEventRecord] = (),
+    adapter_evidence: Mapping[str, Any] | None = None,
 ) -> ValidationResult:
     tasks_tuple = tuple(tasks)
     checks_tuple = tuple(checks)
@@ -567,6 +1311,15 @@ def validate_task_pool_artifacts(
             tasks_tuple,
             checks_tuple,
             evidence_tuple,
+            source_events_tuple,
+        )
+    )
+    errors.extend(
+        _generation_provenance_errors(
+            task_pool,
+            generation_provenance,
+            tuple(observed_frame_events),
+            adapter_evidence,
             source_events_tuple,
         )
     )
@@ -613,6 +1366,9 @@ def validated_task_pool_bundle(
     checks: Sequence[CheckRecord],
     certification_evidence: Sequence[Mapping[str, Any]],
     source_events: Sequence[SourceEventRecord],
+    generation_provenance: GenerationProvenanceManifest | None = None,
+    observed_frame_events: Sequence[ObservedFrameEventRecord] = (),
+    adapter_evidence: Mapping[str, Any] | None = None,
 ) -> TaskPoolBundle:
     validation = validate_task_pool_artifacts(
         task_pool,
@@ -620,6 +1376,9 @@ def validated_task_pool_bundle(
         checks,
         certification_evidence,
         source_events,
+        generation_provenance,
+        observed_frame_events,
+        adapter_evidence,
     )
     if not validation.ok:
         raise ValueError("task pool bundle is invalid: " + "; ".join(validation.errors))
@@ -632,7 +1391,449 @@ def validated_task_pool_bundle(
             cast(Mapping[str, Any], canonical_data(record))
             for record in certification_evidence
         ),
+        generation_provenance=generation_provenance,
+        observed_frame_events=tuple(observed_frame_events),
+        adapter_evidence=(
+            None
+            if adapter_evidence is None
+            else cast(Mapping[str, Any], canonical_data(adapter_evidence))
+        ),
     )
+
+
+def _generation_provenance_errors(
+    task_pool: TaskPoolRecord,
+    manifest: GenerationProvenanceManifest | None,
+    frame_events: tuple[ObservedFrameEventRecord, ...],
+    adapter_evidence: Mapping[str, Any] | None,
+    source_events: tuple[SourceEventRecord, ...],
+) -> tuple[str, ...]:
+    errors: list[str] = []
+    has_ref = task_pool.generation_provenance_ref is not None
+    has_digest = task_pool.generation_provenance_digest is not None
+    has_binding = has_ref and has_digest
+    if has_ref != has_digest:
+        errors.append(
+            "generation provenance ref and digest must be both present or both absent"
+        )
+    if manifest is None:
+        if has_binding:
+            errors.append("generation provenance is missing from Task Pool bundle")
+        if frame_events:
+            errors.append("observed frame events require generation provenance")
+        if adapter_evidence is not None:
+            errors.append("adapter evidence requires generation provenance")
+        if task_pool.source_protocol_digest is not None:
+            errors.append("source protocol digest requires generation provenance")
+        return tuple(errors)
+    if not has_binding:
+        errors.append("generation provenance is not bound by TaskPoolRecord")
+    elif task_pool.generation_provenance_ref is not None:
+        errors.extend(
+            _bundle_member_ref_errors(
+                task_pool,
+                task_pool.generation_provenance_ref,
+                "generation-provenance.jsonl",
+            )
+        )
+    if manifest.schema_version != GENERATION_PROVENANCE_SCHEMA_VERSION:
+        errors.append("generation provenance schema_version is not supported")
+    try:
+        expected_manifest_digest = canonical_digest(manifest, exclude_self_digest=True)
+    except (OverflowError, TypeError, ValueError):
+        errors.append("generation provenance is not strict canonical JSON")
+    else:
+        if manifest.manifest_digest != expected_manifest_digest:
+            errors.append(
+                "generation provenance manifest_digest does not match canonical content"
+            )
+        if task_pool.generation_provenance_digest != manifest.manifest_digest:
+            errors.append("generation provenance digest does not match TaskPoolRecord")
+    errors.extend(
+        _generation_section_errors(
+            "generator_behavior",
+            manifest.generator_behavior,
+            _GENERATOR_BEHAVIOR_FIELDS,
+            manifest.generator_behavior_digest,
+        )
+    )
+    errors.extend(_generator_behavior_errors(manifest.generator_behavior))
+    if task_pool.generator_config_digest != manifest.generator_behavior_digest:
+        errors.append("generator behavior digest does not match TaskPoolRecord")
+    errors.extend(
+        _optional_generation_section_errors(
+            "source_protocol",
+            manifest.source_protocol,
+            _SOURCE_PROTOCOL_FIELDS,
+            manifest.source_protocol_digest,
+        )
+    )
+    if task_pool.source_protocol_digest != manifest.source_protocol_digest:
+        errors.append("source protocol digest does not match TaskPoolRecord")
+    if manifest.source_protocol is not None:
+        errors.extend(_source_protocol_errors(manifest.source_protocol))
+    errors.extend(
+        _optional_generation_section_errors(
+            "observed_frame",
+            manifest.observed_frame,
+            _OBSERVED_FRAME_FIELDS,
+            manifest.observed_frame_digest,
+        )
+    )
+    errors.extend(
+        _generation_section_errors(
+            "run",
+            manifest.run,
+            _GENERATION_RUN_FIELDS,
+            manifest.run_digest,
+        )
+    )
+    errors.extend(_generation_run_errors(manifest.run))
+    errors.extend(
+        _generation_section_errors(
+            "outputs",
+            manifest.outputs,
+            _GENERATION_OUTPUT_FIELDS,
+            manifest.outputs_digest,
+        )
+    )
+    errors.extend(
+        _generation_output_errors(
+            task_pool,
+            manifest.outputs,
+            adapter_evidence,
+        )
+    )
+    errors.extend(
+        _observed_frame_errors(
+            task_pool,
+            manifest,
+            frame_events,
+            source_events,
+        )
+    )
+    return tuple(errors)
+
+
+def _generation_section_errors(
+    label: str,
+    section: object,
+    expected_fields: set[str],
+    section_digest: object,
+) -> tuple[str, ...]:
+    if not isinstance(section, MappingABC):
+        return (f"generation provenance {label} must be an object",)
+    errors = list(_exact_mapping_fields_errors(label, section, expected_fields))
+    try:
+        expected_digest = canonical_digest(section)
+    except (OverflowError, TypeError, ValueError):
+        errors.append(f"generation provenance {label} is not strict canonical JSON")
+    else:
+        if section_digest != expected_digest:
+            errors.append(
+                f"generation provenance {label} digest does not match content"
+            )
+    return tuple(errors)
+
+
+def _optional_generation_section_errors(
+    label: str,
+    section: object,
+    expected_fields: set[str],
+    section_digest: object,
+) -> tuple[str, ...]:
+    if section is None:
+        return (
+            ()
+            if section_digest is None
+            else (f"generation provenance {label} digest must be null",)
+        )
+    if section_digest is None:
+        return (
+            f"generation provenance {label} digest is required when section exists",
+            *_generation_section_errors(
+                label,
+                section,
+                expected_fields,
+                section_digest,
+            ),
+        )
+    return _generation_section_errors(
+        label,
+        section,
+        expected_fields,
+        section_digest,
+    )
+
+
+def _exact_mapping_fields_errors(
+    label: str,
+    value: Mapping[str, Any],
+    expected_fields: set[str],
+) -> tuple[str, ...]:
+    observed = set(value)
+    missing = tuple(sorted(expected_fields - observed))
+    unknown = tuple(sorted(observed - expected_fields))
+    errors: list[str] = []
+    if missing:
+        errors.append(f"generation provenance {label} is missing: {', '.join(missing)}")
+    if unknown:
+        errors.append(
+            f"generation provenance {label} has unknown keys: {', '.join(unknown)}"
+        )
+    return tuple(errors)
+
+
+def _generator_behavior_errors(behavior: Mapping[str, Any]) -> tuple[str, ...]:
+    errors: list[str] = []
+    for field_name in ("generator_family", "adapter_version", "implementation_digest"):
+        if not isinstance(behavior.get(field_name), str) or not behavior.get(
+            field_name
+        ):
+            errors.append(
+                f"generation provenance generator_behavior {field_name} is required"
+            )
+    if not isinstance(behavior.get("behavior_config"), MappingABC):
+        errors.append(
+            "generation provenance generator_behavior behavior_config must be an object"
+        )
+    return tuple(errors)
+
+
+def _source_protocol_errors(protocol: Mapping[str, Any]) -> tuple[str, ...]:
+    errors: list[str] = []
+    for field_name in ("source_kind", "target_definition"):
+        if not isinstance(protocol.get(field_name), str) or not protocol.get(
+            field_name
+        ):
+            errors.append(
+                f"generation provenance source_protocol {field_name} is required"
+            )
+    for field_name in (
+        "query_semantics",
+        "sampling_policy",
+        "deduplication_policy",
+    ):
+        if not isinstance(protocol.get(field_name), MappingABC):
+            errors.append(
+                f"generation provenance source_protocol {field_name} must be an object"
+            )
+    return tuple(errors)
+
+
+def _generation_run_errors(run: Mapping[str, Any]) -> tuple[str, ...]:
+    errors: list[str] = []
+    for field_name in (
+        "run_id",
+        "producer_id",
+        "authority_digest",
+        "input_snapshot_digest",
+    ):
+        if not isinstance(run.get(field_name), str) or not run.get(field_name):
+            errors.append(f"generation provenance run {field_name} is required")
+    if run.get("authority_kind") not in {
+        "barcarolle_managed",
+        "external_attested",
+    }:
+        errors.append("generation provenance run authority_kind is not normalized")
+    errors.extend(
+        _ordered_generation_timestamps(
+            run,
+            ("started_at", "finished_at"),
+            "generation provenance run",
+        )
+    )
+    return tuple(errors)
+
+
+def _generation_output_errors(
+    task_pool: TaskPoolRecord,
+    outputs: Mapping[str, Any],
+    adapter_evidence: Mapping[str, Any] | None,
+) -> tuple[str, ...]:
+    errors: list[str] = []
+    for field_name in (
+        "prepared_candidate_records_digest",
+        "task_records_digest",
+        "check_records_digest",
+        "source_event_records_digest",
+        "certification_evidence_digest",
+    ):
+        if not isinstance(outputs.get(field_name), str) or not outputs.get(field_name):
+            errors.append(f"generation provenance outputs {field_name} is required")
+    expected = {
+        "task_records_digest": task_pool.task_records_digest,
+        "check_records_digest": task_pool.check_records_digest,
+        "source_event_records_digest": task_pool.source_event_records_digest,
+        "certification_evidence_digest": task_pool.certification_evidence_digest,
+    }
+    for field_name, digest in expected.items():
+        if outputs.get(field_name) != digest:
+            errors.append(
+                f"generation provenance outputs {field_name} does not match Task Pool"
+            )
+    adapter_ref = outputs.get("adapter_evidence_ref")
+    adapter_digest = outputs.get("adapter_evidence_digest")
+    if adapter_evidence is None:
+        if adapter_ref is not None or adapter_digest is not None:
+            errors.append(
+                "generation provenance adapter evidence is absent but still referenced"
+            )
+    else:
+        if not isinstance(adapter_ref, str) or not adapter_ref:
+            errors.append("generation provenance adapter_evidence_ref is required")
+        else:
+            errors.extend(
+                _bundle_member_ref_errors(
+                    task_pool,
+                    adapter_ref,
+                    "adapter-evidence.jsonl",
+                )
+            )
+        if adapter_digest != canonical_digest(adapter_evidence):
+            errors.append(
+                "generation provenance adapter evidence digest does not match content"
+            )
+    return tuple(errors)
+
+
+def _observed_frame_errors(
+    task_pool: TaskPoolRecord,
+    manifest: GenerationProvenanceManifest,
+    frame_events: tuple[ObservedFrameEventRecord, ...],
+    source_events: tuple[SourceEventRecord, ...],
+) -> tuple[str, ...]:
+    frame = manifest.observed_frame
+    if frame is None:
+        return (
+            ()
+            if not frame_events
+            else ("observed frame events exist without an observed_frame section",)
+        )
+    errors = list(
+        _observed_frame_metadata_errors(
+            frame,
+            manifest.source_protocol_digest,
+            "observed_frame",
+        )
+    )
+    if (
+        frame.get("window_start") != task_pool.source_window_start
+        or frame.get("window_end") != task_pool.source_window_end
+    ):
+        errors.append("observed frame window does not match Task Pool source window")
+    event_inventory_ref = frame.get("event_inventory_ref")
+    if isinstance(event_inventory_ref, str) and event_inventory_ref:
+        errors.extend(
+            _bundle_member_ref_errors(
+                task_pool,
+                event_inventory_ref,
+                "observed-frame-events.jsonl",
+            )
+        )
+    if canonical_digest(frame_events) != frame.get("event_inventory_digest"):
+        errors.append("observed frame event inventory digest does not match content")
+    event_ids = tuple(event.source_event_id for event in frame_events)
+    if event_ids != tuple(sorted(event_ids)) or len(event_ids) != len(set(event_ids)):
+        errors.append("observed frame events must have unique sorted identities")
+    source_event_ids = tuple(event.source_event_id for event in source_events)
+    if event_ids != source_event_ids:
+        errors.append(
+            "observed frame inventory must exactly cover SourceEvent outcomes"
+        )
+    for event in frame_events:
+        errors.extend(_observed_frame_event_errors(task_pool, event))
+    return tuple(errors)
+
+
+def _observed_frame_event_errors(
+    task_pool: TaskPoolRecord,
+    event: ObservedFrameEventRecord,
+) -> tuple[str, ...]:
+    errors: list[str] = []
+    expected_id = make_source_event_id(
+        event.repository_id,
+        event.source_family,
+        event.source_ref,
+    )
+    if event.source_event_id != expected_id:
+        errors.append(
+            f"observed frame event {event.source_event_id} identity does not match source"
+        )
+    if event.repository_id != task_pool.repository_id:
+        errors.append(
+            f"observed frame event {event.source_event_id} repository does not match Task Pool"
+        )
+    try:
+        if event.observed_at != format_utc_timestamp(
+            parse_utc_timestamp(event.observed_at)
+        ):
+            errors.append(
+                f"observed frame event {event.source_event_id} observed_at is not canonical UTC"
+            )
+    except (TypeError, ValueError):
+        errors.append(
+            f"observed frame event {event.source_event_id} observed_at is invalid"
+        )
+    try:
+        expected_digest = canonical_digest(event, exclude_self_digest=True)
+    except (OverflowError, TypeError, ValueError):
+        errors.append(
+            f"observed frame event {event.source_event_id} is not strict canonical JSON"
+        )
+    else:
+        if event.frame_event_digest != expected_digest:
+            errors.append(
+                f"observed frame event {event.source_event_id} digest does not match"
+            )
+    return tuple(errors)
+
+
+def _ordered_generation_timestamps(
+    value: Mapping[str, Any],
+    field_names: tuple[str, str],
+    label: str,
+) -> tuple[str, ...]:
+    parsed: list[datetime] = []
+    errors: list[str] = []
+    for field_name in field_names:
+        timestamp = value.get(field_name)
+        if not isinstance(timestamp, str) or not timestamp:
+            errors.append(f"{label} {field_name} is required")
+            continue
+        try:
+            instant = parse_utc_timestamp(timestamp)
+        except (TypeError, ValueError):
+            errors.append(f"{label} {field_name} is invalid")
+            continue
+        if timestamp != format_utc_timestamp(instant):
+            errors.append(f"{label} {field_name} is not canonical UTC")
+        parsed.append(instant)
+    if len(parsed) == 2 and parsed[0] > parsed[1]:
+        errors.append(f"{label} timestamps are out of order")
+    return tuple(errors)
+
+
+def _bundle_member_ref_errors(
+    task_pool: TaskPoolRecord,
+    ref: str,
+    expected_name: str,
+) -> tuple[str, ...]:
+    normalized = ref[5:] if ref.startswith("path:") else ref
+    candidate = Path(normalized)
+    task_ref = task_pool.task_records_ref
+    normalized_task_ref = task_ref[5:] if task_ref.startswith("path:") else task_ref
+    task_path = Path(normalized_task_ref)
+    task_parent = task_path.parent
+    if (
+        candidate.name != expected_name
+        or candidate.is_absolute() != task_path.is_absolute()
+        or candidate.parent != task_parent
+    ):
+        return (
+            f"generation provenance {expected_name} ref must share the Task Pool bundle directory",
+        )
+    return ()
 
 
 def load_validated_task_pool_bundle(
@@ -678,12 +1879,64 @@ def load_validated_task_pool_bundle(
         )
     except (KeyError, OSError, TypeError, ValueError) as exc:
         raise ValueError("source event records are unavailable or invalid") from exc
+    generation_provenance = None
+    observed_frame_events: tuple[ObservedFrameEventRecord, ...] = ()
+    adapter_evidence = None
+    if task_pool.generation_provenance_ref is not None:
+        try:
+            manifests = tuple(
+                load_jsonl_records(
+                    _artifact_ref_path(
+                        task_pool.generation_provenance_ref,
+                        artifact_root,
+                    ),
+                    GenerationProvenanceManifest,
+                )
+            )
+        except (KeyError, OSError, TypeError, ValueError) as exc:
+            raise ValueError("generation provenance is unavailable or invalid") from exc
+        if len(manifests) != 1:
+            raise ValueError("generation provenance must contain exactly one manifest")
+        generation_provenance = manifests[0]
+        if generation_provenance.observed_frame is not None:
+            frame_ref = generation_provenance.observed_frame.get("event_inventory_ref")
+            if not isinstance(frame_ref, str) or not frame_ref:
+                raise ValueError(
+                    "observed frame event inventory ref is unavailable or invalid"
+                )
+            try:
+                observed_frame_events = tuple(
+                    load_jsonl_records(
+                        _artifact_ref_path(frame_ref, artifact_root),
+                        ObservedFrameEventRecord,
+                    )
+                )
+            except (KeyError, OSError, TypeError, ValueError) as exc:
+                raise ValueError(
+                    "observed frame event inventory is unavailable or invalid"
+                ) from exc
+        adapter_ref = generation_provenance.outputs.get("adapter_evidence_ref")
+        if adapter_ref is not None:
+            if not isinstance(adapter_ref, str) or not adapter_ref:
+                raise ValueError("adapter evidence ref is unavailable or invalid")
+            try:
+                adapter_records = _load_mapping_records(
+                    _artifact_ref_path(adapter_ref, artifact_root)
+                )
+            except (OSError, TypeError, ValueError) as exc:
+                raise ValueError("adapter evidence is unavailable or invalid") from exc
+            if len(adapter_records) != 1:
+                raise ValueError("adapter evidence must contain exactly one object")
+            adapter_evidence = adapter_records[0]
     return validated_task_pool_bundle(
         task_pool,
         tasks,
         checks,
         evidence,
         source_events,
+        generation_provenance,
+        observed_frame_events,
+        adapter_evidence,
     )
 
 
@@ -718,6 +1971,9 @@ def publish_task_pool_bundle(
         bundle.checks,
         bundle.certification_evidence,
         bundle.source_events,
+        bundle.generation_provenance,
+        bundle.observed_frame_events,
+        bundle.adapter_evidence,
     )
     relative_dir = _task_pool_bundle_relative_dir(bundle.task_pool)
     root = artifact_root.resolve()
@@ -733,6 +1989,9 @@ def publish_task_pool_bundle(
         checks_path = staging / "checks.jsonl"
         evidence_path = staging / "certification-evidence.jsonl"
         source_events_path = staging / "source-events.jsonl"
+        provenance_path = staging / "generation-provenance.jsonl"
+        frame_events_path = staging / "observed-frame-events.jsonl"
+        adapter_evidence_path = staging / "adapter-evidence.jsonl"
         write_jsonl_records(manifest_path, (bundle.task_pool,))
         write_jsonl_records(tasks_path, bundle.tasks)
         write_jsonl_records(checks_path, bundle.checks)
@@ -741,12 +2000,27 @@ def publish_task_pool_bundle(
             bundle.certification_evidence,
         )
         write_jsonl_records(source_events_path, bundle.source_events)
+        optional_paths: list[Path] = []
+        if bundle.generation_provenance is not None:
+            write_jsonl_records(provenance_path, (bundle.generation_provenance,))
+            optional_paths.append(provenance_path)
+        has_observed_frame = (
+            bundle.generation_provenance is not None
+            and bundle.generation_provenance.observed_frame is not None
+        )
+        if has_observed_frame:
+            write_jsonl_records(frame_events_path, bundle.observed_frame_events)
+            optional_paths.append(frame_events_path)
+        if bundle.adapter_evidence is not None:
+            write_jsonl_records(adapter_evidence_path, (bundle.adapter_evidence,))
+            optional_paths.append(adapter_evidence_path)
         for path in (
             manifest_path,
             tasks_path,
             checks_path,
             evidence_path,
             source_events_path,
+            *optional_paths,
         ):
             _fsync_file(path)
         _fsync_directory(staging)
@@ -759,12 +2033,40 @@ def publish_task_pool_bundle(
                 SourceEventRecord,
             )
         )
+        staged_provenance = (
+            tuple(
+                load_jsonl_records(
+                    provenance_path,
+                    GenerationProvenanceManifest,
+                )
+            )[0]
+            if bundle.generation_provenance is not None
+            else None
+        )
+        staged_frame_events = (
+            tuple(
+                load_jsonl_records(
+                    frame_events_path,
+                    ObservedFrameEventRecord,
+                )
+            )
+            if has_observed_frame
+            else ()
+        )
+        staged_adapter_evidence = (
+            _load_mapping_records(adapter_evidence_path)[0]
+            if bundle.adapter_evidence is not None
+            else None
+        )
         validated_task_pool_bundle(
             bundle.task_pool,
             staged_tasks,
             staged_checks,
             staged_evidence,
             staged_source_events,
+            staged_provenance,
+            staged_frame_events,
+            staged_adapter_evidence,
         )
         try:
             staging.replace(target)
@@ -1493,6 +2795,10 @@ def summarize_task_pool(task_pool: TaskPoolRecord) -> Mapping[str, object]:
         "certification_evidence_digest": task_pool.certification_evidence_digest,
         "source_event_records_ref": task_pool.source_event_records_ref,
         "source_event_records_digest": task_pool.source_event_records_digest,
+        "generation_provenance_ref": task_pool.generation_provenance_ref,
+        "generation_provenance_digest": task_pool.generation_provenance_digest,
+        "generator_config_digest": task_pool.generator_config_digest,
+        "source_protocol_digest": task_pool.source_protocol_digest,
         "source_window_start": task_pool.source_window_start,
         "source_window_end": task_pool.source_window_end,
         "created_at": task_pool.created_at,
@@ -1520,6 +2826,8 @@ def _task_pool_bundle_relative_dir(task_pool: TaskPoolRecord) -> Path:
         "certification-evidence.jsonl": task_pool.certification_evidence_ref,
         "source-events.jsonl": task_pool.source_event_records_ref,
     }
+    if task_pool.generation_provenance_ref is not None:
+        refs["generation-provenance.jsonl"] = task_pool.generation_provenance_ref
     parents: set[Path] = set()
     for expected_name, ref in refs.items():
         normalized = ref[5:] if ref.startswith("path:") else ref
@@ -1553,6 +2861,9 @@ def _require_identical_published_bundle(
         or existing.checks != expected.checks
         or existing.certification_evidence != expected.certification_evidence
         or existing.source_events != expected.source_events
+        or existing.generation_provenance != expected.generation_provenance
+        or existing.observed_frame_events != expected.observed_frame_events
+        or existing.adapter_evidence != expected.adapter_evidence
     ):
         raise ValueError("immutable Task Pool bundle target contains different members")
 
@@ -1573,9 +2884,15 @@ def _fsync_directory(path: Path) -> None:
 def _load_certification_evidence_records(
     path: Path,
 ) -> tuple[Mapping[str, Any], ...]:
+    return _load_mapping_records(path)
+
+
+def _load_mapping_records(
+    path: Path,
+) -> tuple[Mapping[str, Any], ...]:
     values = load_jsonl_records(path, dict)
     if any(not isinstance(value, MappingABC) for value in values):
-        raise ValueError("certification evidence must contain objects")
+        raise ValueError("JSONL evidence must contain objects")
     return tuple(values)
 
 
@@ -1777,7 +3094,7 @@ def _load_candidate_payloads(source_path: Path) -> list[Mapping[str, Any]]:
 
 
 def _candidate_from_mapping(data: Mapping[str, Any]) -> TaskCandidate:
-    required = [
+    required = (
         "repository_id",
         "base_commit",
         "source_family",
@@ -1790,7 +3107,17 @@ def _candidate_from_mapping(data: Mapping[str, Any]) -> TaskCandidate:
         "hidden_check_bundle_digest",
         "oracle_source",
         "check_type",
-    ]
+    )
+    allowed = set(required) | {
+        "candidate_id",
+        "solver_material_refs",
+        "dependency_cluster_id",
+        "sampling_stratum",
+        "resource_limits",
+    }
+    unknown = tuple(sorted(set(data) - allowed))
+    if unknown:
+        raise ValueError("candidate has unknown fields: " + ", ".join(unknown))
     missing = [key for key in required if data.get(key) is None or data.get(key) == ""]
     if missing:
         raise ValueError(f"candidate is missing required fields: {', '.join(missing)}")

@@ -38,6 +38,12 @@ InvalidOwner: TypeAlias = Literal["agent", "benchmark"]
 ResultScoreableState: TypeAlias = Literal[
     "scoreable", "agent_invalid", "benchmark_invalid"
 ]
+ResultEvidenceSourceKind: TypeAlias = Literal["barcarolle_managed", "external_attested"]
+ResultAvailabilityPolicy: TypeAlias = Literal[
+    "managed_observation_v1",
+    "import_time_floor_v1",
+    "producer_attested_historical_v1",
+]
 MatrixScoreableState: TypeAlias = Literal[
     "complete", "complete_with_exclusions", "incomplete", "abstained"
 ]
@@ -99,6 +105,68 @@ class SourceEventRecord:
     dependency_cluster_id: str
     sampling_stratum: str
     source_event_digest: str
+
+
+@dataclass(frozen=True)
+class ObservedFrameEventRecord:
+    source_event_id: str
+    repository_id: str
+    source_family: str
+    source_ref: str
+    observed_at: str
+    frame_event_digest: str
+
+
+@dataclass(frozen=True)
+class GenerationProvenanceManifest:
+    schema_version: str
+    generator_behavior: Mapping[str, JSONValue]
+    generator_behavior_digest: str
+    source_protocol: Mapping[str, JSONValue] | None
+    source_protocol_digest: str | None
+    observed_frame: Mapping[str, JSONValue] | None
+    observed_frame_digest: str | None
+    run: Mapping[str, JSONValue]
+    run_digest: str
+    outputs: Mapping[str, JSONValue]
+    outputs_digest: str
+    manifest_digest: str
+
+
+@dataclass(frozen=True)
+class PreparedCandidateMaterialRecord:
+    candidate_id: str
+    reference_patch_ref: str
+    reference_patch_digest: str
+    check_command: tuple[str, ...]
+    check_manifest_ref: str
+    check_manifest_digest: str
+    hidden_material_ref: str
+    hidden_material_digest: str
+    material_digest: str
+
+
+@dataclass(frozen=True)
+class PreparedCandidatePackageManifest:
+    schema_version: str
+    repository_id: str
+    candidate_records_ref: str
+    candidate_records_digest: str
+    excluded_source_event_records_ref: str
+    excluded_source_event_records_digest: str
+    material_records_ref: str
+    material_records_digest: str
+    generator_behavior: Mapping[str, JSONValue] | None
+    generator_behavior_digest: str | None
+    source_protocol: Mapping[str, JSONValue] | None
+    source_protocol_digest: str | None
+    observed_frame: Mapping[str, JSONValue] | None
+    observed_frame_digest: str | None
+    run: Mapping[str, JSONValue] | None
+    run_digest: str | None
+    adapter_evidence_ref: str | None
+    adapter_evidence_digest: str | None
+    manifest_digest: str
 
 
 @dataclass(frozen=True)
@@ -242,7 +310,51 @@ class ResultRecord:
     verifier_metadata_digest: str
     started_at: str
     finished_at: str
+    evidence_source_kind: ResultEvidenceSourceKind
+    evidence_source_manifest_digest: str | None
+    evidence_imported_at: str | None
+    source_result_available_at: str
+    availability_policy: ResultAvailabilityPolicy
     result_available_at: str
+
+
+@dataclass(frozen=True)
+class ResultSourceManifest:
+    schema_version: str
+    producer_id: str
+    authority_digest: str
+    result_records_ref: str
+    result_records_digest: str
+    availability_semantics: str
+    created_at: str
+    manifest_digest: str
+
+
+@dataclass(frozen=True)
+class ResultImportDecision:
+    source_result_id: str
+    source_result_digest: str
+    status: str
+    local_result_id: str | None
+    local_result_digest: str | None
+    rejection_reasons: tuple[str, ...]
+
+
+@dataclass(frozen=True)
+class ResultImportReceipt:
+    receipt_id: str
+    source_manifest_digest: str
+    source_result_records_digest: str
+    target_task_pool_id: str
+    target_task_pool_digest: str
+    accepted_authority_digest: str
+    imported_at: str
+    availability_policy: str
+    agent_record_digests: tuple[str, ...]
+    workspace_config_digest: str
+    runtime_config_digest: str
+    decisions: tuple[ResultImportDecision, ...]
+    receipt_digest: str
 
 
 @dataclass(frozen=True)
@@ -331,7 +443,10 @@ class TaskPoolRecord:
     rejected_candidate_ids: tuple[str, ...]
     rejection_summary_digest: str
     certification_evidence_digest: str
-    generator_config_digest: str
+    generation_provenance_ref: str | None
+    generation_provenance_digest: str | None
+    generator_config_digest: str | None
+    source_protocol_digest: str | None
     certification_config_digest: str
     created_at: str
     source_window_start: str | None = None
@@ -440,8 +555,14 @@ class MetricRecord:
 
 SELF_DIGEST_FIELDS = {
     SourceEventRecord: "source_event_digest",
+    ObservedFrameEventRecord: "frame_event_digest",
+    GenerationProvenanceManifest: "manifest_digest",
+    PreparedCandidateMaterialRecord: "material_digest",
+    PreparedCandidatePackageManifest: "manifest_digest",
     ResultCacheIdentity: "identity_digest",
     ResultRecord: "result_digest",
+    ResultSourceManifest: "manifest_digest",
+    ResultImportReceipt: "receipt_digest",
     FeatureSnapshotRecord: "feature_snapshot_digest",
     SelectorRecord: "selector_digest",
     SelectorInput: "selector_input_digest",
@@ -969,7 +1090,13 @@ def validate_result_cache_identity(identity: ResultCacheIdentity) -> ValidationR
 
 def validate_result(result: ResultRecord) -> ValidationResult:
     errors, invalid_mapping = _initial_validation_errors(
-        result, nullable={"invalid_owner", "failure_label"}
+        result,
+        nullable={
+            "invalid_owner",
+            "failure_label",
+            "evidence_source_manifest_digest",
+            "evidence_imported_at",
+        },
     )
     if invalid_mapping:
         return _validation(errors)
@@ -977,9 +1104,18 @@ def validate_result(result: ResultRecord) -> ValidationResult:
     errors.extend(f"cache_identity: {error}" for error in identity_result.errors)
     errors.extend(
         _ordered_timestamps(
-            result, ["started_at", "finished_at", "result_available_at"]
+            result,
+            ["started_at", "finished_at", "source_result_available_at"],
         )
     )
+    errors.extend(_result_evidence_source_errors(result))
+    try:
+        expected_result_id = make_result_id(result)
+    except (OverflowError, TypeError, ValueError):
+        errors.append("result identity is not strict canonical JSON")
+    else:
+        if result.result_id != expected_result_id:
+            errors.append("result_id does not match canonical Result identity")
     errors.extend(_self_digest_errors(result, "result_digest", "result record"))
     if (
         result.cache_identity.task_id != result.task_id
@@ -1022,6 +1158,107 @@ def validate_result(result: ResultRecord) -> ValidationResult:
         usage_errors, _ = _usage_measurement_errors(result.usage)
         errors.extend(usage_errors)
     return _validation(errors)
+
+
+def make_result_execution_digest(result: ResultRecord) -> str:
+    """Digest one paid execution independently of pricing and evidence views."""
+    return canonical_digest(
+        {
+            "cache_identity": result.cache_identity,
+            "agent_id": result.agent_id,
+            "task_id": result.task_id,
+            "check_id": result.check_id,
+            "terminal_status": result.terminal_status,
+            "scoreable_state": result.scoreable_state,
+            "outcome": result.outcome,
+            "invalid_owner": result.invalid_owner,
+            "failure_label": result.failure_label,
+            "usage": result.usage,
+            "latency": result.latency,
+            "diff_digest": result.diff_digest,
+            "verifier_metadata_digest": result.verifier_metadata_digest,
+            "started_at": result.started_at,
+            "finished_at": result.finished_at,
+        }
+    )
+
+
+def make_result_evidence_digest(result: ResultRecord) -> str:
+    """Digest the source and availability view attached to a Result."""
+    return canonical_digest(
+        {
+            "evidence_source_kind": result.evidence_source_kind,
+            "evidence_source_manifest_digest": (result.evidence_source_manifest_digest),
+            "evidence_imported_at": result.evidence_imported_at,
+            "source_result_available_at": result.source_result_available_at,
+            "availability_policy": result.availability_policy,
+            "result_available_at": result.result_available_at,
+        }
+    )
+
+
+def make_result_id(result: ResultRecord) -> str:
+    """Derive a Result identity from execution, scoring, and evidence views."""
+    return "result_" + canonical_digest(
+        (
+            make_result_execution_digest(result),
+            result.scoring_config_digest,
+            make_result_evidence_digest(result),
+        )
+    )
+
+
+def _result_evidence_source_errors(result: ResultRecord) -> tuple[str, ...]:
+    errors: list[str] = []
+    try:
+        finished_at = parse_utc_timestamp(result.finished_at)
+        source_available_at = parse_utc_timestamp(result.source_result_available_at)
+        effective_available_at = parse_utc_timestamp(result.result_available_at)
+    except (TypeError, ValueError):
+        return ("result evidence availability timestamps must be valid ISO datetimes",)
+    if effective_available_at < finished_at:
+        errors.append("effective result availability must not precede execution")
+    if result.evidence_source_kind == "barcarolle_managed":
+        if result.evidence_source_manifest_digest is not None:
+            errors.append("managed Result must not bind an external source manifest")
+        if result.evidence_imported_at is not None:
+            errors.append("managed Result must not have an import timestamp")
+        if result.availability_policy != "managed_observation_v1":
+            errors.append("managed Result availability policy is not normalized")
+        if effective_available_at != source_available_at:
+            errors.append("managed Result source and effective availability must match")
+        return tuple(errors)
+    if result.evidence_source_kind != "external_attested":
+        errors.append("result evidence source kind is not normalized")
+        return tuple(errors)
+    if (
+        not isinstance(result.evidence_source_manifest_digest, str)
+        or not result.evidence_source_manifest_digest
+    ):
+        errors.append("external Result requires a source manifest digest")
+    if not isinstance(result.evidence_imported_at, str) or not (
+        result.evidence_imported_at
+    ):
+        errors.append("external Result requires an import timestamp")
+        return tuple(errors)
+    try:
+        imported_at = parse_utc_timestamp(result.evidence_imported_at)
+    except (TypeError, ValueError):
+        errors.append("external Result import timestamp is invalid")
+        return tuple(errors)
+    if result.availability_policy == "import_time_floor_v1":
+        if effective_available_at != max(source_available_at, imported_at):
+            errors.append(
+                "external Result effective availability must apply the import-time floor"
+            )
+    elif result.availability_policy == "producer_attested_historical_v1":
+        if effective_available_at != source_available_at:
+            errors.append(
+                "historical external Result effective availability must preserve source time"
+            )
+    else:
+        errors.append("external Result availability policy is not normalized")
+    return tuple(errors)
 
 
 def validate_feature_snapshot(snapshot: FeatureSnapshotRecord) -> ValidationResult:
@@ -1199,6 +1436,10 @@ def validate_task_pool(task_pool: TaskPoolRecord) -> ValidationResult:
             "rejected_candidate_ids",
             "source_window_start",
             "source_window_end",
+            "generation_provenance_ref",
+            "generation_provenance_digest",
+            "generator_config_digest",
+            "source_protocol_digest",
         },
     )
     if invalid_mapping:
@@ -1208,6 +1449,12 @@ def validate_task_pool(task_pool: TaskPoolRecord) -> ValidationResult:
         != task_pool.task_pool_digest
     ):
         errors.append("task_pool_digest does not match TaskPoolRecord")
+    if (task_pool.generation_provenance_ref is None) != (
+        task_pool.generation_provenance_digest is None
+    ):
+        errors.append(
+            "generation provenance ref and digest must be both present or both absent"
+        )
     return _validation(errors)
 
 

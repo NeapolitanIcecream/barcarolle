@@ -28,6 +28,8 @@ from barcarolle.records import (
     ResultCellRef,
     ResultMatrix,
     ResultRecord,
+    ResultImportReceipt,
+    ResultSourceManifest,
     ResultScoreableState,
     RuntimeConfig,
     TaskCheckRef,
@@ -42,6 +44,9 @@ from barcarolle.records import (
     load_jsonl_records,
     make_result_cache_identity,
     make_result_cache_key,
+    make_result_evidence_digest,
+    make_result_execution_digest,
+    make_result_id,
     parse_utc_timestamp,
     record_with_digest,
     result_cell_record_mismatches,
@@ -56,7 +61,11 @@ from barcarolle.records import (
     validate_workspace_config,
     validate_workspace_run,
     utc_now_timestamp,
+    write_jsonl_records,
 )
+
+
+RESULT_SOURCE_MANIFEST_SCHEMA_VERSION = "barcarolle_result_source_manifest_v1"
 
 
 def _normalized_cost_rates(
@@ -113,6 +122,13 @@ class ResultStore:
     path: Path
 
 
+@dataclass(frozen=True)
+class ResultSourceBundle:
+    manifest: ResultSourceManifest
+    results: tuple[ResultRecord, ...]
+    result_records_path: Path
+
+
 class ResultStoreSession:
     """One locked, indexed append session for a Runner operation."""
 
@@ -144,11 +160,9 @@ class ResultStoreSession:
         new_results: list[ResultRecord] = []
         pending_by_id: dict[str, ResultRecord] = {}
         for result in results:
-            validation = validate_result(result)
-            if not validation.ok:
-                raise ValueError(
-                    f"result record is invalid: {', '.join(validation.errors)}"
-                )
+            errors = _result_record_errors(result)
+            if errors:
+                raise ValueError(f"result record is invalid: {', '.join(errors)}")
             stored = self._result_by_id.get(result.result_id) or pending_by_id.get(
                 result.result_id
             )
@@ -254,6 +268,7 @@ def build_result_record(
     _validate_task_check_agent_linkage(task, check, agent, workspace_run)
     _validate_cache_identity_inputs(task, check, agent, cache_identity)
     scoreable_state, outcome, invalid_owner = _normalize_result_state(workspace_run)
+    result_available_at = _latest_timestamp_utc(_now(), workspace_run.finished_at)
     result = ResultRecord(
         result_id="",
         result_digest="",
@@ -275,9 +290,14 @@ def build_result_record(
         verifier_metadata_digest=_verifier_metadata_digest(workspace_run),
         started_at=workspace_run.started_at,
         finished_at=workspace_run.finished_at,
-        result_available_at=_latest_timestamp_utc(_now(), workspace_run.finished_at),
+        evidence_source_kind="barcarolle_managed",
+        evidence_source_manifest_digest=None,
+        evidence_imported_at=None,
+        source_result_available_at=result_available_at,
+        availability_policy="managed_observation_v1",
+        result_available_at=result_available_at,
     )
-    result = replace(result, result_id=_result_id(result))
+    result = replace(result, result_id=compute_result_id(result))
     result = record_with_digest(result)
     result_validation = validate_result(result)
     if not result_validation.ok:
@@ -327,6 +347,284 @@ def store_results(
         return ()
     with open_result_store_session(store) as session:
         return session.append_many(results)
+
+
+def load_result_source_bundle(manifest_path: Path) -> ResultSourceBundle:
+    manifest_file = manifest_path.resolve()
+    if manifest_file.name != "result-source-manifest.jsonl":
+        raise ValueError(
+            "Result source manifest must be named result-source-manifest.jsonl"
+        )
+    try:
+        manifests = tuple(load_jsonl_records(manifest_file, ResultSourceManifest))
+    except (KeyError, OSError, TypeError, ValueError) as exc:
+        raise ValueError("Result source manifest is unavailable or invalid") from exc
+    if len(manifests) != 1:
+        raise ValueError("Result source manifest must contain exactly one record")
+    manifest = manifests[0]
+    errors = _result_source_manifest_errors(manifest)
+    if errors:
+        raise ValueError("Result source manifest is invalid: " + "; ".join(errors))
+    result_path = _result_source_ref_path(
+        manifest_file.parent,
+        manifest.result_records_ref,
+    )
+    try:
+        results = tuple(load_jsonl_records(result_path, ResultRecord))
+    except (KeyError, OSError, TypeError, ValueError) as exc:
+        raise ValueError("source Result records are unavailable or invalid") from exc
+    ensure_unique_result_ids(results)
+    if canonical_digest(results) != manifest.result_records_digest:
+        raise ValueError("source Result records digest does not match manifest")
+    return ResultSourceBundle(manifest, results, result_path)
+
+
+def load_result_import_receipt(path: Path) -> ResultImportReceipt | None:
+    if not path.exists():
+        return None
+    try:
+        receipts = tuple(load_jsonl_records(path, ResultImportReceipt))
+    except (KeyError, OSError, TypeError, ValueError) as exc:
+        raise ValueError("Result import receipt is unavailable or invalid") from exc
+    if len(receipts) != 1:
+        raise ValueError("Result import receipt must contain exactly one record")
+    receipt = receipts[0]
+    errors = _result_import_receipt_errors(receipt)
+    if errors:
+        raise ValueError("Result import receipt is invalid: " + "; ".join(errors))
+    return receipt
+
+
+def write_result_import_receipt(
+    receipt: ResultImportReceipt,
+    path: Path,
+) -> ResultImportReceipt:
+    errors = _result_import_receipt_errors(receipt)
+    if errors:
+        raise ValueError("Result import receipt is invalid: " + "; ".join(errors))
+    existing = load_result_import_receipt(path)
+    if existing is not None:
+        if existing != receipt:
+            raise ValueError(
+                "Result import receipt path already contains other evidence"
+            )
+        return existing
+    write_jsonl_records(path, (receipt,))
+    return receipt
+
+
+def _result_source_manifest_errors(
+    manifest: ResultSourceManifest,
+) -> tuple[str, ...]:
+    errors: list[str] = []
+    if manifest.schema_version != RESULT_SOURCE_MANIFEST_SCHEMA_VERSION:
+        errors.append("schema_version is not supported")
+    if not manifest.producer_id:
+        errors.append("producer_id is required")
+    if not manifest.authority_digest:
+        errors.append("authority_digest is required")
+    if manifest.availability_semantics not in {
+        "import_time_floor_v1",
+        "producer_attested_historical_v1",
+    }:
+        errors.append("availability_semantics is not supported")
+    try:
+        created_at = _canonical_timestamp(manifest.created_at)
+    except (TypeError, ValueError):
+        errors.append("created_at is invalid")
+    else:
+        if created_at != manifest.created_at:
+            errors.append("created_at is not canonical UTC")
+    if manifest.manifest_digest != canonical_digest(manifest, exclude_self_digest=True):
+        errors.append("manifest_digest does not match canonical content")
+    return tuple(errors)
+
+
+def _result_import_receipt_errors(
+    receipt: ResultImportReceipt,
+) -> tuple[str, ...]:
+    errors: list[str] = []
+    required_strings = (
+        "receipt_id",
+        "source_manifest_digest",
+        "source_result_records_digest",
+        "target_task_pool_id",
+        "target_task_pool_digest",
+        "accepted_authority_digest",
+        "workspace_config_digest",
+        "runtime_config_digest",
+    )
+    for field_name in required_strings:
+        value = getattr(receipt, field_name)
+        if not isinstance(value, str) or not value:
+            errors.append(f"{field_name} is required")
+    if receipt.availability_policy not in {
+        "import_time_floor_v1",
+        "producer_attested_historical_v1",
+    }:
+        errors.append("availability_policy is not supported")
+    try:
+        imported_at = _canonical_timestamp(receipt.imported_at)
+    except (TypeError, ValueError):
+        errors.append("imported_at is invalid")
+    else:
+        if imported_at != receipt.imported_at:
+            errors.append("imported_at is not canonical UTC")
+    agent_digests = receipt.agent_record_digests
+    if (
+        not agent_digests
+        or any(not isinstance(value, str) or not value for value in agent_digests)
+        or len(agent_digests) != len(set(agent_digests))
+    ):
+        errors.append("agent_record_digests must be a nonempty unique tuple")
+    for index, decision in enumerate(receipt.decisions):
+        if not decision.source_result_id or not decision.source_result_digest:
+            errors.append(f"decision {index} source Result binding is required")
+        if decision.status in {"admitted", "idempotent"}:
+            if (
+                not decision.local_result_id
+                or not decision.local_result_digest
+                or decision.rejection_reasons
+            ):
+                errors.append(
+                    f"decision {index} accepted state is internally inconsistent"
+                )
+        elif decision.status == "rejected":
+            if (
+                decision.local_result_id is not None
+                or decision.local_result_digest is not None
+                or not decision.rejection_reasons
+                or any(
+                    not isinstance(reason, str) or not reason
+                    for reason in decision.rejection_reasons
+                )
+            ):
+                errors.append(
+                    f"decision {index} rejected state is internally inconsistent"
+                )
+        else:
+            errors.append(f"decision {index} status is not normalized")
+    expected_receipt_id = "result_import_" + canonical_digest(
+        {
+            "source_manifest_digest": receipt.source_manifest_digest,
+            "target_task_pool_digest": receipt.target_task_pool_digest,
+            "imported_at": receipt.imported_at,
+            "availability_policy": receipt.availability_policy,
+        }
+    )
+    if receipt.receipt_id != expected_receipt_id:
+        errors.append("receipt_id does not match import identity")
+    try:
+        expected_digest = canonical_digest(receipt, exclude_self_digest=True)
+    except (OverflowError, TypeError, ValueError):
+        errors.append("receipt is not strict canonical JSON")
+    else:
+        if receipt.receipt_digest != expected_digest:
+            errors.append("receipt_digest does not match")
+    return tuple(errors)
+
+
+def _result_source_ref_path(root: Path, ref: str) -> Path:
+    if not isinstance(ref, str) or not ref:
+        raise ValueError("result_records_ref is invalid")
+    path = Path(ref)
+    if path.is_absolute() or path.name != "results.jsonl":
+        raise ValueError("result_records_ref must be relative and named results.jsonl")
+    resolved = (root / path).resolve()
+    if not resolved.is_relative_to(root.resolve()):
+        raise ValueError("result_records_ref escapes Result source root")
+    return resolved
+
+
+def normalize_external_result(
+    result: ResultRecord,
+    *,
+    source_manifest_digest: str,
+    imported_at: str,
+    availability_policy: str,
+) -> ResultRecord:
+    if not source_manifest_digest:
+        raise ValueError("source_manifest_digest must not be empty")
+    if availability_policy not in {
+        "import_time_floor_v1",
+        "producer_attested_historical_v1",
+    }:
+        raise ValueError("external Result availability policy is not supported")
+    imported = _canonical_timestamp(imported_at)
+    source_available = _canonical_timestamp(result.source_result_available_at)
+    effective_available = (
+        _latest_timestamp_utc(source_available, imported)
+        if availability_policy == "import_time_floor_v1"
+        else source_available
+    )
+    normalized = replace(
+        result,
+        result_id="",
+        result_digest="",
+        evidence_source_kind="external_attested",
+        evidence_source_manifest_digest=source_manifest_digest,
+        evidence_imported_at=imported,
+        source_result_available_at=source_available,
+        availability_policy=availability_policy,
+        result_available_at=effective_available,
+    )
+    normalized = replace(normalized, result_id=compute_result_id(normalized))
+    normalized = record_with_digest(normalized)
+    validation = validate_result(normalized)
+    if not validation.ok:
+        raise ValueError(
+            "normalized external Result is invalid: " + ", ".join(validation.errors)
+        )
+    return normalized
+
+
+def ambiguous_result_execution_keys(
+    results: Sequence[ResultRecord],
+) -> frozenset[tuple[str, str, str, ResultCacheIdentity]]:
+    executions: dict[
+        tuple[str, str, str, ResultCacheIdentity],
+        set[str],
+    ] = {}
+    for result in results:
+        if not validate_result(result).ok:
+            continue
+        key = (
+            result.agent_id,
+            result.task_id,
+            result.check_id,
+            result.cache_identity,
+        )
+        executions.setdefault(key, set()).add(result_execution_digest(result))
+    return frozenset(key for key, digests in executions.items() if len(digests) > 1)
+
+
+def ensure_unambiguous_result_executions(
+    results: Sequence[ResultRecord],
+) -> None:
+    conflicts = ambiguous_result_execution_keys(results)
+    if not conflicts:
+        return
+    identity_digests = sorted(key[3].identity_digest for key in conflicts)
+    raise ValueError(
+        "conflicting Result executions share cache identities: "
+        + ", ".join(identity_digests)
+    )
+
+
+def canonical_result_execution_view(
+    results: Sequence[ResultRecord],
+) -> ResultRecord:
+    """Choose one stable Result view for a known-identical paid execution."""
+    if not results:
+        raise ValueError("at least one Result execution view is required")
+    return min(results, key=lambda result: result.result_id)
+
+
+def ensure_unique_result_ids(results: Sequence[ResultRecord]) -> None:
+    """Reject a Result collection whose identities are not one-to-one."""
+    result_ids = tuple(result.result_id for result in results)
+    if len(result_ids) != len(set(result_ids)):
+        raise ValueError("Result collection contains duplicate result IDs")
 
 
 @contextmanager
@@ -412,6 +710,13 @@ def _load_results_unlocked(store: ResultStore) -> tuple[ResultRecord, ...]:
                     "run recover_result_store_tail explicitly"
                 )
     results = tuple(load_jsonl_records(store.path, ResultRecord))
+    for line_number, result in enumerate(results, start=1):
+        errors = _result_record_errors(result)
+        if errors:
+            raise ValueError(
+                f"{store.path}: line {line_number}: invalid Result record: "
+                + ", ".join(errors)
+            )
     _require_unique_result_ids(store.path, results)
     return results
 
@@ -918,6 +1223,10 @@ def _latest_timestamp_utc(*values: str) -> str:
     return format_utc_timestamp(latest)
 
 
+def _canonical_timestamp(value: str) -> str:
+    return format_utc_timestamp(parse_utc_timestamp(value))
+
+
 def _verifier_metadata_digest(workspace_run: WorkspaceRunRecord) -> str:
     return canonical_digest(
         {
@@ -932,29 +1241,20 @@ def _verifier_metadata_digest(workspace_run: WorkspaceRunRecord) -> str:
 
 def result_execution_digest(result: ResultRecord) -> str:
     """Digest one paid execution independently of its pricing views."""
-    return canonical_digest(
-        {
-            "cache_identity": result.cache_identity,
-            "agent_id": result.agent_id,
-            "task_id": result.task_id,
-            "check_id": result.check_id,
-            "terminal_status": result.terminal_status,
-            "scoreable_state": result.scoreable_state,
-            "outcome": result.outcome,
-            "invalid_owner": result.invalid_owner,
-            "failure_label": result.failure_label,
-            "usage": result.usage,
-            "latency": result.latency,
-            "diff_digest": result.diff_digest,
-            "verifier_metadata_digest": result.verifier_metadata_digest,
-            "started_at": result.started_at,
-            "finished_at": result.finished_at,
-        }
-    )
+    return make_result_execution_digest(result)
 
 
-def _result_id(result: ResultRecord) -> str:
-    return f"result_{canonical_digest((result_execution_digest(result), result.scoring_config_digest))}"
+def compute_result_id(result: ResultRecord) -> str:
+    """Return the canonical ID for one Result execution, price, and evidence view."""
+    return make_result_id(result)
+
+
+def _result_record_errors(result: ResultRecord) -> tuple[str, ...]:
+    return validate_result(result).errors
+
+
+def result_evidence_digest(result: ResultRecord) -> str:
+    return make_result_evidence_digest(result)
 
 
 def _reprice_result(
@@ -968,7 +1268,7 @@ def _reprice_result(
         scoring_config_digest=scoring_config.scoring_config_digest,
         pricing_version=scoring_config.pricing_version,
     )
-    repriced = replace(repriced, result_id=_result_id(repriced))
+    repriced = replace(repriced, result_id=compute_result_id(repriced))
     repriced = record_with_digest(repriced)
     validation = validate_result(repriced)
     if not validation.ok:
@@ -1017,6 +1317,12 @@ def _index_reusable_results(
     cache_config: ResultCacheConfig,
     scoring_config_digest: str | None = None,
 ) -> Mapping[tuple[str, str, str, ResultCacheIdentity], ResultRecord]:
+    conflicts = ambiguous_result_execution_keys(results)
+    if conflicts:
+        raise ValueError(
+            "conflicting reusable Result executions share one cache identity: "
+            + ", ".join(sorted(key[3].identity_digest for key in conflicts))
+        )
     reusable: dict[tuple[str, str, str, ResultCacheIdentity], ResultRecord] = {}
     for result in results:
         if (
@@ -1041,7 +1347,7 @@ def _index_reusable_results(
                 "conflicting reusable Result executions share one cache identity: "
                 f"{result.cache_identity.identity_digest}"
             )
-        reusable[key] = min((existing, result), key=lambda item: item.result_id)
+        reusable[key] = canonical_result_execution_view((existing, result))
     return reusable
 
 

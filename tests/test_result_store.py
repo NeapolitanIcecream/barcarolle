@@ -22,6 +22,7 @@ from barcarolle.records import (
     WorkspaceRunRecord,
     canonical_digest,
     canonical_json,
+    make_result_id,
     make_solver_material_digest,
     record_with_digest,
     validate_result,
@@ -644,7 +645,7 @@ def test_store_result_is_append_only_and_load_results_filters(tmp_path: Path) ->
     conflict = record_with_digest(
         replace(result, result_digest="", failure_label="changed")
     )
-    with pytest.raises(ValueError, match="different digest"):
+    with pytest.raises(ValueError, match="canonical Result identity"):
         store_result(conflict, store)
 
 
@@ -701,7 +702,7 @@ def test_result_store_lock_serializes_conflicting_writers(tmp_path: Path) -> Non
         try:
             store_result(result, store)
         except ValueError as exc:
-            assert "different digest" in str(exc)
+            assert "canonical Result identity" in str(exc)
             return "conflict"
         return "stored"
 
@@ -738,7 +739,8 @@ def test_result_store_load_rejects_duplicate_result_ids(
         encoding="utf-8",
     )
 
-    with pytest.raises(ValueError, match="duplicate result_id"):
+    expected = "invalid Result record" if conflicting_digest else "duplicate result_id"
+    with pytest.raises(ValueError, match=expected):
         if accessor == "load":
             load_results(store, ResultQuery())
         else:
@@ -827,12 +829,10 @@ def test_locked_result_store_session_reuses_its_live_index(
 def test_load_results_excludes_post_cutoff_result_with_earlier_offset_date(
     tmp_path: Path,
 ) -> None:
-    result = record_with_digest(
-        replace(
-            _result(),
-            result_available_at="2026-01-04T20:00:00-05:00",
-            result_digest="",
-        )
+    result = _redigest_result(
+        _result(),
+        source_result_available_at="2026-01-04T20:00:00-05:00",
+        result_available_at="2026-01-04T20:00:00-05:00",
     )
     store = ResultStore(tmp_path / "results.jsonl")
     store_result(result, store)
@@ -956,6 +956,41 @@ def test_resolve_result_cells_rejects_conflicting_exact_identity_executions(
         )
 
 
+def test_scoring_view_filter_cannot_hide_conflicting_executions(
+    tmp_path: Path,
+) -> None:
+    store = ResultStore(tmp_path / "results.jsonl")
+    current = _result()
+    conflicting = _result(
+        workspace_run=_workspace_run(
+            terminal_status="failed",
+            check_outcome="fail",
+            failure_label="check_failed",
+        )
+    )
+    differently_priced_conflict = result_store_module._reprice_result(
+        conflicting,
+        ScoringConfig("alternate-pricing", {"input_tokens": 0.002}),
+    )
+    store_results((current, differently_priced_conflict), store)
+
+    with pytest.raises(
+        ValueError,
+        match="conflicting reusable Result executions share one cache identity",
+    ):
+        resolve_result_cells(
+            task_check_refs=(TaskCheckRef("task", "check"),),
+            tasks=(_task(),),
+            checks={"check": _check()},
+            agents=(_agent(),),
+            workspace_config=_workspace_config(),
+            runtime_config=_runtime_config(),
+            store=store,
+            cache_config=ResultCacheConfig(),
+            scoring_config=_scoring_config(),
+        )
+
+
 def test_resolve_result_cells_reuses_one_execution_across_pricing_views_deterministically(
     tmp_path: Path,
 ) -> None:
@@ -1042,7 +1077,6 @@ def test_resolve_result_cells_does_not_reuse_benchmark_invalid_result_by_default
 
     assert len(cells) == 1
     assert cells[0].cell_state == "missing"
-    assert cells[0].result_id is None
 
 
 def test_resolve_result_cells_can_reuse_valid_benchmark_invalid_result_when_configured(
@@ -1074,26 +1108,24 @@ def test_resolve_result_cells_can_reuse_valid_benchmark_invalid_result_when_conf
     assert cells[0].result_id == benchmark_invalid.result_id
 
 
-def test_resolve_result_cells_never_reuses_structurally_invalid_result(
+def test_resolve_result_cells_rejects_structurally_invalid_store(
     tmp_path: Path,
 ) -> None:
     store = ResultStore(tmp_path / "results.jsonl")
     invalid = replace(_result(), result_digest="not-canonical")
     store.path.write_text(f"{canonical_json(invalid)}\n", encoding="utf-8")
 
-    cells = resolve_result_cells(
-        task_check_refs=(TaskCheckRef("task", "check"),),
-        tasks=(_task(),),
-        checks={"check": _check()},
-        agents=(_agent(),),
-        workspace_config=_workspace_config(),
-        runtime_config=_runtime_config(),
-        store=store,
-        cache_config=ResultCacheConfig(reuse_benchmark_invalid=True),
-    )
-
-    assert cells[0].cell_state == "missing"
-    assert cells[0].result_id is None
+    with pytest.raises(ValueError, match="invalid Result record"):
+        resolve_result_cells(
+            task_check_refs=(TaskCheckRef("task", "check"),),
+            tasks=(_task(),),
+            checks={"check": _check()},
+            agents=(_agent(),),
+            workspace_config=_workspace_config(),
+            runtime_config=_runtime_config(),
+            store=store,
+            cache_config=ResultCacheConfig(reuse_benchmark_invalid=True),
+        )
 
 
 def test_resolve_result_cells_rejects_invalid_cache_identity_input_record(
@@ -1629,6 +1661,19 @@ def _result(
         identity,
         scoring_config,
     )
+
+
+def _redigest_result(
+    result: ResultRecord,
+    **changes: object,
+) -> ResultRecord:
+    draft = replace(
+        result,
+        result_id="",
+        result_digest="",
+        **changes,
+    )
+    return record_with_digest(replace(draft, result_id=make_result_id(draft)))
 
 
 def _evaluation_cell_set(
