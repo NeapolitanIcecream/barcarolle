@@ -40,5 +40,10 @@ jobs:
       - name: Type check
         run: uv run pyright
 
+      - name: Install harness test shell
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes --no-install-recommends zsh
+
       - name: Test
         run: uv run pytest -q

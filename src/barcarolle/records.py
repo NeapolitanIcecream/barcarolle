@@ -2247,11 +2247,19 @@ def _coerce_value(expected_type: Any, data: Any, path: str) -> Any:
 
 def _coerce_literal(args: tuple[Any, ...], data: Any, path: str) -> Any:
     errors: list[TypeError] = []
+    matched_scalar_type = False
     for scalar_type in dict.fromkeys(type(option) for option in args):
         try:
-            return _coerce_scalar(scalar_type, data, path)
+            value = _coerce_scalar(scalar_type, data, path)
         except TypeError as exc:
             errors.append(exc)
+            continue
+        matched_scalar_type = True
+        if any(type(option) is scalar_type and value == option for option in args):
+            return value
+    if matched_scalar_type:
+        options = ", ".join(repr(option) for option in args)
+        raise TypeError(f"{path} must be one of: {options}")
     if errors:
         raise errors[0]
     raise TypeError(f"{path} does not match its literal scalar type")

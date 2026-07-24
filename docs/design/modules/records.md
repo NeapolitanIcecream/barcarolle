@@ -37,8 +37,9 @@ contract. Tuples remain valid structural representations for typed dataclass
 fields and are serialized as arrays, but a tuple supplied directly inside a
 `JSONValue` field is rejected instead of silently changing shape on reload.
 Cycles and unsupported objects fail validation before digest or persistence.
-Finite state fields use shared `Literal` aliases; record validators remain the
-authority for allowed state combinations and stable domain errors.
+Finite state fields use shared `Literal` aliases. Latest-schema conversion
+enforces both their scalar type and declared member set; record validators
+remain the authority for allowed cross-field state combinations.
 
 Records also owns `make_check_command_digest`, the canonical identity of an
 exact Check argv used by Workspace and Verification. This is distinct from the

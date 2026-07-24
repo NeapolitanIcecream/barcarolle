@@ -886,9 +886,9 @@ def test_result_matrix_rejects_incoherent_cell_state_payloads() -> None:
     assert (
         "scoreable_state does not match matrix cells" in validate(clean_missing).errors
     )
-    assert (
-        "scoreable_state is not normalized"
-        in validate(
+    assert any(
+        "ResultMatrix.scoreable_state must be one of" in error
+        for error in validate(
             result_cell,
             scoreable_state="unknown",
         ).errors
@@ -1450,6 +1450,19 @@ def test_jsonl_load_enforces_literal_scalar_type(tmp_path: Path) -> None:
         load_jsonl_records(path, WorkspaceRunRecord)
 
 
+def test_jsonl_load_rejects_value_outside_literal_members(tmp_path: Path) -> None:
+    path = tmp_path / "unknown-state.jsonl"
+    payload = canonical_data(_workspace_run())
+    payload["terminal_status"] = "nonsense"
+    path.write_text(f"{canonical_json(payload)}\n", encoding="utf-8")
+
+    with pytest.raises(
+        ValueError,
+        match=r"line 1: WorkspaceRunRecord.terminal_status must be one of",
+    ):
+        load_jsonl_records(path, WorkspaceRunRecord)
+
+
 def test_jsonl_load_rejects_blank_record_lines(tmp_path: Path) -> None:
     path = tmp_path / "blank-line.jsonl"
     path.write_text(f"{canonical_json(_task())}\n\n", encoding="utf-8")
@@ -1678,9 +1691,18 @@ def test_jsonl_write_rejection_preserves_destination_and_removes_temporary_file(
 @pytest.mark.parametrize(
     ("changes", "expected_error"),
     [
-        ({"terminal_status": "completed"}, "terminal_status is not normalized"),
-        ({"replay_status": "unknown"}, "replay_status is not normalized"),
-        ({"check_outcome": "unknown"}, "check_outcome is not normalized"),
+        (
+            {"terminal_status": "completed"},
+            "WorkspaceRunRecord.terminal_status must be one of",
+        ),
+        (
+            {"replay_status": "unknown"},
+            "WorkspaceRunRecord.replay_status must be one of",
+        ),
+        (
+            {"check_outcome": "unknown"},
+            "WorkspaceRunRecord.check_outcome must be one of",
+        ),
         (
             {"terminal_status": "passed", "check_outcome": "fail"},
             "workspace run state is inconsistent",
@@ -1736,10 +1758,19 @@ def test_workspace_run_validation_accepts_produced_state_combinations(
 @pytest.mark.parametrize(
     ("changes", "expected_error"),
     [
-        ({"terminal_status": "completed"}, "terminal_status is not normalized"),
-        ({"scoreable_state": "complete"}, "scoreable_state is not normalized"),
-        ({"outcome": "unknown"}, "outcome is not normalized"),
-        ({"invalid_owner": "infrastructure"}, "invalid_owner is not normalized"),
+        (
+            {"terminal_status": "completed"},
+            "ResultRecord.terminal_status must be one of",
+        ),
+        (
+            {"scoreable_state": "complete"},
+            "ResultRecord.scoreable_state must be one of",
+        ),
+        ({"outcome": "unknown"}, "ResultRecord.outcome must be one of"),
+        (
+            {"invalid_owner": "infrastructure"},
+            "ResultRecord.invalid_owner must be one of",
+        ),
         ({"cost": {}}, "cost must include total_cost"),
         ({"latency": {}}, "latency must include workspace_seconds"),
         (

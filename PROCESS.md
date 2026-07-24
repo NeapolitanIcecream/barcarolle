@@ -22,8 +22,9 @@ The active direction is predictive validity.
 - The repository quality workflow performs a frozen install, Ruff, Pyright in
   standard mode over `src`, `examples`, and `scripts`, and the full suite.
   Target-repository hidden-check fixtures are excluded. Recursive JSON values
-  and finite execution states now have static types; preparation failures
-  carry stable labels rather than relying on message parsing.
+  and finite execution states now have static types and latest-schema member
+  validation; preparation failures carry stable labels rather than relying on
+  message parsing.
 - No campaign authority ledger or paid call was created during the current
   maintenance work.
 

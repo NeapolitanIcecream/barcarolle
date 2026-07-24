@@ -59,7 +59,8 @@ rules are fixed in [`docs/statistical-protocol.md`](docs/statistical-protocol.md
 
 ## Install And Test
 
-Barcarolle uses Python 3.11+ and `uv`.
+Barcarolle uses Python 3.11+, `uv`, and `zsh` for the Codex harness contract
+tests.
 
 ```bash
 uv sync
