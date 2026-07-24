@@ -925,7 +925,7 @@ def test_load_results_rejects_inverted_time_bounds_before_store_access(
         )
 
 
-def test_resolve_result_cells_uses_first_valid_exact_identity_result(
+def test_resolve_result_cells_rejects_conflicting_exact_identity_executions(
     tmp_path: Path,
 ) -> None:
     store = ResultStore(tmp_path / "results.jsonl")
@@ -940,22 +940,50 @@ def test_resolve_result_cells_uses_first_valid_exact_identity_result(
     store_result(first, store)
     store_result(later, store)
 
-    cells = resolve_result_cells(
-        task_check_refs=(TaskCheckRef("task", "check"),),
-        tasks=(_task(),),
-        checks={"check": _check()},
-        agents=(_agent(),),
-        workspace_config=_workspace_config(),
-        runtime_config=_runtime_config(),
-        store=store,
-        cache_config=ResultCacheConfig(),
-    )
+    with pytest.raises(
+        ValueError,
+        match="conflicting reusable Result executions share one cache identity",
+    ):
+        resolve_result_cells(
+            task_check_refs=(TaskCheckRef("task", "check"),),
+            tasks=(_task(),),
+            checks={"check": _check()},
+            agents=(_agent(),),
+            workspace_config=_workspace_config(),
+            runtime_config=_runtime_config(),
+            store=store,
+            cache_config=ResultCacheConfig(),
+        )
 
-    assert len(cells) == 1
-    assert cells[0].cell_state == "result"
-    assert cells[0].result_id == first.result_id
-    assert cells[0].result_digest == first.result_digest
-    assert cells[0].outcome == "pass"
+
+def test_resolve_result_cells_reuses_one_execution_across_pricing_views_deterministically(
+    tmp_path: Path,
+) -> None:
+    original = _result()
+    repriced = result_store_module._reprice_result(
+        original,
+        ScoringConfig("alternate-pricing", {"input_tokens": 0.002}),
+    )
+    resolved_ids = []
+    for name, ordered_results in (
+        ("forward", (original, repriced)),
+        ("reverse", (repriced, original)),
+    ):
+        store = ResultStore(tmp_path / f"{name}.jsonl")
+        store_results(ordered_results, store)
+        (cell,) = resolve_result_cells(
+            task_check_refs=(TaskCheckRef("task", "check"),),
+            tasks=(_task(),),
+            checks={"check": _check()},
+            agents=(_agent(),),
+            workspace_config=_workspace_config(),
+            runtime_config=_runtime_config(),
+            store=store,
+            cache_config=ResultCacheConfig(),
+        )
+        resolved_ids.append(cell.result_id)
+
+    assert resolved_ids == [min(original.result_id, repriced.result_id)] * 2
 
 
 @pytest.mark.parametrize(

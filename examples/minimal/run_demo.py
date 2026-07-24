@@ -16,6 +16,7 @@ if __package__ is None or __package__ == "":
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from barcarolle import reporting
+from barcarolle import task_pool as task_pool_module
 from barcarolle.records import (
     AgentRecord,
     CheckOutcomeValue,
@@ -164,12 +165,13 @@ def main(output_dir: Path = DEFAULT_OUTPUT_DIR) -> dict[str, object]:
         )
     )
     selection = select_with_selector(selector_input, snapshot, selector)
+    task_pool_bundle = task_pool_module.load_validated_task_pool_bundle(
+        task_pool, output_dir
+    )
     cell_set = prepare_evaluation_cells(
         selection,
         origin,
-        task_pool,
-        tasks,
-        checks_by_id,
+        task_pool_bundle,
         agents,
         workspace_config,
         runtime_config,
@@ -182,9 +184,7 @@ def main(output_dir: Path = DEFAULT_OUTPUT_DIR) -> dict[str, object]:
     scored_cell_set, selected_matrix, future_matrix, metrics = score_selection(
         selection,
         origin,
-        task_pool,
-        tasks,
-        checks_by_id,
+        task_pool_bundle,
         agents,
         cell_set,
         result_store,

@@ -315,7 +315,9 @@ def train_selector(
         raise ValueError("training_selection_ids must not be empty")
     if len(set(training_selection_ids)) != len(training_selection_ids):
         raise ValueError("training_selection_ids must be unique")
-    tasks, checks = _load_task_pool_records(task_pool, artifact_root)
+    task_pool_bundle = _load_task_pool_bundle(task_pool, artifact_root)
+    tasks = task_pool_bundle.tasks
+    checks = task_pool_bundle.checks_by_id
     selections, training_origins, feature_snapshots, selector_inputs = (
         _load_training_selection_records(training_selection_ids, result_store)
     )
@@ -362,7 +364,9 @@ def select_benchmark(
     artifact_root: Path | None = None,
     future_window: TimeRange | None = None,
 ) -> BenchmarkSelectionRecord:
-    tasks, checks = _load_task_pool_records(task_pool, artifact_root)
+    task_pool_bundle = _load_task_pool_bundle(task_pool, artifact_root)
+    tasks = task_pool_bundle.tasks
+    checks = task_pool_bundle.checks_by_id
     origin = selection_module.build_rolling_origin(
         task_pool,
         tasks,
@@ -481,7 +485,9 @@ def evaluate_selectors(
         evaluation_config,
         rolling_policy,
     )
-    tasks, checks = _load_task_pool_records(task_pool, artifact_root)
+    task_pool_bundle = _load_task_pool_bundle(task_pool, artifact_root)
+    tasks = task_pool_bundle.tasks
+    checks = task_pool_bundle.checks_by_id
     future_window_ends = (
         *(format_utc_timestamp(value) for value in origin_times[1:]),
         history_window.end,
@@ -565,9 +571,7 @@ def evaluate_selectors(
         _, selected_matrix, future_matrix, selection_metrics = score_selection(
             selection,
             origin,
-            task_pool,
-            tasks,
-            checks,
+            task_pool_bundle,
             agents,
             cell_set,
             result_store,
@@ -847,10 +851,8 @@ def _ensure_pre_origin_result_task_check_identities(
 
 
 def run_agents(
-    task_pool: TaskPoolRecord,
+    task_pool_bundle: task_pool_module.TaskPoolBundle,
     task_check_refs: Sequence[TaskCheckRef],
-    tasks: Sequence[TaskRecord],
-    checks: Mapping[str, CheckRecord],
     agents: Sequence[AgentRecord],
     workspace_config: WorkspaceConfig,
     runtime_config: RuntimeConfig,
@@ -858,7 +860,10 @@ def run_agents(
     result_store: result_store_module.ResultStore,
     run_context: workspace_module.WorkspaceRunContext,
 ) -> tuple[ResultRecord, ...]:
-    _validate_task_pool_members(task_pool, tasks, checks)
+    bundle = _validated_task_pool_bundle(task_pool_bundle)
+    task_pool = bundle.task_pool
+    tasks = bundle.tasks
+    checks = bundle.checks_by_id
     _ensure_refs_in_task_pool(task_check_refs, task_pool)
     cells: list[ResultCellRef] = []
     for ref in task_check_refs:
@@ -888,9 +893,7 @@ def run_agents(
 
 def fill_results(
     selection: BenchmarkSelectionRecord,
-    task_pool: TaskPoolRecord,
-    tasks: Sequence[TaskRecord],
-    checks: Mapping[str, CheckRecord],
+    task_pool_bundle: task_pool_module.TaskPoolBundle,
     agents: Sequence[AgentRecord],
     workspace_config: WorkspaceConfig,
     runtime_config: RuntimeConfig,
@@ -899,7 +902,10 @@ def fill_results(
     result_store: result_store_module.ResultStore,
     run_context: workspace_module.WorkspaceRunContext,
 ) -> tuple[ResultRecord, ...]:
-    _validate_task_pool_members(task_pool, tasks, checks)
+    bundle = _validated_task_pool_bundle(task_pool_bundle)
+    task_pool = bundle.task_pool
+    tasks = bundle.tasks
+    checks = bundle.checks_by_id
     _ensure_selection_matches_task_pool(selection, task_pool)
     with result_store_module.open_result_store_session(result_store) as session:
         missing = result_store_module.find_missing_results(
@@ -943,9 +949,7 @@ def fill_results(
 def prepare_evaluation_cells(
     selection: BenchmarkSelectionRecord,
     origin: RollingOriginRecord,
-    task_pool: TaskPoolRecord,
-    tasks: Sequence[TaskRecord],
-    checks: Mapping[str, CheckRecord],
+    task_pool_bundle: task_pool_module.TaskPoolBundle,
     agents: Sequence[AgentRecord],
     workspace_config: WorkspaceConfig,
     runtime_config: RuntimeConfig,
@@ -955,11 +959,12 @@ def prepare_evaluation_cells(
     join_config: result_store_module.ResultJoinConfig,
     run_context: workspace_module.WorkspaceRunContext,
 ) -> EvaluationCellSet:
+    bundle = _validated_task_pool_bundle(task_pool_bundle)
     return _prepare_evaluation_cell_sets(
         ((selection, origin),),
-        task_pool,
-        tasks,
-        checks,
+        bundle.task_pool,
+        bundle.tasks,
+        bundle.checks_by_id,
         agents,
         workspace_config,
         runtime_config,
@@ -1363,15 +1368,16 @@ def _validate_reusable_evaluation_cell_set(
 def score_selection(
     selection: BenchmarkSelectionRecord,
     origin: RollingOriginRecord,
-    task_pool: TaskPoolRecord,
-    tasks: Sequence[TaskRecord],
-    checks: Mapping[str, CheckRecord],
+    task_pool_bundle: task_pool_module.TaskPoolBundle,
     agents: Sequence[AgentRecord],
     evaluation_cells: EvaluationCellSet,
     result_store: result_store_module.ResultStore,
     join_config: result_store_module.ResultJoinConfig,
 ) -> tuple[EvaluationCellSet, ResultMatrix, ResultMatrix, tuple[MetricRecord, ...]]:
-    _validate_task_pool_members(task_pool, tasks, checks)
+    bundle = _validated_task_pool_bundle(task_pool_bundle)
+    task_pool = bundle.task_pool
+    tasks = bundle.tasks
+    checks = bundle.checks_by_id
     _ensure_selection_origin(selection, origin, task_pool, tasks, checks)
     if (
         evaluation_cells.future_task_pool_id != task_pool.task_pool_id
@@ -1587,6 +1593,14 @@ def _load_task_pool_records(
     task_pool: TaskPoolRecord,
     artifact_root: Path | None = None,
 ) -> tuple[tuple[TaskRecord, ...], Mapping[str, CheckRecord]]:
+    bundle = _load_task_pool_bundle(task_pool, artifact_root)
+    return bundle.tasks, bundle.checks_by_id
+
+
+def _load_task_pool_bundle(
+    task_pool: TaskPoolRecord,
+    artifact_root: Path | None = None,
+) -> task_pool_module.TaskPoolBundle:
     refs = (
         task_pool.task_records_ref,
         task_pool.check_records_ref,
@@ -1604,7 +1618,7 @@ def _load_task_pool_records(
         task_pool,
         artifact_root,
     )
-    return bundle.tasks, bundle.checks_by_id
+    return bundle
 
 
 def _load_training_selection_records(
@@ -2284,6 +2298,20 @@ def _validate_task_pool_members(
         raise ValueError(
             "task pool members are invalid: " + "; ".join(validation.errors)
         )
+
+
+def _validated_task_pool_bundle(
+    bundle: task_pool_module.TaskPoolBundle,
+) -> task_pool_module.TaskPoolBundle:
+    if not isinstance(bundle, task_pool_module.TaskPoolBundle):
+        raise TypeError("task_pool_bundle must be a TaskPoolBundle")
+    return task_pool_module.validated_task_pool_bundle(
+        bundle.task_pool,
+        bundle.tasks,
+        bundle.checks,
+        bundle.certification_evidence,
+        bundle.source_events,
+    )
 
 
 def _ensure_selection_matches_task_pool(

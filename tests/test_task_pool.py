@@ -1671,6 +1671,73 @@ def test_publish_task_pool_bundle_fsyncs_members_and_publication_directory(
     assert load_validated_task_pool_bundle(bundle.task_pool, tmp_path) == bundle
 
 
+def test_open_task_pool_bundle_is_read_only_and_preserves_identity(
+    tmp_path: Path,
+    accepted_result: CertificationResult,
+) -> None:
+    bundle = _published_bundle_fixture(
+        accepted_result,
+        bundle_key="open",
+        created_at="2026-02-04T00:00:00Z",
+    )
+    target = task_pool_module.publish_task_pool_bundle(bundle, tmp_path)
+    members = tuple(sorted(path for path in target.iterdir() if path.is_file()))
+    before = {
+        path.name: (path.read_bytes(), path.stat().st_mtime_ns) for path in members
+    }
+
+    opened = task_pool_module.open_task_pool_bundle(target / "task-pool.jsonl")
+
+    assert opened == bundle
+    assert opened.task_pool.task_pool_digest == bundle.task_pool.task_pool_digest
+    assert {
+        path.name: (path.read_bytes(), path.stat().st_mtime_ns) for path in members
+    } == before
+
+
+def test_open_task_pool_bundle_rejects_noncanonical_manifest_location(
+    tmp_path: Path,
+    accepted_result: CertificationResult,
+) -> None:
+    bundle = _published_bundle_fixture(
+        accepted_result,
+        bundle_key="canonical",
+        created_at="2026-02-05T00:00:00Z",
+    )
+    wrong_location = tmp_path / "task-pool.jsonl"
+    write_jsonl_records(wrong_location, (bundle.task_pool,))
+
+    with pytest.raises(ValueError, match="path does not match"):
+        task_pool_module.open_task_pool_bundle(wrong_location)
+
+
+@pytest.mark.parametrize(
+    ("filename", "record_count", "error"),
+    (
+        ("manifest.jsonl", 1, "must be named task-pool.jsonl"),
+        ("task-pool.jsonl", 0, "must contain exactly one"),
+        ("task-pool.jsonl", 2, "must contain exactly one"),
+    ),
+)
+def test_open_task_pool_bundle_rejects_ambiguous_manifest(
+    tmp_path: Path,
+    accepted_result: CertificationResult,
+    filename: str,
+    record_count: int,
+    error: str,
+) -> None:
+    bundle = _published_bundle_fixture(
+        accepted_result,
+        bundle_key="ambiguous",
+        created_at="2026-02-06T00:00:00Z",
+    )
+    manifest = tmp_path / filename
+    write_jsonl_records(manifest, (bundle.task_pool,) * record_count)
+
+    with pytest.raises(ValueError, match=error):
+        task_pool_module.open_task_pool_bundle(manifest)
+
+
 def test_freeze_task_pool_rejects_broken_task_check_linkage(
     accepted_result: CertificationResult,
 ) -> None:

@@ -13,6 +13,7 @@ from typing import Any
 import pytest
 
 from barcarolle import runner as runner_module
+from barcarolle import task_pool as task_pool_module
 from barcarolle.cli import main as cli_main
 from barcarolle.records import (
     AgentRecord,
@@ -346,8 +347,11 @@ def test_fill_results_runs_only_missing_agent_task_check_cells(
         _result(task, check, agent, workspace_config, runtime_config, scoring_config),
         store,
     )
-    task_pool = _task_pool((task,), (check,))
-    selection = _selection(task_pool, TaskCheckRef(task.task_id, check.check_id))
+    task_pool_bundle = _task_pool_bundle((task,), (check,))
+    selection = _selection(
+        task_pool_bundle.task_pool,
+        TaskCheckRef(task.task_id, check.check_id),
+    )
     calls: list[str] = []
 
     def fake_run_agent_on_task(
@@ -367,9 +371,7 @@ def test_fill_results_runs_only_missing_agent_task_check_cells(
 
     new_results = fill_results(
         selection,
-        task_pool,
-        (task,),
-        {check.check_id: check},
+        task_pool_bundle,
         (agent, other_agent),
         workspace_config,
         runtime_config,
@@ -404,8 +406,11 @@ def test_fill_results_rejects_tampered_scoring_before_agent_runs(
     task = _task()
     check = _check()
     agent = _agent()
-    task_pool = _task_pool((task,), (check,))
-    selection = _selection(task_pool, TaskCheckRef(task.task_id, check.check_id))
+    task_pool_bundle = _task_pool_bundle((task,), (check,))
+    selection = _selection(
+        task_pool_bundle.task_pool,
+        TaskCheckRef(task.task_id, check.check_id),
+    )
     scoring_config = ScoringConfig("valid-pricing", {})
     object.__setattr__(scoring_config, field_name, invalid_value)
     calls: list[str] = []
@@ -421,9 +426,7 @@ def test_fill_results_rejects_tampered_scoring_before_agent_runs(
     with pytest.raises(ValueError, match=error):
         fill_results(
             selection,
-            task_pool,
-            (task,),
-            {check.check_id: check},
+            task_pool_bundle,
             (agent,),
             _workspace_config(),
             _runtime_config(),
@@ -442,7 +445,7 @@ def test_run_agents_rejects_duplicate_agent_ids_before_execution(
     task = _task()
     check = _check()
     agent = _agent()
-    task_pool = _task_pool((task,), (check,))
+    task_pool_bundle = _task_pool_bundle((task,), (check,))
     calls: list[str] = []
 
     def fake_run_agent_on_task(*args, **kwargs):
@@ -455,10 +458,8 @@ def test_run_agents_rejects_duplicate_agent_ids_before_execution(
 
     with pytest.raises(ValueError, match="duplicate Agent IDs"):
         run_agents(
-            task_pool,
+            task_pool_bundle,
             (TaskCheckRef(task.task_id, check.check_id),),
-            (task,),
-            {check.check_id: check},
             (agent, agent),
             _workspace_config(),
             _runtime_config(),
@@ -576,7 +577,7 @@ def test_run_agents_rejects_nonpositive_timeout_before_execution(
     task = _task()
     check = _check()
     agent = _agent()
-    task_pool = _task_pool((task,), (check,))
+    task_pool_bundle = _task_pool_bundle((task,), (check,))
     calls: list[str] = []
 
     def fake_run_agent_on_task(*args, **kwargs):
@@ -589,10 +590,8 @@ def test_run_agents_rejects_nonpositive_timeout_before_execution(
 
     with pytest.raises(ValueError, match="timeout_seconds must be a positive integer"):
         run_agents(
-            task_pool,
+            task_pool_bundle,
             (TaskCheckRef(task.task_id, check.check_id),),
-            (task,),
-            {check.check_id: check},
             (agent,),
             _workspace_config(),
             replace(_runtime_config(), timeout_seconds=0),
@@ -616,10 +615,6 @@ def test_run_agents_rejects_invalid_later_task_before_any_workspace_run(
     )
     second_check = _check(check_id="second-check", task_id="second-task")
     tasks = (first_task, second_task)
-    checks = {
-        first_check.check_id: first_check,
-        second_check.check_id: second_check,
-    }
     agent = _agent()
     calls: list[str] = []
 
@@ -634,13 +629,11 @@ def test_run_agents_rejects_invalid_later_task_before_any_workspace_run(
 
     with pytest.raises(ValueError, match="failed validation"):
         run_agents(
-            _task_pool(tasks, (first_check, second_check)),
+            _task_pool_bundle(tasks, (first_check, second_check)),
             (
                 TaskCheckRef(first_task.task_id, first_check.check_id),
                 TaskCheckRef(second_task.task_id, second_check.check_id),
             ),
-            tasks,
-            checks,
             (agent,),
             _workspace_config(),
             _runtime_config(),
@@ -652,15 +645,25 @@ def test_run_agents_rejects_invalid_later_task_before_any_workspace_run(
     assert calls == []
 
 
-@pytest.mark.parametrize("drifted_member", ("task", "check"))
+@pytest.mark.parametrize(
+    ("drifted_member", "expected_error"),
+    (
+        ("task", "task records digest"),
+        ("check", "check records digest"),
+        ("certification", "certification evidence digest"),
+        ("source_event", "source event records digest"),
+    ),
+)
 def test_run_agents_rejects_frozen_task_pool_member_drift_before_execution(
     tmp_path: Path,
     monkeypatch,
     drifted_member: str,
+    expected_error: str,
 ) -> None:
     task = _task()
     check = _check()
-    task_pool = _task_pool((task,), (check,))
+    valid_bundle = _task_pool_bundle((task,), (check,))
+    task_pool = valid_bundle.task_pool
     tasks = (
         (replace(task, source_ref="changed-with-same-task-id"),)
         if drifted_member == "task"
@@ -673,18 +676,42 @@ def test_run_agents_rejects_frozen_task_pool_member_drift_before_execution(
             else check
         )
     }
+    certification_evidence = valid_bundle.certification_evidence
+    if drifted_member == "certification":
+        certification_evidence = (
+            {
+                **certification_evidence[0],
+                "reference_patch_digest": "changed-reference-patch",
+            },
+        )
+    source_events = valid_bundle.source_events
+    if drifted_member == "source_event":
+        source_events = (
+            record_with_digest(
+                replace(
+                    source_events[0],
+                    source_ref="changed-source-ref",
+                    source_event_digest="",
+                )
+            ),
+        )
     calls: list[str] = []
     monkeypatch.setattr(
         "barcarolle.runner.workspace_module.run_agent_on_task",
         lambda *args, **kwargs: calls.append("called"),
     )
+    drifted_bundle = task_pool_module.TaskPoolBundle(
+        task_pool=task_pool,
+        source_events=source_events,
+        tasks=tasks,
+        checks=tuple(checks.values()),
+        certification_evidence=certification_evidence,
+    )
 
-    with pytest.raises(ValueError, match=f"{drifted_member} records digest"):
+    with pytest.raises(ValueError, match=expected_error):
         run_agents(
-            task_pool,
+            drifted_bundle,
             (TaskCheckRef(task.task_id, check.check_id),),
-            tasks,
-            checks,
             (_agent(),),
             _workspace_config(),
             _runtime_config(),
@@ -694,6 +721,108 @@ def test_run_agents_rejects_frozen_task_pool_member_drift_before_execution(
         )
 
     assert calls == []
+
+
+def test_fill_results_rejects_source_event_drift_before_opening_result_store(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    task = _task()
+    check = _check()
+    bundle = _task_pool_bundle((task,), (check,))
+    drifted_event = record_with_digest(
+        replace(
+            bundle.source_events[0],
+            source_ref="changed-source-ref",
+            source_event_digest="",
+        )
+    )
+    drifted_bundle = replace(bundle, source_events=(drifted_event,))
+    result_path = tmp_path / "results.jsonl"
+
+    def fail_if_store_opens(*args, **kwargs):
+        raise AssertionError("invalid Task Pool must fail before opening Result Store")
+
+    monkeypatch.setattr(
+        runner_module.result_store_module,
+        "open_result_store_session",
+        fail_if_store_opens,
+    )
+
+    with pytest.raises(ValueError, match="source event records digest"):
+        fill_results(
+            _selection(bundle.task_pool, TaskCheckRef(task.task_id, check.check_id)),
+            drifted_bundle,
+            (_agent(),),
+            _workspace_config(),
+            _runtime_config(),
+            _scoring_config(),
+            ResultCacheConfig(),
+            ResultStore(result_path),
+            WorkspaceRunContext(),
+        )
+
+    assert not result_path.exists()
+
+
+@pytest.mark.parametrize("entrypoint", ("prepare", "score"))
+def test_evaluation_entrypoints_reject_certification_drift_before_cache_access(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    entrypoint: str,
+) -> None:
+    task = _task()
+    check = _check()
+    bundle = _task_pool_bundle((task,), (check,))
+    drifted_evidence = (
+        {
+            **bundle.certification_evidence[0],
+            "reference_patch_digest": "changed-reference-patch",
+        },
+    )
+    drifted_bundle = replace(bundle, certification_evidence=drifted_evidence)
+    ref = TaskCheckRef(task.task_id, check.check_id)
+    selection = _selection(bundle.task_pool, ref)
+    origin = _origin(bundle.task_pool, ref, ref)
+
+    def fail_if_cache_is_touched(*args, **kwargs):
+        raise AssertionError("invalid Task Pool must fail before cache access")
+
+    monkeypatch.setattr(
+        runner_module,
+        (
+            "_prepare_evaluation_cell_sets"
+            if entrypoint == "prepare"
+            else "_score_evaluation_cell_set"
+        ),
+        fail_if_cache_is_touched,
+    )
+
+    with pytest.raises(ValueError, match="certification evidence digest"):
+        if entrypoint == "prepare":
+            prepare_evaluation_cells(
+                selection,
+                origin,
+                drifted_bundle,
+                (_agent(),),
+                _workspace_config(),
+                _runtime_config(),
+                _scoring_config(),
+                ResultCacheConfig(),
+                ResultStore(tmp_path / "results.jsonl"),
+                ResultJoinConfig(),
+                WorkspaceRunContext(),
+            )
+        else:
+            score_selection(
+                selection,
+                origin,
+                drifted_bundle,
+                (_agent(),),
+                None,  # type: ignore[arg-type]
+                ResultStore(tmp_path / "results.jsonl"),
+                ResultJoinConfig(),
+            )
 
 
 def test_fill_results_reprices_cached_execution_without_rerunning_agent(
@@ -714,8 +843,11 @@ def test_fill_results_reprices_cached_execution_without_rerunning_agent(
         task, check, agent, workspace_config, runtime_config, old_pricing
     )
     store_result(old_result, store)
-    task_pool = _task_pool((task,), (check,))
-    selection = _selection(task_pool, TaskCheckRef(task.task_id, check.check_id))
+    task_pool_bundle = _task_pool_bundle((task,), (check,))
+    selection = _selection(
+        task_pool_bundle.task_pool,
+        TaskCheckRef(task.task_id, check.check_id),
+    )
 
     def fail_if_agent_runs(*args, **kwargs):
         raise AssertionError("a pricing change must not rerun paid execution")
@@ -729,9 +861,7 @@ def test_fill_results_reprices_cached_execution_without_rerunning_agent(
 
     repriced = fill_results(
         selection,
-        task_pool,
-        (task,),
-        {check.check_id: check},
+        task_pool_bundle,
         (agent,),
         workspace_config,
         runtime_config,
@@ -772,9 +902,7 @@ def test_fill_results_reprices_cached_execution_without_rerunning_agent(
     assert (
         fill_results(
             selection,
-            task_pool,
-            (task,),
-            {check.check_id: check},
+            task_pool_bundle,
             (agent,),
             workspace_config,
             runtime_config,
@@ -1057,7 +1185,10 @@ def test_prepare_evaluation_cells_and_score_selection_keep_selected_future_linka
             _result(task, check, agent, workspace_config, runtime_config, old_pricing),
             store,
         )
-    task_pool = _task_pool((selected_task, future_task), (selected_check, future_check))
+    task_pool_bundle = _task_pool_bundle(
+        (selected_task, future_task), (selected_check, future_check)
+    )
+    task_pool = task_pool_bundle.task_pool
     selected_ref = TaskCheckRef("selected-task", "selected-check")
     future_ref = TaskCheckRef("future-task", "future-check")
     origin = _origin(task_pool, selected_ref, future_ref)
@@ -1079,9 +1210,7 @@ def test_prepare_evaluation_cells_and_score_selection_keep_selected_future_linka
     cell_set = prepare_evaluation_cells(
         selection,
         origin,
-        task_pool,
-        (selected_task, future_task),
-        {"selected-check": selected_check, "future-check": future_check},
+        task_pool_bundle,
         (agent,),
         workspace_config,
         runtime_config,
@@ -1094,9 +1223,7 @@ def test_prepare_evaluation_cells_and_score_selection_keep_selected_future_linka
     scored_cell_set, selected_matrix, future_matrix, metrics = score_selection(
         selection,
         origin,
-        task_pool,
-        (selected_task, future_task),
-        {"selected-check": selected_check, "future-check": future_check},
+        task_pool_bundle,
         (agent,),
         cell_set,
         store,
@@ -1105,9 +1232,7 @@ def test_prepare_evaluation_cells_and_score_selection_keep_selected_future_linka
     resumed = score_selection(
         selection,
         origin,
-        task_pool,
-        (selected_task, future_task),
-        {"selected-check": selected_check, "future-check": future_check},
+        task_pool_bundle,
         (agent,),
         cell_set,
         store,
@@ -2539,7 +2664,10 @@ def test_prepare_evaluation_cells_reuses_persisted_missing_cell_set(
     future_check = _check(
         "future-check", "future-task", available_at="2026-01-07T00:00:00Z"
     )
-    task_pool = _task_pool((selected_task, future_task), (selected_check, future_check))
+    task_pool_bundle = _task_pool_bundle(
+        (selected_task, future_task), (selected_check, future_check)
+    )
+    task_pool = task_pool_bundle.task_pool
     selected_ref = TaskCheckRef("selected-task", "selected-check")
     origin = _origin(
         task_pool,
@@ -2563,9 +2691,7 @@ def test_prepare_evaluation_cells_reuses_persisted_missing_cell_set(
     first = prepare_evaluation_cells(
         selection,
         origin,
-        task_pool,
-        (selected_task, future_task),
-        {"selected-check": selected_check, "future-check": future_check},
+        task_pool_bundle,
         (_agent(),),
         _workspace_config(),
         _runtime_config(),
@@ -2589,9 +2715,7 @@ def test_prepare_evaluation_cells_reuses_persisted_missing_cell_set(
     resumed = prepare_evaluation_cells(
         selection,
         origin,
-        task_pool,
-        (selected_task, future_task),
-        {"selected-check": selected_check, "future-check": future_check},
+        task_pool_bundle,
         (_agent(),),
         _workspace_config(),
         _runtime_config(),
@@ -2725,7 +2849,10 @@ def test_score_selection_uses_exact_result_binding_frozen_in_evaluation_cells(
     )
     store_result(selected_pass, store)
     store_result(future_pass, store)
-    task_pool = _task_pool((selected_task, future_task), (selected_check, future_check))
+    task_pool_bundle = _task_pool_bundle(
+        (selected_task, future_task), (selected_check, future_check)
+    )
+    task_pool = task_pool_bundle.task_pool
     selected_ref = TaskCheckRef("selected-task", "selected-check")
     future_ref = TaskCheckRef("future-task", "future-check")
     origin = _origin(task_pool, selected_ref, future_ref)
@@ -2739,9 +2866,7 @@ def test_score_selection_uses_exact_result_binding_frozen_in_evaluation_cells(
     cell_set = prepare_evaluation_cells(
         selection,
         origin,
-        task_pool,
-        (selected_task, future_task),
-        {"selected-check": selected_check, "future-check": future_check},
+        task_pool_bundle,
         (agent,),
         workspace_config,
         runtime_config,
@@ -2773,9 +2898,7 @@ def test_score_selection_uses_exact_result_binding_frozen_in_evaluation_cells(
         score_selection(
             selection,
             origin,
-            task_pool,
-            (selected_task, future_task),
-            {"selected-check": selected_check, "future-check": future_check},
+            task_pool_bundle,
             (agent,),
             drifted_cell_set,
             store,
@@ -2785,9 +2908,7 @@ def test_score_selection_uses_exact_result_binding_frozen_in_evaluation_cells(
     _, selected_matrix, _, _ = score_selection(
         selection,
         origin,
-        task_pool,
-        (selected_task, future_task),
-        {"selected-check": selected_check, "future-check": future_check},
+        task_pool_bundle,
         (agent,),
         cell_set,
         store,
@@ -3908,6 +4029,30 @@ def _task_pool(
         ),
     )
     return record_with_digest(record)
+
+
+def _task_pool_bundle(
+    tasks: tuple[TaskRecord, ...],
+    checks: tuple[CheckRecord, ...],
+    *,
+    task_pool_id: str = "task-pool",
+    created_at: str | None = None,
+    source_window: TimeRange | None = None,
+) -> task_pool_module.TaskPoolBundle:
+    task_pool = _task_pool(
+        tasks,
+        checks,
+        task_pool_id=task_pool_id,
+        created_at=created_at,
+        source_window=source_window,
+    )
+    return task_pool_module.validated_task_pool_bundle(
+        task_pool,
+        tasks,
+        checks,
+        _certification_evidence(tasks, checks),
+        _source_events(tasks, checks),
+    )
 
 
 def _task_pool_with_refs(

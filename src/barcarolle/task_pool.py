@@ -687,6 +687,27 @@ def load_validated_task_pool_bundle(
     )
 
 
+def open_task_pool_bundle(manifest_path: Path) -> TaskPoolBundle:
+    """Open one published Task Pool bundle without modifying or republishing it."""
+    manifest = manifest_path.resolve()
+    if manifest.name != "task-pool.jsonl":
+        raise ValueError("Task Pool manifest must be named task-pool.jsonl")
+    try:
+        records = tuple(load_jsonl_records(manifest, TaskPoolRecord))
+    except (KeyError, OSError, TypeError, ValueError) as exc:
+        raise ValueError("Task Pool manifest is unavailable or invalid") from exc
+    if len(records) != 1:
+        raise ValueError("Task Pool manifest must contain exactly one TaskPoolRecord")
+    task_pool = records[0]
+    relative_dir = _task_pool_bundle_relative_dir(task_pool)
+    artifact_root = manifest.parent
+    for _ in relative_dir.parts:
+        artifact_root = artifact_root.parent
+    if (artifact_root / relative_dir).resolve() != manifest.parent:
+        raise ValueError("Task Pool manifest path does not match its member refs")
+    return load_validated_task_pool_bundle(task_pool, artifact_root)
+
+
 def publish_task_pool_bundle(
     bundle: TaskPoolBundle,
     artifact_root: Path,

@@ -559,9 +559,9 @@ def resolve_result_cells(
 ) -> Sequence[ResultCellRef]:
     """Resolve each requested Agent/Task/Check cell against exact cached identity.
 
-    When duplicate eligible results have the same exact identity, the first
-    record in append order is reused. This preserves the existing JSONL lookup
-    semantics while indexing the result set once per operation.
+    Multiple pricing views of one execution are interchangeable for execution
+    reuse. Distinct executions under one exact identity are an evidence
+    conflict and must be resolved explicitly rather than by append order.
     """
     ref_keys = tuple((ref.task_id, ref.check_id) for ref in task_check_refs)
     if len(set(ref_keys)) != len(ref_keys):
@@ -1032,7 +1032,16 @@ def _index_reusable_results(
         ):
             continue
         key = (result.agent_id, result.task_id, result.check_id, result.cache_identity)
-        reusable.setdefault(key, result)
+        existing = reusable.get(key)
+        if existing is None:
+            reusable[key] = result
+            continue
+        if result_execution_digest(existing) != result_execution_digest(result):
+            raise ValueError(
+                "conflicting reusable Result executions share one cache identity: "
+                f"{result.cache_identity.identity_digest}"
+            )
+        reusable[key] = min((existing, result), key=lambda item: item.result_id)
     return reusable
 
 
