@@ -1,6 +1,6 @@
 # Statistical Protocol
 
-Status: current offline contract, 2026-07-23. Empirical thresholds and model
+Status: current offline contract, 2026-07-24. Empirical thresholds and model
 claims remain pending until a larger authorized paired history exists.
 
 This document fixes the statistical meanings used by rolling-origin evaluation.
@@ -38,12 +38,50 @@ and Feature provenance. It also proves the Result cache identity projects to
 the frozen Agent before supply reads. After validating the selection-time pool
 and replaying Origin, it verifies Task/Check cache identity and exact
 `task_count`/`task_stratum` Feature provenance before opening the later pool.
-That pool must preserve the earlier source coverage, cover the
-future-window end, postdate the Selection, and be observed through the
-label-maturity cutoff.
+That pool must preserve the bound repository, stable Generator behavior, source
+protocol, and certification configuration; cover the complete declared future
+interval; postdate the Selection; and be observed through the label-maturity
+cutoff. It may contain only the later increment or a cumulative history.
+Overlapping same-ID Task/Check records must remain unchanged. Run identity,
+observed frame, and output inventory may change without changing Generator
+behavior.
 Reporting reloads both pools and recomputes mature and censored refs before
 supporting a prospective claim. The original Origin and Task Pool are never
 rewritten.
+
+Result availability is also evidence. Barcarolle-managed Results use the
+recorded local observation time. Imported Results default to an import-time
+floor, preventing late evidence from entering an earlier Origin. An explicit
+`producer_attested_historical_v1` policy may preserve the producer's source
+timestamp, but reports label that history as producer-attested; it does not
+become a Barcarolle observation-time claim.
+
+## Evidence Claim Lattice
+
+Claim strength is a product of independent evidence axes, not one ladder:
+
+- supplied Task Pool bundle and cross-record consistency;
+- observed source-frame identity and authority;
+- Generator behavior and source-protocol continuity;
+- executable Check certification and hidden-oracle binding;
+- Agent/Task/Check/Workspace/Runtime Result identity;
+- Result-source and availability provenance;
+- rolling-origin chronology, maturity, censoring, and leakage replay;
+- downstream field or tuning outcomes.
+
+The machine claim `task_pool_bundle_internal_consistency` proves only the first
+axis. A frame-free user pool remains usable, but cannot support a source-frame
+or population-coverage claim. A producer-attested frame requires the declared
+blind spots and authority; source-authoritative frames additionally require
+their authority receipt. An observed frame is an inventory of what was seen,
+not proof that the underlying population is complete.
+
+Prediction-error estimates from a generated or user-supplied pool are
+conditional on the exact frozen pool and whatever source-frame/protocol
+evidence is present. Generalization to natural future traffic additionally
+requires a defensible source protocol, prospective behavior continuity, and
+enough future Origin blocks. Reporting must not infer those axes from internal
+bundle validity.
 
 ## Dependence And Stratification
 
@@ -63,9 +101,10 @@ The fixed Pylint adapter implements the first concrete dependency protocol as
 reference patches, persists only each SourceEvent's patch digest and exact
 repository-relative changed paths, creates an undirected edge for exact path
 overlap, and assigns deterministic connected-component IDs. The evidence is a
-self-digested adapter artifact at `records/dependency-evidence.jsonl`; its
-protocol, ref, and digest enter the Task Pool generator-config digest. Loading
-the pilot re-derives the artifact from the local patches and checks every
+self-digested adapter artifact at `records/adapter-evidence.jsonl`. Generation
+provenance binds its ref and digest as run-specific sidecar evidence while
+keeping stable behavior inventory-independent. Loading validates the complete
+Task Pool bundle, re-derives the artifact from local patches, and checks every
 persisted SourceEvent cluster before any paid stage.
 
 Exact path overlap is a conservative, coarse relation: overlap is evidence of

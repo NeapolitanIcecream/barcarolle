@@ -13,11 +13,13 @@ benchmark or research evidence.
 
 Barcarolle keeps the benchmark boundary outside the tested Agent:
 
-- filters or imports a `Task + Check` pool with an auditable source-event frame
-  and execution-based task validation;
+- accepts direct candidates, a prepared package from an arbitrary Generator, or
+  an existing user-maintained `Task + Check` pool, with execution-based task
+  validation where Barcarolle builds the pool;
 - runs Agents in fresh solver workspaces;
 - replays captured diffs in verifier workspaces with private check material;
-- stores normalized `Result` records with exact cache identity;
+- stores managed or explicitly admitted external `Result` records with exact
+  cache identity and availability provenance;
 - selects benchmark tasks under rolling-origin splits;
 - writes reports from frozen records and result matrices.
 
@@ -56,6 +58,13 @@ single-cell execution commands are documented in
 [`docs/pylint-swe-bench-reasoning-pilot.md`](docs/pylint-swe-bench-reasoning-pilot.md).
 The rolling-origin estimands, censoring, weighting, pairing, and uncertainty
 rules are fixed in [`docs/statistical-protocol.md`](docs/statistical-protocol.md).
+
+Validate an existing immutable Task Pool bundle without running its Generator,
+recertifying, or republishing it:
+
+```bash
+uv run barcarolle task-pool validate path/to/task-pool.jsonl
+```
 
 ## Install And Test
 
@@ -118,9 +127,10 @@ strict-prospective CellSets. `task_pool` and `output_dir` are required; omit a
 record file when that evidence is absent.
 Included record files contain zero or more records of the type named by the
 key. Task Pool artifact refs resolve under `artifact_root`, which defaults to
-the config-file directory. Coverage is unsupported when referenced Task,
-SourceEvent, Check, or certification-evidence files are missing or do not match
-their stored digests. The command writes `report.md` and `report.json` under
+the config-file directory. Bundle internal consistency is unsupported when
+referenced Task, SourceEvent, Check, or certification-evidence files are
+missing or do not match their stored digests; this claim does not imply source
+or population coverage. The command writes `report.md` and `report.json` under
 `output_dir`. A supported Selector-performance claim additionally requires the
 Selector, Origin, FeatureSnapshot, SelectorInput, Agent, Result, Selection,
 cell-set, matrix, and metric files shown above; omitting them produces an
@@ -130,10 +140,11 @@ explicit unsupported claim rather than inferring missing provenance.
 
 The Python API runs benchmark workflows. Start with these modules:
 
-- `barcarolle.task_pool` builds and freezes candidate `Task + Check` pools.
+- `barcarolle.task_pool` validates prepared candidates and complete bundles,
+  then builds and freezes candidate `Task + Check` pools.
 - `barcarolle.workspace` creates solver and verifier workspaces.
-- `barcarolle.result_store` stores reusable `Result` records and builds
-  result matrices.
+- `barcarolle.result_store` stores reusable managed/external `Result` records,
+  detects ambiguous executions, and builds result matrices.
 - `barcarolle.selection` builds rolling origins, selector inputs, benchmark
   selections, and metrics.
 - `barcarolle.reporting` writes human-readable and machine-readable reports.

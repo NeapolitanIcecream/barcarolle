@@ -1,10 +1,11 @@
 # Module Design: Result Store
 
-Status: current behavior and planned scale boundary, 2026-07-23.
+Status: current behavior and planned scale boundary, 2026-07-24.
 
 ## Responsibility
 
-Store, query, and join reusable `Result` records for Agent-task-check cells.
+Store, admit, query, and join reusable `Result` records for exact
+Agent-task-check execution cells.
 
 Result Store does not execute Agents and does not choose benchmark tasks.
 
@@ -16,6 +17,8 @@ Result Store does not execute Agents and does not choose benchmark tasks.
 - `ResultCacheIdentity`;
 - `WorkspaceRunRecord`;
 - cache and scoring config.
+- optional external Result source manifest plus explicit import authority and
+  availability policy.
 
 ## Outputs
 
@@ -24,7 +27,8 @@ Result Store does not execute Agents and does not choose benchmark tasks.
 - cached result queries;
 - `ResultMatrix`;
 - result completeness and exclusion metadata;
-- missing Agent-task-check cells.
+- missing Agent-task-check cells;
+- normalized external Result evidence and an immutable import receipt.
 
 ## System Boundary
 
@@ -96,9 +100,14 @@ Effect:
   rate is configured and all priced keys are present.
 - Stores pricing provenance on the Result, outside `ResultCacheIdentity`, so a
   new price table can reprice retained usage without rerunning paid work.
-- Derives `result_id` from the execution evidence digest and the derived
-  scoring-config digest. Repricing the same execution through any prior price
-  view therefore produces the same ID for the same target price table.
+- Marks locally executed evidence as `barcarolle_managed`, with source and
+  effective availability equal and no external manifest or import-observation
+  timestamp.
+- Derives `result_id` from execution evidence, scoring configuration, and
+  evidence provenance/availability. Repricing the same execution through any
+  prior price view therefore produces the same ID for the same target price
+  table and evidence view; importing it through another authority or
+  availability policy does not overwrite that view.
 
 ### result_execution_digest
 
@@ -113,9 +122,97 @@ Output:
 Effect:
 
 - Digests the Result fields that describe one execution while excluding cost,
-  pricing provenance, Result availability, and Result record identity.
-- Gives all pricing views of the same execution one stable key without adding
-  another record type.
+  pricing provenance, evidence source, Result availability, and Result record
+  identity.
+- Gives all pricing and evidence views of the same execution one stable key
+  without adding another record type.
+
+### load_result_source_bundle
+
+Input:
+
+- canonical `result-source-manifest.jsonl`.
+
+Output:
+
+- read-only source manifest, Result tuple, and resolved source path.
+
+Effect:
+
+- Requires one latest-schema, self-digested manifest with producer, authority
+  digest, availability semantics, canonical creation time, and one relative
+  `results.jsonl` ref.
+- Loads strict canonical Result records, rejects duplicate source Result IDs,
+  and checks the tuple digest. Per-row semantic admission remains Runner's
+  responsibility. It never opens the source for writing.
+
+### normalize_external_result
+
+Input:
+
+- source `ResultRecord`;
+- source-manifest digest;
+- implementation-owned local import-observation time;
+- `import_time_floor_v1` or
+  `producer_attested_historical_v1`.
+
+Output:
+
+- normalized local `ResultRecord`.
+
+Effect:
+
+- Preserves execution and cache identity, labels the evidence
+  `external_attested`, and binds source manifest and import time.
+- Under the default policy sets effective availability to
+  `max(source_result_available_at, evidence_imported_at)`. The historical policy
+  preserves source time only as an explicit producer attestation.
+- Recomputes Result identity/digest for the evidence view. It does not change
+  or authenticate the source record.
+
+### load_result_import_receipt / write_result_import_receipt
+
+Input:
+
+- receipt path and, for writes, one `ResultImportReceipt`.
+
+Output:
+
+- zero or one immutable receipt.
+
+Effect:
+
+- Requires exactly one self-digested record when present and refuses a
+  different record at the same path.
+- The receipt binds source/target digests, authority, the first local
+  import-observation time,
+  availability policy, admitted Agent/config identities, and each source row's
+  admitted/idempotent/rejected local binding and reason.
+- Runner requires exact replay to use the same canonical observation time and
+  rejects an observation before source-manifest creation.
+- Write or identical-replay success is returned only after the receipt file and
+  its parent directory are fsynced.
+
+### open_result_import_transaction
+
+Input:
+
+- `store: ResultStore`;
+- `receipt_path: Path`.
+
+Output:
+
+- one context-managed import transaction.
+
+Effect:
+
+- Acquires deterministic store- and receipt-scoped POSIX advisory locks before
+  reading local Result or receipt state and holds them through Result append and
+  immutable receipt publication.
+- Serializes imports sharing either destination without creating an empty
+  Result Store. Persistent hidden lock sidecars contain no evidence.
+- Does not replace the Result Store's exclusive append lock; import takes that
+  lock only when it has normalized rows to admit.
 
 ### compute_result_cache_identity
 
@@ -190,7 +287,9 @@ Output:
 Effect:
 
 - Delegates to the same locked writer used for batches. Writes a result record
-  append-only. Corrections or rescoring create a new `result_id` and
+  append-only. Records validation requires the canonical Result ID derived
+  from execution, scoring, and evidence identity. Corrections or rescoring
+  create a new `result_id` and
   `result_digest`; existing frozen records are not mutated.
 
 ### open_result_store_session
@@ -238,6 +337,9 @@ Effect:
   different offsets have the same ordering.
 - Takes a shared advisory lock and rejects an unterminated final line instead of
   treating a partial append as a record.
+- Validates every complete Result row, including its canonical Result ID,
+  before applying query filters; invalid durable evidence fails closed rather
+  than disappearing from a cache view.
 - Rejects the second occurrence of any `result_id`, with its line number, before
   applying query filters. This is the same rule used by a locked session.
 
@@ -292,8 +394,10 @@ Effect:
   does not reuse benchmark-invalid infrastructure results; callers may opt in
   with `reuse_benchmark_invalid` without allowing malformed records. Agent-
   invalid results remain reusable.
-- If duplicate eligible records have the same exact identity, chooses the first
-  record in append order.
+- If the same exact cache identity has different execution digests, fails as
+  ambiguous instead of choosing by append order. Equal execution digests may
+  have several pricing or evidence views; pricing selection remains
+  deterministic.
 - Loads and indexes matching stored results once per resolution operation.
 - When Runner supplies its active Result Store session, reuses the same live
   index instead of parsing JSONL again.
@@ -342,6 +446,8 @@ Effect:
   `cell_state=missing` for Runner to execute through Workspace.
 - Uses pricing-independent resolution: a price-table change is never a reason
   to rerun the Agent.
+- Inherits the same ambiguity check. A conflicting cache cannot be disguised as
+  a missing cell and rerun implicitly.
 
 ### build_result_matrix
 

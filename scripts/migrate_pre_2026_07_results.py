@@ -1,14 +1,17 @@
 """Migrate the pre-2026-07 Result JSONL cache to the current schema.
 
 This is deliberately a one-off, non-destructive migration. It preserves paid
-execution records in the current Result schema; exact cache reuse still
-requires every current execution-identity field to match. It does not migrate
-selections, matrices, or metrics that reference old result and identity digests.
+execution evidence while assigning current cache, Result, and evidence
+identities. Exact cache reuse still requires every current execution-identity
+field to match. Derived FeatureSnapshots, SelectorInputs, Selections, fitted
+Selectors, CellSets, matrices, and metrics that bind old identities must be
+rebuilt.
 """
 
 from __future__ import annotations
 
 import argparse
+from dataclasses import replace
 import json
 from pathlib import Path
 from typing import Any, Mapping, Sequence
@@ -28,6 +31,7 @@ from barcarolle.records import (
     validate_result,
     write_jsonl_records,
 )
+from barcarolle.result_store import compute_result_id, ensure_unique_result_ids
 
 
 _OLD_CHECK_FIELDS = frozenset(
@@ -133,6 +137,7 @@ def migrate_result_cache(
 
     old_rows = _read_old_rows(results_path)
     migrated = tuple(_migrate_result(row, checks_by_id) for row in old_rows)
+    ensure_unique_result_ids(migrated)
     write_jsonl_records(output_path, migrated)
     return migrated
 
@@ -305,7 +310,7 @@ def _migrate_result(
         )
     )
     result = ResultRecord(
-        result_id=_string(old_result["result_id"], "result_id"),
+        result_id="",
         result_digest="",
         cache_identity=identity,
         agent_id=agent_id,
@@ -330,10 +335,18 @@ def _migrate_result(
         ),
         started_at=_string(old_result["started_at"], "started_at"),
         finished_at=_string(old_result["finished_at"], "finished_at"),
+        evidence_source_kind="barcarolle_managed",
+        evidence_source_manifest_digest=None,
+        evidence_imported_at=None,
+        source_result_available_at=_string(
+            old_result["result_available_at"], "result_available_at"
+        ),
+        availability_policy="managed_observation_v1",
         result_available_at=_string(
             old_result["result_available_at"], "result_available_at"
         ),
     )
+    result = replace(result, result_id=compute_result_id(result))
     result = record_with_digest(result)
     validation = validate_result(result)
     if not validation.ok:

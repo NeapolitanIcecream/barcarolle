@@ -23,6 +23,7 @@ from barcarolle.records import (
     load_jsonl_records,
 )
 from barcarolle.runner import ReportConfig, write_report
+from barcarolle.task_pool import open_task_pool_bundle
 
 
 _REPORT_PATH_KEYS = (
@@ -49,7 +50,12 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser = _parser()
     args = parser.parse_args(argv)
     try:
-        summary = _write_report_from_config(args.config)
+        if args.command == "report":
+            summary = _write_report_from_config(args.config)
+        elif args.command == "task-pool" and args.task_pool_command == "validate":
+            summary = _validate_task_pool_manifest(args.manifest)
+        else:  # pragma: no cover - argparse closes the command set
+            raise ValueError("unsupported command")
     except (OSError, TypeError, ValueError) as exc:
         parser.error(str(exc))
     print(canonical_json(summary))
@@ -63,7 +69,32 @@ def _parser() -> argparse.ArgumentParser:
         "report", help="write a report from existing JSONL records"
     )
     report.add_argument("config", type=Path, help="path to the report JSON config")
+    task_pool = commands.add_parser(
+        "task-pool", help="inspect immutable Task Pool bundles"
+    )
+    task_pool_commands = task_pool.add_subparsers(
+        dest="task_pool_command", required=True
+    )
+    validate = task_pool_commands.add_parser(
+        "validate", help="validate one published Task Pool bundle in place"
+    )
+    validate.add_argument(
+        "manifest", type=Path, help="path to the bundle's task-pool.jsonl"
+    )
     return parser
+
+
+def _validate_task_pool_manifest(manifest_path: Path) -> Mapping[str, object]:
+    bundle = open_task_pool_bundle(manifest_path)
+    return {
+        "task_pool_id": bundle.task_pool.task_pool_id,
+        "task_pool_digest": bundle.task_pool.task_pool_digest,
+        "repository_id": bundle.task_pool.repository_id,
+        "task_count": len(bundle.tasks),
+        "check_count": len(bundle.checks),
+        "source_event_count": len(bundle.source_events),
+        "certification_evidence_count": len(bundle.certification_evidence),
+    }
 
 
 def _write_report_from_config(config_path: Path) -> Mapping[str, object]:

@@ -1,6 +1,6 @@
 # Module Design: Runner
 
-Status: current, 2026-07-23.
+Status: current, 2026-07-24.
 
 ## Responsibility
 
@@ -13,7 +13,10 @@ reporting logic.
 ## Inputs
 
 - stable target `repository_id` and local `repository_path`;
-- task-source config or existing `Task Pool`;
+- task-source config, a prepared-candidate package, or an existing complete
+  `Task Pool` bundle;
+- optional external Result source manifest plus an explicit accepted authority
+  and availability policy;
 - Agent set;
 - historical window, origin, and future window;
 - budget;
@@ -32,7 +35,9 @@ reporting logic.
   Benchmark Selection, evaluation-cell, matrix, and metric records where the
   command produces them;
 - run summary;
-- report paths.
+- report paths;
+- immutable Result-import decisions and receipt when external evidence is
+  admitted.
 
 ## System Boundary
 
@@ -76,7 +81,8 @@ Input:
     patches;
   - direct `candidate_id -> check command` and `candidate_id -> hidden material
     path` mappings, plus optional semantic Check manifests;
-  - either an import path or a time range with task-source config;
+  - exactly one candidate source: an import path, a time range with task-source
+    config, or a validated prepared-candidate package;
   - certification config and output refs in metadata.
 
 Output:
@@ -101,12 +107,64 @@ Effect:
   machine-local command.
 - Runs executable base-fail/reference-patch-pass certification as symmetric
   fresh-workspace pairs, finalizes the complete accepted/rejected/excluded
-  source-event frame, and passes both it and all certification results to
+  source-event ledger, and passes both it and all certification results to
   `freeze_task_pool`.
+- When the source is a prepared package, validates its candidate and exclusion
+  ledgers, repository/base-commit bindings, referenced material digests, and
+  optional observed-frame/provenance sidecars before certification. The
+  package is a language-neutral artifact contract, not a Generator plugin API.
 - After the frozen record is constructed, writes the exact accepted Task
   sequence, accepted Check sequence, ordered sanitized certification evidence,
   and ordered SourceEvent sequence as one immutable content-addressed bundle.
   Their canonical digests must match the digests stored on `TaskPoolRecord`.
+
+### build_task_pool_from_package
+
+Input:
+
+- `package: PreparedCandidatePackage`
+- `config: TaskPoolConfig` without another candidate source or material map.
+
+Output:
+
+- `TaskPoolRecord`
+
+Effect:
+
+- Derives the certification material maps from the validated package and calls
+  the ordinary `build_task_pool` path. It adds no second certification,
+  publication, or Generator execution path.
+
+### import_result_bundle
+
+Input:
+
+- an immutable external Result-source manifest;
+- a complete validated `TaskPoolBundle`;
+- the accepted Agent set plus Workspace and Runtime configs;
+- a local Result Store and receipt path;
+- an explicit accepted authority digest and availability policy.
+
+Output:
+
+- `ResultImportReceipt`
+
+Effect:
+
+- Reads the source bundle without modifying it, validates its manifest and
+  records, and admits only Results whose Agent, Task, Check, Workspace, and
+  Runtime cache identities match the supplied local evidence.
+- Rejects conflicting executions both within the source and against the local
+  store. Accepted records receive external evidence provenance. The default
+  policy floors effective availability at import time; preserving a
+  producer-attested historical timestamp requires that explicit source policy.
+- Persists per-record decisions and one immutable receipt. An exact replay
+  recomputes admission against a read-only store view and returns the existing
+  receipt without creating or duplicating Results. The first local observation
+  time is implementation-owned, recovered from the receipt or a prior valid
+  local row, and cannot predate source-manifest creation. Local write paths
+  cannot alias or sit inside the read-only source root. Receipt write or replay
+  returns only after the file and parent directory are fsynced.
 
 ### train_selector
 
@@ -223,12 +281,12 @@ Effect:
   label maturity at the origin cutoff or after the configured maturity lag;
   immature refs stay in censored origin fields. Arrivals before
   `history_window.start` are excluded from that origin's history.
-  For each timestamp, resolves Task/Check records and builds the complete
-  pre-origin evidence chain once, with `history_window.start` as the Result
-  availability lower bound. Runner computes every Selector/origin
-  Selection in Selector-major order and appends all Selectors, Origins,
-  FeatureSnapshots, SelectorInputs, and Selections before opening future
-  outcomes.
+  Runner loads one physical Result snapshot through the maximum origin cutoff,
+  releases the store lock, and derives every origin's conflict-checked cutoff
+  view from that immutable tuple, with `history_window.start` as the
+  availability lower bound. It computes every Selector/origin Selection in
+  Selector-major order and appends all Selectors, Origins, FeatureSnapshots,
+  SelectorInputs, and Selections before opening future outcomes.
 - Plans the first-occurrence union of each Selection's selected refs and its
   origin's mature future refs. Censored refs are never sent to Workspace. One
   locked Result Store session resolves, executes, and
@@ -285,10 +343,11 @@ Effect:
   records. Selection then replays `task_count` and every `task_stratum` record
   against that Origin and the validated TaskRecords. Metadata drift fails after
   the one required selection-pool read but before the later pool or Agent
-  execution. The later pool must use the same
-  repository, generator behavior, and certification config, preserve the
-  earlier source-window start, cover the declared future-window end, postdate
-  the Selection, and be observed through the label-maturity cutoff.
+  execution. The later pool must use the same repository, Generator behavior,
+  source protocol, and certification config; cover the complete declared
+  future source window; postdate the Selection; and be observed through the
+  label-maturity cutoff. It may be an incremental or cumulative pool. Any
+  same-ID Task or Check present in both snapshots must be unchanged.
 - Replays future arrival, maturity, censoring, and dependency policy without
   mutating the strict Origin. The CellSet binds the later Task Pool identity;
   censored refs remain evidence but do not enter Agent execution.
@@ -324,10 +383,8 @@ Effect:
 
 Input:
 
-- `task_pool: TaskPoolRecord`
+- `task_pool_bundle: TaskPoolBundle`
 - `task_check_refs: Sequence[TaskCheckRef]`
-- `tasks: Sequence[TaskRecord]`
-- `checks: Mapping[str, CheckRecord]`
 - `agents: Sequence[AgentRecord]`
 - `workspace_config: WorkspaceConfig`
 - `runtime_config: RuntimeConfig`
@@ -341,8 +398,10 @@ Output:
 
 Effect:
 
-- Calls Workspace for requested Agent-task-check cells and calls Result Store to
-  store the produced records. It constructs every missing-cell identity first,
+- Validates the complete Task Pool bundle, including certification and
+  SourceEvent evidence, before repository, Agent, or Result-store side effects.
+  Calls Workspace for requested Agent-task-check cells and calls Result Store
+  to store the produced records. It constructs every missing-cell identity first,
   rejects duplicate or invalid plans, applies the shared RuntimeConfig contract,
   and asks Workspace to preflight both configs plus all repository, Check,
   timeout, harness, and paid-endpoint bindings before the first Agent
@@ -353,45 +412,7 @@ Effect:
 Input:
 
 - `selection: BenchmarkSelectionRecord`
-- `task_pool: TaskPoolRecord`
-- `tasks: Sequence[TaskRecord]`
-- `checks: Mapping[str, CheckRecord]`
-- `agents: Sequence[AgentRecord]`
-- `workspace_config: WorkspaceConfig`
-- `runtime_config: RuntimeConfig`
-- `scoring_config: ScoringConfig`
-- `cache_config: ResultCacheConfig`
-- `result_store: ResultStore`
-- `run_context: WorkspaceRunContext`
-
-Output:
-
-- `Sequence[ResultRecord]`
-
-Effect:
-
-- Calls Result Store to find selected Agent-task-check cells that are not
-  reusable from the cache, then calls Workspace and Result Store to execute and
-  store only those cells. If an exact execution exists only under older
-  pricing, appends and returns the current pricing view without running the
-  Agent. An already-present current pricing view is not duplicated. Invalid
-  cache identities and scoring configuration fail before paid execution. If
-  execution is needed, the complete missing-cell plan passes the same batch
-  preflight before the first call; cache-only and repricing paths do not require
-  endpoint credentials.
-- Holds one Result Store session across resolution, execution, repricing, and
-  final lookup. Each produced Result is durably appended before the next Agent
-  cell, without rescanning the JSONL file.
-
-### prepare_evaluation_cells
-
-Input:
-
-- `selection: BenchmarkSelectionRecord`
-- `origin: RollingOriginRecord`
-- `task_pool: TaskPoolRecord`
-- `tasks: Sequence[TaskRecord]`
-- `checks: Mapping[str, CheckRecord]`
+- `task_pool_bundle: TaskPoolBundle`
 - `agents: Sequence[AgentRecord]`
 - `workspace_config: WorkspaceConfig`
 - `runtime_config: RuntimeConfig`
@@ -407,10 +428,50 @@ Output:
 
 Effect:
 
-- Is the single-Selection wrapper over the shared planner used by
-  `evaluate_selectors`. It applies the same cache identity and denominator
-  policy to selected and future refs, executes the deduplicated union, and
-  returns completeness, exclusion, and abstention metadata. A valid persisted
+- Validates the complete Task Pool bundle, then reloads and deterministically
+  replays the persisted Selection, Origin, SelectorInput, FeatureSnapshot,
+  Selector, frozen pre-origin Results, and exact Agent identities before cache
+  access.
+- Uses the shared evaluation-cell resolver for selected refs only. It reuses
+  exact cached executions, appends a current pricing view when needed, executes
+  only misses, and persists the resulting `EvaluationCellSet` with the declared
+  join, scoring, and benchmark-invalid reuse policies in its identity. Changing
+  either resolution policy creates a new CellSet and reruns resolution;
+  unchanged policy resumes the frozen cells. The complete missing plan is
+  preflighted before its first call; cache-only and repricing paths do not
+  require endpoint credentials.
+- Holds one Result Store session across resolution, execution, repricing, and
+  final lookup. Each produced Result is durable before the next Agent cell, and
+  the CellSet is written only after complete resolution.
+
+### prepare_evaluation_cells
+
+Input:
+
+- `selection: BenchmarkSelectionRecord`
+- `origin: RollingOriginRecord`
+- `task_pool_bundle: TaskPoolBundle`
+- `agents: Sequence[AgentRecord]`
+- `workspace_config: WorkspaceConfig`
+- `runtime_config: RuntimeConfig`
+- `scoring_config: ScoringConfig`
+- `cache_config: ResultCacheConfig`
+- `result_store: ResultStore`
+- `join_config: ResultJoinConfig`
+- `run_context: WorkspaceRunContext`
+
+Output:
+
+- `EvaluationCellSet`
+
+Effect:
+
+- Validates the complete bundle and replays the exact persisted Selection chain
+  before cache access. It then acts as the single-Selection wrapper over the
+  shared planner used by `evaluate_selectors`, applying the same cache identity
+  and denominator policy to selected and future refs and executing their
+  deduplicated union.
+- Returns completeness, exclusion, and abstention metadata. A valid persisted
   CellSet with the same Selection, Origin, ref order, Agent set, execution
   identities, future Task Pool, censored cohort, and join policy is reused
   exactly.
@@ -421,9 +482,7 @@ Input:
 
 - `selection: BenchmarkSelectionRecord`
 - `origin: RollingOriginRecord`
-- `task_pool: TaskPoolRecord`
-- `tasks: Sequence[TaskRecord]`
-- `checks: Mapping[str, CheckRecord]`
+- `task_pool_bundle: TaskPoolBundle`
 - `agents: Sequence[AgentRecord]`
 - `evaluation_cells: EvaluationCellSet`
 - `result_store: ResultStore`

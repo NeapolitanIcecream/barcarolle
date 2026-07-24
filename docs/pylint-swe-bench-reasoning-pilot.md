@@ -209,11 +209,15 @@ returns to `preflight` after recording one Result. All Agent, Runtime, schedule,
 Result, and ledger paths must stay below `CAMPAIGN_DIR`. A missing ledger makes
 `preflight` and `run-next` fail; neither operation creates authority.
 
-Future preparation also writes
-`records/dependency-evidence.jsonl`. The adapter derives exact changed-path
-overlap edges from trusted certification-side reference patches, assigns
-deterministic connected components, binds the artifact through Task Pool
-generator identity, and replays it before paid stages. On the historical ten
+Preparation also writes the dependency artifact to
+`records/adapter-evidence.jsonl` alongside the sanitized F2P/P2P certification
+summaries. A generation manifest binds that object as run-specific adapter
+evidence while keeping stable adapter behavior independent of the observed
+dependency inventory. Preparation writes the canonical Task Pool manifest at
+`records/task-pool.jsonl`. Resume opens and validates that complete bundle,
+checks the current adapter implementation against the frozen behavior section,
+then replays exact changed-path overlap, deterministic components, SourceEvent
+clusters, and trusted reference patches before paid stages. On the historical ten
 patches, `pylint-dev__pylint-6528` and `pylint-dev__pylint-7080` form the only
 non-singleton component because both change
 `pylint/lint/expand_modules.py`. Absence of another overlap is not evidence of

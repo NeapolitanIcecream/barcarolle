@@ -27,6 +27,7 @@ from barcarolle.records import (
     load_jsonl_records,
     make_check_digest,
     make_feature_snapshot_id,
+    make_result_id,
     make_source_event_id,
     make_solver_material_digest,
     record_with_digest,
@@ -50,7 +51,12 @@ from barcarolle.selection import (
     build_rule_selector,
 )
 from barcarolle.selection.evaluation import METRIC_CONFIG_DIGEST
-from barcarolle.task_pool import TimeRange
+from barcarolle.task_pool import (
+    GENERATION_PROVENANCE_SCHEMA_VERSION,
+    GenerationProvenanceManifest,
+    ObservedFrameEventRecord,
+    TimeRange,
+)
 from barcarolle.verification import VERIFICATION_ADAPTER_DIGEST
 
 
@@ -70,6 +76,11 @@ def test_claim_config_rejects_malformed_claim_controls() -> None:
         ClaimConfig(requested_claims=("selector_metrics", "selector_metrics"))
     with pytest.raises(ValueError, match="unsupported requested claims: unknown"):
         ClaimConfig(requested_claims=("unknown",))
+    with pytest.raises(
+        ValueError,
+        match="unsupported requested claims: task_pool_coverage",
+    ):
+        ClaimConfig(requested_claims=("task_pool_coverage",))
 
 
 def test_claim_config_does_not_expose_claim_weakening_controls() -> None:
@@ -81,10 +92,16 @@ def test_claim_config_does_not_expose_claim_weakening_controls() -> None:
 
 def test_claim_config_canonicalizes_requested_claim_order() -> None:
     reordered = ClaimConfig(
-        requested_claims=("agent_result_identity", "task_pool_coverage")
+        requested_claims=(
+            "agent_result_identity",
+            "task_pool_bundle_internal_consistency",
+        )
     )
     canonical = ClaimConfig(
-        requested_claims=("task_pool_coverage", "agent_result_identity")
+        requested_claims=(
+            "task_pool_bundle_internal_consistency",
+            "agent_result_identity",
+        )
     )
 
     assert reordered.requested_claims == canonical.requested_claims
@@ -148,6 +165,38 @@ def test_task_pool_and_result_reports_summarize_existing_records(tmp_path) -> No
     assert result_pass.result_digest in result_section.source_digests["result_digests"]
 
 
+def test_generated_task_pool_reports_enumerate_nested_provenance_artifacts(
+    tmp_path,
+) -> None:
+    task_pool = _generated_task_pool_with_artifacts(tmp_path)
+
+    task_section = build_task_pool_report(task_pool, artifact_root=tmp_path)
+    claim_section = build_claim_boundary(
+        task_pool,
+        (),
+        (),
+        (),
+        (),
+        ClaimConfig(
+            requested_claims=("task_pool_bundle_internal_consistency",),
+        ),
+        artifact_root=tmp_path,
+    )
+
+    expected_paths = (
+        "tasks.jsonl",
+        "checks.jsonl",
+        "certification-evidence.jsonl",
+        "source-events.jsonl",
+        "generation-provenance.jsonl",
+        "observed-frame-events.jsonl",
+        "adapter-evidence.jsonl",
+    )
+    assert task_section.artifact_paths == expected_paths
+    assert claim_section.artifact_paths == expected_paths
+    assert claim_section.supported_claims == ("task_pool_bundle_internal_consistency",)
+
+
 def test_result_report_rejects_duplicate_result_and_agent_identities() -> None:
     result = _result()
     agent = _agent()
@@ -157,6 +206,23 @@ def test_result_report_rejects_duplicate_result_and_agent_identities() -> None:
     assert section.supported_claims == ()
     assert f"duplicate result identity: {result.result_id}" in section.limitations
     assert f"duplicate Agent identity: {agent.agent_id}" in section.limitations
+
+
+def test_result_report_rejects_conflicting_executions_for_one_cache_identity() -> None:
+    result = _result()
+    conflicting = _redigest_result(
+        result,
+        terminal_status="failed",
+        outcome="fail",
+    )
+
+    section = build_result_report((result, conflicting), (_agent(),))
+
+    assert section.supported_claims == ()
+    assert (
+        "conflicting Result executions share cache identity "
+        f"{result.cache_identity.identity_digest}"
+    ) in section.limitations
 
 
 def test_task_pool_report_tracks_yield_rejections_and_flaky_quarantine(
@@ -239,26 +305,19 @@ def test_task_pool_report_tracks_yield_rejections_and_flaky_quarantine(
 
 def test_result_report_tracks_later_benchmark_invalid_rate_by_execution() -> None:
     passed = _result(result_id="passed")
-    benchmark_invalid = record_with_digest(
-        replace(
-            _result(result_id="benchmark-invalid"),
-            terminal_status="invalid",
-            scoreable_state="benchmark_invalid",
-            outcome="invalid",
-            invalid_owner="benchmark",
-            failure_label="check_launch_failed",
-            result_digest="",
-        )
+    benchmark_invalid = _redigest_result(
+        _result(result_id="benchmark-invalid"),
+        terminal_status="invalid",
+        scoreable_state="benchmark_invalid",
+        outcome="invalid",
+        invalid_owner="benchmark",
+        failure_label="check_launch_failed",
     )
-    repriced = record_with_digest(
-        replace(
-            benchmark_invalid,
-            result_id="benchmark-invalid-repriced",
-            result_digest="",
-            cost={"total_cost": 0.25},
-            scoring_config_digest="scoring-v2",
-            pricing_version="test-v2",
-        )
+    repriced = _redigest_result(
+        benchmark_invalid,
+        cost={"total_cost": 0.25},
+        scoring_config_digest="scoring-v2",
+        pricing_version="test-v2",
     )
 
     section = build_result_report((passed, benchmark_invalid, repriced), (_agent(),))
@@ -274,20 +333,17 @@ def test_result_report_tracks_later_benchmark_invalid_rate_by_execution() -> Non
 
 
 def test_result_report_summarizes_monotonic_phase_latency() -> None:
-    result = record_with_digest(
-        replace(
-            _result(workspace_seconds=5.0),
-            latency={
-                "workspace_seconds": 5.0,
-                "agent_seconds": 3.0,
-                "verification_seconds": 1.0,
-                "solver_checkout_seconds": 0.5,
-                "verifier_checkout_seconds": 0.5,
-                "diff_replay_seconds": 0.25,
-                "cleanup_seconds": 0.25,
-            },
-            result_digest="",
-        )
+    result = _redigest_result(
+        _result(workspace_seconds=5.0),
+        latency={
+            "workspace_seconds": 5.0,
+            "agent_seconds": 3.0,
+            "verification_seconds": 1.0,
+            "solver_checkout_seconds": 0.5,
+            "verifier_checkout_seconds": 0.5,
+            "diff_replay_seconds": 0.25,
+            "cleanup_seconds": 0.25,
+        },
     )
 
     section = build_result_report((result,), (_agent(),))
@@ -334,20 +390,17 @@ def test_result_report_summarizes_monotonic_phase_latency() -> None:
 
 def test_result_report_does_not_fill_missing_historical_phases_with_zero() -> None:
     legacy = _result(result_id="legacy", workspace_seconds=7.0)
-    current = record_with_digest(
-        replace(
-            _result(result_id="current", workspace_seconds=5.0),
-            latency={
-                "workspace_seconds": 5.0,
-                "agent_seconds": 3.0,
-                "verification_seconds": 1.0,
-                "solver_checkout_seconds": 0.5,
-                "verifier_checkout_seconds": 0.5,
-                "diff_replay_seconds": 0.25,
-                "cleanup_seconds": 0.25,
-            },
-            result_digest="",
-        )
+    current = _redigest_result(
+        _result(result_id="current", workspace_seconds=5.0),
+        latency={
+            "workspace_seconds": 5.0,
+            "agent_seconds": 3.0,
+            "verification_seconds": 1.0,
+            "solver_checkout_seconds": 0.5,
+            "verifier_checkout_seconds": 0.5,
+            "diff_replay_seconds": 0.25,
+            "cleanup_seconds": 0.25,
+        },
     )
 
     latency = build_result_report((legacy, current), (_agent(),)).summary["latency"]
@@ -379,33 +432,38 @@ def test_result_report_does_not_support_empty_evidence() -> None:
 
 
 def test_result_report_rejects_non_numeric_cost_and_latency() -> None:
-    result = record_with_digest(
-        replace(
-            _result(),
-            cost={"total_cost": "12.5"},
-            latency={"workspace_seconds": "7"},
-            result_digest="",
-        )
+    result = _redigest_result(
+        _result(),
+        cost={"total_cost": "12.5"},
+        latency={"workspace_seconds": "7"},
     )
 
     section = build_result_report((result,), (_agent(),))
 
     assert section.supported_claims == ()
-    assert "result result cost.total_cost is non-numeric" in section.unsupported_claims
-    assert (
-        "result result latency.workspace_seconds is non-numeric"
-        in section.unsupported_claims
+    assert any(
+        "cost.total_cost is non-numeric" in claim
+        for claim in section.unsupported_claims
+    )
+    assert any(
+        "latency.workspace_seconds is non-numeric" in claim
+        for claim in section.unsupported_claims
     )
 
 
 def test_result_report_distinguishes_unknown_cost_from_measured_zero() -> None:
     measured_zero = _result(result_id="result-zero", total_cost=0.0)
-    unknown = record_with_digest(
+    unknown_identity = record_with_digest(
         replace(
-            _result(result_id="result-unknown", total_cost=None),
-            usage={},
-            result_digest="",
+            _identity(),
+            stochastic_settings_digest="unknown-observation-slot",
+            identity_digest="",
         )
+    )
+    unknown = _redigest_result(
+        _result(result_id="result-unknown", total_cost=None),
+        cache_identity=unknown_identity,
+        usage={},
     )
 
     section = build_result_report((measured_zero, unknown), (_agent(),))
@@ -422,15 +480,11 @@ def test_result_report_distinguishes_unknown_cost_from_measured_zero() -> None:
 
 def test_result_report_separates_pricing_views_from_executions() -> None:
     original = _result(total_cost=0.5, workspace_seconds=2.0)
-    repriced = record_with_digest(
-        replace(
-            original,
-            result_id="result-repriced",
-            result_digest="",
-            cost={"total_cost": 0.75},
-            scoring_config_digest="scoring-repriced",
-            pricing_version="test-repriced",
-        )
+    repriced = _redigest_result(
+        original,
+        cost={"total_cost": 0.75},
+        scoring_config_digest="scoring-repriced",
+        pricing_version="test-repriced",
     )
     assert result_execution_digest(original) == result_execution_digest(repriced)
 
@@ -493,16 +547,12 @@ def test_result_report_rejects_multiple_pricing_versions_for_one_scoring_digest(
             identity_digest="",
         )
     )
-    second = record_with_digest(
-        replace(
-            first,
-            result_id="other-execution",
-            result_digest="",
-            cache_identity=second_identity,
-            task_id="other-task",
-            pricing_version="other-pricing-version",
-            cost={"total_cost": 0.75},
-        )
+    second = _redigest_result(
+        first,
+        cache_identity=second_identity,
+        task_id="other-task",
+        pricing_version="other-pricing-version",
+        cost={"total_cost": 0.75},
     )
     assert result_execution_digest(first) != result_execution_digest(second)
 
@@ -820,7 +870,7 @@ def test_selector_report_rejects_strict_selection_created_after_future_result() 
 
     assert section.supported_claims == ()
     assert any(
-        "selection selection was created at or after future Result result became available"
+        f"selection selection was created at or after future Result {result.result_id} became available"
         in claim
         for claim in section.unsupported_claims
     )
@@ -1358,7 +1408,7 @@ def test_claim_boundary_separates_supported_and_unsupported_claims(tmp_path) -> 
         artifact_root=tmp_path,
     )
 
-    assert "task_pool_coverage" in section.supported_claims
+    assert "task_pool_bundle_internal_consistency" in section.supported_claims
     assert "benchmark_selection_frozen" in section.supported_claims
     assert any(
         claim.startswith("cache_completeness:") for claim in section.unsupported_claims
@@ -1524,7 +1574,7 @@ def test_claim_boundary_rejects_strict_selection_created_after_future_result() -
     )
 
     assert any(
-        "future Result result became available" in claim
+        f"future Result {result.result_id} became available" in claim
         for claim in section.unsupported_claims
     )
 
@@ -1719,8 +1769,9 @@ def test_claim_boundary_binds_result_identity_to_frozen_task_pool(
     drifted_identity = record_with_digest(
         replace(result.cache_identity, base_commit="b" * 40, identity_digest="")
     )
-    drifted_result = record_with_digest(
-        replace(result, cache_identity=drifted_identity, result_digest="")
+    drifted_result = _redigest_result(
+        result,
+        cache_identity=drifted_identity,
     )
     drifted_cell_set = _cell_set(
         selection,
@@ -1785,6 +1836,37 @@ def test_claim_boundary_requires_matching_agent_evidence(
 
     assert section.supported_claims == ()
     assert any(expected_reason in claim for claim in section.unsupported_claims)
+
+
+def test_claim_boundary_rejects_ambiguous_result_executions(tmp_path) -> None:
+    task_pool = _task_pool_with_artifacts(tmp_path)
+    result = _result()
+    conflicting = _redigest_result(
+        result,
+        terminal_status="failed",
+        outcome="fail",
+    )
+    selection = _selection(task_pool)
+    cell_set = _cell_set(selection, result.cache_identity.identity_digest, result)
+    matrix = _matrix(selection, cell_set, role="selected")
+
+    section = build_claim_boundary(
+        task_pool,
+        (selection,),
+        (cell_set,),
+        (matrix,),
+        (),
+        ClaimConfig(requested_claims=("agent_result_identity",)),
+        results=(result, conflicting),
+        agents=(_agent(),),
+        artifact_root=tmp_path,
+    )
+
+    assert section.supported_claims == ()
+    assert any(
+        "conflicting Result executions share cache identity" in reason
+        for reason in section.unsupported_claims
+    )
 
 
 def test_claim_boundary_traces_result_bindings_on_excluded_cells() -> None:
@@ -1883,7 +1965,7 @@ def test_task_pool_report_rejects_missing_audit_fields() -> None:
         "task_records_ref is missing" in claim for claim in section.unsupported_claims
     )
     assert any(
-        claim.startswith("task_pool_coverage:")
+        claim.startswith("task_pool_bundle_internal_consistency:")
         for claim in claim_section.unsupported_claims
     )
 
@@ -2192,7 +2274,8 @@ def test_claim_boundary_does_not_support_claims_without_evidence() -> None:
     )
 
     assert any(
-        claim.startswith("task_pool_coverage:") for claim in section.unsupported_claims
+        claim.startswith("task_pool_bundle_internal_consistency:")
+        for claim in section.unsupported_claims
     )
     assert any(
         claim.startswith("benchmark_selection_frozen:")
@@ -2311,7 +2394,10 @@ def _task_pool() -> TaskPoolRecord:
         rejected_candidate_ids=("rejected",),
         rejection_summary_digest="rejection-summary",
         certification_evidence_digest="certification-evidence",
-        generator_config_digest="generator",
+        generation_provenance_ref=None,
+        generation_provenance_digest=None,
+        generator_config_digest=None,
+        source_protocol_digest=None,
         certification_config_digest="certification",
         created_at="2026-01-01T00:00:00Z",
     )
@@ -2431,9 +2517,110 @@ def _task_pool_with_artifacts(root) -> TaskPoolRecord:
                 {"rejected_count": 0, "reasons": {}}
             ),
             certification_evidence_digest=canonical_digest(evidence),
-            generator_config_digest="generator",
+            generation_provenance_ref=None,
+            generation_provenance_digest=None,
+            generator_config_digest=None,
+            source_protocol_digest=None,
             certification_config_digest=canonical_digest({"repeat_count": 1}),
             created_at="2026-01-01T00:00:00Z",
+        )
+    )
+
+
+def _generated_task_pool_with_artifacts(root) -> TaskPoolRecord:
+    task_pool = _task_pool_with_artifacts(root)
+    source_events = tuple(
+        load_jsonl_records(root / "source-events.jsonl", SourceEventRecord)
+    )
+    observed_at = "2026-01-01T00:00:00.000000Z"
+    frame_events = tuple(
+        record_with_digest(
+            ObservedFrameEventRecord(
+                source_event_id=event.source_event_id,
+                repository_id=event.repository_id,
+                source_family=event.source_family,
+                source_ref=event.source_ref,
+                observed_at=observed_at,
+                frame_event_digest="",
+            )
+        )
+        for event in source_events
+    )
+    behavior = {
+        "generator_family": "fixture",
+        "adapter_version": "1",
+        "implementation_digest": "fixture-implementation",
+        "behavior_config": {"strategy": "stable"},
+    }
+    protocol = {
+        "source_kind": "issue",
+        "target_definition": "all fixture issues in the declared window",
+        "query_semantics": {"state": "resolved"},
+        "sampling_policy": {"mode": "all"},
+        "deduplication_policy": {"key": "source_ref"},
+    }
+    protocol_digest = canonical_digest(protocol)
+    frame = {
+        "frame_id": "fixture-frame",
+        "source_protocol_digest": protocol_digest,
+        "source_revision": "fixture-revision",
+        "window_start": observed_at,
+        "window_end": observed_at,
+        "event_inventory_ref": "observed-frame-events.jsonl",
+        "event_inventory_digest": canonical_digest(frame_events),
+        "observation_authority": "source_authoritative",
+        "observation_receipt_digest": "fixture-receipt",
+        "known_blind_spots": [],
+        "coverage_mode": "one_source_event_per_frame_unit_v1",
+    }
+    run = {
+        "run_id": "fixture-run",
+        "producer_id": "fixture-producer",
+        "authority_kind": "barcarolle_managed",
+        "authority_digest": "fixture-authority",
+        "started_at": observed_at,
+        "finished_at": observed_at,
+        "input_snapshot_digest": "fixture-input",
+    }
+    adapter_evidence = {"schema_version": "fixture_v1", "count": 1}
+    outputs = {
+        "prepared_candidate_records_digest": "fixture-candidates",
+        "adapter_evidence_ref": "adapter-evidence.jsonl",
+        "adapter_evidence_digest": canonical_digest(adapter_evidence),
+        "task_records_digest": task_pool.task_records_digest,
+        "check_records_digest": task_pool.check_records_digest,
+        "source_event_records_digest": task_pool.source_event_records_digest,
+        "certification_evidence_digest": task_pool.certification_evidence_digest,
+    }
+    manifest = record_with_digest(
+        GenerationProvenanceManifest(
+            schema_version=GENERATION_PROVENANCE_SCHEMA_VERSION,
+            generator_behavior=behavior,
+            generator_behavior_digest=canonical_digest(behavior),
+            source_protocol=protocol,
+            source_protocol_digest=protocol_digest,
+            observed_frame=frame,
+            observed_frame_digest=canonical_digest(frame),
+            run=run,
+            run_digest=canonical_digest(run),
+            outputs=outputs,
+            outputs_digest=canonical_digest(outputs),
+            manifest_digest="",
+        )
+    )
+    write_jsonl_records(root / "observed-frame-events.jsonl", frame_events)
+    write_jsonl_records(root / "adapter-evidence.jsonl", (adapter_evidence,))
+    write_jsonl_records(root / "generation-provenance.jsonl", (manifest,))
+    return record_with_digest(
+        replace(
+            task_pool,
+            generation_provenance_ref="generation-provenance.jsonl",
+            generation_provenance_digest=manifest.manifest_digest,
+            generator_config_digest=manifest.generator_behavior_digest,
+            source_protocol_digest=manifest.source_protocol_digest,
+            source_window_start=observed_at,
+            source_window_end=observed_at,
+            task_pool_digest="",
         )
     )
 
@@ -2513,7 +2700,7 @@ def _result(
     workspace_seconds: float = 2.0,
 ) -> ResultRecord:
     result = ResultRecord(
-        result_id=result_id,
+        result_id="",
         result_digest="",
         cache_identity=_identity(),
         agent_id="agent",
@@ -2530,12 +2717,30 @@ def _result(
         usage={"total_tokens": 10},
         latency={"workspace_seconds": workspace_seconds},
         diff_digest="diff",
-        verifier_metadata_digest="verifier",
+        verifier_metadata_digest=f"verifier:{result_id}",
         started_at="2026-01-04T00:00:00Z",
         finished_at="2026-01-04T00:00:01Z",
+        evidence_source_kind="barcarolle_managed",
+        evidence_source_manifest_digest=None,
+        evidence_imported_at=None,
+        source_result_available_at="2026-01-04T00:00:02Z",
+        availability_policy="managed_observation_v1",
         result_available_at="2026-01-04T00:00:02Z",
     )
-    return record_with_digest(result)
+    return record_with_digest(replace(result, result_id=make_result_id(result)))
+
+
+def _redigest_result(
+    result: ResultRecord,
+    **changes: object,
+) -> ResultRecord:
+    draft = replace(
+        result,
+        result_id="",
+        result_digest="",
+        **changes,
+    )
+    return record_with_digest(replace(draft, result_id=make_result_id(draft)))
 
 
 def _result_with_wrong_agent_identity(result: ResultRecord) -> ResultRecord:
@@ -2546,9 +2751,7 @@ def _result_with_wrong_agent_identity(result: ResultRecord) -> ResultRecord:
             identity_digest="",
         )
     )
-    return record_with_digest(
-        replace(result, cache_identity=cache_identity, result_digest="")
-    )
+    return _redigest_result(result, cache_identity=cache_identity)
 
 
 def _selection(

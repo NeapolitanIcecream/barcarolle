@@ -1,6 +1,6 @@
 # Evidence Storage, Identity, And Recovery
 
-Status: current enforced behavior, 2026-07-22.
+Status: current enforced behavior, 2026-07-24.
 
 This document defines where Barcarolle evidence lives, which identity controls
 reuse, and what recovery is allowed after an interrupted write. It does not add
@@ -12,7 +12,9 @@ Each existing module remains responsible for its records.
 | Evidence | Owner | Storage rule | Recovery rule |
 | --- | --- | --- | --- |
 | Task Pool bundle | Task Pool and Runner | Immutable directory published under an explicit artifact root | Validate the complete target; ignore unpublished staging directories |
+| Prepared-candidate package | External Generator or user | Immutable manifest plus candidate, exclusion, material, and optional provenance/frame sidecars | Read and validate without modification; rebuild or republish a corrected package |
 | Agent Results | Result Store | Locked append-only canonical JSONL | Fail on an unterminated tail; repair only through `recover_result_store_tail` |
+| External Result source and import receipt | External producer and Runner | Read-only source manifest/JSONL; separate immutable local decision receipt | Exact receipt replay is idempotent; correct a source by publishing a new manifest |
 | Selector, Origin, Snapshot, Input, Selection, cell-set, matrix, and metric records | Runner and Selection | Single-writer append-only canonical JSONL with stable semantic IDs | Fail closed on invalid input; the current runtime has no automatic tail repair for these logs |
 | Workspace run artifacts | Workspace | Optional files with relative refs and content digests | Best effort; artifact failure does not replace a completed normalized run |
 | Reports | Reporting | Derived Markdown and JSON | Rebuild from validated source records |
@@ -33,6 +35,9 @@ new bundles below:
   tasks.jsonl
   checks.jsonl
   certification-evidence.jsonl
+  generation-provenance.jsonl  # only when provenance is bound
+  observed-frame-events.jsonl  # only when an observed frame is bound
+  adapter-evidence.jsonl       # only when adapter evidence is bound
 ```
 
 Published member refs are relative, share that directory, use the fixed member
@@ -58,14 +63,15 @@ must pass them rather than depend on the process working directory.
 ## Immutable Task Pool Publication
 
 Runner derives the bundle directory from the exact accepted Tasks, Checks,
-sanitized certification evidence, SourceEvents, generator config,
-certification config, canonical source window, creation time, and optional
-declared pool identity. It
+sanitized certification evidence, SourceEvents, optional generation
+provenance, Generator behavior/source protocol, certification config, canonical
+source window, creation time, and optional declared pool identity. It
 then:
 
 1. validates the in-memory Task Pool and all members;
 2. creates a staging directory beside the final target;
-3. writes the manifest and four member files;
+3. writes the manifest, four required member files, optional provenance,
+   optional observed-frame inventory, and optional adapter evidence;
 4. reloads and validates the staged files;
 5. renames the complete staging directory to an absent target.
 
@@ -87,12 +93,13 @@ equivalent publication contract.
 Published Task Pool members are immutable. A correction creates another bundle
 and identity. It never edits the old directory or relabels paid Results.
 
-Generated Task Pools separate behavior identity from observations. The
-generator digest binds mode and source family; SourceEvent/Task/Check digests
-bind inventory; `source_window_start` and `source_window_end` bind the requested
-collection interval. Imported pools may have null windows and cannot serve as
-prospective future evidence until a concrete adapter supplies a bounded source
-frame.
+Generated Task Pools separate stable behavior and source-protocol identity from
+run, observed-frame, and output identity. SourceEvent/Task/Check digests bind
+the supplied inventory; `source_window_start` and `source_window_end` bind the
+requested collection interval. A user-maintained pool may omit generation
+provenance entirely. Such a pool is usable but cannot serve as prospective
+future evidence until a concrete source contract supplies a bounded frame,
+behavior, and protocol.
 
 ## Result Execution Identity And Cache Reuse
 
@@ -108,15 +115,16 @@ valid benchmark-invalid Result. `ResultCacheIdentity` binds:
   model-resolution campaign scope;
 - Workspace, Runtime, and optional hardware profile identity.
 
-Resolution compares the full validated identity, not its digest alone. The
-first eligible Result in append order wins when duplicate exact identities are
-present. There is no latest-result or best-result policy.
+Resolution compares the full validated identity, not its digest alone. Multiple
+pricing or evidence-source views of the same execution may share that identity.
+Different execution digests under one cache identity are ambiguous and fail
+closed; there is no first-, latest-, or best-result policy.
 
 Distinct Result records may share an exact cache identity, for example across
-pricing views, but every `result_id` occurs exactly once. Shared and exclusive
-loads reject the second identical or conflicting ID before filtering or index
-construction, so callers cannot disagree through first-wins versus last-wins
-maps.
+pricing or evidence-source views, but every `result_id` occurs exactly once.
+Shared and exclusive loads reject the second identical or conflicting ID before
+filtering or index construction. Historical cutoff views apply the same
+execution-ambiguity check.
 
 Agent-attributable invalid Results remain reusable because rerunning them would
 change the observation. Benchmark-infrastructure invalid Results are not reused
@@ -130,15 +138,30 @@ order. Resume returns the first exact missing slot; the resolver cannot invoke
 an Agent or select a latest or best duplicate.
 
 Historical queries also constrain `result_available_at`. Repricing preserves
-that timestamp, so a later price table cannot move old execution evidence into
+the evidence view's timestamp, so a later price table cannot move that view into
 a later or earlier rolling-origin cohort.
+
+Barcarolle-managed Results bind the local observation time. External Result
+admission reads a source manifest without changing it, verifies authority and
+the exact Task/Check/Agent/Workspace/Runtime identities, then writes normalized
+local records plus per-row decisions and a receipt. The default
+`import_time_floor_v1` policy uses the later of producer availability and import
+time. `producer_attested_historical_v1` preserves source availability only as
+an explicit external attestation. Import time is the implementation-owned first
+local observation; a receipt or prior valid local row recovers it on retry.
+Receipt replay recomputes admission without opening a writer, and local Result
+and receipt paths must stay outside the read-only source root. Imports sharing
+either a Result Store or receipt take deterministic coordination locks from the
+first local-state read through durable Result append and receipt publication;
+the receipt file and parent directory are fsynced before success, including for
+an all-rejected import. The hidden lock sidecars contain no evidence.
 
 ## Execution Views And Pricing Views
 
 One Agent invocation has one `result_execution_digest`. That digest includes
 the exact cache identity, normalized outcome, usage, latency, diff, verifier
 metadata, and execution times. It excludes cost, pricing provenance, Result
-record identity, and availability metadata.
+record identity, evidence-source binding, and availability metadata.
 
 `ScoringConfig` derives its digest from the pricing version and exact rates.
 When a reusable execution lacks the requested scoring view, Result Store
@@ -231,7 +254,15 @@ identical or conflicting. Any other same-ID difference fails.
 Before a resumed batch executes any pending cell, Runner resolves all Results
 bound by reusable EvaluationCellSets in one read and verifies the complete
 ResultCell binding. Persisted missing or unbound excluded cells remain frozen
-evidence and require no Result lookup.
+evidence and require no Result lookup. CellSet identity includes the scoring
+config and benchmark-invalid reuse policy used to resolve those cells, so a
+changed policy cannot reuse a snapshot created under another resolution view.
+
+For lazy selected-only execution, Runner first reloads the persisted Selection,
+Origin, SelectorInput, FeatureSnapshot, Selector, frozen pre-origin Results, and
+Agent records and proves deterministic replay before cache access. Multi-origin
+evaluation performs one physical Result snapshot read through the maximum
+cutoff and derives all chronological views from that immutable tuple.
 
 These logs use one Runner writer, append one canonical line, flush and fsync it,
 and fsync the parent directory on first creation. They do not currently share
@@ -266,8 +297,9 @@ Reports are derived outputs. Their configured Markdown and JSON names are
 direct typed filenames below `ReportConfig.output_dir`; traversal, absolute
 paths, nested paths, and swapped suffixes fail at config construction. An
 interrupted or outdated report is rebuilt from the exact current-schema logs
-and validated Task Pool bundle. A coverage claim requires the complete Task
-Pool bundle. A Selector-performance claim also
+and validated Task Pool bundle. The internal-consistency claim requires the
+complete Task Pool bundle but does not assert source or population coverage. A
+Selector-performance claim also
 requires the exact Selector, Origin, FeatureSnapshot, SelectorInput, Selection,
 cell-set, matrix, metric, Agent, and Result chain. Missing provenance produces
 an unsupported claim.
@@ -289,8 +321,9 @@ After an interrupted workflow:
 Schema migration is separate from crash recovery. A migration writes a new
 file, refuses overwrite, preserves the source, and validates the latest schema.
 Migrated Results are historical evidence until their current execution identity
-is proven compatible. Rebuild downstream cell sets, matrices, and metrics from
-the compatible migrated records.
+is proven compatible. Migration assigns current canonical Result IDs and
+digests. Rebuild any FeatureSnapshot, SelectorInput, Selection, fitted Selector,
+EvaluationCellSet, matrix, or metric that binds the old identities.
 
 ## Reopening Triggers
 

@@ -28,6 +28,7 @@ from barcarolle.records import (
     make_feature_snapshot_id,
     make_rolling_origin_id,
     make_rolling_origin_policy_digest,
+    make_result_id,
     make_selector_id,
     make_selector_input_id,
     make_solver_material_digest,
@@ -544,7 +545,7 @@ def test_strict_prospective_waits_for_frozen_task_pool_availability() -> None:
     assert origin.future_holdout_task_check_refs == ()
 
 
-def test_prospective_future_cohort_rejects_dropped_source_coverage() -> None:
+def test_prospective_future_cohort_accepts_incremental_pool_and_rejects_gap() -> None:
     history_task = _task(
         "history", "history-check", available_at="2026-01-02T00:00:00Z"
     )
@@ -581,18 +582,39 @@ def test_prospective_future_cohort_rejects_dropped_source_coverage() -> None:
             _task_pool(("future",), ("future-check",)),
             task_pool_id="future-pool",
             created_at="2026-01-11T00:00:00Z",
-            source_window_start="2026-01-03T00:00:00.000000Z",
+            source_window_start="2026-01-06T00:00:00.000000Z",
             source_window_end="2026-01-10T00:00:00.000000Z",
             task_pool_digest="",
         )
     )
 
-    with pytest.raises(ValueError, match="drops prior source coverage"):
+    mature, censored = materialize_prospective_future_cohort(
+        selection,
+        origin,
+        selection_pool,
+        future_pool,
+        (history_task,),
+        {history_check.check_id: history_check},
+        (future_task,),
+        {future_check.check_id: future_check},
+    )
+
+    assert mature == (TaskCheckRef("future", "future-check"),)
+    assert censored == ()
+
+    gap_pool = record_with_digest(
+        replace(
+            future_pool,
+            source_window_start="2026-01-07T00:00:00.000000Z",
+            task_pool_digest="",
+        )
+    )
+    with pytest.raises(ValueError, match="does not cover.*future window start"):
         materialize_prospective_future_cohort(
             selection,
             origin,
             selection_pool,
-            future_pool,
+            gap_pool,
             (history_task,),
             {history_check.check_id: history_check},
             (future_task,),
@@ -1232,8 +1254,9 @@ def test_selector_input_result_evidence_requires_exact_frozen_bindings() -> None
             snapshot,
             (),
         )
-    drifted_result = record_with_digest(
-        replace(result, diff_digest="drifted-diff", result_digest="")
+    drifted_result = _redigest_result(
+        result,
+        cost={"total_cost": 1.0},
     )
     with pytest.raises(ValueError, match="Result digest does not match"):
         ensure_selector_input_result_evidence(
@@ -2670,12 +2693,9 @@ def test_train_selector_rejects_an_unknown_metric_protocol() -> None:
 
 def test_train_selector_requires_exact_result_bindings() -> None:
     evidence = _training_evidence()
-    extra = record_with_digest(
-        replace(
-            evidence.training_results[0],
-            result_id="extra-result",
-            result_digest="",
-        )
+    extra = _redigest_result(
+        evidence.training_results[0],
+        scoring_config_digest="extra-scoring",
     )
 
     with pytest.raises(ValueError, match="exactly match matrix bindings"):
@@ -5124,12 +5144,9 @@ def _redigest_training_result_task_identities(
                 identity_digest="",
             )
         )
-        result_by_id[result.result_id] = record_with_digest(
-            replace(
-                result,
-                cache_identity=identity,
-                result_digest="",
-            )
+        result_by_id[result.result_id] = _redigest_result(
+            result,
+            cache_identity=identity,
         )
 
     matrices_by_selection: dict[str, dict[str, ResultMatrix]] = {}
@@ -5138,6 +5155,7 @@ def _redigest_training_result_task_identities(
         cells = tuple(
             replace(
                 cell,
+                result_id=result_by_id[cell.result_id or ""].result_id,
                 required_identity_digest=result_by_id[
                     cell.result_id or ""
                 ].cache_identity.identity_digest,
@@ -5269,15 +5287,7 @@ def _training_evidence(
             task_id=history_refs[0].task_id,
             check_id=history_refs[0].check_id,
         )
-        pre_origin_results = (
-            record_with_digest(
-                replace(
-                    pre_origin_result,
-                    result_id="pre-origin-result",
-                    result_digest="",
-                )
-            ),
-        )
+        pre_origin_results = (pre_origin_result,)
         allowed_feature_classes = ("task_metadata", "pre_origin_result")
         feature_names = ("task_count", "pre_origin_result_count")
     feature_config = FeatureConfig(feature_names)
@@ -5357,13 +5367,7 @@ def _training_evidence(
             task_id=ref.task_id,
             check_id=ref.check_id,
         )
-        result_by_ref[ref] = record_with_digest(
-            replace(
-                result,
-                result_id=f"result-{ref.task_id}",
-                result_digest="",
-            )
-        )
+        result_by_ref[ref] = result
 
     matrices: list[ResultMatrix] = []
     metrics: list[MetricRecord] = []
@@ -5476,16 +5480,13 @@ def _training_evidence_with_bound_exclusion(
     )
     excluded_result = source_result
     if justified:
-        excluded_result = record_with_digest(
-            replace(
-                source_result,
-                terminal_status="invalid",
-                scoreable_state="benchmark_invalid",
-                outcome="invalid",
-                invalid_owner="benchmark",
-                failure_label="check_failed",
-                result_digest="",
-            )
+        excluded_result = _redigest_result(
+            source_result,
+            terminal_status="invalid",
+            scoreable_state="benchmark_invalid",
+            outcome="invalid",
+            invalid_owner="benchmark",
+            failure_label="check_failed",
         )
     exclusion_reason = (
         "task_check_infrastructure_failure:"
@@ -5592,7 +5593,10 @@ def _task_pool(task_ids: tuple[str, ...], check_ids: tuple[str, ...]) -> TaskPoo
         rejected_candidate_ids=(),
         rejection_summary_digest="rejections",
         certification_evidence_digest="evidence",
+        generation_provenance_ref="generation-provenance.jsonl",
+        generation_provenance_digest="generation-provenance",
         generator_config_digest="generator",
+        source_protocol_digest="source-protocol",
         certification_config_digest="certification",
         created_at="2026-01-01T00:00:00Z",
     )
@@ -5779,7 +5783,7 @@ def _result(
     )
     identity = record_with_digest(identity)
     result = ResultRecord(
-        result_id="result",
+        result_id="",
         result_digest="",
         cache_identity=identity,
         agent_id=agent_id,
@@ -5799,9 +5803,27 @@ def _result(
         verifier_metadata_digest="verifier",
         started_at="2026-01-03T23:59:58Z",
         finished_at="2026-01-03T23:59:59Z",
+        evidence_source_kind="barcarolle_managed",
+        evidence_source_manifest_digest=None,
+        evidence_imported_at=None,
+        source_result_available_at=result_available_at,
+        availability_policy="managed_observation_v1",
         result_available_at=result_available_at,
     )
-    return record_with_digest(result)
+    return record_with_digest(replace(result, result_id=make_result_id(result)))
+
+
+def _redigest_result(
+    result: ResultRecord,
+    **changes: object,
+) -> ResultRecord:
+    draft = replace(
+        result,
+        result_id="",
+        result_digest="",
+        **changes,
+    )
+    return record_with_digest(replace(draft, result_id=make_result_id(draft)))
 
 
 def _result_with_mismatched_identity(result: ResultRecord) -> ResultRecord:
@@ -5812,9 +5834,7 @@ def _result_with_mismatched_identity(result: ResultRecord) -> ResultRecord:
             identity_digest="",
         )
     )
-    return record_with_digest(
-        replace(result, cache_identity=cache_identity, result_digest="")
-    )
+    return _redigest_result(result, cache_identity=cache_identity)
 
 
 def _result_with_stale_check_identity(result: ResultRecord) -> ResultRecord:
@@ -5825,9 +5845,7 @@ def _result_with_stale_check_identity(result: ResultRecord) -> ResultRecord:
             identity_digest="",
         )
     )
-    return record_with_digest(
-        replace(result, cache_identity=cache_identity, result_digest="")
-    )
+    return _redigest_result(result, cache_identity=cache_identity)
 
 
 def _result_with_wrong_agent_identity(result: ResultRecord) -> ResultRecord:
@@ -5838,6 +5856,4 @@ def _result_with_wrong_agent_identity(result: ResultRecord) -> ResultRecord:
             identity_digest="",
         )
     )
-    return record_with_digest(
-        replace(result, cache_identity=cache_identity, result_digest="")
-    )
+    return _redigest_result(result, cache_identity=cache_identity)

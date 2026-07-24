@@ -22,6 +22,8 @@ from barcarolle.records import (
     MetricRecord,
     ResultCacheIdentity,
     ResultCellRef,
+    ResultImportDecision,
+    ResultImportReceipt,
     ResultMatrix,
     ResultRecord,
     RollingOriginRecord,
@@ -41,11 +43,13 @@ from barcarolle.records import (
     record_with_digest,
     result_cell_record_mismatches,
     validate_benchmark_selection,
+    validate_agent,
     validate_check,
     validate_evaluation_cell_set,
     validate_feature_snapshot,
     validate_metric,
     validate_result_matrix,
+    validate_result,
     validate_rolling_origin,
     validate_runtime_config,
     validate_selector,
@@ -71,6 +75,7 @@ class TaskPoolConfig:
     check_commands: Mapping[str, tuple[str, ...]]
     hidden_material_paths: Mapping[str, Path]
     check_manifests: Mapping[str, Mapping[str, object]] = field(default_factory=dict)
+    prepared_package: task_pool_module.PreparedCandidatePackage | None = None
     time_range: TimeRange | None = None
     task_source_config: task_pool_module.TaskSourceConfig | None = None
     import_path: Path | None = None
@@ -129,10 +134,583 @@ def build_task_pool(config: TaskPoolConfig) -> TaskPoolRecord:
     if not config.repository_id:
         raise ValueError("repository_id must not be empty")
     _validate_task_pool_configs(config)
-    source_window = _canonical_source_window(config.time_range)
+    source_window = _task_pool_source_window(config)
     batch = _resolved_task_pool_candidate_batch(config)
     certified = _certify_task_pool_candidates(config, batch.candidates)
     return _publish_task_pool(config, source_window, batch, certified)
+
+
+def build_task_pool_from_package(
+    package: task_pool_module.PreparedCandidatePackage,
+    config: TaskPoolConfig,
+) -> TaskPoolRecord:
+    if config.prepared_package is not None:
+        raise ValueError("TaskPoolConfig already has a prepared_package")
+    if config.import_path is not None or config.task_source_config is not None:
+        raise ValueError(
+            "prepared package cannot be combined with other candidate sources"
+        )
+    (
+        reference_patches,
+        check_commands,
+        hidden_material_paths,
+        check_manifests,
+    ) = task_pool_module.prepared_candidate_build_inputs(package)
+    return build_task_pool(
+        replace(
+            config,
+            prepared_package=package,
+            reference_patches=reference_patches,
+            check_commands=check_commands,
+            hidden_material_paths=hidden_material_paths,
+            check_manifests=check_manifests,
+        )
+    )
+
+
+def import_result_bundle(
+    source_manifest_path: Path,
+    task_pool_bundle: task_pool_module.TaskPoolBundle,
+    agents: Sequence[AgentRecord],
+    workspace_config: WorkspaceConfig,
+    runtime_config: RuntimeConfig,
+    local_result_store: result_store_module.ResultStore,
+    receipt_path: Path,
+    *,
+    accepted_authority_digest: str,
+    availability_policy: str,
+) -> ResultImportReceipt:
+    bundle = _validated_task_pool_bundle(task_pool_bundle)
+    _validate_result_import_inputs(
+        agents,
+        workspace_config,
+        runtime_config,
+        accepted_authority_digest,
+    )
+    source = result_store_module.load_result_source_bundle(source_manifest_path)
+    _validate_result_import_paths(
+        source_manifest_path,
+        source.result_records_path,
+        local_result_store.path,
+        receipt_path,
+    )
+    if source.manifest.authority_digest != accepted_authority_digest:
+        raise ValueError("Result source authority is not accepted")
+    if source.manifest.availability_semantics != availability_policy:
+        raise ValueError(
+            "Result source availability semantics do not match import policy"
+        )
+    with result_store_module.open_result_import_transaction(
+        local_result_store,
+        receipt_path,
+    ):
+        return _import_result_bundle_locked(
+            source,
+            bundle,
+            agents,
+            workspace_config,
+            runtime_config,
+            local_result_store,
+            receipt_path,
+            accepted_authority_digest=accepted_authority_digest,
+            availability_policy=availability_policy,
+        )
+
+
+def _import_result_bundle_locked(
+    source: result_store_module.ResultSourceBundle,
+    bundle: task_pool_module.TaskPoolBundle,
+    agents: Sequence[AgentRecord],
+    workspace_config: WorkspaceConfig,
+    runtime_config: RuntimeConfig,
+    local_result_store: result_store_module.ResultStore,
+    receipt_path: Path,
+    *,
+    accepted_authority_digest: str,
+    availability_policy: str,
+) -> ResultImportReceipt:
+    existing_receipt = result_store_module.load_result_import_receipt(receipt_path)
+    if existing_receipt is not None:
+        _ensure_result_import_receipt_matches(
+            existing_receipt,
+            source,
+            bundle.task_pool,
+            agents,
+            workspace_config,
+            runtime_config,
+            accepted_authority_digest,
+            availability_policy,
+            local_result_store,
+        )
+    effective_imported_at = (
+        existing_receipt.imported_at
+        if existing_receipt is not None
+        else (
+            _existing_result_source_observed_at(
+                local_result_store,
+                source.manifest.manifest_digest,
+            )
+            or _now()
+        )
+    )
+    effective_imported_at = format_utc_timestamp(
+        parse_utc_timestamp(effective_imported_at)
+    )
+    if parse_utc_timestamp(effective_imported_at) < parse_utc_timestamp(
+        source.manifest.created_at
+    ):
+        raise ValueError("Result import observation precedes source manifest creation")
+    tasks_by_id = {task.task_id: task for task in bundle.tasks}
+    checks = bundle.checks_by_id
+    agents_by_id = {agent.agent_id: agent for agent in agents}
+    decisions: list[ResultImportDecision | None] = [None] * len(source.results)
+    normalized_by_index: dict[int, ResultRecord] = {}
+    for index, source_result in enumerate(source.results):
+        rejection_reasons = _external_result_admission_errors(
+            source_result,
+            tasks_by_id,
+            checks,
+            agents_by_id,
+            workspace_config,
+            runtime_config,
+        )
+        if rejection_reasons:
+            decisions[index] = _result_import_rejection(
+                source_result,
+                rejection_reasons,
+            )
+            continue
+        try:
+            normalized_by_index[index] = result_store_module.normalize_external_result(
+                source_result,
+                source_manifest_digest=source.manifest.manifest_digest,
+                imported_at=effective_imported_at,
+                availability_policy=availability_policy,
+            )
+        except ValueError as exc:
+            decisions[index] = _result_import_rejection(
+                source_result,
+                ("normalization_failed: " + str(exc),),
+            )
+    _reject_ambiguous_incoming_results(
+        source.results,
+        normalized_by_index,
+        decisions,
+    )
+    if existing_receipt is None and normalized_by_index:
+        with result_store_module.open_result_store_session(
+            local_result_store
+        ) as session:
+            _admit_external_results(
+                source.results,
+                normalized_by_index,
+                decisions,
+                session.results,
+                session=session,
+            )
+    else:
+        _admit_external_results(
+            source.results,
+            normalized_by_index,
+            decisions,
+            result_store_module.load_results(
+                local_result_store,
+                result_store_module.ResultQuery(),
+            ),
+        )
+    if any(decision is None for decision in decisions):
+        raise AssertionError("Result import decisions are incomplete")
+    frozen_decisions = cast(tuple[ResultImportDecision, ...], tuple(decisions))
+    if existing_receipt is not None:
+        _ensure_result_import_decisions_replay(
+            existing_receipt.decisions,
+            frozen_decisions,
+        )
+        return result_store_module.write_result_import_receipt(
+            existing_receipt,
+            receipt_path,
+        )
+    receipt_identity = {
+        "source_manifest_digest": source.manifest.manifest_digest,
+        "target_task_pool_digest": bundle.task_pool.task_pool_digest,
+        "imported_at": effective_imported_at,
+        "availability_policy": availability_policy,
+    }
+    receipt = record_with_digest(
+        ResultImportReceipt(
+            receipt_id=f"result_import_{canonical_digest(receipt_identity)}",
+            source_manifest_digest=source.manifest.manifest_digest,
+            source_result_records_digest=source.manifest.result_records_digest,
+            target_task_pool_id=bundle.task_pool.task_pool_id,
+            target_task_pool_digest=bundle.task_pool.task_pool_digest,
+            accepted_authority_digest=accepted_authority_digest,
+            imported_at=effective_imported_at,
+            availability_policy=availability_policy,
+            agent_record_digests=tuple(
+                canonical_digest(agent)
+                for agent in sorted(agents, key=lambda item: item.agent_id)
+            ),
+            workspace_config_digest=canonical_digest(workspace_config),
+            runtime_config_digest=canonical_digest(runtime_config),
+            decisions=frozen_decisions,
+            receipt_digest="",
+        )
+    )
+    return result_store_module.write_result_import_receipt(receipt, receipt_path)
+
+
+def _validate_result_import_inputs(
+    agents: Sequence[AgentRecord],
+    workspace_config: WorkspaceConfig,
+    runtime_config: RuntimeConfig,
+    accepted_authority_digest: str,
+) -> None:
+    if not accepted_authority_digest:
+        raise ValueError("accepted_authority_digest must not be empty")
+    agent_ids = tuple(agent.agent_id for agent in agents)
+    if not agent_ids:
+        raise ValueError("agents must not be empty")
+    if len(agent_ids) != len(set(agent_ids)):
+        raise ValueError("duplicate Agent IDs are not allowed")
+    for agent in agents:
+        validation = validate_agent(agent)
+        if not validation.ok:
+            raise ValueError(f"agent is invalid: {', '.join(validation.errors)}")
+    for label, validation in (
+        ("workspace_config", validate_workspace_config(workspace_config)),
+        ("runtime_config", validate_runtime_config(runtime_config)),
+    ):
+        if not validation.ok:
+            raise ValueError(f"{label} is invalid: {', '.join(validation.errors)}")
+
+
+def _validate_result_import_paths(
+    source_manifest_path: Path,
+    source_result_path: Path,
+    local_result_path: Path,
+    receipt_path: Path,
+) -> None:
+    paths = {
+        "source manifest": source_manifest_path,
+        "source Results": source_result_path,
+        "local Result Store": local_result_path,
+        "Result import receipt": receipt_path,
+    }
+    write_labels = ("local Result Store", "Result import receipt")
+    source_root = source_manifest_path.resolve().parent
+    for write_label in write_labels:
+        if paths[write_label].resolve().is_relative_to(source_root):
+            raise ValueError(f"{write_label} must be outside the Result source root")
+        for other_label, other_path in paths.items():
+            if write_label == other_label:
+                continue
+            if _paths_alias(paths[write_label], other_path):
+                raise ValueError(f"{write_label} must not alias {other_label}")
+
+
+def _paths_alias(left: Path, right: Path) -> bool:
+    if left.resolve() == right.resolve():
+        return True
+    if left.exists() and right.exists():
+        return left.samefile(right)
+    return False
+
+
+def _existing_result_source_observed_at(
+    result_store: result_store_module.ResultStore,
+    source_manifest_digest: str,
+) -> str | None:
+    observations = tuple(
+        result.evidence_imported_at
+        for result in result_store_module.load_results(
+            result_store,
+            result_store_module.ResultQuery(),
+        )
+        if result.evidence_source_kind == "external_attested"
+        and result.evidence_source_manifest_digest == source_manifest_digest
+        and result.evidence_imported_at is not None
+        and validate_result(result).ok
+    )
+    if not observations:
+        return None
+    return min(observations, key=parse_utc_timestamp)
+
+
+def _external_result_admission_errors(
+    result: ResultRecord,
+    tasks_by_id: Mapping[str, TaskRecord],
+    checks: Mapping[str, CheckRecord],
+    agents_by_id: Mapping[str, AgentRecord],
+    workspace_config: WorkspaceConfig,
+    runtime_config: RuntimeConfig,
+) -> tuple[str, ...]:
+    validation = validate_result(result)
+    if not validation.ok:
+        return tuple(f"invalid_result: {error}" for error in validation.errors)
+    task = tasks_by_id.get(result.task_id)
+    check = checks.get(result.check_id)
+    agent = agents_by_id.get(result.agent_id)
+    errors: list[str] = []
+    if task is None or check is None or check.task_id != result.task_id:
+        errors.append("result_is_outside_task_pool")
+    if agent is None:
+        errors.append("result_agent_is_not_admitted")
+    if errors:
+        return tuple(errors)
+    assert task is not None
+    assert check is not None
+    assert agent is not None
+    expected_identity = result_store_module.compute_result_cache_identity(
+        task,
+        check,
+        agent,
+        workspace_config,
+        runtime_config,
+    )
+    if result.cache_identity != expected_identity:
+        errors.append("result_cache_identity_does_not_match_admission_inputs")
+    return tuple(errors)
+
+
+def _result_import_rejection(
+    source_result: ResultRecord,
+    reasons: tuple[str, ...],
+) -> ResultImportDecision:
+    return ResultImportDecision(
+        source_result_id=source_result.result_id,
+        source_result_digest=source_result.result_digest,
+        status="rejected",
+        local_result_id=None,
+        local_result_digest=None,
+        rejection_reasons=reasons,
+    )
+
+
+def _result_import_success(
+    source_result: ResultRecord,
+    local_result: ResultRecord,
+    status: str,
+) -> ResultImportDecision:
+    return ResultImportDecision(
+        source_result_id=source_result.result_id,
+        source_result_digest=source_result.result_digest,
+        status=status,
+        local_result_id=local_result.result_id,
+        local_result_digest=local_result.result_digest,
+        rejection_reasons=(),
+    )
+
+
+def _result_execution_key(
+    result: ResultRecord,
+) -> tuple[str, str, str, ResultCacheIdentity]:
+    return (
+        result.agent_id,
+        result.task_id,
+        result.check_id,
+        result.cache_identity,
+    )
+
+
+def _reject_ambiguous_incoming_results(
+    source_results: Sequence[ResultRecord],
+    normalized_by_index: dict[int, ResultRecord],
+    decisions: list[ResultImportDecision | None],
+) -> None:
+    conflicts = result_store_module.ambiguous_result_execution_keys(
+        tuple(normalized_by_index.values())
+    )
+    digests_by_result_id: dict[str, set[str]] = {}
+    for normalized in normalized_by_index.values():
+        digests_by_result_id.setdefault(normalized.result_id, set()).add(
+            normalized.result_digest
+        )
+    conflicting_result_ids = {
+        result_id
+        for result_id, digests in digests_by_result_id.items()
+        if len(digests) > 1
+    }
+    for index, normalized in tuple(normalized_by_index.items()):
+        reason = None
+        if _result_execution_key(normalized) in conflicts:
+            reason = "ambiguous_incoming_execution"
+        elif normalized.result_id in conflicting_result_ids:
+            reason = "incoming_result_id_digest_conflict"
+        if reason is None:
+            continue
+        decisions[index] = _result_import_rejection(
+            source_results[index],
+            (reason,),
+        )
+        del normalized_by_index[index]
+
+
+def _admit_external_results(
+    source_results: Sequence[ResultRecord],
+    normalized_by_index: Mapping[int, ResultRecord],
+    decisions: list[ResultImportDecision | None],
+    existing_results: Sequence[ResultRecord],
+    *,
+    session: result_store_module.ResultStoreSession | None = None,
+) -> None:
+    existing_by_id = {result.result_id: result for result in existing_results}
+    existing_by_key: dict[
+        tuple[str, str, str, ResultCacheIdentity],
+        list[ResultRecord],
+    ] = {}
+    for result in existing_results:
+        if validate_result(result).ok:
+            existing_by_key.setdefault(_result_execution_key(result), []).append(result)
+    admitted: list[tuple[int, ResultRecord]] = []
+    for index, normalized in normalized_by_index.items():
+        source_result = source_results[index]
+        key = _result_execution_key(normalized)
+        existing = existing_by_key.get(key, [])
+        existing_execution_digests = {
+            result_store_module.result_execution_digest(result) for result in existing
+        }
+        normalized_execution_digest = result_store_module.result_execution_digest(
+            normalized
+        )
+        if existing_execution_digests and existing_execution_digests != {
+            normalized_execution_digest
+        }:
+            decisions[index] = _result_import_rejection(
+                source_result,
+                ("ambiguous_local_execution",),
+            )
+            continue
+        same_id = existing_by_id.get(normalized.result_id)
+        if same_id is not None:
+            if same_id.result_digest != normalized.result_digest:
+                decisions[index] = _result_import_rejection(
+                    source_result,
+                    ("result_id_digest_conflict",),
+                )
+            else:
+                decisions[index] = _result_import_success(
+                    source_result,
+                    same_id,
+                    "idempotent",
+                )
+            continue
+        admitted.append((index, normalized))
+    if session is None:
+        for index, local_result in admitted:
+            decisions[index] = _result_import_success(
+                source_results[index],
+                local_result,
+                "admitted",
+            )
+        return
+    stored = session.append_many(tuple(result for _, result in admitted))
+    for (index, _), local_result in zip(admitted, stored, strict=True):
+        decisions[index] = _result_import_success(
+            source_results[index],
+            local_result,
+            "admitted",
+        )
+
+
+def _ensure_result_import_receipt_matches(
+    receipt: ResultImportReceipt,
+    source: result_store_module.ResultSourceBundle,
+    task_pool: TaskPoolRecord,
+    agents: Sequence[AgentRecord],
+    workspace_config: WorkspaceConfig,
+    runtime_config: RuntimeConfig,
+    accepted_authority_digest: str,
+    availability_policy: str,
+    result_store: result_store_module.ResultStore,
+) -> None:
+    expected_agent_digests = tuple(
+        canonical_digest(agent)
+        for agent in sorted(agents, key=lambda item: item.agent_id)
+    )
+    expected = {
+        "source_manifest_digest": source.manifest.manifest_digest,
+        "source_result_records_digest": (source.manifest.result_records_digest),
+        "target_task_pool_id": task_pool.task_pool_id,
+        "target_task_pool_digest": task_pool.task_pool_digest,
+        "accepted_authority_digest": accepted_authority_digest,
+        "availability_policy": availability_policy,
+        "agent_record_digests": expected_agent_digests,
+        "workspace_config_digest": canonical_digest(workspace_config),
+        "runtime_config_digest": canonical_digest(runtime_config),
+    }
+    mismatched = tuple(
+        field_name
+        for field_name, value in expected.items()
+        if getattr(receipt, field_name) != value
+    )
+    if mismatched:
+        raise ValueError(
+            "existing Result import receipt does not match: " + ", ".join(mismatched)
+        )
+    if parse_utc_timestamp(receipt.imported_at) < parse_utc_timestamp(
+        source.manifest.created_at
+    ):
+        raise ValueError(
+            "existing Result import receipt predates source manifest creation"
+        )
+    if len(receipt.decisions) != len(source.results) or any(
+        decision.source_result_id != result.result_id
+        or decision.source_result_digest != result.result_digest
+        for decision, result in zip(
+            receipt.decisions,
+            source.results,
+            strict=False,
+        )
+    ):
+        raise ValueError(
+            "existing Result import receipt decisions do not cover source Results"
+        )
+    local_bindings = {
+        (result.result_id, result.result_digest)
+        for result in result_store_module.load_results(
+            result_store,
+            result_store_module.ResultQuery(),
+        )
+    }
+    missing = tuple(
+        decision.local_result_id
+        for decision in receipt.decisions
+        if decision.local_result_id is not None
+        and (
+            decision.local_result_id,
+            decision.local_result_digest,
+        )
+        not in local_bindings
+    )
+    if missing:
+        raise ValueError(
+            "existing Result import receipt references missing local Results: "
+            + ", ".join(cast(tuple[str, ...], missing))
+        )
+
+
+def _ensure_result_import_decisions_replay(
+    recorded: Sequence[ResultImportDecision],
+    replayed: Sequence[ResultImportDecision],
+) -> None:
+    if len(recorded) != len(replayed):
+        raise ValueError("existing Result import receipt decisions do not replay")
+    for prior, current in zip(recorded, replayed, strict=True):
+        same_source = (
+            prior.source_result_id == current.source_result_id
+            and prior.source_result_digest == current.source_result_digest
+        )
+        if prior.status in {"admitted", "idempotent"}:
+            matches = (
+                current.status == "idempotent"
+                and prior.local_result_id == current.local_result_id
+                and prior.local_result_digest == current.local_result_digest
+                and prior.rejection_reasons == current.rejection_reasons
+            )
+        else:
+            matches = prior == current
+        if not same_source or not matches:
+            raise ValueError("existing Result import receipt decisions do not replay")
 
 
 def _validate_task_pool_configs(config: TaskPoolConfig) -> None:
@@ -265,6 +843,11 @@ def _publish_task_pool(
             "certification_evidence": evidence,
             "source_events": source_events,
             "generator_config_digest": metadata["generator_config_digest"],
+            "prepared_candidate_package_digest": (
+                config.prepared_package.manifest.manifest_digest
+                if config.prepared_package is not None
+                else None
+            ),
             "certification_config_digest": metadata["certification_config_digest"],
             "created_at": metadata["created_at"],
             "source_window_start": metadata["source_window_start"],
@@ -290,12 +873,29 @@ def _publish_task_pool(
         source_events,
         metadata,
     )
+    generation_provenance = None
+    observed_frame_events: tuple[task_pool_module.ObservedFrameEventRecord, ...] = ()
+    adapter_evidence = None
+    if config.prepared_package is not None:
+        (
+            task_pool,
+            generation_provenance,
+            observed_frame_events,
+            adapter_evidence,
+        ) = task_pool_module.bind_task_pool_generation_provenance(
+            task_pool,
+            bundle_dir,
+            config.prepared_package,
+        )
     bundle = task_pool_module.validated_task_pool_bundle(
         task_pool,
         accepted_tasks,
         accepted_checks,
         evidence,
         source_events,
+        generation_provenance,
+        observed_frame_events,
+        adapter_evidence,
     )
     task_pool_module.publish_task_pool_bundle(bundle, config.artifact_root)
     return task_pool
@@ -315,7 +915,9 @@ def train_selector(
         raise ValueError("training_selection_ids must not be empty")
     if len(set(training_selection_ids)) != len(training_selection_ids):
         raise ValueError("training_selection_ids must be unique")
-    tasks, checks = _load_task_pool_records(task_pool, artifact_root)
+    task_pool_bundle = _load_task_pool_bundle(task_pool, artifact_root)
+    tasks = task_pool_bundle.tasks
+    checks = task_pool_bundle.checks_by_id
     selections, training_origins, feature_snapshots, selector_inputs = (
         _load_training_selection_records(training_selection_ids, result_store)
     )
@@ -362,7 +964,9 @@ def select_benchmark(
     artifact_root: Path | None = None,
     future_window: TimeRange | None = None,
 ) -> BenchmarkSelectionRecord:
-    tasks, checks = _load_task_pool_records(task_pool, artifact_root)
+    task_pool_bundle = _load_task_pool_bundle(task_pool, artifact_root)
+    tasks = task_pool_bundle.tasks
+    checks = task_pool_bundle.checks_by_id
     origin = selection_module.build_rolling_origin(
         task_pool,
         tasks,
@@ -481,7 +1085,9 @@ def evaluate_selectors(
         evaluation_config,
         rolling_policy,
     )
-    tasks, checks = _load_task_pool_records(task_pool, artifact_root)
+    task_pool_bundle = _load_task_pool_bundle(task_pool, artifact_root)
+    tasks = task_pool_bundle.tasks
+    checks = task_pool_bundle.checks_by_id
     future_window_ends = (
         *(format_utc_timestamp(value) for value in origin_times[1:]),
         history_window.end,
@@ -505,10 +1111,20 @@ def evaluate_selectors(
     )
     for origin in origins:
         _append_origin_record(origin, result_store)
+    selection_result_snapshot = tuple(
+        result_store_module.load_results(
+            result_store,
+            result_store_module.ResultQuery(
+                agent_ids=agent_ids,
+                result_available_after=history_window.start,
+                result_available_before=max(origin.as_of_cutoff for origin in origins),
+            ),
+        )
+    )
     origin_material: dict[str, tuple[FeatureSnapshotRecord, SelectorInput]] = {}
     for origin in origins:
-        pre_origin_results = _load_pre_origin_results(
-            result_store,
+        pre_origin_results = _results_for_refs_snapshot(
+            selection_result_snapshot,
             origin,
             agents,
             result_available_after=history_window.start,
@@ -565,9 +1181,7 @@ def evaluate_selectors(
         _, selected_matrix, future_matrix, selection_metrics = score_selection(
             selection,
             origin,
-            task_pool,
-            tasks,
-            checks,
+            task_pool_bundle,
             agents,
             cell_set,
             result_store,
@@ -736,60 +1350,80 @@ def _load_replayed_prospective_selection(
     FeatureSnapshotRecord,
     tuple[ResultRecord, ...],
 ]:
+    selection, origin, snapshot, pre_origin_results = _load_replayed_selection(
+        selection_id,
+        agents,
+        result_store,
+    )
+    if (
+        selection.eligibility_mode != "strict_prospective"
+        or origin.eligibility_mode != "strict_prospective"
+    ):
+        raise ValueError("prospective Selection does not match a strict Origin")
+    return selection, origin, snapshot, pre_origin_results
+
+
+def _load_replayed_selection(
+    selection_id: str,
+    agents: Sequence[AgentRecord],
+    result_store: result_store_module.ResultStore,
+) -> tuple[
+    BenchmarkSelectionRecord,
+    RollingOriginRecord,
+    FeatureSnapshotRecord,
+    tuple[ResultRecord, ...],
+]:
     (selection,) = _load_records_by_ids(
         _selection_log_path(result_store),
         BenchmarkSelectionRecord,
         "selection_id",
         (selection_id,),
-        "prospective Selection",
+        "persisted Selection",
     )
     (origin,) = _load_records_by_ids(
         _origin_log_path(result_store),
         RollingOriginRecord,
         "origin_id",
         (selection.origin_id,),
-        "prospective Origin",
+        "persisted Origin",
     )
     (selector_input,) = _load_records_by_ids(
         _selector_input_log_path(result_store),
         SelectorInput,
         "selector_input_digest",
         (selection.selection_input_digest,),
-        "prospective SelectorInput",
+        "persisted SelectorInput",
     )
     (selector,) = _load_records_by_ids(
         _selector_log_path(result_store),
         SelectorRecord,
         "selector_id",
         (selection.selector_id,),
-        "prospective Selector",
+        "persisted Selector",
     )
     (snapshot,) = _load_records_by_ids(
         _feature_snapshot_log_path(result_store),
         FeatureSnapshotRecord,
         "feature_snapshot_id",
         (selection.feature_snapshot_id,),
-        "prospective FeatureSnapshot",
+        "persisted FeatureSnapshot",
     )
     origin_validation = validate_rolling_origin(origin)
     if not origin_validation.ok:
         raise ValueError(
-            "prospective Origin is invalid: " + ", ".join(origin_validation.errors)
+            "persisted Origin is invalid: " + ", ".join(origin_validation.errors)
         )
     if (
         selection.origin_id != origin.origin_id
-        or selection.eligibility_mode != "strict_prospective"
-        or origin.eligibility_mode != "strict_prospective"
+        or selection.eligibility_mode != origin.eligibility_mode
     ):
-        raise ValueError("prospective Selection does not match a strict Origin")
+        raise ValueError("persisted Selection does not match its Origin")
     if tuple(agent.agent_id for agent in agents) != selector_input.agent_ids:
-        raise ValueError("prospective Agent set does not match frozen SelectorInput")
+        raise ValueError("Agent set does not match frozen SelectorInput")
     if tuple(canonical_digest(agent) for agent in agents) != (
         selector_input.agent_record_digests
     ):
-        raise ValueError(
-            "prospective Agent identities do not match frozen SelectorInput"
-        )
+        raise ValueError("Agent identities do not match frozen SelectorInput")
     selection_module.ensure_selection_replay(
         selector_input,
         snapshot,
@@ -847,10 +1481,8 @@ def _ensure_pre_origin_result_task_check_identities(
 
 
 def run_agents(
-    task_pool: TaskPoolRecord,
+    task_pool_bundle: task_pool_module.TaskPoolBundle,
     task_check_refs: Sequence[TaskCheckRef],
-    tasks: Sequence[TaskRecord],
-    checks: Mapping[str, CheckRecord],
     agents: Sequence[AgentRecord],
     workspace_config: WorkspaceConfig,
     runtime_config: RuntimeConfig,
@@ -858,7 +1490,10 @@ def run_agents(
     result_store: result_store_module.ResultStore,
     run_context: workspace_module.WorkspaceRunContext,
 ) -> tuple[ResultRecord, ...]:
-    _validate_task_pool_members(task_pool, tasks, checks)
+    bundle = _validated_task_pool_bundle(task_pool_bundle)
+    task_pool = bundle.task_pool
+    tasks = bundle.tasks
+    checks = bundle.checks_by_id
     _ensure_refs_in_task_pool(task_check_refs, task_pool)
     cells: list[ResultCellRef] = []
     for ref in task_check_refs:
@@ -888,64 +1523,7 @@ def run_agents(
 
 def fill_results(
     selection: BenchmarkSelectionRecord,
-    task_pool: TaskPoolRecord,
-    tasks: Sequence[TaskRecord],
-    checks: Mapping[str, CheckRecord],
-    agents: Sequence[AgentRecord],
-    workspace_config: WorkspaceConfig,
-    runtime_config: RuntimeConfig,
-    scoring_config: result_store_module.ScoringConfig,
-    cache_config: result_store_module.ResultCacheConfig,
-    result_store: result_store_module.ResultStore,
-    run_context: workspace_module.WorkspaceRunContext,
-) -> tuple[ResultRecord, ...]:
-    _validate_task_pool_members(task_pool, tasks, checks)
-    _ensure_selection_matches_task_pool(selection, task_pool)
-    with result_store_module.open_result_store_session(result_store) as session:
-        missing = result_store_module.find_missing_results(
-            selection.selected_task_check_refs,
-            tasks,
-            checks,
-            agents,
-            workspace_config,
-            runtime_config,
-            result_store,
-            cache_config,
-            session=session,
-        )
-        executed = _run_agent_cells(
-            missing,
-            tasks,
-            checks,
-            agents,
-            workspace_config,
-            runtime_config,
-            scoring_config,
-            result_store,
-            run_context,
-            result_session=session,
-        )
-        repriced = result_store_module.reprice_cached_results(
-            selection.selected_task_check_refs,
-            tasks,
-            checks,
-            agents,
-            workspace_config,
-            runtime_config,
-            result_store,
-            cache_config,
-            scoring_config,
-            session=session,
-        )
-    return (*executed, *repriced)
-
-
-def prepare_evaluation_cells(
-    selection: BenchmarkSelectionRecord,
-    origin: RollingOriginRecord,
-    task_pool: TaskPoolRecord,
-    tasks: Sequence[TaskRecord],
-    checks: Mapping[str, CheckRecord],
+    task_pool_bundle: task_pool_module.TaskPoolBundle,
     agents: Sequence[AgentRecord],
     workspace_config: WorkspaceConfig,
     runtime_config: RuntimeConfig,
@@ -955,11 +1533,69 @@ def prepare_evaluation_cells(
     join_config: result_store_module.ResultJoinConfig,
     run_context: workspace_module.WorkspaceRunContext,
 ) -> EvaluationCellSet:
+    bundle = _validated_task_pool_bundle(task_pool_bundle)
+    task_pool = bundle.task_pool
+    tasks = bundle.tasks
+    checks = bundle.checks_by_id
+    persisted_selection, origin, _, _ = _load_replayed_selection(
+        selection.selection_id,
+        agents,
+        result_store,
+    )
+    if persisted_selection != selection:
+        raise ValueError("Selection does not match its persisted record")
+    _ensure_selection_origin(selection, origin, task_pool, tasks, checks)
+    plan = _EvaluationCellSetPlan(
+        selection=selection,
+        origin=origin,
+        future_task_pool_id=task_pool.task_pool_id,
+        future_task_pool_digest=task_pool.task_pool_digest,
+        future_task_check_refs=(),
+        future_censored_task_check_refs=(),
+        tasks=tasks,
+        checks=checks,
+    )
+    return _resolve_evaluation_cell_sets(
+        (plan,),
+        agents,
+        workspace_config,
+        runtime_config,
+        scoring_config,
+        cache_config,
+        result_store,
+        join_config,
+        run_context,
+    )[0]
+
+
+def prepare_evaluation_cells(
+    selection: BenchmarkSelectionRecord,
+    origin: RollingOriginRecord,
+    task_pool_bundle: task_pool_module.TaskPoolBundle,
+    agents: Sequence[AgentRecord],
+    workspace_config: WorkspaceConfig,
+    runtime_config: RuntimeConfig,
+    scoring_config: result_store_module.ScoringConfig,
+    cache_config: result_store_module.ResultCacheConfig,
+    result_store: result_store_module.ResultStore,
+    join_config: result_store_module.ResultJoinConfig,
+    run_context: workspace_module.WorkspaceRunContext,
+) -> EvaluationCellSet:
+    bundle = _validated_task_pool_bundle(task_pool_bundle)
+    persisted_selection, persisted_origin, _, _ = _load_replayed_selection(
+        selection.selection_id,
+        agents,
+        result_store,
+    )
+    if persisted_selection != selection:
+        raise ValueError("Selection does not match its persisted record")
+    if persisted_origin != origin:
+        raise ValueError("Origin does not match its persisted record")
     return _prepare_evaluation_cell_sets(
         ((selection, origin),),
-        task_pool,
-        tasks,
-        checks,
+        bundle.task_pool,
+        bundle.tasks,
+        bundle.checks_by_id,
         agents,
         workspace_config,
         runtime_config,
@@ -1034,7 +1670,13 @@ def _resolve_evaluation_cell_sets(
         raise ValueError("duplicate Agent IDs are not allowed")
 
     cell_set_ids, plan_by_cell_set_id, requested_refs_by_cell_set_id = (
-        _evaluation_cell_set_plan_index(plans, join_config, agents)
+        _evaluation_cell_set_plan_index(
+            plans,
+            join_config,
+            agents,
+            scoring_config,
+            cache_config,
+        )
     )
 
     existing_by_id = _load_existing_evaluation_cell_sets(result_store)
@@ -1051,6 +1693,8 @@ def _resolve_evaluation_cell_sets(
             agents,
             workspace_config,
             runtime_config,
+            scoring_config,
+            cache_config,
             join_config,
         )
         resolved_cell_sets[cell_set_id] = existing
@@ -1123,6 +1767,8 @@ def _resolve_evaluation_cell_sets(
             plan_by_cell_set_id[cell_set_id],
             union_cell_by_key,
             agents,
+            scoring_config,
+            cache_config,
             join_config,
         )
         for cell_set_id in pending_ids
@@ -1138,6 +1784,8 @@ def _evaluation_cell_set_plan_index(
     plans: Sequence[_EvaluationCellSetPlan],
     join_config: result_store_module.ResultJoinConfig,
     agents: Sequence[AgentRecord],
+    scoring_config: result_store_module.ScoringConfig,
+    cache_config: result_store_module.ResultCacheConfig,
 ) -> tuple[
     tuple[str, ...],
     Mapping[str, _EvaluationCellSetPlan],
@@ -1148,7 +1796,13 @@ def _evaluation_cell_set_plan_index(
     cell_set_ids: list[str] = []
     for plan in plans:
         requested_refs = _plan_requested_refs(plan)
-        cell_set_id = _evaluation_cell_set_id(plan, join_config, agents)
+        cell_set_id = _evaluation_cell_set_id(
+            plan,
+            join_config,
+            agents,
+            scoring_config,
+            cache_config,
+        )
         if cell_set_id in requested_refs_by_cell_set_id:
             raise ValueError("duplicate evaluation cell-set identity")
         requested_refs_by_cell_set_id[cell_set_id] = requested_refs
@@ -1195,6 +1849,8 @@ def _build_evaluation_cell_set(
     plan: _EvaluationCellSetPlan,
     cell_by_key: Mapping[tuple[str, str, str], ResultCellRef],
     agents: Sequence[AgentRecord],
+    scoring_config: result_store_module.ScoringConfig,
+    cache_config: result_store_module.ResultCacheConfig,
     join_config: result_store_module.ResultJoinConfig,
 ) -> EvaluationCellSet:
     selection = plan.selection
@@ -1206,7 +1862,13 @@ def _build_evaluation_cell_set(
     )
     cell_set = record_with_digest(
         EvaluationCellSet(
-            cell_set_id=_evaluation_cell_set_id(plan, join_config, agents),
+            cell_set_id=_evaluation_cell_set_id(
+                plan,
+                join_config,
+                agents,
+                scoring_config,
+                cache_config,
+            ),
             origin_id=origin.origin_id,
             selection_id=selection.selection_id,
             selected_task_check_refs=selection.selected_task_check_refs,
@@ -1231,9 +1893,24 @@ def _evaluation_cell_set_id(
     plan: _EvaluationCellSetPlan,
     join_config: result_store_module.ResultJoinConfig,
     agents: Sequence[AgentRecord],
+    scoring_config: result_store_module.ScoringConfig,
+    cache_config: result_store_module.ResultCacheConfig,
 ) -> str:
     requested_refs = _plan_requested_refs(plan)
-    return f"cell_set_{canonical_digest((plan.selection.selection_digest, plan.origin.origin_id, plan.future_task_pool_digest, join_config.join_policy_digest, tuple(_ref_key(ref) for ref in requested_refs), tuple(_ref_key(ref) for ref in plan.future_censored_task_check_refs), tuple(agent.agent_id for agent in agents)))}"
+    identity = {
+        "selection_digest": plan.selection.selection_digest,
+        "origin_id": plan.origin.origin_id,
+        "future_task_pool_digest": plan.future_task_pool_digest,
+        "join_policy_digest": join_config.join_policy_digest,
+        "scoring_config_digest": scoring_config.scoring_config_digest,
+        "cache_policy_digest": canonical_digest(cache_config),
+        "requested_refs": tuple(_ref_key(ref) for ref in requested_refs),
+        "future_censored_refs": tuple(
+            _ref_key(ref) for ref in plan.future_censored_task_check_refs
+        ),
+        "agent_ids": tuple(agent.agent_id for agent in agents),
+    }
+    return f"cell_set_{canonical_digest(identity)}"
 
 
 def _plan_requested_refs(
@@ -1314,6 +1991,8 @@ def _validate_reusable_evaluation_cell_set(
     agents: Sequence[AgentRecord],
     workspace_config: WorkspaceConfig,
     runtime_config: RuntimeConfig,
+    scoring_config: result_store_module.ScoringConfig,
+    cache_config: result_store_module.ResultCacheConfig,
     join_config: result_store_module.ResultJoinConfig,
 ) -> None:
     validation = validate_evaluation_cell_set(cell_set)
@@ -1324,6 +2003,16 @@ def _validate_reusable_evaluation_cell_set(
     selection = plan.selection
     origin = plan.origin
     requested_refs = _plan_requested_refs(plan)
+    if cell_set.cell_set_id != _evaluation_cell_set_id(
+        plan,
+        join_config,
+        agents,
+        scoring_config,
+        cache_config,
+    ):
+        raise ValueError(
+            "persisted evaluation cell set resolution policy has changed"
+        )
     if (
         cell_set.origin_id != origin.origin_id
         or cell_set.selection_id != selection.selection_id
@@ -1363,15 +2052,16 @@ def _validate_reusable_evaluation_cell_set(
 def score_selection(
     selection: BenchmarkSelectionRecord,
     origin: RollingOriginRecord,
-    task_pool: TaskPoolRecord,
-    tasks: Sequence[TaskRecord],
-    checks: Mapping[str, CheckRecord],
+    task_pool_bundle: task_pool_module.TaskPoolBundle,
     agents: Sequence[AgentRecord],
     evaluation_cells: EvaluationCellSet,
     result_store: result_store_module.ResultStore,
     join_config: result_store_module.ResultJoinConfig,
 ) -> tuple[EvaluationCellSet, ResultMatrix, ResultMatrix, tuple[MetricRecord, ...]]:
-    _validate_task_pool_members(task_pool, tasks, checks)
+    bundle = _validated_task_pool_bundle(task_pool_bundle)
+    task_pool = bundle.task_pool
+    tasks = bundle.tasks
+    checks = bundle.checks_by_id
     _ensure_selection_origin(selection, origin, task_pool, tasks, checks)
     if (
         evaluation_cells.future_task_pool_id != task_pool.task_pool_id
@@ -1516,12 +2206,21 @@ def write_report(
 def _candidate_batch(
     config: TaskPoolConfig,
 ) -> task_pool_module.CandidateBatch:
-    if config.import_path is not None and (
-        config.time_range is not None or config.task_source_config is not None
-    ):
-        raise ValueError(
-            "TaskPoolConfig import_path and history generation inputs are mutually exclusive"
+    source_count = sum(
+        (
+            config.prepared_package is not None,
+            config.import_path is not None,
+            config.time_range is not None or config.task_source_config is not None,
         )
+    )
+    if source_count > 1:
+        raise ValueError("TaskPoolConfig candidate sources are mutually exclusive")
+    if config.prepared_package is not None:
+        if config.prepared_package.manifest.repository_id != config.repository_id:
+            raise ValueError(
+                "prepared package repository_id does not match TaskPoolConfig"
+            )
+        return config.prepared_package.batch
     if config.import_path is not None:
         return task_pool_module.import_task_candidates(
             config.import_path,
@@ -1529,7 +2228,8 @@ def _candidate_batch(
         )
     if config.time_range is None or config.task_source_config is None:
         raise ValueError(
-            "TaskPoolConfig requires either import_path or time_range with task_source_config"
+            "TaskPoolConfig requires prepared_package, import_path, or "
+            "time_range with task_source_config"
         )
     return task_pool_module.filter_history_candidates(
         config.repository_id,
@@ -1544,7 +2244,8 @@ def _task_pool_metadata(
 ) -> dict[str, object]:
     metadata = dict(config.metadata)
     metadata["repository_id"] = config.repository_id
-    metadata["generator_config_digest"] = _generator_config_digest(config)
+    metadata["generator_config_digest"] = None
+    metadata["source_protocol_digest"] = None
     metadata["certification_config_digest"] = canonical_digest(
         config.certification_config
     )
@@ -1565,28 +2266,36 @@ def _canonical_source_window(
     return start, end
 
 
-def _generator_config_digest(config: TaskPoolConfig) -> str:
-    if config.import_path is not None:
-        return canonical_digest(
-            {
-                "mode": "import",
-                "source_family": config.import_config.source_family,
-            }
-        )
-    if config.task_source_config is None:
-        raise ValueError("task_source_config is required for source-event generation")
-    return canonical_digest(
-        {
-            "mode": "source_events",
-            "source_family": config.task_source_config.source_family,
-        }
-    )
+def _task_pool_source_window(
+    config: TaskPoolConfig,
+) -> tuple[str | None, str | None]:
+    if (
+        config.prepared_package is not None
+        and config.prepared_package.manifest.observed_frame is not None
+    ):
+        frame = config.prepared_package.manifest.observed_frame
+        start = frame.get("window_start")
+        end = frame.get("window_end")
+        if not isinstance(start, str) or not isinstance(end, str):
+            raise ValueError(
+                "prepared observed frame window timestamps must be strings"
+            )
+        return _canonical_source_window(TimeRange(start, end))
+    return _canonical_source_window(config.time_range)
 
 
 def _load_task_pool_records(
     task_pool: TaskPoolRecord,
     artifact_root: Path | None = None,
 ) -> tuple[tuple[TaskRecord, ...], Mapping[str, CheckRecord]]:
+    bundle = _load_task_pool_bundle(task_pool, artifact_root)
+    return bundle.tasks, bundle.checks_by_id
+
+
+def _load_task_pool_bundle(
+    task_pool: TaskPoolRecord,
+    artifact_root: Path | None = None,
+) -> task_pool_module.TaskPoolBundle:
     refs = (
         task_pool.task_records_ref,
         task_pool.check_records_ref,
@@ -1604,7 +2313,7 @@ def _load_task_pool_records(
         task_pool,
         artifact_root,
     )
-    return bundle.tasks, bundle.checks_by_id
+    return bundle
 
 
 def _load_training_selection_records(
@@ -1889,17 +2598,52 @@ def _load_results_for_refs(
             result_available_before=result_available_before,
         ),
     )
-    distinct_executions: list[ResultRecord] = []
-    seen_execution_digests: set[str] = set()
-    for result in loaded:
-        if (result.task_id, result.check_id) not in allowed_refs:
-            continue
+    return _distinct_unambiguous_results(loaded, allowed_refs)
+
+
+def _distinct_unambiguous_results(
+    loaded: Sequence[ResultRecord],
+    allowed_refs: set[tuple[str, str]],
+) -> tuple[ResultRecord, ...]:
+    in_scope = tuple(
+        result for result in loaded if (result.task_id, result.check_id) in allowed_refs
+    )
+    result_store_module.ensure_unambiguous_result_executions(in_scope)
+    views_by_execution: dict[str, list[ResultRecord]] = {}
+    for result in in_scope:
         execution_digest = result_store_module.result_execution_digest(result)
-        if execution_digest in seen_execution_digests:
-            continue
-        seen_execution_digests.add(execution_digest)
-        distinct_executions.append(result)
-    return tuple(distinct_executions)
+        views_by_execution.setdefault(execution_digest, []).append(result)
+    return tuple(
+        result_store_module.canonical_result_execution_view(views_by_execution[digest])
+        for digest in sorted(views_by_execution)
+    )
+
+
+def _results_for_refs_snapshot(
+    snapshot: Sequence[ResultRecord],
+    origin: RollingOriginRecord,
+    agents: Sequence[AgentRecord],
+    *,
+    result_available_after: str | None,
+) -> tuple[ResultRecord, ...]:
+    allowed_refs = {
+        (ref.task_id, ref.check_id) for ref in origin.history_task_check_refs
+    }
+    agent_ids = {agent.agent_id for agent in agents}
+    after = (
+        parse_utc_timestamp(result_available_after)
+        if result_available_after is not None
+        else None
+    )
+    before = parse_utc_timestamp(origin.as_of_cutoff)
+    filtered = tuple(
+        result
+        for result in snapshot
+        if result.agent_id in agent_ids
+        and (after is None or parse_utc_timestamp(result.result_available_at) >= after)
+        and parse_utc_timestamp(result.result_available_at) <= before
+    )
+    return _distinct_unambiguous_results(filtered, allowed_refs)
 
 
 def _load_pre_origin_results(
@@ -2284,6 +3028,23 @@ def _validate_task_pool_members(
         raise ValueError(
             "task pool members are invalid: " + "; ".join(validation.errors)
         )
+
+
+def _validated_task_pool_bundle(
+    bundle: task_pool_module.TaskPoolBundle,
+) -> task_pool_module.TaskPoolBundle:
+    if not isinstance(bundle, task_pool_module.TaskPoolBundle):
+        raise TypeError("task_pool_bundle must be a TaskPoolBundle")
+    return task_pool_module.validated_task_pool_bundle(
+        bundle.task_pool,
+        bundle.tasks,
+        bundle.checks,
+        bundle.certification_evidence,
+        bundle.source_events,
+        bundle.generation_provenance,
+        bundle.observed_frame_events,
+        bundle.adapter_evidence,
+    )
 
 
 def _ensure_selection_matches_task_pool(

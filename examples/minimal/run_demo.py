@@ -16,19 +16,24 @@ if __package__ is None or __package__ == "":
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from barcarolle import reporting
+from barcarolle import task_pool as task_pool_module
 from barcarolle.records import (
     AgentRecord,
     CheckOutcomeValue,
     CheckRecord,
+    FeatureSnapshotRecord,
     ResultRecord,
+    RollingOriginRecord,
     RuntimeConfig,
+    SelectorInput,
     SelectorRecord,
-    TaskCheckRef,
     TaskPoolRecord,
     TaskRecord,
     WorkspaceConfig,
     WorkspaceRunRecord,
     canonical_digest,
+    load_jsonl_records,
+    make_result_id,
     record_with_digest,
     write_jsonl_records,
 )
@@ -43,15 +48,15 @@ from barcarolle.result_store import (
     load_results,
     store_result,
 )
-from barcarolle.runner import prepare_evaluation_cells, score_selection
+from barcarolle.runner import (
+    prepare_evaluation_cells,
+    score_selection,
+    select_benchmark,
+)
 from barcarolle.selection import (
     FeatureConfig,
     RollingOriginPolicy,
     SelectionBudget,
-    build_feature_snapshot,
-    build_rolling_origin,
-    build_selector_input,
-    select_with_selector,
 )
 from barcarolle.task_pool import (
     candidate_batch,
@@ -117,43 +122,17 @@ def main(output_dir: Path = DEFAULT_OUTPUT_DIR) -> dict[str, object]:
         future_holdout_known=True,
         maturity_lag_seconds=0,
     )
-    origin = build_rolling_origin(
-        task_pool,
-        tasks,
-        checks_by_id,
-        ORIGIN_TIME,
-        TimeRange(start=ORIGIN_TIME_ISO, end=FUTURE_END_ISO),
-        policy,
-    )
-    pre_origin_results = _pre_origin_results(
-        result_store, origin.history_task_check_refs, agents, ORIGIN_TIME_ISO
-    )
     feature_config = FeatureConfig(
         feature_names=("task_count", "pre_origin_result_count", "task_stratum"),
     )
-    snapshot = build_feature_snapshot(
-        origin, task_pool, tasks, checks_by_id, pre_origin_results, feature_config
-    )
     budget = SelectionBudget(1)
-    selector_input = build_selector_input(
-        origin,
-        task_pool,
-        snapshot,
-        pre_origin_results,
-        agents,
-        budget,
-        feature_config.leakage_policy(origin.as_of_cutoff),
-    )
     selector_parameters = {}
     selector = record_with_digest(
         SelectorRecord(
             selector_id="selector-demo-recency",
             selector_family="recency",
             selector_version="1",
-            training_source_digests=(
-                task_pool.task_pool_digest,
-                snapshot.feature_records_digest,
-            ),
+            training_source_digests=(task_pool.task_pool_digest,),
             allowed_feature_classes=feature_config.allowed_leakage_classes,
             parameters=selector_parameters,
             config_digest=canonical_digest(
@@ -163,13 +142,37 @@ def main(output_dir: Path = DEFAULT_OUTPUT_DIR) -> dict[str, object]:
             selector_digest="",
         )
     )
-    selection = select_with_selector(selector_input, snapshot, selector)
+    selection = select_benchmark(
+        task_pool,
+        agents,
+        ORIGIN_TIME,
+        budget,
+        selector,
+        policy,
+        feature_config,
+        result_store,
+        artifact_root=output_dir,
+        future_window=TimeRange(start=ORIGIN_TIME_ISO, end=FUTURE_END_ISO),
+    )
+    (origin,) = load_jsonl_records(
+        records_dir / "origins.jsonl",
+        RollingOriginRecord,
+    )
+    (snapshot,) = load_jsonl_records(
+        records_dir / "feature-snapshots.jsonl",
+        FeatureSnapshotRecord,
+    )
+    (selector_input,) = load_jsonl_records(
+        records_dir / "selector-inputs.jsonl",
+        SelectorInput,
+    )
+    task_pool_bundle = task_pool_module.load_validated_task_pool_bundle(
+        task_pool, output_dir
+    )
     cell_set = prepare_evaluation_cells(
         selection,
         origin,
-        task_pool,
-        tasks,
-        checks_by_id,
+        task_pool_bundle,
         agents,
         workspace_config,
         runtime_config,
@@ -182,9 +185,7 @@ def main(output_dir: Path = DEFAULT_OUTPUT_DIR) -> dict[str, object]:
     scored_cell_set, selected_matrix, future_matrix, metrics = score_selection(
         selection,
         origin,
-        task_pool,
-        tasks,
-        checks_by_id,
+        task_pool_bundle,
         agents,
         cell_set,
         result_store,
@@ -271,7 +272,7 @@ def _build_task_pool(
             "check_records_ref": "records/checks.jsonl",
             "certification_evidence_ref": "records/certification-evidence.jsonl",
             "source_event_records_ref": "records/source-events.jsonl",
-            "generator_config_digest": "generator-fixture",
+            "generator_config_digest": None,
             "certification_config_digest": canonical_digest(certification_config),
             "created_at": "2026-01-11T00:00:00Z",
         },
@@ -574,32 +575,14 @@ def _fixture_result(
     result = build_result_record(
         task, check, agent, workspace_run, identity, scoring_config
     )
-    return record_with_digest(
-        replace(result, result_available_at=result_available_at, result_digest="")
+    result = replace(
+        result,
+        result_id="",
+        source_result_available_at=result_available_at,
+        result_available_at=result_available_at,
+        result_digest="",
     )
-
-
-def _pre_origin_results(
-    result_store: ResultStore,
-    refs: tuple[TaskCheckRef, ...],
-    agents: tuple[AgentRecord, ...],
-    cutoff: str,
-) -> tuple[ResultRecord, ...]:
-    task_ids = tuple(dict.fromkeys(ref.task_id for ref in refs))
-    check_ids = tuple(dict.fromkeys(ref.check_id for ref in refs))
-    results = load_results(
-        result_store,
-        ResultQuery(
-            task_ids=task_ids,
-            check_ids=check_ids,
-            agent_ids=tuple(agent.agent_id for agent in agents),
-            result_available_before=cutoff,
-        ),
-    )
-    allowed = {(ref.task_id, ref.check_id) for ref in refs}
-    return tuple(
-        result for result in results if (result.task_id, result.check_id) in allowed
-    )
+    return record_with_digest(replace(result, result_id=make_result_id(result)))
 
 
 def _clear_output_dir(output_dir: Path) -> None:
@@ -609,6 +592,13 @@ def _clear_output_dir(output_dir: Path) -> None:
         output_dir / "records" / "tasks.jsonl",
         output_dir / "records" / "checks.jsonl",
         output_dir / "records" / "results.jsonl",
+        output_dir / "records" / "selectors.jsonl",
+        output_dir / "records" / "origins.jsonl",
+        output_dir / "records" / "feature-snapshots.jsonl",
+        output_dir / "records" / "selector-inputs.jsonl",
+        output_dir / "records" / "selections.jsonl",
+        output_dir / "records" / "evaluation-cell-sets.jsonl",
+        output_dir / "records" / "result-matrices.jsonl",
         output_dir / "records" / "metrics.jsonl",
     ):
         if path.exists():
