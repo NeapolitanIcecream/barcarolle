@@ -51,7 +51,12 @@ from barcarolle.selection import (
     build_rule_selector,
 )
 from barcarolle.selection.evaluation import METRIC_CONFIG_DIGEST
-from barcarolle.task_pool import TimeRange
+from barcarolle.task_pool import (
+    GENERATION_PROVENANCE_SCHEMA_VERSION,
+    GenerationProvenanceManifest,
+    ObservedFrameEventRecord,
+    TimeRange,
+)
 from barcarolle.verification import VERIFICATION_ADAPTER_DIGEST
 
 
@@ -158,6 +163,38 @@ def test_task_pool_and_result_reports_summarize_existing_records(tmp_path) -> No
     assert result_section.summary["latency"]["agent_count"] == 0
     assert result_section.summary["latency"]["verification_count"] == 0
     assert result_pass.result_digest in result_section.source_digests["result_digests"]
+
+
+def test_generated_task_pool_reports_enumerate_nested_provenance_artifacts(
+    tmp_path,
+) -> None:
+    task_pool = _generated_task_pool_with_artifacts(tmp_path)
+
+    task_section = build_task_pool_report(task_pool, artifact_root=tmp_path)
+    claim_section = build_claim_boundary(
+        task_pool,
+        (),
+        (),
+        (),
+        (),
+        ClaimConfig(
+            requested_claims=("task_pool_bundle_internal_consistency",),
+        ),
+        artifact_root=tmp_path,
+    )
+
+    expected_paths = (
+        "tasks.jsonl",
+        "checks.jsonl",
+        "certification-evidence.jsonl",
+        "source-events.jsonl",
+        "generation-provenance.jsonl",
+        "observed-frame-events.jsonl",
+        "adapter-evidence.jsonl",
+    )
+    assert task_section.artifact_paths == expected_paths
+    assert claim_section.artifact_paths == expected_paths
+    assert claim_section.supported_claims == ("task_pool_bundle_internal_consistency",)
 
 
 def test_result_report_rejects_duplicate_result_and_agent_identities() -> None:
@@ -2486,6 +2523,104 @@ def _task_pool_with_artifacts(root) -> TaskPoolRecord:
             source_protocol_digest=None,
             certification_config_digest=canonical_digest({"repeat_count": 1}),
             created_at="2026-01-01T00:00:00Z",
+        )
+    )
+
+
+def _generated_task_pool_with_artifacts(root) -> TaskPoolRecord:
+    task_pool = _task_pool_with_artifacts(root)
+    source_events = tuple(
+        load_jsonl_records(root / "source-events.jsonl", SourceEventRecord)
+    )
+    observed_at = "2026-01-01T00:00:00.000000Z"
+    frame_events = tuple(
+        record_with_digest(
+            ObservedFrameEventRecord(
+                source_event_id=event.source_event_id,
+                repository_id=event.repository_id,
+                source_family=event.source_family,
+                source_ref=event.source_ref,
+                observed_at=observed_at,
+                frame_event_digest="",
+            )
+        )
+        for event in source_events
+    )
+    behavior = {
+        "generator_family": "fixture",
+        "adapter_version": "1",
+        "implementation_digest": "fixture-implementation",
+        "behavior_config": {"strategy": "stable"},
+    }
+    protocol = {
+        "source_kind": "issue",
+        "target_definition": "all fixture issues in the declared window",
+        "query_semantics": {"state": "resolved"},
+        "sampling_policy": {"mode": "all"},
+        "deduplication_policy": {"key": "source_ref"},
+    }
+    protocol_digest = canonical_digest(protocol)
+    frame = {
+        "frame_id": "fixture-frame",
+        "source_protocol_digest": protocol_digest,
+        "source_revision": "fixture-revision",
+        "window_start": observed_at,
+        "window_end": observed_at,
+        "event_inventory_ref": "observed-frame-events.jsonl",
+        "event_inventory_digest": canonical_digest(frame_events),
+        "observation_authority": "source_authoritative",
+        "observation_receipt_digest": "fixture-receipt",
+        "known_blind_spots": [],
+        "coverage_mode": "one_source_event_per_frame_unit_v1",
+    }
+    run = {
+        "run_id": "fixture-run",
+        "producer_id": "fixture-producer",
+        "authority_kind": "barcarolle_managed",
+        "authority_digest": "fixture-authority",
+        "started_at": observed_at,
+        "finished_at": observed_at,
+        "input_snapshot_digest": "fixture-input",
+    }
+    adapter_evidence = {"schema_version": "fixture_v1", "count": 1}
+    outputs = {
+        "prepared_candidate_records_digest": "fixture-candidates",
+        "adapter_evidence_ref": "adapter-evidence.jsonl",
+        "adapter_evidence_digest": canonical_digest(adapter_evidence),
+        "task_records_digest": task_pool.task_records_digest,
+        "check_records_digest": task_pool.check_records_digest,
+        "source_event_records_digest": task_pool.source_event_records_digest,
+        "certification_evidence_digest": task_pool.certification_evidence_digest,
+    }
+    manifest = record_with_digest(
+        GenerationProvenanceManifest(
+            schema_version=GENERATION_PROVENANCE_SCHEMA_VERSION,
+            generator_behavior=behavior,
+            generator_behavior_digest=canonical_digest(behavior),
+            source_protocol=protocol,
+            source_protocol_digest=protocol_digest,
+            observed_frame=frame,
+            observed_frame_digest=canonical_digest(frame),
+            run=run,
+            run_digest=canonical_digest(run),
+            outputs=outputs,
+            outputs_digest=canonical_digest(outputs),
+            manifest_digest="",
+        )
+    )
+    write_jsonl_records(root / "observed-frame-events.jsonl", frame_events)
+    write_jsonl_records(root / "adapter-evidence.jsonl", (adapter_evidence,))
+    write_jsonl_records(root / "generation-provenance.jsonl", (manifest,))
+    return record_with_digest(
+        replace(
+            task_pool,
+            generation_provenance_ref="generation-provenance.jsonl",
+            generation_provenance_digest=manifest.manifest_digest,
+            generator_config_digest=manifest.generator_behavior_digest,
+            source_protocol_digest=manifest.source_protocol_digest,
+            source_window_start=observed_at,
+            source_window_end=observed_at,
+            task_pool_digest="",
         )
     )
 

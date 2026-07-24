@@ -68,6 +68,9 @@ Effect:
   frozen Task Pool. Missing, malformed, or mismatched artifacts make the bundle
   consistency claim unsupported. It does not re-certify tasks or infer
   population coverage.
+- For a validated generated pool, enumerates the generation manifest and its
+  optional observed-frame inventory and adapter sidecar in Artifact Paths.
+  Invalid nested refs remain validation limitations rather than report links.
 - Reports source dispositions, right-censored event count, label-delay
   distribution, and exact source-event ref/digest from evidence rather than
   inferring a source denominator from accepted Tasks.
@@ -236,6 +239,8 @@ Effect:
   cover accepted Task/Check and rejected candidate decisions with valid
   certification transitions. It makes no source-frame or population-coverage
   claim.
+- Uses the same complete Task Pool artifact inventory as the Task Pool report,
+  including manifest-bound observed-frame and adapter sidecar refs.
 - Supports Selector metric claims only when the complete provenance chain also
   validates against the frozen Task Pool bundle and exact Agent/Result
   identities.

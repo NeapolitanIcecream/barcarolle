@@ -178,7 +178,7 @@ def build_task_pool_report(
             "source_event_records_digest": task_pool.source_event_records_digest,
             "generation_provenance_digest": (task_pool.generation_provenance_digest),
         },
-        artifact_paths=_task_pool_artifact_paths((task_pool,)),
+        artifact_paths=_task_pool_artifact_paths((task_pool,), artifact_root),
         supported_claims=supported_claims,
         unsupported_claims=tuple(
             f"task_pool_counts: {error}" for error in validation_errors
@@ -1288,7 +1288,10 @@ def build_claim_boundary(
                 sorted(agent.agent_manifest_digest for agent in agents)
             ),
         },
-        artifact_paths=_task_pool_artifact_paths((task_pool, *future_task_pools)),
+        artifact_paths=_task_pool_artifact_paths(
+            (task_pool, *future_task_pools),
+            artifact_root,
+        ),
         supported_claims=supported_tuple,
         unsupported_claims=unsupported_tuple,
         limitations=unsupported_tuple,
@@ -1297,18 +1300,49 @@ def build_claim_boundary(
 
 def _task_pool_artifact_paths(
     task_pools: Sequence[TaskPoolRecord],
+    artifact_root: Path | None,
 ) -> tuple[str, ...]:
-    return tuple(
-        ref
-        for task_pool in task_pools
-        for ref in (
-            task_pool.task_records_ref,
-            task_pool.check_records_ref,
-            task_pool.certification_evidence_ref,
-            task_pool.source_event_records_ref,
-            task_pool.generation_provenance_ref,
+    paths: list[str] = []
+    for task_pool in task_pools:
+        paths.extend(
+            ref
+            for ref in (
+                task_pool.task_records_ref,
+                task_pool.check_records_ref,
+                task_pool.certification_evidence_ref,
+                task_pool.source_event_records_ref,
+                task_pool.generation_provenance_ref,
+            )
+            if ref is not None
         )
-        if ref is not None
+        paths.extend(_nested_generation_artifact_paths(task_pool, artifact_root))
+    return tuple(paths)
+
+
+def _nested_generation_artifact_paths(
+    task_pool: TaskPoolRecord,
+    artifact_root: Path | None,
+) -> tuple[str, ...]:
+    if task_pool.generation_provenance_ref is None:
+        return ()
+    try:
+        bundle = load_validated_task_pool_bundle(
+            task_pool,
+            artifact_root or Path.cwd(),
+        )
+    except (KeyError, OSError, TypeError, ValueError):
+        return ()
+    provenance = bundle.generation_provenance
+    if provenance is None:
+        return ()
+    frame_ref = (
+        None
+        if provenance.observed_frame is None
+        else provenance.observed_frame.get("event_inventory_ref")
+    )
+    adapter_ref = provenance.outputs.get("adapter_evidence_ref")
+    return tuple(
+        ref for ref in (frame_ref, adapter_ref) if isinstance(ref, str) and ref
     )
 
 

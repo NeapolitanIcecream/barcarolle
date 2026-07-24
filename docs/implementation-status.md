@@ -32,6 +32,10 @@ execution and scoring consume a complete validated bundle rather than parallel
 Task/Check lists. No concrete new Generator or plugin registry is part of this
 boundary.
 
+Task Pool and claim-boundary reports enumerate the complete validated generated
+bundle: core Task Pool members, generation manifest, observed-frame inventory,
+and adapter sidecar. Nested refs are reported only after bundle validation.
+
 Reusable EvaluationCellSet identity binds the requested scoring configuration
 and benchmark-invalid Result reuse policy in addition to Selection, Origin,
 future pool, refs, Agents, and join policy. A changed resolution policy creates

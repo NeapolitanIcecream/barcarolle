@@ -29,6 +29,7 @@ The generic pre-Generator infrastructure is at its stop line:
   no later than run completion, which must be no later than Task Pool creation.
   Without the manifest, both behavior and source-protocol digests are null;
   absence remains valid but supports no Generator, frame, or population claim.
+  Reports enumerate the manifest plus its frame inventory and adapter sidecar.
 - The existing fixed Pylint pilot binds dependency evidence as run-specific
   adapter sidecar data together with sanitized F2P/P2P summaries, keeps core
   certification evidence schema-exact and behavior identity
