@@ -163,7 +163,8 @@ Effect:
   receipt without creating or duplicating Results. The first local observation
   time is implementation-owned, recovered from the receipt or a prior valid
   local row, and cannot predate source-manifest creation. Local write paths
-  cannot alias or sit inside the read-only source root.
+  cannot alias or sit inside the read-only source root. Receipt write or replay
+  returns only after the file and parent directory are fsynced.
 
 ### train_selector
 

@@ -870,10 +870,18 @@ def _prepared_observed_frame_errors(
     frame = package.manifest.observed_frame
     if frame is None:
         return ()
+    run_finished_at = _generation_run_finished_at(package.manifest.run)
     errors = list(
         _observed_frame_metadata_errors(
             frame,
             package.manifest.source_protocol_digest,
+            "prepared observed_frame",
+        )
+    )
+    errors.extend(
+        _observed_frame_run_errors(
+            frame,
+            run_finished_at,
             "prepared observed_frame",
         )
     )
@@ -912,7 +920,6 @@ def _prepared_observed_frame_errors(
         errors.append(
             "prepared observed frame must exactly cover candidates and excluded events"
         )
-    run_finished_at = _generation_run_finished_at(package.manifest.run)
     for event in package.observed_frame_events:
         errors.extend(
             _observed_frame_event_errors_for_repository(
@@ -1754,10 +1761,18 @@ def _observed_frame_errors(
             if not frame_events
             else ("observed frame events exist without an observed_frame section",)
         )
+    run_finished_at = _generation_run_finished_at(manifest.run)
     errors = list(
         _observed_frame_metadata_errors(
             frame,
             manifest.source_protocol_digest,
+            "observed_frame",
+        )
+    )
+    errors.extend(
+        _observed_frame_run_errors(
+            frame,
+            run_finished_at,
             "observed_frame",
         )
     )
@@ -1785,7 +1800,6 @@ def _observed_frame_errors(
         errors.append(
             "observed frame inventory must exactly cover SourceEvent outcomes"
         )
-    run_finished_at = _generation_run_finished_at(manifest.run)
     for event in frame_events:
         errors.extend(
             _observed_frame_event_errors(task_pool, event, run_finished_at)
@@ -1864,6 +1878,25 @@ def _generation_run_finished_at(
         return parse_utc_timestamp(value)
     except ValueError:
         return None
+
+
+def _observed_frame_run_errors(
+    frame: Mapping[str, object],
+    run_finished_at: datetime | None,
+    label: str,
+) -> tuple[str, ...]:
+    window_end_value = frame.get("window_end")
+    if run_finished_at is None or not isinstance(window_end_value, str):
+        return ()
+    try:
+        window_end = parse_utc_timestamp(window_end_value)
+    except (TypeError, ValueError):
+        return ()
+    if window_end > run_finished_at:
+        return (
+            f"{label} window_end must not postdate generation run completion",
+        )
+    return ()
 
 
 def _ordered_generation_timestamps(

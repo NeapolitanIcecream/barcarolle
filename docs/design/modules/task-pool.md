@@ -208,8 +208,9 @@ Effect:
   candidates, and digest mismatch before certification.
 - If an observed frame is declared, validates behavior/protocol/run section
   schemas; frame authority and receipt; canonical window, revision, and blind
-  spots; sorted unique inventory; and exact coverage of candidate plus excluded
-  source identities. Because the package is untrusted input, its run must be
+  spots; a window end and observations no later than run completion; sorted
+  unique inventory; and exact coverage of candidate plus excluded source
+  identities. Because the package is untrusted input, its run must be
   `external_attested` and its frame must be `producer_attested`; it cannot
   self-upgrade to `barcarolle_managed` or `source_authoritative`. A future
   trusted concrete adapter may attach those stronger claims only through an
@@ -243,10 +244,9 @@ Effect:
   exactly and use the exact Task Pool source window.
   Inventory/run/output changes do not change the stable behavior digest;
   behavior changes do.
-- Rejects an observed-frame event recorded after its generation run completes,
-  a run that finishes after Task Pool creation, or an observation recorded
-  after Task Pool creation. The chronology is observation, run completion,
-  then immutable pool creation.
+- Rejects a declared frame window ending after its generation run completes, an
+  observed-frame event recorded after that run, a run that finishes after Task
+  Pool creation, or an observation recorded after creation.
 - Keeps adapter-specific zero/one/many derivation or classic-paper fields in the
   sidecar. Core v1 retains one candidate projection per SourceEvent.
 
@@ -449,7 +449,8 @@ Effect:
   or certification-rejected events outside it fail validation.
 - Validates optional generation provenance as an all-or-nothing Task Pool
   binding. A pool with no provenance remains usable and supports only
-  pool-conditional claims. A declared frame must exactly cover SourceEvents.
+  pool-conditional claims. A declared frame must exactly cover SourceEvents and
+  its window must end no later than the bound generation run.
 - Is used by freeze, open, Runner, and Reporting; it does not execute Checks
   again.
 

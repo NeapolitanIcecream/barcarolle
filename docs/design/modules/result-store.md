@@ -190,6 +190,8 @@ Effect:
   admitted/idempotent/rejected local binding and reason.
 - Runner requires exact replay to use the same canonical observation time and
   rejects an observation before source-manifest creation.
+- Write or identical-replay success is returned only after the receipt file and
+  its parent directory are fsynced.
 
 ### open_result_import_transaction
 

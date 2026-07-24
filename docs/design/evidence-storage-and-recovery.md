@@ -153,7 +153,8 @@ Receipt replay recomputes admission without opening a writer, and local Result
 and receipt paths must stay outside the read-only source root. Imports sharing
 either a Result Store or receipt take deterministic coordination locks from the
 first local-state read through durable Result append and receipt publication;
-the hidden lock sidecars contain no evidence.
+the receipt file and parent directory are fsynced before success, including for
+an all-rejected import. The hidden lock sidecars contain no evidence.
 
 ## Execution Views And Pricing Views
 

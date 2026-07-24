@@ -314,6 +314,10 @@ def test_load_prepared_candidate_package_rejects_material_drift(
             "timestamps are out of order",
         ),
         (
+            {"window_end": "2026-01-30T00:00:02.000000Z"},
+            "window_end must not postdate generation run completion",
+        ),
+        (
             {"known_blind_spots": [7]},
             "known_blind_spots must contain nonempty strings",
         ),
@@ -2204,6 +2208,7 @@ def test_generator_behavior_identity_excludes_frame_run_and_adapter_evidence(
     later_frame = _with_generation_provenance(
         base,
         frame_window_end="2026-01-31T00:00:00.000000Z",
+        run_finished_at="2026-01-31T00:00:01.000000Z",
         run_id="later-run",
         adapter_evidence={"schema_version": "fixture_v1", "count": 2},
     )
@@ -2222,6 +2227,25 @@ def test_generator_behavior_identity_excludes_frame_run_and_adapter_evidence(
     assert original.task_pool.generator_config_digest != (
         changed_behavior.task_pool.generator_config_digest
     )
+
+
+def test_generation_provenance_rejects_frame_window_after_run(
+    accepted_result: CertificationResult,
+) -> None:
+    base = _published_bundle_fixture(
+        accepted_result,
+        bundle_key="post-run-frame-window",
+        created_at="2026-02-05T00:00:00Z",
+    )
+
+    with pytest.raises(
+        ValueError,
+        match="window_end must not postdate generation run completion",
+    ):
+        _with_generation_provenance(
+            base,
+            frame_window_end="2026-01-30T00:00:02.000000Z",
+        )
 
 
 def test_generation_provenance_rejects_self_attested_completeness_flag(
@@ -2723,6 +2747,7 @@ def _with_generation_provenance(
     *,
     behavior_config: dict[str, object] | None = None,
     frame_window_end: str = "2026-01-30T00:00:00.000000Z",
+    run_finished_at: str = "2026-01-30T00:00:01.000000Z",
     run_id: str = "fixture-run",
     adapter_evidence: dict[str, object] | None = None,
 ) -> task_pool_module.TaskPoolBundle:
@@ -2773,7 +2798,7 @@ def _with_generation_provenance(
         "authority_kind": "barcarolle_managed",
         "authority_digest": "fixture-authority",
         "started_at": "2026-01-30T00:00:00.000000Z",
-        "finished_at": "2026-01-30T00:00:01.000000Z",
+        "finished_at": run_finished_at,
         "input_snapshot_digest": "fixture-input",
     }
     adapter = adapter_evidence or {

@@ -43,9 +43,10 @@ a new frozen view; an unchanged policy resumes the exact persisted cells.
 
 Generated Task Pools bind a canonical source window separately from stable
 Generator behavior and source-protocol digests. Validation requires the window
-to precede pool creation and reconciles every outside-range SourceEvent
-disposition. Later pools may add observed events under unchanged behavior and
-protocol without reusing run or output identity.
+to end no later than generation completion, which precedes pool creation, and
+reconciles every outside-range SourceEvent disposition. Later pools may add
+observed events under unchanged behavior and protocol without reusing run or
+output identity.
 
 External Result admission now validates one immutable source manifest against
 the complete Task Pool, Agent, Workspace, and Runtime identities. It writes
@@ -53,7 +54,8 @@ per-row decisions and an idempotent receipt, defaults availability to an
 import-time floor, and rejects different executions sharing one cache identity.
 Store- and receipt-scoped import locks serialize the first local observation,
 Result admission, and receipt publication without creating an empty Result
-Store.
+Store. Receipt publication syncs the receipt file and parent directory before
+returning success.
 Runner lazy fill replays the persisted Selection chain before cache access, and
 multi-origin evaluation derives all origin views from one physical Result
 snapshot.

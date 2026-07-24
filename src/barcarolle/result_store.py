@@ -408,8 +408,10 @@ def write_result_import_receipt(
             raise ValueError(
                 "Result import receipt path already contains other evidence"
             )
-        return existing
-    write_jsonl_records(path, (receipt,))
+    else:
+        write_jsonl_records(path, (receipt,))
+    _fsync_file(path)
+    _fsync_directory(path.parent)
     return receipt
 
 
@@ -1714,6 +1716,11 @@ def _lock_store_file(handle: Any, *, exclusive: bool) -> None:
 def _unlock_store_file(handle: Any) -> None:
     if fcntl is not None:
         fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
+
+
+def _fsync_file(path: Path) -> None:
+    with path.open("rb") as handle:
+        os.fsync(handle.fileno())
 
 
 def _fsync_directory(path: Path) -> None:

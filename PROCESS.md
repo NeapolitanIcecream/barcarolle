@@ -26,10 +26,11 @@ The generic pre-Generator infrastructure is at its stop line:
   and adapter evidence. Binding it replaces any pre-binding Task Pool ID with
   the final content-derived ID. A frame must have an exact sorted event
   inventory and receipt/attestation semantics. Every frame observation must be
-  no later than run completion, which must be no later than Task Pool creation.
-  Without the manifest, both behavior and source-protocol digests are null;
-  absence remains valid but supports no Generator, frame, or population claim.
-  Reports enumerate the manifest plus its frame inventory and adapter sidecar.
+  no later than run completion; its declared window must also end by that
+  completion, which must be no later than Task Pool creation. Without the
+  manifest, both behavior and source-protocol digests are null; absence remains
+  valid but supports no Generator, frame, or population claim. Reports
+  enumerate the manifest plus its frame inventory and adapter sidecar.
 - The existing fixed Pylint pilot binds dependency evidence as run-specific
   adapter sidecar data together with sanitized F2P/P2P summaries, keeps core
   certification evidence schema-exact and behavior identity
@@ -42,7 +43,8 @@ The generic pre-Generator infrastructure is at its stop line:
   availability policy. The implementation records the first local observation
   time; receipt replay is read-only and reuses that time. Store- and
   receipt-scoped import locks serialize observation lookup, Result admission,
-  and receipt publication.
+  and receipt publication. Success is returned only after the receipt file and
+  its parent directory are synced.
 - Default external availability is
   `max(source_result_available_at, evidence_imported_at)`. Historical
   availability requires the explicit producer-attested policy and is labeled

@@ -628,6 +628,89 @@ def test_import_result_bundle_rejects_ambiguous_incoming_executions_as_a_group(
     assert not store.path.exists()
 
 
+def test_import_result_bundle_durably_publishes_and_replays_rejected_receipt(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    task = _task()
+    check = _check()
+    source_agent = _agent()
+    accepted_agent = _agent("accepted-agent", "accepted-manifest")
+    workspace_config = _workspace_config()
+    runtime_config = _runtime_config()
+    source_manifest = _write_result_source_bundle(
+        tmp_path / "source",
+        (
+            _result(
+                task,
+                check,
+                source_agent,
+                workspace_config,
+                runtime_config,
+                _scoring_config(),
+            ),
+        ),
+        availability_semantics="import_time_floor_v1",
+    )
+    store = ResultStore(tmp_path / "store" / "results.jsonl")
+    receipt_path = tmp_path / "receipts" / "receipt.jsonl"
+    result_store_module = runner_module.result_store_module
+    file_calls: list[Path] = []
+    directory_calls: list[Path] = []
+    original_fsync_directory = result_store_module._fsync_directory
+
+    def track_file(path: Path) -> None:
+        file_calls.append(path)
+        with path.open("rb") as handle:
+            os.fsync(handle.fileno())
+
+    def track_directory(path: Path) -> None:
+        directory_calls.append(path)
+        original_fsync_directory(path)
+
+    monkeypatch.setattr(runner_module, "_now", lambda: "2026-01-20T00:00:00Z")
+    monkeypatch.setattr(
+        result_store_module,
+        "_fsync_file",
+        track_file,
+        raising=False,
+    )
+    monkeypatch.setattr(
+        result_store_module,
+        "_fsync_directory",
+        track_directory,
+    )
+
+    receipt = import_result_bundle(
+        source_manifest,
+        _task_pool_bundle((task,), (check,)),
+        (accepted_agent,),
+        workspace_config,
+        runtime_config,
+        store,
+        receipt_path,
+        accepted_authority_digest="trusted-authority",
+        availability_policy="import_time_floor_v1",
+    )
+    replayed = import_result_bundle(
+        source_manifest,
+        _task_pool_bundle((task,), (check,)),
+        (accepted_agent,),
+        workspace_config,
+        runtime_config,
+        store,
+        receipt_path,
+        accepted_authority_digest="trusted-authority",
+        availability_policy="import_time_floor_v1",
+    )
+
+    assert replayed == receipt
+    assert receipt.decisions[0].status == "rejected"
+    assert not store.path.exists()
+    assert file_calls == [receipt_path, receipt_path]
+    assert directory_calls == [receipt_path.parent, receipt_path.parent]
+
+
 def test_import_result_bundle_rejects_authority_before_local_writes(
     tmp_path: Path,
 ) -> None:

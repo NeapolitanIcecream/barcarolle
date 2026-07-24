@@ -326,7 +326,10 @@ def _import_result_bundle_locked(
             existing_receipt.decisions,
             frozen_decisions,
         )
-        return existing_receipt
+        return result_store_module.write_result_import_receipt(
+            existing_receipt,
+            receipt_path,
+        )
     receipt_identity = {
         "source_manifest_digest": source.manifest.manifest_digest,
         "target_task_pool_digest": bundle.task_pool.task_pool_digest,
