@@ -20,11 +20,15 @@ except ImportError:  # pragma: no cover - scoreable execution is POSIX-only toda
 from barcarolle.records import (
     AgentRecord,
     CheckRecord,
+    CheckOutcomeValue,
     EvaluationCellSet,
+    InvalidOwner,
+    MatrixScoreableState,
     ResultCacheIdentity,
     ResultCellRef,
     ResultMatrix,
     ResultRecord,
+    ResultScoreableState,
     RuntimeConfig,
     TaskCheckRef,
     TaskRecord,
@@ -842,7 +846,7 @@ def _validate_cache_identity_inputs(
 
 def _normalize_result_state(
     workspace_run: WorkspaceRunRecord,
-) -> tuple[str, str, str | None]:
+) -> tuple[ResultScoreableState, CheckOutcomeValue, InvalidOwner | None]:
     if (
         workspace_run.terminal_status == "passed"
         and workspace_run.check_outcome == "pass"
@@ -1368,7 +1372,9 @@ def _fsync_directory(path: Path) -> None:
         os.close(directory_fd)
 
 
-def _matrix_scoreable_state(cells: Sequence[ResultCellRef]) -> str:
+def _matrix_scoreable_state(
+    cells: Sequence[ResultCellRef],
+) -> MatrixScoreableState:
     if any(cell.cell_state == "missing" for cell in cells):
         return "incomplete"
     if any(cell.cell_state == "excluded" for cell in cells):

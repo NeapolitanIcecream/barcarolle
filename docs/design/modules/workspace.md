@@ -76,6 +76,9 @@ Effect:
 - Binds a local Git checkout to
   `workspace_config.repository_checkout_config_digest` in a returned context.
   Runner performs this binding before task certification or Agent execution.
+- A missing binding raises `RepositorySourceNotBoundError`; checkout failures
+  remain internal but map to `repository_checkout_failed`. Higher layers use
+  these types, not substrings from Git or filesystem messages.
 
 ### bind_agent_harness
 
@@ -301,6 +304,9 @@ Effect:
   module. Workspace bindings accept hidden-material destinations only under
   the reserved `.barcarolle` namespace; preparation and launch failures are
   returned as invalid outcomes rather than escaping as exceptions.
+- Preserves the structured failure label supplied by verifier preparation.
+  Unexpected setup failures use the generic `verifier_preparation_failed`
+  label; message wording is diagnostic only.
 
 ### run_agent_on_task
 

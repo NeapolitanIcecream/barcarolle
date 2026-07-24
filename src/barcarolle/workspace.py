@@ -7,7 +7,7 @@ from pathlib import Path
 from tempfile import mkdtemp
 from threading import Lock
 from time import monotonic
-from typing import Any, Mapping, Sequence
+from typing import Any, Literal, Mapping, Sequence, TypeAlias
 import hashlib
 import json
 import math
@@ -20,10 +20,13 @@ from barcarolle._subprocess import run_bounded_process
 from barcarolle.records import (
     AgentRecord,
     CheckRecord,
+    InvalidOwner,
     RuntimeConfig,
     TaskRecord,
     WorkspaceConfig,
+    WorkspaceReplayStatus,
     WorkspaceRunRecord,
+    WorkspaceTerminalStatus,
     canonical_digest,
     is_full_git_object_id,
     make_check_command_digest,
@@ -38,11 +41,25 @@ from barcarolle.records import (
 from barcarolle.verification import (
     VERIFICATION_ADAPTER_DIGEST,
     CheckOutcome,
+    VerifierPreparationError,
     VerifierWorkspace,
     hidden_material_digest,
     prepare_verifier,
     verify_diff,
 )
+
+
+AgentTerminalStatus: TypeAlias = Literal["completed", "invalid", "error", "timeout"]
+
+
+class RepositorySourceNotBoundError(ValueError):
+    """A missing repository binding at a Workspace execution boundary."""
+
+    failure_label = "missing_repository_source"
+
+
+class _RepositoryCheckoutError(RuntimeError):
+    failure_label = "repository_checkout_failed"
 
 
 @dataclass(frozen=True)
@@ -101,7 +118,7 @@ class WorkspaceRunResult:
 
 @dataclass(frozen=True)
 class AgentRunOutcome:
-    terminal_status: str
+    terminal_status: AgentTerminalStatus
     duration_seconds: float
     usage: Mapping[str, Any]
     safe_output_digest: str
@@ -118,7 +135,7 @@ class CapturedDiff:
 
 @dataclass(frozen=True)
 class DiffReplayOutcome:
-    replay_status: str
+    replay_status: WorkspaceReplayStatus
     failure_label: str | None
     safe_output_digest: str
 
@@ -394,7 +411,9 @@ def preflight_run_bindings(
         workspace_config.repository_checkout_config_digest
     )
     if source is None or not (source / ".git").exists():
-        raise ValueError("repository source is not bound for workspace config")
+        raise RepositorySourceNotBoundError(
+            "repository source is not bound for workspace config"
+        )
     unique_checks: dict[tuple[str, str, str], CheckRecord] = {}
     unique_agents: dict[str, AgentRecord] = {}
     for task, check, agent in plans:
@@ -733,9 +752,11 @@ def verify_agent_diff(
     )
     try:
         prepared = prepare_verifier(check, verifier_ref)
-    except (OSError, ValueError, shutil.Error) as exc:
+    except VerifierPreparationError as exc:
+        return CheckOutcome("invalid", exc.failure_label, None, False, 0.0, "")
+    except (OSError, ValueError, shutil.Error):
         return CheckOutcome(
-            "invalid", _preparation_failure_label(str(exc)), None, False, 0.0, ""
+            "invalid", "verifier_preparation_failed", None, False, 0.0, ""
         )
     return verify_diff(check, prepared, runtime_config)
 
@@ -801,7 +822,7 @@ def run_agent_on_task_with_artifacts(
                 started_at=started_at,
                 workspace_started=workspace_started,
                 phase_timings=phase_timings,
-                failure_label=_workspace_failure_label(str(exc)),
+                failure_label=_workspace_failure_label(exc),
                 invalid_owner="benchmark",
             )
             return _workspace_run_result(run, artifact_config, None, None, None, None)
@@ -852,9 +873,7 @@ def run_agent_on_task_with_artifacts(
                 _phase_timings=phase_timings,
             )
         except (OSError, RuntimeError, ValueError) as exc:
-            replay = DiffReplayOutcome(
-                "invalid", _workspace_failure_label(str(exc)), ""
-            )
+            replay = DiffReplayOutcome("invalid", _workspace_failure_label(exc), "")
             check_outcome = CheckOutcome(
                 "invalid", replay.failure_label, None, False, 0.0, ""
             )
@@ -1108,21 +1127,26 @@ def _checkout_repository(
         workspace_config.repository_checkout_config_digest
     )
     if source is None:
-        raise ValueError("repository source is not bound for workspace config")
+        raise RepositorySourceNotBoundError(
+            "repository source is not bound for workspace config"
+        )
     path = Path(mkdtemp(prefix=prefix))
     _register_owned_workspace_path(path)
     try:
-        object_format = _repository_object_format(source)
-        _run_git(path, ("init", "--quiet", f"--object-format={object_format}"))
-        _run_git(
-            path,
-            ("fetch", "--quiet", "--no-tags", str(source), task.base_commit),
-        )
-        _run_git(path, ("checkout", "--quiet", "--detach", "FETCH_HEAD"))
-        if _head_commit(path) != task.base_commit:
-            raise RuntimeError("checked-out HEAD does not match Task base_commit")
-        (path / ".git" / "FETCH_HEAD").unlink(missing_ok=True)
-        return path
+        try:
+            object_format = _repository_object_format(source)
+            _run_git(path, ("init", "--quiet", f"--object-format={object_format}"))
+            _run_git(
+                path,
+                ("fetch", "--quiet", "--no-tags", str(source), task.base_commit),
+            )
+            _run_git(path, ("checkout", "--quiet", "--detach", "FETCH_HEAD"))
+            if _head_commit(path) != task.base_commit:
+                raise RuntimeError("checked-out HEAD does not match Task base_commit")
+            (path / ".git" / "FETCH_HEAD").unlink(missing_ok=True)
+            return path
+        except (OSError, RuntimeError, ValueError) as exc:
+            raise _RepositoryCheckoutError("repository checkout failed") from exc
     except BaseException:
         _discard_owned_workspace_path(path)
         raise
@@ -1322,7 +1346,7 @@ def _invalid_run_record(
     workspace_started: float,
     phase_timings: _WorkspacePhaseTimings,
     failure_label: str,
-    invalid_owner: str,
+    invalid_owner: InvalidOwner,
     solver_workspace_digest: str | None = None,
     usage: Mapping[str, Any] | None = None,
     agent_seconds: float = 0.0,
@@ -1558,7 +1582,7 @@ def _terminal_status(
     agent_outcome: AgentRunOutcome,
     replay: DiffReplayOutcome,
     check_outcome: CheckOutcome,
-) -> str:
+) -> WorkspaceTerminalStatus:
     if replay.replay_status != "applied" or check_outcome.outcome == "invalid":
         return "invalid"
     if agent_outcome.terminal_status != "completed":
@@ -1571,13 +1595,13 @@ def _terminal_status(
 
 
 def _invalid_owner(
-    terminal_status: str,
+    terminal_status: WorkspaceTerminalStatus,
     agent_outcome: AgentRunOutcome,
     replay: DiffReplayOutcome,
     check_outcome: CheckOutcome,
     *,
     check_execution_failure_agent_owned: bool = False,
-) -> str | None:
+) -> InvalidOwner | None:
     if terminal_status != "invalid":
         return None
     if agent_outcome.failure_label == "agent_process_containment_failed":
@@ -1615,28 +1639,12 @@ def _failure_label(
     return check_outcome.failure_label
 
 
-def _workspace_failure_label(message: str) -> str:
-    lowered = message.lower()
-    if "repository source is not bound" in lowered:
-        return "missing_repository_source"
-    if "checkout" in lowered:
-        return "repository_checkout_failed"
+def _workspace_failure_label(error: BaseException) -> str:
+    if isinstance(error, RepositorySourceNotBoundError):
+        return error.failure_label
+    if isinstance(error, _RepositoryCheckoutError):
+        return error.failure_label
     return "workspace_preparation_failed"
-
-
-def _preparation_failure_label(message: str) -> str:
-    lowered = message.lower()
-    if "identity does not match" in lowered:
-        return "check_workspace_mismatch"
-    if "hidden_material_source" in lowered:
-        return "missing_verification_material"
-    if "hidden material digest" in lowered:
-        return "hidden_material_mismatch"
-    if "check command digest" in lowered:
-        return "check_command_mismatch"
-    if "inside verifier workspace" in lowered:
-        return "invalid_hidden_material_destination"
-    return "verifier_preparation_failed"
 
 
 def _is_reserved_hidden_material_destination(destination: Path) -> bool:

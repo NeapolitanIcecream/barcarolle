@@ -417,7 +417,7 @@ def evaluate(context: ExperimentContext) -> Mapping[str, object]:
     )
     if len(execution_keys) != len(set(execution_keys)):
         raise RuntimeError("paid Result Store contains duplicate execution identities")
-    total_cost = sum(float(result.cost["total_cost"]) for result in results)
+    total_cost = sum(_required_number(result.cost, "total_cost") for result in results)
     summary = {
         "schema_version": 1,
         "stage": "complete",
@@ -903,6 +903,13 @@ def _priced_usage(usage: Mapping[str, object]) -> Mapping[str, int]:
                 "measured input_tokens must equal cached plus uncached input"
             )
     return priced
+
+
+def _required_number(values: Mapping[str, object], key: str) -> float:
+    value = values.get(key)
+    if isinstance(value, bool) or not isinstance(value, int | float):
+        raise RuntimeError(f"{key} must be a measured number")
+    return float(value)
 
 
 def _load_or_score_origin(

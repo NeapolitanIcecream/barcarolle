@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 from tempfile import mkdtemp
-from typing import Any, Mapping, Sequence
+from typing import Any, Mapping, Sequence, cast
 import hashlib
 import json
 import math
@@ -47,6 +47,7 @@ from barcarolle.verification import (
 )
 from barcarolle.workspace import (
     CapturedDiff,
+    RepositorySourceNotBoundError,
     WorkspaceRunContext,
     apply_diff,
     cleanup_workspace,
@@ -628,7 +629,8 @@ def validated_task_pool_bundle(
         tasks=tuple(tasks),
         checks=tuple(checks),
         certification_evidence=tuple(
-            canonical_data(record) for record in certification_evidence
+            cast(Mapping[str, Any], canonical_data(record))
+            for record in certification_evidence
         ),
     )
 
@@ -1824,13 +1826,10 @@ def _run_task_check(
 ) -> CheckOutcome:
     try:
         workspace = create_verifier_workspace(task, workspace_config, run_context)
-    except (OSError, RuntimeError, ValueError) as exc:
-        failure_label = (
-            "missing_repository_source"
-            if "repository source is not bound" in str(exc).lower()
-            else "verifier_workspace_error"
-        )
-        return CheckOutcome("invalid", failure_label, None, False, 0.0, "")
+    except RepositorySourceNotBoundError as exc:
+        return CheckOutcome("invalid", exc.failure_label, None, False, 0.0, "")
+    except (OSError, RuntimeError, ValueError):
+        return CheckOutcome("invalid", "verifier_workspace_error", None, False, 0.0, "")
 
     try:
         if validate_material_refs:

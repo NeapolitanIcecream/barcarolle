@@ -22,6 +22,7 @@ from barcarolle.records import (
 )
 from barcarolle.workspace import (
     CapturedDiff,
+    RepositorySourceNotBoundError,
     WorkspaceArtifactConfig,
     WorkspaceRef,
     WorkspaceRunContext,
@@ -44,7 +45,7 @@ from barcarolle.workspace import (
     run_agent_on_task_with_artifacts,
     verify_agent_diff,
 )
-from barcarolle.verification import hidden_material_digest
+from barcarolle.verification import VerifierPreparationError, hidden_material_digest
 
 
 @pytest.fixture
@@ -121,8 +122,12 @@ def test_repository_binding_returns_a_new_context_without_mutating_the_original(
     bound_context = bind_repository_source(original_context, workspace_config, repo)
 
     assert bound_context is not original_context
-    with pytest.raises(ValueError, match="repository source is not bound"):
+    with pytest.raises(
+        RepositorySourceNotBoundError,
+        match="repository source is not bound",
+    ) as exc_info:
         create_solver_workspace(task, workspace_config, original_context)
+    assert exc_info.value.failure_label == "missing_repository_source"
     workspace = create_solver_workspace(task, workspace_config, bound_context)
     managed_workspaces.append(workspace)
 
@@ -1040,6 +1045,51 @@ def test_verify_agent_diff_normalizes_hidden_material_copy_collision(
 
     assert outcome.outcome == "invalid"
     assert outcome.failure_label == "verifier_preparation_failed"
+
+
+def test_verify_agent_diff_uses_structured_preparation_label_not_message(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    run_context = WorkspaceRunContext()
+    check, run_context = _bind_default_check(tmp_path, run_context)
+    workspace = WorkspaceRef(tmp_path, "verifier", "task", "commit", "workspace")
+
+    def renamed_diagnostic(*_args) -> None:
+        raise VerifierPreparationError(
+            "check_command_mismatch",
+            "diagnostic wording changed",
+        )
+
+    monkeypatch.setattr(workspace_module, "prepare_verifier", renamed_diagnostic)
+
+    outcome = verify_agent_diff(workspace, check, _runtime(), run_context)
+
+    assert outcome.outcome == "invalid"
+    assert outcome.failure_label == "check_command_mismatch"
+
+
+def test_run_agent_on_task_classifies_git_fetch_failure_as_checkout_failure(
+    tmp_path: Path,
+) -> None:
+    run_context = WorkspaceRunContext()
+    repo, _ = _make_repo(tmp_path)
+    task = _task(base_commit="b" * 40)
+    workspace_config = _workspace_config(repo)
+    agent_command = (sys.executable, "-c", "raise AssertionError('must not run')")
+    agent = _agent(agent_command)
+    run_context = bind_repository_source(run_context, workspace_config, repo)
+    run_context = bind_agent_harness(run_context, agent, agent_command)
+    check, run_context = _bind_default_check(tmp_path, run_context)
+
+    record = run_agent_on_task(
+        task, check, agent, workspace_config, _runtime(), run_context
+    )
+
+    assert validate_workspace_run(record).ok
+    assert record.terminal_status == "invalid"
+    assert record.invalid_owner == "benchmark"
+    assert record.failure_label == "repository_checkout_failed"
 
 
 def test_run_agent_on_task_executes_scoreable_workspace_path_and_returns_valid_record(

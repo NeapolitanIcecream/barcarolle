@@ -884,4 +884,8 @@ def _string_mapping(value: JSONValue, label: str) -> Mapping[str, str]:
         for key, item in value.items()
     ):
         raise ValueError(f"{label} must map strings to strings")
-    return dict(value)
+    return {
+        key: item
+        for key, item in value.items()
+        if isinstance(key, str) and isinstance(item, str)
+    }

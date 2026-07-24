@@ -14,9 +14,13 @@ from pathlib import Path
 from typing import Any, Mapping, Sequence
 
 from barcarolle.records import (
+    CheckOutcomeValue,
     CheckRecord,
+    InvalidOwner,
     ResultCacheIdentity,
     ResultRecord,
+    ResultScoreableState,
+    WorkspaceTerminalStatus,
     canonical_digest,
     make_check_digest,
     record_with_digest,
@@ -290,14 +294,15 @@ def _migrate_result(
             raise ValueError("cannot infer unknown total_cost from the old Result")
         cost["total_cost"] = None
 
-    terminal_status = _string(old_result["terminal_status"], "terminal_status")
     failure_label = _optional_string(old_result["failure_label"], "failure_label")
-    scoreable_state, outcome, invalid_owner = _normalize_old_result_state(
-        terminal_status,
-        _string(old_result["scoreable_state"], "scoreable_state"),
-        _string(old_result["outcome"], "outcome"),
-        _optional_string(old_result["invalid_owner"], "invalid_owner"),
-        failure_label,
+    terminal_status, scoreable_state, outcome, invalid_owner = (
+        _normalize_old_result_state(
+            _string(old_result["terminal_status"], "terminal_status"),
+            _string(old_result["scoreable_state"], "scoreable_state"),
+            _string(old_result["outcome"], "outcome"),
+            _optional_string(old_result["invalid_owner"], "invalid_owner"),
+            failure_label,
+        )
     )
     result = ResultRecord(
         result_id=_string(old_result["result_id"], "result_id"),
@@ -344,17 +349,22 @@ def _normalize_old_result_state(
     outcome: str,
     old_invalid_owner: str | None,
     failure_label: str | None,
-) -> tuple[str, str, str | None]:
+) -> tuple[
+    WorkspaceTerminalStatus,
+    ResultScoreableState,
+    CheckOutcomeValue,
+    InvalidOwner | None,
+]:
     old_state = (terminal_status, scoreable_state, outcome, old_invalid_owner)
     if old_state == ("passed", "scoreable", "pass", None):
-        return ("scoreable", "pass", None)
+        return ("passed", "scoreable", "pass", None)
     if old_state == ("failed", "scoreable", "fail", None):
-        return ("scoreable", "fail", None)
+        return ("failed", "scoreable", "fail", None)
     if (
         old_state == ("error", "scoreable", "fail", None)
         and failure_label == "agent_failed"
     ):
-        return ("agent_invalid", "invalid", "agent")
+        return ("error", "agent_invalid", "invalid", "agent")
     raise ValueError(
         "unsupported old result state; inspect benchmark ownership before migration"
     )

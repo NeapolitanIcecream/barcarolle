@@ -493,6 +493,24 @@ def test_certify_task_candidate_rejects_empty_task_text(tmp_path: Path) -> None:
     assert "task_text must not be empty" in result.rejection_reasons
 
 
+def test_certify_task_candidate_reports_missing_repository_binding(
+    tmp_path: Path,
+) -> None:
+    candidate, workspace_config, runtime_config, reference_patch, _ = (
+        _executable_candidate(tmp_path)
+    )
+
+    with pytest.raises(RuntimeError, match="missing_repository_source"):
+        certify_task_candidate(
+            candidate,
+            CertificationConfig(),
+            workspace_config,
+            runtime_config,
+            reference_patch,
+            WorkspaceRunContext(),
+        )
+
+
 @pytest.mark.parametrize(
     "failure_label",
     (

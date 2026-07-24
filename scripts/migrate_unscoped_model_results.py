@@ -11,11 +11,15 @@ from __future__ import annotations
 import argparse
 import json
 from pathlib import Path
-from typing import Any, Mapping, Sequence
+from typing import Any, Mapping, Sequence, cast
 
 from barcarolle.records import (
+    CheckOutcomeValue,
+    InvalidOwner,
     ResultCacheIdentity,
     ResultRecord,
+    ResultScoreableState,
+    WorkspaceTerminalStatus,
     canonical_digest,
     canonical_json,
     parse_utc_timestamp,
@@ -245,11 +249,21 @@ def _migrate_result(
             agent_id=_string(old_result["agent_id"], "agent_id"),
             task_id=task_id,
             check_id=check_id,
-            terminal_status=_string(old_result["terminal_status"], "terminal_status"),
-            scoreable_state=_string(old_result["scoreable_state"], "scoreable_state"),
-            outcome=_string(old_result["outcome"], "outcome"),
-            invalid_owner=_optional_string(
-                old_result["invalid_owner"], "invalid_owner"
+            terminal_status=cast(
+                WorkspaceTerminalStatus,
+                _string(old_result["terminal_status"], "terminal_status"),
+            ),
+            scoreable_state=cast(
+                ResultScoreableState,
+                _string(old_result["scoreable_state"], "scoreable_state"),
+            ),
+            outcome=cast(
+                CheckOutcomeValue,
+                _string(old_result["outcome"], "outcome"),
+            ),
+            invalid_owner=cast(
+                InvalidOwner | None,
+                _optional_string(old_result["invalid_owner"], "invalid_owner"),
             ),
             failure_label=_optional_string(
                 old_result["failure_label"], "failure_label"

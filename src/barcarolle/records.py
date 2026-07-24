@@ -8,14 +8,39 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 from types import UnionType
-from typing import Any, Mapping, Sequence, Union, get_args, get_origin, get_type_hints
+from typing import (
+    Any,
+    Literal,
+    Mapping,
+    Sequence,
+    TypeAlias,
+    Union,
+    get_args,
+    get_origin,
+    get_type_hints,
+)
 import hashlib
 import json
 import math
 import os
 
 
-JSONValue = Any
+JSONValue: TypeAlias = (
+    str | int | float | bool | None | list["JSONValue"] | Mapping[str, "JSONValue"]
+)
+ResultCellState: TypeAlias = Literal["result", "missing", "excluded"]
+WorkspaceTerminalStatus: TypeAlias = Literal[
+    "passed", "failed", "invalid", "error", "timeout"
+]
+WorkspaceReplayStatus: TypeAlias = Literal["applied", "failed", "invalid", "skipped"]
+CheckOutcomeValue: TypeAlias = Literal["pass", "fail", "invalid"]
+InvalidOwner: TypeAlias = Literal["agent", "benchmark"]
+ResultScoreableState: TypeAlias = Literal[
+    "scoreable", "agent_invalid", "benchmark_invalid"
+]
+MatrixScoreableState: TypeAlias = Literal[
+    "complete", "complete_with_exclusions", "incomplete", "abstained"
+]
 _SOLVER_MATERIAL_FORMAT = "task_text_and_file_refs_v1"
 _WORKSPACE_CHECKOUT_MODE = "base_commit_history_v1"
 _ROLLING_ORIGIN_PROTOCOL_VERSION = "rolling_origin_arrival_cohort_v2"
@@ -50,9 +75,9 @@ class ResultCellRef:
     required_identity_digest: str
     result_id: str | None
     result_digest: str | None
-    cell_state: str
+    cell_state: ResultCellState
     exclusion_reason: str | None
-    outcome: str | None = None
+    outcome: CheckOutcomeValue | None = None
 
 
 @dataclass(frozen=True)
@@ -183,11 +208,11 @@ class WorkspaceRunRecord:
     agent_id: str
     solver_workspace_digest: str
     verifier_workspace_digest: str
-    terminal_status: str
+    terminal_status: WorkspaceTerminalStatus
     diff_digest: str
-    replay_status: str
-    check_outcome: str
-    invalid_owner: str | None
+    replay_status: WorkspaceReplayStatus
+    check_outcome: CheckOutcomeValue
+    invalid_owner: InvalidOwner | None
     failure_label: str | None
     usage: Mapping[str, JSONValue]
     latency: Mapping[str, JSONValue]
@@ -203,10 +228,10 @@ class ResultRecord:
     agent_id: str
     task_id: str
     check_id: str
-    terminal_status: str
-    scoreable_state: str
-    outcome: str
-    invalid_owner: str | None
+    terminal_status: WorkspaceTerminalStatus
+    scoreable_state: ResultScoreableState
+    outcome: CheckOutcomeValue
+    invalid_owner: InvalidOwner | None
     failure_label: str | None
     cost: Mapping[str, JSONValue]
     scoring_config_digest: str
@@ -369,7 +394,7 @@ class ResultMatrix:
     join_policy_digest: str
     denominator_policy_digest: str
     abstention_reason: str | None
-    scoreable_state: str
+    scoreable_state: MatrixScoreableState
     matrix_digest: str
 
 
@@ -482,21 +507,52 @@ _RESULT_STATES = frozenset(
 
 
 def canonical_data(value: Any) -> JSONValue:
+    return _canonical_data(value, set())
+
+
+def _canonical_data(value: Any, active_containers: set[int]) -> JSONValue:
     if is_dataclass(value):
-        return {
-            field.name: canonical_data(getattr(value, field.name))
-            for field in fields(value)
-        }
+        identity = _enter_canonical_container(value, active_containers)
+        try:
+            return {
+                field.name: _canonical_data(
+                    getattr(value, field.name), active_containers
+                )
+                for field in fields(value)
+            }
+        finally:
+            active_containers.remove(identity)
     if isinstance(value, tuple | list):
-        return [canonical_data(item) for item in value]
+        identity = _enter_canonical_container(value, active_containers)
+        try:
+            return [_canonical_data(item, active_containers) for item in value]
+        finally:
+            active_containers.remove(identity)
     if isinstance(value, Mapping):
         keys = tuple(value)
         if any(not isinstance(key, str) for key in keys):
             raise TypeError("canonical JSON mapping keys must be strings")
-        return {key: canonical_data(value[key]) for key in sorted(keys)}
+        identity = _enter_canonical_container(value, active_containers)
+        try:
+            return {
+                key: _canonical_data(value[key], active_containers)
+                for key in sorted(keys)
+            }
+        finally:
+            active_containers.remove(identity)
     if type(value) is float and value == 0.0:
         return 0.0
-    return value
+    if value is None or type(value) in {str, int, float, bool}:
+        return value
+    raise TypeError("canonical JSON value has an unsupported type")
+
+
+def _enter_canonical_container(value: object, active_containers: set[int]) -> int:
+    identity = id(value)
+    if identity in active_containers:
+        raise TypeError("canonical JSON values must not contain cycles")
+    active_containers.add(identity)
+    return identity
 
 
 def canonical_json(value: Any) -> str:
@@ -779,6 +835,10 @@ def validate_check(check: CheckRecord) -> ValidationResult:
         errors.append("resource_limits must be a mapping")
     elif any(value is None for value in check.resource_limits.values()):
         errors.append("resource_limits values must be bounded")
+    else:
+        errors.extend(
+            _json_mapping_value_errors("resource_limits", check.resource_limits)
+        )
     if _looks_solver_visible(check.hidden_check_bundle_digest):
         errors.append("hidden_check_bundle_digest must not expose hidden material")
     return _validation(errors)
@@ -996,6 +1056,8 @@ def validate_feature_snapshot(snapshot: FeatureSnapshotRecord) -> ValidationResu
                 },
             )
             record_errors.extend(_ordered_timestamps(record, ["observed_at"]))
+            if not _is_json_value(record.value):
+                record_errors.append("value must be a strict JSON value")
             errors.extend(
                 f"feature_records[{index}]: {error}" for error in record_errors
             )
@@ -1457,14 +1519,19 @@ def validate_selector(selector: SelectorRecord) -> ValidationResult:
     if not isinstance(selector.parameters, Mapping):
         errors.append("parameters must be a mapping")
     else:
-        expected_config_digest = canonical_digest(
-            {
-                "selector_family": selector.selector_family,
-                "parameters": selector.parameters,
-            }
-        )
-        if selector.config_digest != expected_config_digest:
-            errors.append("config_digest does not match selector family and parameters")
+        parameter_errors = _json_mapping_value_errors("parameters", selector.parameters)
+        errors.extend(parameter_errors)
+        if not parameter_errors:
+            expected_config_digest = canonical_digest(
+                {
+                    "selector_family": selector.selector_family,
+                    "parameters": selector.parameters,
+                }
+            )
+            if selector.config_digest != expected_config_digest:
+                errors.append(
+                    "config_digest does not match selector family and parameters"
+                )
     errors.extend(_self_digest_errors(selector, "selector_digest", "selector"))
     return _validation(errors)
 
@@ -1894,6 +1961,43 @@ def _result_state_errors(result: ResultRecord) -> list[str]:
     return [] if state in _RESULT_STATES else ["result state is inconsistent"]
 
 
+def _json_mapping_value_errors(
+    name: str,
+    values: Mapping[str, object],
+) -> list[str]:
+    if all(_is_json_value(value) for value in values.values()):
+        return []
+    return [f"{name} must contain only strict JSON values"]
+
+
+def _is_json_value(
+    value: object,
+    active_containers: set[int] | None = None,
+) -> bool:
+    if value is None or type(value) in {str, int, bool}:
+        return True
+    if type(value) is float:
+        return math.isfinite(value)
+    if type(value) is not list and not isinstance(value, MappingABC):
+        return False
+    active = active_containers if active_containers is not None else set()
+    identity = id(value)
+    if identity in active:
+        return False
+    active.add(identity)
+    try:
+        if type(value) is list:
+            return all(_is_json_value(item, active) for item in value)
+        if not isinstance(value, MappingABC):
+            return False
+        return all(
+            type(key) is str and _is_json_value(item, active)
+            for key, item in value.items()
+        )
+    finally:
+        active.remove(identity)
+
+
 def _measurement_errors(
     name: str,
     values: Mapping[str, Any],
@@ -2126,6 +2230,8 @@ def _coerce_value(expected_type: Any, data: Any, path: str) -> Any:
         return data
     origin = get_origin(expected_type)
     args = get_args(expected_type)
+    if origin is Literal:
+        return _coerce_literal(args, data, path)
     if origin in {Union, UnionType}:
         return _coerce_union(args, data, path)
     if origin is tuple:
@@ -2137,6 +2243,18 @@ def _coerce_value(expected_type: Any, data: Any, path: str) -> Any:
     if isinstance(expected_type, type) and is_dataclass(expected_type):
         return _from_data(expected_type, data)
     return _coerce_scalar(expected_type, data, path)
+
+
+def _coerce_literal(args: tuple[Any, ...], data: Any, path: str) -> Any:
+    errors: list[TypeError] = []
+    for scalar_type in dict.fromkeys(type(option) for option in args):
+        try:
+            return _coerce_scalar(scalar_type, data, path)
+        except TypeError as exc:
+            errors.append(exc)
+    if errors:
+        raise errors[0]
+    raise TypeError(f"{path} does not match its literal scalar type")
 
 
 def _coerce_union(args: tuple[Any, ...], data: Any, path: str) -> Any:

@@ -25,12 +25,44 @@ testpaths = ["tests"]
 pythonpath = ["src"]
 
 [tool.pyright]
-include = ["src"]
+include = ["src", "examples", "scripts"]
+exclude = ["examples/boltons_regression/hidden-checks"]
 pythonVersion = "3.11"
-typeCheckingMode = "basic"
+typeCheckingMode = "standard"
 
 [tool.ruff]
 target-version = "py311"
+
+# Cremona is a refactor-routing aid, not a quality gate. The default scope is
+# executable project code; tests are scanned explicitly only for a concrete
+# test-maintenance question so their different complexity profile cannot
+# dominate production routing.
+[tool.cremona]
+profile = "generic-python"
+targets = ["src/barcarolle", "examples", "scripts"]
+exclude = [
+    ".git",
+    ".venv",
+    ".pytest_cache",
+    ".ruff_cache",
+    ".pyright",
+    "*/__pycache__/*",
+    "outputs",
+    "output",
+    ".orchestrator",
+    ".codex-workflows",
+    "examples/boltons_regression/hidden-checks",
+]
+out_dir = "outputs/cremona-current"
+
+# The repository is young, so 180 days covers its useful history. In-scope
+# commit sizes are 35, 28, 15, 3, and 1 files: a cutoff of 25 retains the
+# package/Selection migration while excluding two broad integration PRs that
+# would otherwise create an almost complete coupling graph.
+[tool.cremona.history]
+lookback_days = 180
+min_shared_commits = 2
+coupling_ignore_commit_file_count = 25
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/barcarolle"]
