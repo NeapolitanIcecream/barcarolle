@@ -9,6 +9,7 @@ from barcarolle.records import CheckRecord, RuntimeConfig, canonical_digest
 from barcarolle.verification import (
     CheckOutcome,
     CheckNormalizationConfig,
+    VerifierPreparationError,
     VerifierWorkspace,
     normalize_outcome,
     prepare_verifier,
@@ -52,7 +53,10 @@ def test_prepare_verifier_rejects_hidden_material_destination_outside_workspace(
     hidden.write_text("private oracle", encoding="utf-8")
     check = _check()
 
-    with pytest.raises(ValueError, match="inside verifier workspace"):
+    with pytest.raises(
+        VerifierPreparationError,
+        match="inside verifier workspace",
+    ) as exc_info:
         prepare_verifier(
             check,
             _workspace_ref(
@@ -62,6 +66,7 @@ def test_prepare_verifier_rejects_hidden_material_destination_outside_workspace(
                 hidden_material_destination=tmp_path / "outside.txt",
             ),
         )
+    assert exc_info.value.failure_label == "invalid_hidden_material_destination"
 
 
 def test_prepare_verifier_rejects_mismatch_before_copying_hidden_material(

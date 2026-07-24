@@ -222,9 +222,10 @@ Agent run.
   withhold report claims when the future pool is absent. A separate adversarial
   spec changes the persisted Selection to another eligible history ref and
   proves deterministic replay rejects it before Task Pool reads.
-- The current full-signal Cremona scan covers 38 first-party Python files and
-  reports 112 hotspots (0 now / 36 soon / 76 monitor), no structural
-  regression, and no dead-code candidate.
+- The calibrated full-signal Cremona scan covers 34 executable first-party
+  Python files and reports 115 hotspots (0 now / 37 soon / 78 monitor), nine
+  `investigate_soon` files, and no dead-code candidate. No baseline exists, so
+  the scan establishes routing state rather than a regression trend.
 
 These checks establish implementation behavior, not predictive validity. The
 algorithm and data questions later in this ledger still require experiments.
@@ -478,7 +479,7 @@ and rehashes the resulting tree before Check execution.
 | RI-008 | P1 | reproduced, resolved 2026-07-22 | The former `train_selector` returned the first candidate or built a static rule record. | `train_selector` now fits only the concrete rule-mixture family from replayed expert Selections, paired selected/future matrices, recomputed MAE, exact Result bindings, and origins before a declared deployment origin. Fixed rules use `build_rule_selector`; candidate choice is separate. |
 | RI-009 | P1 | reproduced, resolved 2026-07-22 | The former inference path could accept only a FeatureSnapshot ID while public rule helpers bypassed snapshot validation. | `select_with_selector` now requires the materialized, self-validated FeatureSnapshot, checks its exact SelectorInput binding, cutoff, and allowed leakage classes, and is the sole public inference path. Training additionally resolves exact pre-origin Results used by snapshots. |
 | RI-015 | P2 | code-confirmed, resolved 2026-07-22 | Large experiment scripts duplicated ledger-event loading, fsync, snapshot folding, and paid-cost accounting. Endpoint, exact-cell recovery, pricing validation, and scoreability differ by experiment. | `examples/experiment_ledger.py` now owns only the shared single-writer reservation/completion log, complete-line check, durable append, atomic snapshot, and cost folding. It validates the shared timestamp and finite nonnegative accounting boundary; Boltons and Pylint retain their direct experiment-specific guards. Temporary replay of the 10-call boltons ledger and both 2-call and 20-call Pylint ledgers preserved calls, spent cost, and remaining budget exactly. |
-| RI-034 | P2 | static-audit plus temporary full-suite branch coverage | active; ninety-five evidence-boundary slices resolved through 2026-07-23 | Evidence validators and report builders still contain several independent checks in long functions. The current 38-file scan remains `strained`/`investigate_soon`, with full signal health, 112 hotspots (0 now / 36 soon / 76 monitor), no Ruff/Complexipy critical findings, 19 Lizard critical findings, and no dead-code candidates. Runner `train_selector`, prospective Task Pool report replay, Task Pool construction, SourceEvent finalization, certification-evidence reconciliation, matrix alignment, Claim Boundary evaluation, Selector-batch preflight, bounded subprocess execution, shared resource-ledger snapshot reconstruction, and Records payload-state validation now have direct phase boundaries. Exact Result-cache identity and construction, schema-first shared validator/latest-schema typing including Task Pool/member/Result/config inputs, ordered Task Pool artifact prerequisites, non-coercive candidate and Task Pool metadata ingestion, canonical Selector parameters including scale-invariant rule-mixture weights, canonical JSON and immutable scoring inputs including signed zero, typed optional pre-origin and ResultQuery bounds, relative Workspace artifact refs, confined typed report filenames, implementation-owned Metric consumption, typed rolling-origin cohort controls, canonical persisted floats, and Check normalization are fixed contracts instead of placeholder, coercion, or truthiness controls; certification repeat count and all evidence/execution configs fail at batch, binding, and just-in-time entry boundaries. Complete-plan binding checks deduplicate immutable Check and Agent identities while retaining per-cell revalidation. The shared CellSet resolver and `evaluate_selectors` retain explicit orchestration dependencies rather than one-use context objects. Companion-log, Reporting, and Task Pool candidate/context checks remain linear in existing boundaries. | Continue one characterized evidence boundary at a time; keep validation strength and module ownership. The Claim Boundary directly orchestrates five stable claim predicates and evaluates only requested claims; the shared CellSet execution orchestrator remains an explicit audit surface. Do not hide contracts with `**kwargs`, duplicate execution dependencies, or add a validation framework, one-use context object, or baseline during the large active change set. |
+| RI-034 | P2 | calibrated static audit plus temporary full-suite branch coverage; active after ninety-five evidence-boundary slices | Long evidence validators and orchestrators remain navigation candidates. The maintained 34-file scan is `strained`/`investigate_soon`, with full signal health, 115 hotspots (0 now / 37 soon / 78 monitor), nine investigate-soon files, and no dead-code candidates. Earlier slices extracted characterized phase boundaries and removed placeholder, coercion, truthiness, and duplicate-validation controls without changing the public module vocabulary. No baseline exists, so the scan cannot establish trend. | Continue only from a reproduced evidence-boundary failure or measured maintenance bottleneck. Keep explicit orchestration surfaces when an extraction would create one-use forwarding objects. Do not split by file length, add a validation framework, or make Cremona a gate. |
 | RI-035 | P1 | reproduced, resolved 2026-07-22 | A Result-linked FeatureRecord could name Task, Check, or Agent fields from another in-origin cell because validation checked only the Result/source and optional cache digest. | Present Task, Check, Agent, and cache-identity links now must match the exact visible Result. Fields remain nullable, and origin-level aggregate digest/count behavior is unchanged. A characterization test reproduces both cross-ref and cross-Agent drift. |
 | RI-036 | P1 | reproduced, resolved 2026-07-22 | `build_rolling_origin` silently skipped missing Task Pool Task/Check records or a Check with the wrong owner, allowing an incomplete denominator to be constructed under the complete Task Pool digest. | Origin construction now requires every Task Pool member record and exact Task/Check owner linkage before cohort derivation. Record supersets remain allowed and filtered to the Task Pool. Characterization covers missing Task, missing Check, and wrong owner. |
 | RI-037 | P1 | reproduced, resolved 2026-07-22 | Result and excluded cells could omit outcomes, missing cells could carry exclusion/outcome payloads, excluded Result bindings could be partial, and ResultMatrix `scoreable_state` was not checked against cells or abstention. | Records now enforce one explicit ResultCellRef payload state machine and derive the allowed matrix scoreability state from cells/abstention. Four Selection fixtures were corrected to use production-valid states. |
@@ -553,6 +554,11 @@ and rehashes the resulting tree before Check execution.
 | RI-112 | P1 | code-confirmed, resolved 2026-07-23 | The frozen Pylint schedule and campaign authority were executable only by manually assembling `ReplicateCampaignContext` in Python. That left endpoint-time file loading and action selection to ad hoc code immediately before an evidence-producing run. | `replicate_campaign_cli.py` loads the exact Agent, Runtime, schedule, Task Pool, and local Pylint bindings. It provides only explicit authority creation, no-call preflight, and one-cell execution; verifies pinned verifier-image digest, architecture, and base commit before a paid cell; confines campaign artifacts below one directory; and returns bounded JSON summaries. It does not generate experiment inputs or loop over paid cells. |
 | RI-113 | P1 | maintainer decision | future-work | Expanding Task supply before the model endpoint exists assumes a Task Generator. Some intended generators may be LLM-driven, while deterministic importers have different source and certification prerequisites. | Do not build a generic generator or expand a pool without selecting one concrete source. Resume with an adapter-specific generator when its data and, where required, model endpoint are available; reuse the existing candidate, certification, SourceEvent, and immutable publication contracts. |
 | RI-114 | P2 | PR-review reproduced, resolved 2026-07-23 | Multi-file paid-harness evidence retained only a sorted multiset of content hashes. Swapping the executable and helper bytes therefore kept both the harness-content digest and unchanged command paths valid, allowing paid preflight to accept different code at the executable path. | `harness_content_digest` now hashes canonical resolved-path/content-digest pairs in path order. A red preflight regression swaps two declared files and proves the endpoint/harness proof fails. The same-mode search found no other endpoint-harness content digest path. |
+| RI-115 | P1 | external-review hypothesis, reproduced and resolved 2026-07-23; PR-review gap closed 2026-07-24 | `JSONValue = Any` gave Pyright no recursive payload contract. Direct validators accepted unsupported objects in Check limits, Selector validation could raise while digesting them, tuple payloads could persist as lists, and cyclic payloads could recurse indefinitely. Finite execution states were also plain strings; the first implementation checked a `Literal`'s scalar type but not membership during JSONL loading. | `JSONValue` is now recursive; shared `Literal` aliases cover finite Result, Workspace, Check, and matrix states. Latest-schema conversion enforces each Literal member set, while domain validators own valid cross-field combinations. Canonicalization rejects cycles and unsupported leaves, and the three arbitrary JSON payload boundaries reject tuples and non-finite numbers before digesting. Fourteen new or strengthened contract cases cover the counterexamples. |
+| RI-116 | P1 | external-review hypothesis, reproduced and resolved 2026-07-23 | Workspace and Task Pool derived stable benchmark labels by searching exception-message substrings. A changed Git or preparation message could silently reclassify the same failure. | Missing repository binding and verifier preparation now use thin `ValueError`-compatible typed failures carrying stable labels; checkout uses one internal typed failure. Workspace and Task Pool dispatch by type and fall back to generic labels for unexpected errors. No broad exception framework or cross-module taxonomy was added. |
+| RI-117 | P1 | code-confirmed, resolved in repository 2026-07-23; repository rule pending first default-branch run | The repository had no PR workflow and Pyright used `basic` over only `src`, so local commands were documented but not continuously exercised and executable examples/migrations were outside the static contract. | The minimal `quality` workflow performs `uv sync --frozen`, Ruff, Pyright, and the full suite with pinned actions, read-only permissions, cancellation, and a timeout. Pyright now uses `standard` over `src`, `examples`, and `scripts`; target-repository hidden-check fixtures are excluded, and the optional SWE-bench adapter suppresses only unavailable local dependency reports. Formatting and coverage are excluded because repository-wide format drift is pre-existing and coverage is diagnostic rather than a target. Require the `quality` status after its first successful `main` run. |
+| RI-118 | P2 | external-review example, resolved 2026-07-23 | A Runner ordering test patched `_resolved_task_pool_candidate_batch`, coupling the contract to a private helper name. | The test now supplies a nonexistent public import path and asserts malformed configs fail before that path is read or the artifact directory is created. Other private patches remain until a concrete refactor or brittle failure shows that replacing them improves a public contract. |
+| RI-119 | P2 | calibrated structural audit and maintainer decision | active routing policy; no broad split | File length and Cremona hotspots identify navigation candidates but do not by themselves prove a responsibility boundary. The 34-file full-signal scan reports `strained`/`investigate_soon`, 115 hotspots (0 now / 37 soon / 78 monitor), nine investigate-soon files, and no dead-code candidates. With no baseline, it cannot establish trend. A separate `tests/test_runner.py` scan labels 18 pytest tests/helpers as high-confidence dead code because Vulture cannot see pytest discovery; that false signal alone raises the file to `investigate_now`. | Keep the current public module vocabulary. Split an internal submodule only when one coherent responsibility can move with a public characterization test or when measured change coupling/navigation cost justifies it. Default Cremona scope, exclusions, history window, and bulk-commit cutoff are stored in `pyproject.toml`; tests are scanned only for a concrete maintenance question and Vulture findings there require pytest-aware confirmation. Do not make Cremona a CI gate or initialize a baseline yet. |
 
 Decisions from the 2026-07-22 maintainer review:
 
@@ -570,21 +576,38 @@ Decisions from the 2026-07-22 maintainer review:
 
 ### RI-034 Structural Audit Boundary
 
-The scoped scan covered the 37 version-controlled Python files under `src`,
-`examples`, and `scripts`. The first whole-worktree attempt also traversed
-ignored historical virtual environments and failed on third-party source, so
-those artifacts were excluded rather than treated as project debt. Early scans
-had no coverage input. The current 38-file scan uses a temporary offline
-coverage.py run of the full suite, with conservative 0% entries for non-imported
-scripts/hidden checks and conventional 100% entries for two empty `__init__.py`
-files. Signal health is now full. Coverage remains routing
-evidence, not proof that a function is risky in production, and the temporary
-artifact is not committed as a baseline.
+The first whole-worktree attempt traversed ignored virtual environments and
+third-party or generated material. The maintained configuration now scans only
+the 34 executable first-party Python files under `src/barcarolle`, `examples`,
+and `scripts`, excluding caches, outputs, workflow state, and hidden-check
+fixtures. Tests have a different complexity profile and enter only an explicit
+test-maintenance scan. History uses 180 days, requires two shared commits, and
+discards commits touching more than 25 in-scope files as coupling evidence.
+Observed in-scope commit sizes are 35, 28, 15, 3, and 1: the cutoff retains the
+package/Selection migration while preventing two broad integration PRs from
+creating an almost complete coupling graph.
 
-After fifty evidence-boundary slices, the repository verdict remains
-`strained`.
+The current scan uses temporary full-suite branch coverage, conservative 0%
+entries for non-imported scripts, and conventional 100% entries for empty
+`__init__.py` files. It has full signal health and reports 115 hotspots (0
+`refactor_now`, 37 `refactor_soon`, 78 `monitor`), nine
+`investigate_soon` files, and no dead-code candidates. The repository verdict
+remains `strained`. Coverage and hotspot counts are routing evidence, not proof
+that a function is risky. No baseline is committed, so the scan does not
+support a regression claim.
+
+An explicit one-file scan of `tests/test_runner.py` was used only for the
+external review's test-maintenance question. It reports 13 length/complexity
+hotspots, but also calls 18 pytest-discovered tests/helpers high-confidence dead
+code. That false Vulture signal supplies the scan's dead-code score and
+`investigate_now` band, so neither deletion nor file splitting follows from the
+headline. The one cited private-helper patch was replaced with a public
+input/side-effect contract; the remaining long scenario tests stay intact until
+a concrete refactor makes shared setup or file ownership observable.
+
+The detailed figures below are historical slices retained for auditability.
 The original 37-file scan had 108 hotspots, 22 `refactor_now`, and
-Ruff/Lizard/Complexipy critical counts of 8/31/8. The current 38-file scope,
+Ruff/Lizard/Complexipy critical counts of 8/31/8. A later 38-file scope,
 which also includes the new replicate campaign executor, has 116 hotspots, 3
 retained `refactor_now`, 43 `refactor_soon`, 70 `monitor`, and critical counts
 of 0/21/0. Two later offline algorithm additions account for the two new
@@ -2760,8 +2783,46 @@ and show material wall-clock or paid-cost improvement.
   second executor or automatic paid loop.
 - RI-114: paid endpoint proof binds every declared harness path to its exact
   content digest; exchanging executable and helper bytes fails preflight.
+- RI-115: recursive JSON payloads and finite state strings have static types,
+  while direct validation rejects unsupported, cyclic, non-finite, or
+  shape-changing values before persistence.
+- RI-116: Workspace and Verification propagate stable preparation labels by
+  typed failures rather than parsing diagnostic messages.
+- RI-117: the repository owns a minimal locked quality workflow and Pyright
+  standard-mode contract across library code, executable examples, and
+  migrations; the required repository rule follows its first successful
+  default-branch run.
+- RI-118: Runner's configuration-before-source contract is observed through
+  public inputs and side effects rather than a private helper patch.
+- RI-119: Cremona has a calibrated code scope and history policy; it remains
+  routing evidence, with no automatic module split, baseline, or CI gate.
 
 ## Update Log
+
+- 2026-07-24: closed RI-115's PR-review gap. A red public JSONL case proved
+  that same-typed unknown Literal values loaded successfully; generic
+  latest-schema conversion now checks membership for every Literal, while
+  domain validators retain cross-field state-machine checks. The first
+  `quality` run also showed that Ubuntu lacks the zsh required by the Codex
+  harness contract tests, so CI installs that explicit test dependency instead
+  of skipping four tests.
+
+- 2026-07-23: closed RI-115 through RI-118 and calibrated RI-119 from the
+  external review. Recursive JSON and finite state types now reach Pyright
+  standard mode; unsupported, cyclic, non-finite, and tuple-shaped JSON
+  counterexamples fail without exception leaks or persistence drift.
+  Repository binding, checkout, and verifier preparation preserve stable
+  labels through thin typed errors. The minimal quality workflow performs a
+  frozen install, Ruff, Pyright standard over library code, executable
+  examples, and migrations, and the full suite. One Runner test now proves
+  ordering through public source and artifact effects. The full 851-test suite
+  passes with 2 skipped. A full-signal 34-file Cremona scan reports 115
+  hotspots (0 now / 37 soon / 78 monitor), nine investigate-soon files, and no
+  dead-code candidates; no baseline means no trend claim. A separate
+  `test_runner.py` scan was rejected as an automatic priority because Vulture
+  misclassified 18 pytest-discovered symbols as dead code. No module-by-size
+  split, generic error hierarchy, `NewType` migration, format gate, coverage
+  target, Cremona baseline, network request, or paid call was added.
 
 - 2026-07-23: closed RI-114 from PR review. Paid multi-file harness evidence
   now binds resolved path/content-digest pairs instead of an unlabelled content

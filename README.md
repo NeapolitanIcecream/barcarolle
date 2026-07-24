@@ -59,7 +59,8 @@ rules are fixed in [`docs/statistical-protocol.md`](docs/statistical-protocol.md
 
 ## Install And Test
 
-Barcarolle uses Python 3.11+ and `uv`.
+Barcarolle uses Python 3.11+, `uv`, and `zsh` for the Codex harness contract
+tests.
 
 ```bash
 uv sync
@@ -67,6 +68,12 @@ uv run pytest
 uv run ruff check src tests examples scripts
 uv run pyright
 ```
+
+Pull requests and pushes to `main` run the locked install, Ruff, Pyright in
+standard mode over `src`, `examples`, and `scripts`, and the full test suite in
+the `quality` workflow. Target-repository hidden-check fixtures are excluded
+from static analysis. Formatting is not yet a repository-wide gate because the
+current tree has pre-existing format drift.
 
 Run a focused test file while working in one area:
 

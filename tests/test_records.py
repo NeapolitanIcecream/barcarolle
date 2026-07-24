@@ -297,6 +297,38 @@ def test_result_cache_identity_changes_with_check_resource_limits() -> None:
 
 
 @pytest.mark.parametrize(
+    "value",
+    (object(), float("nan"), float("inf"), (1, 2)),
+)
+def test_check_validation_rejects_non_json_resource_limit_before_digest(
+    value: object,
+) -> None:
+    check = replace(
+        _check(_task()),
+        resource_limits={"timeout_seconds": value},
+    )
+
+    validation = validate_check(check)
+
+    assert not validation.ok
+    assert any(
+        "strict JSON" in error or "unsupported type" in error
+        for error in validation.errors
+    )
+
+
+def test_check_validation_rejects_cyclic_json_without_recursion_error() -> None:
+    cyclic: list[object] = []
+    cyclic.append(cyclic)
+    check = replace(_check(_task()), resource_limits={"limits": cyclic})
+
+    validation = validate_check(check)
+
+    assert not validation.ok
+    assert "canonical JSON values must not contain cycles" in validation.errors
+
+
+@pytest.mark.parametrize(
     ("field", "value"),
     (("check_type", "unittest"), ("oracle_source", "generated_tests")),
 )
@@ -418,6 +450,31 @@ def test_selector_config_digest_binds_family_and_parameters() -> None:
 
     assert validate_selector(selector).ok
     assert not validate_selector(replace(selector, parameters={"seed": 8})).ok
+
+
+@pytest.mark.parametrize("value", (object(), float("nan"), (1, 2)))
+def test_selector_validation_returns_json_errors_for_non_json_parameters(
+    value: object,
+) -> None:
+    selector = SelectorRecord(
+        selector_id="selector",
+        selector_family="random",
+        selector_version="v1",
+        training_source_digests=("training",),
+        allowed_feature_classes=("task",),
+        parameters={"payload": value},
+        config_digest="stale",
+        created_at="2026-06-01T00:00:00Z",
+        selector_digest="stale",
+    )
+
+    validation = validate_selector(selector)
+
+    assert not validation.ok
+    assert any(
+        "strict JSON" in error or "unsupported type" in error
+        for error in validation.errors
+    )
 
 
 def test_task_validation_rejects_stale_solver_material_digest_and_unordered_timestamps() -> (
@@ -829,9 +886,9 @@ def test_result_matrix_rejects_incoherent_cell_state_payloads() -> None:
     assert (
         "scoreable_state does not match matrix cells" in validate(clean_missing).errors
     )
-    assert (
-        "scoreable_state is not normalized"
-        in validate(
+    assert any(
+        "ResultMatrix.scoreable_state must be one of" in error
+        for error in validate(
             result_cell,
             scoreable_state="unknown",
         ).errors
@@ -1380,6 +1437,32 @@ def test_jsonl_load_rejects_noncanonical_json_representation(tmp_path: Path) -> 
         load_jsonl_records(path, TaskRecord)
 
 
+def test_jsonl_load_enforces_literal_scalar_type(tmp_path: Path) -> None:
+    path = tmp_path / "wrong-state-type.jsonl"
+    payload = canonical_data(_workspace_run())
+    payload["terminal_status"] = 7
+    path.write_text(f"{canonical_json(payload)}\n", encoding="utf-8")
+
+    with pytest.raises(
+        ValueError,
+        match=r"line 1: WorkspaceRunRecord.terminal_status must be a string",
+    ):
+        load_jsonl_records(path, WorkspaceRunRecord)
+
+
+def test_jsonl_load_rejects_value_outside_literal_members(tmp_path: Path) -> None:
+    path = tmp_path / "unknown-state.jsonl"
+    payload = canonical_data(_workspace_run())
+    payload["terminal_status"] = "nonsense"
+    path.write_text(f"{canonical_json(payload)}\n", encoding="utf-8")
+
+    with pytest.raises(
+        ValueError,
+        match=r"line 1: WorkspaceRunRecord.terminal_status must be one of",
+    ):
+        load_jsonl_records(path, WorkspaceRunRecord)
+
+
 def test_jsonl_load_rejects_blank_record_lines(tmp_path: Path) -> None:
     path = tmp_path / "blank-line.jsonl"
     path.write_text(f"{canonical_json(_task())}\n\n", encoding="utf-8")
@@ -1453,6 +1536,48 @@ def test_feature_snapshot_validation_rejects_invalid_embedded_features_without_t
     validation = validate_feature_snapshot(snapshot)
 
     assert not validation.ok
+
+
+def test_feature_snapshot_validation_rejects_tuple_json_value_shape() -> None:
+    feature = FeatureRecord(
+        feature_id="feature",
+        feature_scope="origin",
+        task_id=None,
+        check_id=None,
+        agent_id=None,
+        result_id=None,
+        result_cache_identity_digest=None,
+        feature_name="counts",
+        value=(1, 2),
+        aggregation_window=None,
+        aggregation_method=None,
+        observed_at="2026-01-01T00:00:00Z",
+        source_artifact_digest="source",
+        origin_snapshot_digest="origin-snapshot",
+        leakage_class="task_metadata",
+    )
+    snapshot = FeatureSnapshotRecord(
+        feature_snapshot_id="",
+        origin_id="origin",
+        feature_record_ids=(feature.feature_id,),
+        feature_records_digest=canonical_digest((feature,)),
+        leakage_policy_digest="policy",
+        leakage_lint_status="not_run",
+        feature_records=(feature,),
+        result_view_digest=None,
+        feature_config_digest="config",
+        feature_snapshot_digest="",
+    )
+    snapshot = replace(
+        snapshot,
+        feature_snapshot_id=make_feature_snapshot_id(snapshot),
+    )
+    snapshot = record_with_digest(snapshot)
+
+    validation = validate_feature_snapshot(snapshot)
+
+    assert not validation.ok
+    assert "feature_records[0]: value must be a strict JSON value" in validation.errors
 
 
 def test_feature_snapshot_validation_rejects_passed_lint_without_feature_records() -> (
@@ -1566,9 +1691,18 @@ def test_jsonl_write_rejection_preserves_destination_and_removes_temporary_file(
 @pytest.mark.parametrize(
     ("changes", "expected_error"),
     [
-        ({"terminal_status": "completed"}, "terminal_status is not normalized"),
-        ({"replay_status": "unknown"}, "replay_status is not normalized"),
-        ({"check_outcome": "unknown"}, "check_outcome is not normalized"),
+        (
+            {"terminal_status": "completed"},
+            "WorkspaceRunRecord.terminal_status must be one of",
+        ),
+        (
+            {"replay_status": "unknown"},
+            "WorkspaceRunRecord.replay_status must be one of",
+        ),
+        (
+            {"check_outcome": "unknown"},
+            "WorkspaceRunRecord.check_outcome must be one of",
+        ),
         (
             {"terminal_status": "passed", "check_outcome": "fail"},
             "workspace run state is inconsistent",
@@ -1624,10 +1758,19 @@ def test_workspace_run_validation_accepts_produced_state_combinations(
 @pytest.mark.parametrize(
     ("changes", "expected_error"),
     [
-        ({"terminal_status": "completed"}, "terminal_status is not normalized"),
-        ({"scoreable_state": "complete"}, "scoreable_state is not normalized"),
-        ({"outcome": "unknown"}, "outcome is not normalized"),
-        ({"invalid_owner": "infrastructure"}, "invalid_owner is not normalized"),
+        (
+            {"terminal_status": "completed"},
+            "ResultRecord.terminal_status must be one of",
+        ),
+        (
+            {"scoreable_state": "complete"},
+            "ResultRecord.scoreable_state must be one of",
+        ),
+        ({"outcome": "unknown"}, "ResultRecord.outcome must be one of"),
+        (
+            {"invalid_owner": "infrastructure"},
+            "ResultRecord.invalid_owner must be one of",
+        ),
         ({"cost": {}}, "cost must include total_cost"),
         ({"latency": {}}, "latency must include workspace_seconds"),
         (

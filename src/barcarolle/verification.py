@@ -15,6 +15,7 @@ import subprocess
 
 from barcarolle._subprocess import run_bounded_process
 from barcarolle.records import (
+    CheckOutcomeValue,
     CheckRecord,
     RuntimeConfig,
     canonical_digest,
@@ -25,6 +26,14 @@ from barcarolle.records import (
 VERIFICATION_ADAPTER_DIGEST = canonical_digest(
     {"adapter": "builtin_verifier", "version": 1}
 )
+
+
+class VerifierPreparationError(ValueError):
+    """A verifier setup failure with a stable benchmark failure label."""
+
+    def __init__(self, failure_label: str, message: str) -> None:
+        super().__init__(message)
+        self.failure_label = failure_label
 
 
 @dataclass(frozen=True)
@@ -42,7 +51,7 @@ class VerifierWorkspace:
 
 @dataclass(frozen=True)
 class CheckOutcome:
-    outcome: str
+    outcome: CheckOutcomeValue
     failure_label: str | None
     exit_code: int | None
     timed_out: bool
@@ -92,7 +101,7 @@ class CheckNormalizationConfig:
 
 @dataclass(frozen=True)
 class EvidenceSummary:
-    outcome: str
+    outcome: CheckOutcomeValue
     failure_label: str | None
     timed_out: bool
     duration_seconds: float
@@ -103,32 +112,56 @@ def prepare_verifier(
     check: CheckRecord, verifier_workspace: VerifierWorkspace
 ) -> VerifierWorkspace:
     if not _workspace_matches_check(check, verifier_workspace):
-        raise ValueError("verifier workspace identity does not match check")
-    if verifier_workspace.hidden_material_source is None:
-        raise ValueError(
-            "hidden_material_source is required to prepare verifier workspace"
+        raise VerifierPreparationError(
+            "check_workspace_mismatch",
+            "verifier workspace identity does not match check",
         )
-    if (
-        hidden_material_digest(verifier_workspace.hidden_material_source)
-        != check.hidden_check_bundle_digest
-    ):
-        raise ValueError("hidden material digest does not match check")
+    if verifier_workspace.hidden_material_source is None:
+        raise VerifierPreparationError(
+            "missing_verification_material",
+            "hidden_material_source is required to prepare verifier workspace",
+        )
+    try:
+        source_digest = hidden_material_digest(
+            verifier_workspace.hidden_material_source
+        )
+    except (OSError, ValueError) as exc:
+        raise VerifierPreparationError(
+            "verifier_preparation_failed",
+            str(exc),
+        ) from exc
+    if source_digest != check.hidden_check_bundle_digest:
+        raise VerifierPreparationError(
+            "hidden_material_mismatch",
+            "hidden material digest does not match check",
+        )
     if (
         make_check_command_digest(verifier_workspace.check_command)
         != verifier_workspace.check_command_digest
     ):
-        raise ValueError("check command digest does not match bound command")
-    if verifier_workspace.hidden_material_destination is None:
-        raise ValueError(
-            "hidden_material_destination is required when hidden material is provided"
+        raise VerifierPreparationError(
+            "check_command_mismatch",
+            "check command digest does not match bound command",
         )
-    destination = _resolve_under_workspace(
-        verifier_workspace.path, verifier_workspace.hidden_material_destination
-    )
+    if verifier_workspace.hidden_material_destination is None:
+        raise VerifierPreparationError(
+            "verifier_preparation_failed",
+            "hidden_material_destination is required when hidden material is provided",
+        )
+    try:
+        destination = _resolve_under_workspace(
+            verifier_workspace.path, verifier_workspace.hidden_material_destination
+        )
+    except ValueError as exc:
+        raise VerifierPreparationError(
+            "invalid_hidden_material_destination",
+            str(exc),
+        ) from exc
     source = verifier_workspace.hidden_material_source
     if _path_lexists(destination):
-        raise ValueError(
-            "hidden material destination must be absent before preparation"
+        raise VerifierPreparationError(
+            "verifier_preparation_failed",
+            "hidden material destination must be absent before preparation",
         )
     relative_destination = verifier_workspace.hidden_material_destination
     if (
@@ -137,16 +170,27 @@ def prepare_verifier(
         and relative_destination.parts[0] == ".barcarolle"
         and _path_lexists(verifier_workspace.path / ".barcarolle")
     ):
-        raise ValueError(
-            "reserved .barcarolle namespace must be absent before preparation"
+        raise VerifierPreparationError(
+            "verifier_preparation_failed",
+            "reserved .barcarolle namespace must be absent before preparation",
         )
     if source.is_dir():
         copytree(source, destination)
     else:
         destination.parent.mkdir(parents=True, exist_ok=True)
         copy2(source, destination)
-    if hidden_material_digest(destination) != check.hidden_check_bundle_digest:
-        raise ValueError("copied hidden material digest does not match check")
+    try:
+        copied_digest = hidden_material_digest(destination)
+    except (OSError, ValueError) as exc:
+        raise VerifierPreparationError(
+            "verifier_preparation_failed",
+            str(exc),
+        ) from exc
+    if copied_digest != check.hidden_check_bundle_digest:
+        raise VerifierPreparationError(
+            "hidden_material_mismatch",
+            "copied hidden material digest does not match check",
+        )
     return replace(verifier_workspace, prepared=True)
 
 

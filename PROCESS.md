@@ -19,6 +19,12 @@ The active direction is predictive validity.
 - The Pylint replicate campaign has a concrete entry point. It loads frozen
   Agent, Runtime, schedule, Task Pool, and adapter evidence, then exposes only
   `authorize`, `preflight`, and one-cell `run-next` actions.
+- The repository quality workflow performs a frozen install, Ruff, Pyright in
+  standard mode over `src`, `examples`, and `scripts`, and the full suite.
+  Target-repository hidden-check fixtures are excluded. Recursive JSON values
+  and finite execution states now have static types and latest-schema member
+  validation; preparation failures carry stable labels rather than relying on
+  message parsing.
 - No campaign authority ledger or paid call was created during the current
   maintenance work.
 
@@ -40,6 +46,14 @@ plugin host, distributed scheduler, or generic Task Generator.
 4. Continue RI-034 refactoring only for a reproduced boundary failure or a
    measured maintenance bottleneck. Static hotspot counts alone do not justify
    another abstraction.
+5. Use Cremona only as routing evidence. Its default scope is executable code
+   under `src/barcarolle`, `examples`, and `scripts`; tests require a concrete
+   test-maintenance question. Use 180 days of history, at least two shared
+   commits, and ignore commits touching more than 25 in-scope files for
+   coupling. That cutoff separates the two 28/35-file integration PRs from the
+   15-file package/Selection migration. Do not create a baseline or CI gate
+   until the repository has a stable comparison window and an agreed
+   regression policy.
 
 ## Next Campaign
 
@@ -145,9 +159,10 @@ ignored paths.
 
 ## Handoff
 
-The campaign entry point and documentation are the last planned no-API
-infrastructure work. Before the endpoint arrives, further development should
-start only after selecting a concrete Task Generator or reproducing a new
-evidence-chain defect. When the endpoint arrives, prepare the frozen campaign
-inputs, create explicit authority, run no-call preflight, and advance one cell
-at a time.
+After the quality workflow first succeeds on `main`, configure the repository
+rule to require its `quality` check; that setting cannot be proven before the
+workflow exists on the default branch. Before the endpoint arrives, further
+development should start only after selecting a concrete Task Generator,
+reproducing a new evidence-chain defect, or measuring a maintenance bottleneck.
+When the endpoint arrives, prepare the frozen campaign inputs, create explicit
+authority, run no-call preflight, and advance one cell at a time.

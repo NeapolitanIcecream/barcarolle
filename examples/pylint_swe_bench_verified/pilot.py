@@ -589,13 +589,13 @@ def summarize(context: PilotContext) -> Mapping[str, object]:
         "paired": paired,
         "usage": usage,
         "estimated_cost_usd": sum(
-            float(result.cost["total_cost"]) for result in results
+            _required_number(result.cost, "total_cost") for result in results
         ),
         "maximum_estimated_cost_usd": MAXIMUM_ESTIMATED_COST_USD,
         "pricing_version": PRICING_VERSION,
         "pricing_source": OFFICIAL_PRICING_SOURCE,
         "workspace_seconds": sum(
-            float(result.latency["workspace_seconds"]) for result in results
+            _required_number(result.latency, "workspace_seconds") for result in results
         ),
         "result_time_span_seconds": _result_time_span(results),
         "scope": (
@@ -645,10 +645,11 @@ def _reasoning_effort_rows(
                 "pass_count": passed,
                 "pass_rate": passed / len(scoreable) if scoreable else None,
                 "estimated_cost_usd": sum(
-                    float(result.cost["total_cost"]) for result in effort_results
+                    _required_number(result.cost, "total_cost")
+                    for result in effort_results
                 ),
                 "workspace_seconds": sum(
-                    float(result.latency["workspace_seconds"])
+                    _required_number(result.latency, "workspace_seconds")
                     for result in effort_results
                 ),
             }
@@ -1657,6 +1658,13 @@ def _priced_usage(usage: Mapping[str, object]) -> Mapping[str, int]:
         ):
             raise RuntimeError("input_tokens must equal cached plus uncached input")
     return priced
+
+
+def _required_number(values: Mapping[str, object], key: str) -> float:
+    value = values.get(key)
+    if isinstance(value, bool) or not isinstance(value, int | float):
+        raise RuntimeError(f"{key} must be a measured number")
+    return float(value)
 
 
 def _paid_results(context: PilotContext) -> tuple[ResultRecord, ...]:

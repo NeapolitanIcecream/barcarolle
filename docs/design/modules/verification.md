@@ -1,6 +1,6 @@
 # Module Design: Verification
 
-Status: current built-in behavior, 2026-07-22.
+Status: current built-in behavior, 2026-07-23.
 
 ## Responsibility
 
@@ -92,6 +92,10 @@ Effect:
 - Rechecks the bound command digest before material injection. This transient
   execution check is separate from the semantic Check manifest stored in
   `CheckRecord`.
+- Preparation failures raise the `ValueError`-compatible
+  `VerifierPreparationError`, which carries a stable failure label. Workspace
+  maps that field into `CheckOutcome`; callers do not infer machine-readable
+  state from exception text.
 
 ### verify_diff
 

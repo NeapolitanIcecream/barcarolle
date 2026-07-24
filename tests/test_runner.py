@@ -135,7 +135,6 @@ def _stub_workspace_binding_preflight(monkeypatch: pytest.MonkeyPatch) -> None:
 )
 def test_build_task_pool_validates_configs_before_candidate_resolution(
     tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
     config_name: str,
     changes: dict[str, object],
     expected_error: str,
@@ -155,21 +154,12 @@ def test_build_task_pool_validates_configs_before_candidate_resolution(
         reference_patches={},
         check_commands={},
         hidden_material_paths={},
-        time_range=TimeRange("2026-01-01T00:00:00Z", "2026-01-31T00:00:00Z"),
-        task_source_config=TaskSourceConfig("user_import", ()),
-    )
-
-    def unexpected_resolution(*args: object, **kwargs: object) -> None:
-        raise AssertionError("config validation must precede candidate resolution")
-
-    monkeypatch.setattr(
-        runner_module,
-        "_resolved_task_pool_candidate_batch",
-        unexpected_resolution,
+        import_path=tmp_path / "must-not-be-read.jsonl",
     )
 
     with pytest.raises(ValueError, match=expected_error):
         build_task_pool(config)
+    assert not config.artifact_root.exists()
 
 
 def test_build_task_pool_accepts_semantic_manifest_and_writes_resolvable_records(

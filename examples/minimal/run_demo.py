@@ -18,6 +18,7 @@ if __package__ is None or __package__ == "":
 from barcarolle import reporting
 from barcarolle.records import (
     AgentRecord,
+    CheckOutcomeValue,
     CheckRecord,
     ResultRecord,
     RuntimeConfig,
@@ -503,7 +504,7 @@ def _store_fixture_results(
     scoring_config: ScoringConfig,
     result_store: ResultStore,
 ) -> None:
-    outcomes = {
+    outcomes: dict[tuple[str, str], tuple[CheckOutcomeValue, str]] = {
         ("history-1", "fixture-fast"): ("pass", "2026-01-03T00:00:00Z"),
         ("history-1", "fixture-careful"): ("pass", "2026-01-03T00:05:00Z"),
         ("history-2", "fixture-fast"): ("pass", "2026-01-05T00:00:00Z"),
@@ -538,7 +539,7 @@ def _fixture_result(
     workspace_config: WorkspaceConfig,
     runtime_config: RuntimeConfig,
     scoring_config: ScoringConfig,
-    outcome: str,
+    outcome: CheckOutcomeValue,
     result_available_at: str,
 ) -> ResultRecord:
     identity = compute_result_cache_identity(

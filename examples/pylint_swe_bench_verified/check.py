@@ -3,6 +3,10 @@
 
 from __future__ import annotations
 
+# The optional Docker/SWE-bench environment is installed only in the verifier.
+# Keep first-party checks enabled without treating absent local packages as debt.
+# pyright: reportMissingImports=false, reportMissingModuleSource=false
+
 import argparse
 import hashlib
 import json
@@ -125,7 +129,9 @@ def run_check(
         repo_directory="/testbed",
         version=_required_string(spec_payload, "version"),
         repo_script_list=[],
-        eval_script_list=_string_list(spec_payload.get("eval_script_list"), "eval_script_list"),
+        eval_script_list=_string_list(
+            spec_payload.get("eval_script_list"), "eval_script_list"
+        ),
         env_script_list=[],
         arch="arm64",
         FAIL_TO_PASS=_string_list(spec_payload.get(FAIL_TO_PASS), FAIL_TO_PASS),
@@ -149,7 +155,9 @@ def run_check(
     container_name = f"barcarolle-{instance_id.rsplit('-', 1)[-1]}-{patch_digest[:12]}"
     container = None
     try:
-        stale = client.containers.list(all=True, filters={"name": f"^{container_name}$"})
+        stale = client.containers.list(
+            all=True, filters={"name": f"^{container_name}$"}
+        )
         for item in stale:
             item.remove(force=True)
         container = client.containers.create(
@@ -157,14 +165,19 @@ def run_check(
             name=container_name,
             user="root",
             detach=True,
-            command=("tail", "-f", "/dev/null"),
+            command=["tail", "-f", "/dev/null"],
             platform=spec.platform,
         )
         container.start()
         observed_head = container.exec_run(
             "git rev-parse HEAD", workdir="/testbed", user="root"
         )
-        if observed_head.exit_code != 0 or observed_head.output.decode().strip() != base_commit:
+        if not isinstance(observed_head.output, bytes):
+            raise RuntimeError("instance HEAD command returned streamed output")
+        if (
+            observed_head.exit_code != 0
+            or observed_head.output.decode().strip() != base_commit
+        ):
             raise RuntimeError("instance image is not at the expected base commit")
         if patch:
             patch_path = run_dir / "candidate.diff"
@@ -244,9 +257,7 @@ def _write_json(path: Path, value: Mapping[str, Any]) -> None:
 
 def _parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--bundle", type=Path, default=Path(".barcarolle/check_bundle")
-    )
+    parser.add_argument("--bundle", type=Path, default=Path(".barcarolle/check_bundle"))
     parser.add_argument("--image-ref", required=True)
     parser.add_argument("--raw-output-dir", type=Path, required=True)
     parser.add_argument("--timeout-seconds", type=int, default=900)
