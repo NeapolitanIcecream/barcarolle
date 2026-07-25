@@ -59,6 +59,25 @@ def test_decision_amendment_freezes_one_connected_replacement_panel() -> None:
     assert decision["control_agent_key"] == "gpt-5.6-terra-high"
 
 
+def test_execution_amendment_changes_only_the_main_per_call_ceiling() -> None:
+    plan = study._load_plan(study.DEFAULT_PLAN)
+    amendment = study._load_execution_amendment(
+        study.DEFAULT_EXECUTION_AMENDMENT,
+        plan,
+    )
+    change = amendment["operational_change"]
+
+    assert amendment["previous_amendment_digest"] == study._load_decision_amendment(
+        study.DEFAULT_DECISION_AMENDMENT,
+        plan,
+    )["amendment_digest"]
+    assert isinstance(change, dict)
+    assert change["new_maximum_estimated_cost_per_call_usd"] == 10.0
+    assert change["unchanged_maximum_estimated_cost_usd"] == 260.0
+    assert change["unchanged_paid_cell_count"] == 238
+    assert change["unchanged_cell_retries"] == 0
+
+
 def test_study_agent_homes_are_distinct_for_same_effort(tmp_path: Path) -> None:
     first = _agent("first-high", "model-a")
     second = _agent("second-high", "model-b")

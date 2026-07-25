@@ -90,6 +90,52 @@ def test_resource_ledger_allows_completion_without_known_cost(
     assert ledger["remaining_usd"] == 5.0
 
 
+def test_resource_ledger_reauthorizes_one_stopped_call_without_losing_reason(
+    tmp_path: Path,
+) -> None:
+    snapshot = tmp_path / "resource-ledger.json"
+
+    ledger = rebuild_ledger_snapshot(
+        snapshot,
+        {"authorization": {"budget_usd": 5.0}, "calls": []},
+        (
+            {
+                "event_type": "reservation",
+                "call_id": "cell-01",
+                "state": "started",
+            },
+            {
+                "event_type": "completion",
+                "call_id": "cell-01",
+                "state": "stopped",
+                "stop_reason": "CostLimitExceeded",
+                "estimated_cost_usd": 1.25,
+            },
+            {
+                "event_type": "reauthorization",
+                "call_id": "cell-01",
+                "authority_amendment_digest": "amendment-digest",
+                "reauthorized_at": "2026-07-25T20:00:00Z",
+            },
+        ),
+        updated_at="after",
+    )
+
+    assert ledger["calls"] == [
+        {
+            "call_id": "cell-01",
+            "state": "completed",
+            "stop_reason": "CostLimitExceeded",
+            "estimated_cost_usd": 1.25,
+            "reauthorized_after_stop": {
+                "authority_amendment_digest": "amendment-digest",
+                "reauthorized_at": "2026-07-25T20:00:00Z",
+            },
+        }
+    ]
+    assert ledger["spent_usd"] == 1.25
+
+
 @pytest.mark.parametrize(
     "ledger, events, updated_at, message",
     (
@@ -291,6 +337,46 @@ def test_resource_ledger_event_log_rejects_unterminated_tail(
         (
             ({"event_type": "unknown", "call_id": "cell"},),
             "event_type is invalid",
+        ),
+        (
+            (
+                {"event_type": "reservation", "call_id": "cell"},
+                {
+                    "event_type": "completion",
+                    "call_id": "cell",
+                    "state": "completed",
+                },
+                {
+                    "event_type": "reauthorization",
+                    "call_id": "cell",
+                    "authority_amendment_digest": "amendment",
+                    "reauthorized_at": "after",
+                },
+            ),
+            "requires a stopped completion",
+        ),
+        (
+            (
+                {"event_type": "reservation", "call_id": "cell"},
+                {
+                    "event_type": "completion",
+                    "call_id": "cell",
+                    "state": "stopped",
+                },
+                {
+                    "event_type": "reauthorization",
+                    "call_id": "cell",
+                    "authority_amendment_digest": "amendment",
+                    "reauthorized_at": "after",
+                },
+                {
+                    "event_type": "reauthorization",
+                    "call_id": "cell",
+                    "authority_amendment_digest": "amendment",
+                    "reauthorized_at": "after",
+                },
+            ),
+            "duplicate reauthorization",
         ),
     ),
 )

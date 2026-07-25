@@ -37,8 +37,8 @@ The authorized coding-agent/model study is frozen by:
 
 - `docs/experiments/2026-07-25-model-agent-study.md`;
 - `examples/model_agent_study/study-plan.json`; and
-- append-only `examples/model_agent_study/study-amendment-1.json` and
-  `study-amendment-2.json`.
+- append-only `examples/model_agent_study/study-amendment-1.json`,
+  `study-amendment-2.json`, and `study-amendment-3.json`.
 
 Current evidence:
 
@@ -60,6 +60,13 @@ Current evidence:
 - Main is authorized for 238 cells over 75 SymPy Tasks and 22 preselected
   repeat Tasks. Actual p90 projection is $128.355304; the common-ScoringConfig
   projection is $242.984137 under its separate $260 ledger ceiling.
+- Main has 37 exact scoreable Results. Cell 36 cost $2.968422 at the gateway
+  but $4.909603 under the common conservative ScoringConfig, exceeding the
+  calibration-derived $4.032351 per-call ledger ceiling. Amendment 3 raises
+  only that ceiling to $10. Revised outcome-independent full-main projections
+  are $119.952162 actual and $235.142591 conservative; the 238-cell schedule,
+  zero retries, $180 actual gate, $260 ledger authority, $300 global cap, and
+  $30 reserve do not change.
 - Per-call accounting comes from sanitized gateway token-log rows whose
   prompt/completion totals exactly match the Result. If same-model calls
   overlap a Result window, only one uniquely matching row subset is
@@ -71,8 +78,9 @@ Current evidence:
 
 Persist each Result immediately, but batch token-log attribution every six
 cells. Pending calls reserve their full per-call ceilings, and a new block
-cannot start until the previous block's receipts are exact. This keeps live
-balance checkpoints at 0/6/12/18 and receipt checkpoints at 5/11/17/23.
+cannot start until the previous block's receipts are exact. The first resumed
+partial block contains cells 37–41 because cell 36 already has an exact
+receipt; subsequent blocks resume the ordinary six-cell cadence.
 
 Research sequence:
 

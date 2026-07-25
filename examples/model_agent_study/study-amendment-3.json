@@ -1,0 +1,72 @@
+{
+  "schema_version": "barcarolle_model_agent_study_amendment_v3",
+  "amendment_digest": "560808c453035d98f6ad28175c2729c638c2f0c24dcc5007a1cdc63be24d3fab",
+  "base_study_plan_digest": "445398963a6e703953f4a4f5c758034b8d4f377b3a0a575197b4d3282191834f",
+  "previous_amendment_digest": "affeef281bd2b907dec67090cfd6cbff4c8a19b8b401a16691e62505147b4f49",
+  "approved_at": "2026-07-25T19:22:32Z",
+  "reason": "Main cell 36 produced one exact scoreable Result whose shared conservative ScoringConfig cost exceeded the calibration-derived per-call ceiling, while its exact gateway cost and outcome-independent revised full-campaign forecasts remained within every frozen total budget gate. Raise only the conservative per-call ledger ceiling so the frozen schedule can continue without retry or replacement.",
+  "trigger": {
+    "campaign_id": "model-main-sympy-2026-07-25",
+    "schedule_digest": "be9507012c54b6bc7185fa1117c22ab79175d5b342e5c5e874cf594e1278cbae",
+    "completed_main_cell_count": 37,
+    "sequence_index": 36,
+    "call_id": "replicate-cell-0036",
+    "result_id": "result_33072c6df641ace8fa3808f3dbcd910411422282ae8770e3f99c9eb41ad2424c",
+    "result_digest": "c3fe8451786aa2d6a37627e63a1ad565292799b429a56d009ccec2807d83a4b9",
+    "result_estimated_cost_usd": 4.909603000000001,
+    "observed_gateway_cost_usd": 2.968422,
+    "gateway_receipt_digest": "e63a06baa261e1f5d473a6a96a408ada9b8e897cd311ac9c5ea6977b9dbad060",
+    "previous_campaign_authority_digest": "4d2ce27081f8a42c5e656247da13f7b8405cce6b8d4023306263b6a6b496b6e8",
+    "old_maximum_estimated_cost_per_call_usd": 4.032351
+  },
+  "decision_basis": {
+    "used": [
+      "exact per-Agent gateway and conservative costs through sequence 36",
+      "remaining frozen cell counts by Agent",
+      "recomputed per-Agent nearest-rank p90 full-campaign projections",
+      "the unchanged actual, campaign-ledger, global, and reserve gates"
+    ],
+    "excluded": [
+      "the hidden pass/fail outcome of sequence 36",
+      "any change to Tasks, Agents, repeats, order, scoring, runtime, or retries"
+    ]
+  },
+  "operational_change": {
+    "new_maximum_estimated_cost_per_call_usd": 10.0,
+    "unchanged_maximum_estimated_cost_usd": 260.0,
+    "unchanged_actual_p90_projection_limit_usd": 180.0,
+    "unchanged_global_budget_usd": 300.0,
+    "unchanged_unallocated_reserve_usd": 30.0,
+    "unchanged_paid_cell_count": 238,
+    "unchanged_cell_retries": 0,
+    "unchanged_runtime_timeout_seconds": 900,
+    "unchanged_schedule_digest": "be9507012c54b6bc7185fa1117c22ab79175d5b342e5c5e874cf594e1278cbae"
+  },
+  "revised_forecast": {
+    "observed_main_actual_cost_usd": 13.13552,
+    "projected_full_main_actual_p90_cost_usd": 119.952162,
+    "observed_main_conservative_cost_usd": 24.589844000000006,
+    "projected_full_main_conservative_p90_cost_usd": 235.14259050000004,
+    "observed_pre_main_actual_cost_usd": 17.66516,
+    "projected_full_study_actual_plus_reserve_usd": 167.617322,
+    "by_agent_key": {
+      "gpt-5.4-mini-high": {
+        "completed_cell_count": 19,
+        "remaining_cell_count": 100,
+        "observed_actual_p90_cost_usd": 0.73038,
+        "observed_actual_max_cost_usd": 2.968422,
+        "observed_conservative_p90_cost_usd": 1.3581310000000002,
+        "observed_conservative_max_cost_usd": 4.909603000000001
+      },
+      "gpt-5.6-terra-high": {
+        "completed_cell_count": 18,
+        "remaining_cell_count": 101,
+        "observed_actual_p90_cost_usd": 0.334442,
+        "observed_actual_max_cost_usd": 0.580982,
+        "observed_conservative_p90_cost_usd": 0.7399965,
+        "observed_conservative_max_cost_usd": 1.3461305
+      }
+    }
+  },
+  "stop_rule": "A future Result whose common conservative cost exceeds USD 10 still stops. The USD 260 main authority, USD 180 actual projection gate, USD 300 global cap, USD 30 reserve, and provider-quota guards remain unchanged."
+}

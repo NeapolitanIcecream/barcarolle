@@ -52,6 +52,7 @@ from examples.pylint_swe_bench_verified.replicate_campaign import (  # noqa: E40
     ReplicateCampaignContext,
     initialize_replicate_campaign_ledger,
     preflight_replicate_campaign,
+    reauthorize_stopped_replicate_campaign_call,
     run_next_replicate_campaign_cell,
 )
 from examples.pylint_swe_bench_verified import replicate_campaign_cli  # noqa: E402
@@ -711,6 +712,71 @@ def test_replicate_campaign_stops_after_result_exceeds_per_call_limit(
     assert executed == [0]
 
 
+def test_replicate_campaign_reauthorizes_exact_cost_stop_without_rerun(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    context = _campaign_context(tmp_path)
+    initialize_replicate_campaign_ledger(
+        context,
+        approved_at="2026-07-22T00:00:00Z",
+        endpoint_digest="endpoint-digest",
+        maximum_estimated_cost_usd=0.01,
+        maximum_estimated_cost_per_call_usd=0.0005,
+        pricing_sources=("https://example.test/pricing",),
+        accounting_basis="test price schedule",
+        scope="paired replicate test campaign",
+    )
+    _stub_campaign_preflight(monkeypatch)
+    executed = _stub_successful_campaign_run(monkeypatch, context)
+
+    with pytest.raises(RuntimeError, match="exceeds the per-call cost limit"):
+        run_next_replicate_campaign_cell(context)
+
+    ledger = reauthorize_stopped_replicate_campaign_call(
+        context,
+        source_amendment_digest="study-amendment-digest",
+        approved_at="2026-07-22T00:00:02Z",
+        reason="cost-only operational amendment",
+        new_maximum_estimated_cost_per_call_usd=0.002,
+    )
+    event_count = len(load_ledger_events(ledger_events_path(context.ledger_path)))
+    repeated = reauthorize_stopped_replicate_campaign_call(
+        context,
+        source_amendment_digest="study-amendment-digest",
+        approved_at="2026-07-22T00:00:02Z",
+        reason="cost-only operational amendment",
+        new_maximum_estimated_cost_per_call_usd=0.002,
+    )
+    next_cell = preflight_replicate_campaign(context)
+
+    assert next_cell is not None
+    assert next_cell.schedule_cell.sequence_index == 1
+    assert executed == [0]
+    assert len(load_ledger_events(ledger_events_path(context.ledger_path))) == event_count
+    assert repeated["campaign_authority_digest"] == ledger["campaign_authority_digest"]
+    amendment = ledger["authority_amendment"]
+    calls = ledger["calls"]
+    limits = ledger["limits"]
+    assert isinstance(amendment, dict)
+    assert isinstance(calls, list)
+    assert isinstance(limits, dict)
+    assert amendment["source_amendment_digest"] == "study-amendment-digest"
+    assert amendment["old_maximum_estimated_cost_per_call_usd"] == pytest.approx(
+        0.0005
+    )
+    assert amendment["new_maximum_estimated_cost_per_call_usd"] == pytest.approx(
+        0.002
+    )
+    assert limits["maximum_estimated_cost_per_call_usd"] == pytest.approx(0.002)
+    assert calls[0]["state"] == "completed"
+    assert calls[0]["stop_reason"] == "RuntimeError"
+    assert calls[0]["reauthorized_after_stop"] == {
+        "authority_amendment_digest": amendment["authority_amendment_digest"],
+        "reauthorized_at": "2026-07-22T00:00:02Z",
+    }
+
+
 def test_replicate_campaign_rejects_authority_drift_before_result_store_access(
     tmp_path: Path,
 ) -> None:
@@ -920,6 +986,14 @@ def test_replicate_campaign_does_not_retry_a_failed_paid_cell(
         run_next_replicate_campaign_cell(context)
     with pytest.raises(RuntimeError, match="stopped paid cell"):
         run_next_replicate_campaign_cell(context)
+    with pytest.raises(RuntimeError, match="exact cost Result"):
+        reauthorize_stopped_replicate_campaign_call(
+            context,
+            source_amendment_digest="study-amendment-digest",
+            approved_at="2026-07-22T00:00:02Z",
+            reason="must not convert a harness failure",
+            new_maximum_estimated_cost_per_call_usd=2.0,
+        )
 
     assert attempts == 1
 

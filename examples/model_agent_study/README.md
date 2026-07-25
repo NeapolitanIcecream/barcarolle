@@ -39,11 +39,18 @@ run-next-calibration --campaign-id ...
 reconcile-campaign-receipts --campaign-id ...
 summarize-calibration
 prepare-main
+apply-main-cost-amendment
 preflight-main
 run-next-main
 summarize-main
 reconcile-resource-ledger
 ```
+
+`apply-main-cost-amendment` is a no-model-call recovery action. It accepts only
+the exact scoreable Result named by the committed amendment, preserves the
+original stop reason, raises only the campaign's conservative per-call ledger
+ceiling, and appends a reauthorization event. Repeating the action is
+idempotent; it cannot retry or replace the stopped cell.
 
 Raw Agent artifacts, workspaces, gateway payloads, and campaign outputs stay
 under ignored `outputs/research/2026-07-25-model-agent-study`. Committed

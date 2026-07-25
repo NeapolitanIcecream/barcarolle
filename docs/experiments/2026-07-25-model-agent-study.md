@@ -274,6 +274,26 @@ gateway p90 costs and $242.984137 under the common conservative ScoringConfig.
 Both passed their separate $180 and $260 gates; $20.537588 of conservative
 global budget consumption was observed before main.
 
+`study-amendment-3.json` was frozen after main cell 36 exposed a tail-cost
+failure in the calibration-derived per-call guard:
+
+- The Result is exact and scoreable. Its actual token-log receipt cost
+  $2.968422, while the shared conservative ScoringConfig charged $4.909603,
+  above the $4.032351 per-call ledger ceiling. The Result and receipt were
+  persisted before execution stopped; the cell is not retried.
+- The amendment decision used only costs and remaining frozen cell counts. It
+  did not use the cell's hidden pass/fail outcome. Through 37 cells, per-Agent
+  nearest-rank p90 projection gives $119.952162 for the complete main campaign
+  by actual gateway costs and $235.142591 by the conservative ScoringConfig.
+- Only the conservative per-call ledger ceiling rises, to $10. The 238 cells,
+  cell order, Agents, Tasks, repeat set, scoring rates, 900-second runtime,
+  zero retries, $180 actual projection gate, $260 campaign authority, $300
+  global cap, and $30 reserve are unchanged.
+- Reauthorization is append-only. The event fold preserves the original
+  `RuntimeError` stop reason, binds the committed amendment and exact Result,
+  and changes that one call to completed without invoking the Agent. A future
+  conservative Result above $10 still stops.
+
 ### Route portfolio
 
 | Route | Mechanism | First decisive test | Status / reopening rule |

@@ -54,7 +54,10 @@ from barcarolle.workspace import (  # noqa: E402
     make_openai_env_network_policy_digest,
     resolve_openai_endpoint_digest,
 )
-from examples.experiment_ledger import write_json  # noqa: E402
+from examples.experiment_ledger import (  # noqa: E402
+    load_resource_ledger,
+    write_json,
+)
 from examples.pylint_swe_bench_verified.pilot import (  # noqa: E402
     DEFAULT_DATASET_NAME,
     DEFAULT_SUPPLEMENTAL_DATASET_NAME,
@@ -67,6 +70,7 @@ from examples.pylint_swe_bench_verified.replicate_campaign import (  # noqa: E40
     ReplicateCampaignContext,
     initialize_replicate_campaign_ledger,
     preflight_replicate_campaign,
+    reauthorize_stopped_replicate_campaign_call,
     run_next_replicate_campaign_cell,
 )
 from examples.pylint_swe_bench_verified.replicate_schedule import (  # noqa: E402
@@ -93,6 +97,7 @@ HERE = Path(__file__).resolve().parent
 DEFAULT_PLAN = HERE / "study-plan.json"
 DEFAULT_AMENDMENT = HERE / "study-amendment-1.json"
 DEFAULT_DECISION_AMENDMENT = HERE / "study-amendment-2.json"
+DEFAULT_EXECUTION_AMENDMENT = HERE / "study-amendment-3.json"
 DEFAULT_STUDY_OUTPUT = Path("outputs/research/2026-07-25-model-agent-study")
 DEFAULT_PILOT_OUTPUT = DEFAULT_STUDY_OUTPUT / "pylint-pool"
 STUDY_LEDGER_NAME = "resource-ledger.json"
@@ -1263,6 +1268,231 @@ def prepare_main(
     return summary
 
 
+def apply_main_cost_amendment(
+    paths: StudyPaths,
+    execution_amendment_path: Path = DEFAULT_EXECUTION_AMENDMENT,
+) -> Mapping[str, Any]:
+    """Apply the frozen cost-only amendment without executing a model call."""
+    plan = _load_plan(paths.plan_path)
+    amendment = _load_execution_amendment(execution_amendment_path, plan)
+    _activate_llm_proxy_environment(plan)
+    context, metadata, _ = _load_main_context(paths, plan)
+    trigger = _required_mapping(amendment, "trigger")
+    change = _required_mapping(amendment, "operational_change")
+    forecast = _required_mapping(amendment, "revised_forecast")
+    amendment_digest = _required_string(amendment, "amendment_digest")
+    new_limit = _required_number(
+        change,
+        "new_maximum_estimated_cost_per_call_usd",
+    )
+    campaign_ledger = load_resource_ledger(
+        context.ledger_path,
+        updated_at=_utc_now(),
+    )
+    raw_authority_amendment = campaign_ledger.get("authority_amendment")
+    if raw_authority_amendment is not None and not isinstance(
+        raw_authority_amendment,
+        Mapping,
+    ):
+        raise RuntimeError("main campaign authority amendment is invalid")
+    ledger_has_amendment = (
+        isinstance(raw_authority_amendment, Mapping)
+        and raw_authority_amendment.get("source_amendment_digest")
+        == amendment_digest
+    )
+    metadata_amendment = metadata.get("study_execution_amendment_digest")
+    if metadata_amendment not in (None, amendment_digest):
+        raise RuntimeError("main metadata binds a different execution amendment")
+    already_applied = metadata_amendment == amendment_digest
+    if already_applied and not math.isclose(
+        _required_number(
+            metadata,
+            "maximum_estimated_cost_per_call_usd",
+        ),
+        new_limit,
+    ):
+        raise RuntimeError("main metadata amendment limit does not match")
+
+    if not already_applied and not ledger_has_amendment:
+        calls = _required_mapping_sequence(campaign_ledger, "calls")
+        results = tuple(
+            load_jsonl_records(context.result_store.path, ResultRecord)
+        )
+        if (
+            len(calls) != _required_int(trigger, "completed_main_cell_count")
+            or len(results) != len(calls)
+            or not calls
+        ):
+            raise RuntimeError("main cost amendment trigger cell count changed")
+        call = calls[-1]
+        result_matches = tuple(
+            result
+            for result in results
+            if result.result_id == trigger.get("result_id")
+        )
+        if len(result_matches) != 1:
+            raise RuntimeError("main cost amendment Result is missing")
+        result = result_matches[0]
+        if (
+            call.get("state") != "stopped"
+            or call.get("call_id") != trigger.get("call_id")
+            or call.get("sequence_index") != trigger.get("sequence_index")
+            or call.get("result_id") != result.result_id
+            or call.get("result_digest") != result.result_digest
+            or result.result_digest != trigger.get("result_digest")
+            or result.scoreable_state != "scoreable"
+            or campaign_ledger.get("campaign_authority_digest")
+            != trigger.get("previous_campaign_authority_digest")
+            or context.schedule.campaign_id != trigger.get("campaign_id")
+            or context.schedule.schedule_digest != trigger.get("schedule_digest")
+        ):
+            raise RuntimeError("main cost amendment trigger identity changed")
+        _require_matching_numeric_evidence(
+            result.cost["total_cost"],
+            trigger.get("result_estimated_cost_usd"),
+            label="main cost amendment Result cost",
+        )
+        study_ledger = _load_json(paths.study_output / STUDY_LEDGER_NAME)
+        receipt_entries = tuple(
+            entry
+            for entry in _required_mapping_sequence(study_ledger, "entries")
+            if entry.get("result_id") == result.result_id
+        )
+        if len(receipt_entries) != 1:
+            raise RuntimeError("main cost amendment receipt is missing")
+        receipt_entry = receipt_entries[0]
+        receipt = _required_mapping(receipt_entry, "gateway_log_receipt")
+        if (
+            receipt_entry.get("gateway_log_receipt_status") != "exact"
+            or canonical_digest(receipt)
+            != trigger.get("gateway_receipt_digest")
+        ):
+            raise RuntimeError("main cost amendment receipt changed")
+        _require_matching_numeric_evidence(
+            receipt_entry.get("gateway_log_cost_usd"),
+            trigger.get("observed_gateway_cost_usd"),
+            label="main cost amendment gateway cost",
+        )
+        limits = _required_mapping(campaign_ledger, "limits")
+        decision = _load_decision_amendment(
+            DEFAULT_DECISION_AMENDMENT,
+            plan,
+        )
+        main_budget = _required_mapping(decision, "main_budget")
+        plan_budget = _required_mapping(plan, "budget")
+        unchanged = {
+            "unchanged_maximum_estimated_cost_usd": metadata.get(
+                "maximum_estimated_cost_usd"
+            ),
+            "unchanged_actual_p90_projection_limit_usd": main_budget.get(
+                "actual_p90_projection_limit_usd"
+            ),
+            "unchanged_global_budget_usd": plan_budget.get("total_usd"),
+            "unchanged_unallocated_reserve_usd": main_budget.get(
+                "unallocated_reserve_usd"
+            ),
+            "unchanged_paid_cell_count": len(context.schedule.cells),
+            "unchanged_cell_retries": limits.get("cell_retries"),
+            "unchanged_runtime_timeout_seconds": (
+                context.base_runtime_config.timeout_seconds
+            ),
+            "unchanged_schedule_digest": context.schedule.schedule_digest,
+        }
+        for key, value in unchanged.items():
+            _require_matching_numeric_evidence(
+                value,
+                change.get(key),
+                label=f"main cost amendment {key}",
+            )
+        _require_matching_numeric_evidence(
+            limits.get("maximum_estimated_cost_per_call_usd"),
+            trigger.get("old_maximum_estimated_cost_per_call_usd"),
+            label="main cost amendment old per-call limit",
+        )
+        observed_forecast = _current_main_cost_forecast(
+            paths,
+            context,
+            metadata,
+        )
+        _require_matching_numeric_evidence(
+            observed_forecast,
+            forecast,
+            label="main cost amendment revised forecast",
+        )
+        if (
+            _required_number(
+                forecast,
+                "projected_full_main_actual_p90_cost_usd",
+            )
+            > _required_number(
+                main_budget,
+                "actual_p90_projection_limit_usd",
+            )
+            or _required_number(
+                forecast,
+                "projected_full_main_conservative_p90_cost_usd",
+            )
+            > _required_number(
+                main_budget,
+                "conservative_ledger_authority_limit_usd",
+            )
+            or _required_number(
+                forecast,
+                "projected_full_study_actual_plus_reserve_usd",
+            )
+            > _required_number(plan_budget, "total_usd")
+        ):
+            raise RuntimeError(
+                "main cost amendment revised forecast exceeds a frozen gate"
+            )
+
+    amended_ledger = reauthorize_stopped_replicate_campaign_call(
+        context,
+        source_amendment_digest=amendment_digest,
+        approved_at=_required_string(amendment, "approved_at"),
+        reason=_required_string(amendment, "reason"),
+        new_maximum_estimated_cost_per_call_usd=new_limit,
+    )
+    updated_metadata = dict(metadata)
+    updated_metadata["study_execution_amendment_digest"] = amendment_digest
+    updated_metadata["maximum_estimated_cost_per_call_usd"] = new_limit
+    write_json(
+        paths.study_output
+        / "main"
+        / MAIN_CAMPAIGN_ID
+        / CAMPAIGN_METADATA_NAME,
+        updated_metadata,
+    )
+    authority_summary_path = paths.study_output / "main-authority-summary.json"
+    if authority_summary_path.exists():
+        authority_summary = _load_json(authority_summary_path)
+        authority_summary["study_execution_amendment_digest"] = amendment_digest
+        authority_summary["maximum_estimated_cost_per_call_usd"] = new_limit
+        authority_summary["revised_forecast"] = canonical_data_mapping(forecast)
+        write_json(authority_summary_path, authority_summary)
+    summary = {
+        "stage": "main_cost_amendment_applied",
+        "campaign_id": MAIN_CAMPAIGN_ID,
+        "study_execution_amendment_digest": amendment_digest,
+        "maximum_estimated_cost_per_call_usd": new_limit,
+        "maximum_estimated_cost_usd": _required_number(
+            updated_metadata,
+            "maximum_estimated_cost_usd",
+        ),
+        "paid_model_calls_executed": 0,
+        "reauthorized_call_id": trigger["call_id"],
+        "campaign_authority_digest": amended_ledger[
+            "campaign_authority_digest"
+        ],
+        "next": "preflight-main",
+    }
+    write_json(
+        paths.study_output / "main-cost-amendment-summary.json",
+        summary,
+    )
+    return summary
+
+
 def preflight_main(paths: StudyPaths) -> Mapping[str, Any]:
     plan = _load_plan(paths.plan_path)
     endpoint_digest = _activate_llm_proxy_environment(plan)
@@ -1771,6 +2001,35 @@ def _load_main_context(
         or metadata.get("campaign_id") != MAIN_CAMPAIGN_ID
     ):
         raise RuntimeError("main campaign metadata does not match the study plan")
+    execution_amendment_digest = metadata.get(
+        "study_execution_amendment_digest"
+    )
+    if execution_amendment_digest is not None:
+        execution_amendment = _load_execution_amendment(
+            DEFAULT_EXECUTION_AMENDMENT,
+            plan,
+        )
+        execution_change = _required_mapping(
+            execution_amendment,
+            "operational_change",
+        )
+        if (
+            execution_amendment_digest
+            != execution_amendment["amendment_digest"]
+            or not math.isclose(
+                _required_number(
+                    metadata,
+                    "maximum_estimated_cost_per_call_usd",
+                ),
+                _required_number(
+                    execution_change,
+                    "new_maximum_estimated_cost_per_call_usd",
+                ),
+            )
+        ):
+            raise RuntimeError(
+                "main campaign metadata does not match amendment 3"
+            )
     agents = tuple(
         load_jsonl_records(campaign_dir / "records" / "agents.jsonl", AgentRecord)
     )
@@ -1953,6 +2212,133 @@ def _nearest_rank(values: Sequence[float], probability: float) -> float:
     ordered = sorted(values)
     rank = max(1, math.ceil(probability * len(ordered)))
     return ordered[rank - 1]
+
+
+def _current_main_cost_forecast(
+    paths: StudyPaths,
+    context: ReplicateCampaignContext,
+    metadata: Mapping[str, Any],
+) -> Mapping[str, Any]:
+    selected_keys = _required_string_sequence(metadata, "selected_agent_keys")
+    if len(selected_keys) != len(context.agents):
+        raise RuntimeError("main Agent keys do not match Agent records")
+    results = tuple(
+        load_jsonl_records(context.result_store.path, ResultRecord)
+    )
+    study_ledger = _load_json(paths.study_output / STUDY_LEDGER_NAME)
+    entries_by_result_id: dict[str, Mapping[str, Any]] = {}
+    for entry in _required_mapping_sequence(study_ledger, "entries"):
+        if entry.get("campaign_id") != MAIN_CAMPAIGN_ID:
+            continue
+        result_id = entry.get("result_id")
+        if not isinstance(result_id, str) or result_id in entries_by_result_id:
+            raise RuntimeError("main study ledger Result entries are invalid")
+        entries_by_result_id[result_id] = entry
+    by_agent: dict[str, Mapping[str, Any]] = {}
+    observed_actual = 0.0
+    observed_conservative = 0.0
+    projected_actual = 0.0
+    projected_conservative = 0.0
+    for key, agent in zip(selected_keys, context.agents, strict=True):
+        agent_results = tuple(
+            result for result in results if result.agent_id == agent.agent_id
+        )
+        actual_costs: list[float] = []
+        conservative_costs: list[float] = []
+        for result in agent_results:
+            entry = entries_by_result_id.get(result.result_id)
+            if (
+                entry is None
+                or entry.get("gateway_log_receipt_status") != "exact"
+            ):
+                raise RuntimeError(
+                    "main Result lacks one exact gateway receipt"
+                )
+            actual_costs.append(_required_number(entry, "gateway_log_cost_usd"))
+            conservative_costs.append(
+                _result_number(result.cost, "total_cost")
+            )
+        if not actual_costs:
+            raise RuntimeError("main cost forecast requires observed Agent costs")
+        scheduled_count = sum(
+            cell.agent_id == agent.agent_id for cell in context.schedule.cells
+        )
+        remaining_count = scheduled_count - len(agent_results)
+        if remaining_count < 0:
+            raise RuntimeError("main Result count exceeds the frozen schedule")
+        actual_p90 = _nearest_rank(actual_costs, 0.90)
+        conservative_p90 = _nearest_rank(conservative_costs, 0.90)
+        agent_actual = sum(actual_costs)
+        agent_conservative = sum(conservative_costs)
+        observed_actual += agent_actual
+        observed_conservative += agent_conservative
+        projected_actual += agent_actual + (actual_p90 * remaining_count)
+        projected_conservative += agent_conservative + (
+            conservative_p90 * remaining_count
+        )
+        by_agent[key] = {
+            "completed_cell_count": len(agent_results),
+            "remaining_cell_count": remaining_count,
+            "observed_actual_p90_cost_usd": actual_p90,
+            "observed_actual_max_cost_usd": max(actual_costs),
+            "observed_conservative_p90_cost_usd": conservative_p90,
+            "observed_conservative_max_cost_usd": max(conservative_costs),
+        }
+    total_actual = _resource_total(
+        study_ledger,
+        "observed_gateway_attributed_cost",
+    )
+    observed_pre_main = total_actual - observed_actual
+    decision = _load_decision_amendment(DEFAULT_DECISION_AMENDMENT, _load_plan(paths.plan_path))
+    reserve = _required_number(
+        _required_mapping(decision, "main_budget"),
+        "unallocated_reserve_usd",
+    )
+    return {
+        "observed_main_actual_cost_usd": observed_actual,
+        "projected_full_main_actual_p90_cost_usd": projected_actual,
+        "observed_main_conservative_cost_usd": observed_conservative,
+        "projected_full_main_conservative_p90_cost_usd": projected_conservative,
+        "observed_pre_main_actual_cost_usd": observed_pre_main,
+        "projected_full_study_actual_plus_reserve_usd": (
+            observed_pre_main + projected_actual + reserve
+        ),
+        "by_agent_key": by_agent,
+    }
+
+
+def _require_matching_numeric_evidence(
+    observed: object,
+    expected: object,
+    *,
+    label: str,
+) -> None:
+    if isinstance(expected, Mapping):
+        if not isinstance(observed, Mapping) or set(observed) != set(expected):
+            raise RuntimeError(f"{label} shape does not match")
+        for key, value in expected.items():
+            _require_matching_numeric_evidence(
+                observed[key],
+                value,
+                label=f"{label}.{key}",
+            )
+        return
+    if (
+        isinstance(expected, int | float)
+        and not isinstance(expected, bool)
+        and isinstance(observed, int | float)
+        and not isinstance(observed, bool)
+    ):
+        if not math.isclose(
+            float(observed),
+            float(expected),
+            rel_tol=1e-12,
+            abs_tol=1e-12,
+        ):
+            raise RuntimeError(f"{label} numeric evidence does not match")
+        return
+    if observed != expected:
+        raise RuntimeError(f"{label} evidence does not match")
 
 
 def _replicate_count_for_plan(task_count: int, fraction: float) -> int:
@@ -3562,6 +3948,29 @@ def _load_decision_amendment(
     return amendment
 
 
+def _load_execution_amendment(
+    path: Path,
+    plan: Mapping[str, Any],
+) -> Mapping[str, Any]:
+    amendment = _load_json(path)
+    digest = _required_string(amendment, "amendment_digest")
+    payload = dict(amendment)
+    payload.pop("amendment_digest")
+    if canonical_digest(payload) != digest:
+        raise ValueError("study execution amendment digest does not match")
+    if (
+        amendment.get("schema_version")
+        != "barcarolle_model_agent_study_amendment_v3"
+    ):
+        raise ValueError("study execution amendment schema is unsupported")
+    if amendment.get("base_study_plan_digest") != plan["study_plan_digest"]:
+        raise ValueError("study execution amendment does not bind the base plan")
+    decision = _load_decision_amendment(DEFAULT_DECISION_AMENDMENT, plan)
+    if amendment.get("previous_amendment_digest") != decision["amendment_digest"]:
+        raise ValueError("study execution amendment does not bind amendment 2")
+    return amendment
+
+
 def canonical_data_mapping(value: Any) -> Mapping[str, Any]:
     payload = json.loads(canonical_json(value))
     if not isinstance(payload, Mapping):
@@ -3697,6 +4106,11 @@ def _parse_args(argv: Sequence[str] | None) -> argparse.Namespace:
         type=Path,
         default=DEFAULT_DECISION_AMENDMENT,
     )
+    parser.add_argument(
+        "--execution-amendment",
+        type=Path,
+        default=DEFAULT_EXECUTION_AMENDMENT,
+    )
     parser.add_argument("--study-output", type=Path, default=DEFAULT_STUDY_OUTPUT)
     parser.add_argument("--pilot-output", type=Path, default=DEFAULT_PILOT_OUTPUT)
     actions = parser.add_subparsers(dest="action", required=True)
@@ -3716,6 +4130,7 @@ def _parse_args(argv: Sequence[str] | None) -> argparse.Namespace:
     actions.add_parser("summarize-calibration")
     actions.add_parser("summarize-protocol-canaries")
     actions.add_parser("prepare-main")
+    actions.add_parser("apply-main-cost-amendment")
     actions.add_parser("preflight-main")
     actions.add_parser("run-next-main")
     actions.add_parser("summarize-main")
@@ -3779,6 +4194,11 @@ def main(argv: Sequence[str] | None = None) -> int:
         summary = summarize_protocol_canaries(paths, args.amendment.resolve())
     elif args.action == "prepare-main":
         summary = prepare_main(paths, args.decision_amendment.resolve())
+    elif args.action == "apply-main-cost-amendment":
+        summary = apply_main_cost_amendment(
+            paths,
+            args.execution_amendment.resolve(),
+        )
     elif args.action == "preflight-main":
         summary = preflight_main(paths)
     elif args.action == "reconcile-resource-ledger":
