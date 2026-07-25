@@ -23,6 +23,10 @@ raw checks, and published artifacts belong below ignored `outputs/`; the
 manifest retains only the small source and image identities needed to replay
 their selection.
 
+The first full run certified all 75 frozen candidates in about 66 minutes and
+published 75 Tasks, 75 Checks, and 54 dependency clusters. This is one
+adapter-conformance result, not a certification-throughput benchmark.
+
 Run `--help` on each script for its explicit inputs. The adapter deliberately
 does not download a dataset, choose a repository, install a harness, clone a
 target repository, or infer credentials. Those acquisition steps are campaign

@@ -98,6 +98,8 @@ DEFAULT_PILOT_OUTPUT = DEFAULT_STUDY_OUTPUT / "pylint-pool"
 STUDY_LEDGER_NAME = "resource-ledger.json"
 CAMPAIGN_METADATA_NAME = "campaign-metadata.json"
 MAIN_CAMPAIGN_ID = "model-main-sympy-2026-07-25"
+QUOTA_CHECKPOINT_CELL_INTERVAL = 6
+QUOTA_CHECKPOINT_MAX_AGE_SECONDS = 300
 
 
 @dataclass(frozen=True)
@@ -2100,6 +2102,62 @@ def _require_study_budget_guard(
         raise RuntimeError("study-attributed quota guard cannot cover the next call")
 
 
+def _quota_checkpoint_for_cell(
+    paths: StudyPaths,
+    sequence_index: int,
+) -> tuple[Mapping[str, int], str, str]:
+    ledger = _load_json(paths.study_output / STUDY_LEDGER_NAME)
+    accounting = _required_mapping(ledger, "gateway_accounting")
+    baseline_used = _required_int(accounting, "baseline_total_used")
+    baseline_available = _required_int(accounting, "baseline_total_available")
+    if sequence_index % QUOTA_CHECKPOINT_CELL_INTERVAL == 0:
+        recent_total = accounting.get("latest_live_total_used")
+        recent_at = accounting.get("latest_live_observed_at")
+        if (
+            isinstance(recent_total, int)
+            and not isinstance(recent_total, bool)
+            and isinstance(recent_at, str)
+            and recent_at
+        ):
+            age = (
+                parse_utc_timestamp(_utc_now()) - parse_utc_timestamp(recent_at)
+            ).total_seconds()
+            if 0 <= age <= QUOTA_CHECKPOINT_MAX_AGE_SECONDS:
+                total_granted = baseline_used + baseline_available
+                if recent_total > total_granted:
+                    raise RuntimeError("recent live quota exceeds the frozen grant")
+                return (
+                    {
+                        "total_granted": total_granted,
+                        "total_used": recent_total,
+                        "total_available": total_granted - recent_total,
+                    },
+                    "recent_live_checkpoint_reuse",
+                    recent_at,
+                )
+        live = _gateway_quota()
+        return live, "live_six_cell_checkpoint", _utc_now()
+    snapshots = [baseline_used]
+    for entry in _required_mapping_sequence(ledger, "entries"):
+        for key in ("gateway_quota_before", "gateway_quota_after"):
+            value = entry.get(key)
+            if isinstance(value, int) and not isinstance(value, bool):
+                snapshots.append(value)
+    total_used = max(snapshots)
+    total_granted = baseline_used + baseline_available
+    if total_used > total_granted:
+        raise RuntimeError("cached gateway quota exceeds the frozen grant")
+    return (
+        {
+            "total_granted": total_granted,
+            "total_used": total_used,
+            "total_available": total_granted - total_used,
+        },
+        "cached_between_six_cell_checkpoints",
+        _required_string(accounting, "latest_live_observed_at"),
+    )
+
+
 def _run_accounted_campaign_cell(
     paths: StudyPaths,
     plan: Mapping[str, Any],
@@ -2115,7 +2173,14 @@ def _run_accounted_campaign_cell(
             or current_cell.schedule_cell != expected_cell.schedule_cell
         ):
             raise RuntimeError("campaign cell changed while waiting for study lock")
-        quota_before = _gateway_quota()
+        (
+            quota_before,
+            quota_before_source,
+            quota_before_observed_at,
+        ) = _quota_checkpoint_for_cell(
+            paths,
+            current_cell.schedule_cell.sequence_index,
+        )
         _require_study_budget_guard(
             paths,
             plan,
@@ -2150,11 +2215,6 @@ def _run_accounted_campaign_cell(
             except BaseException as exc:
                 accounting_error = exc
         quota_after: Mapping[str, int] | None = None
-        quota_after_error: BaseException | None = None
-        try:
-            quota_after = _gateway_quota()
-        except BaseException as exc:
-            quota_after_error = exc
         _record_study_call(
             paths,
             plan,
@@ -2167,7 +2227,8 @@ def _run_accounted_campaign_cell(
             error,
             gateway_log_receipt,
             accounting_error,
-            quota_after_error,
+            quota_before_source,
+            quota_before_observed_at,
         )
         if error is not None:
             raise error
@@ -2207,10 +2268,16 @@ def _record_study_call(
     error: BaseException | None,
     gateway_log_receipt: Mapping[str, Any] | None,
     accounting_error: BaseException | None,
-    quota_after_error: BaseException | None,
+    quota_before_source: str,
+    quota_before_observed_at: str,
 ) -> None:
     ledger_path = paths.study_output / STUDY_LEDGER_NAME
     ledger = dict(_load_json(ledger_path))
+    if quota_before_source == "live_six_cell_checkpoint":
+        accounting = dict(_required_mapping(ledger, "gateway_accounting"))
+        accounting["latest_live_total_used"] = quota_before["total_used"]
+        accounting["latest_live_observed_at"] = quota_before_observed_at
+        ledger["gateway_accounting"] = accounting
     entries = list(_required_mapping_sequence(ledger, "entries"))
     quota_delta = (
         None
@@ -2241,9 +2308,12 @@ def _record_study_call(
             "result_state": None if result is None else result.scoreable_state,
             "estimated_cost_usd": estimated_cost,
             "gateway_quota_before": quota_before["total_used"],
+            "gateway_quota_before_source": quota_before_source,
+            "gateway_quota_before_observed_at": quota_before_observed_at,
             "gateway_quota_after": (
                 None if quota_after is None else quota_after["total_used"]
             ),
+            "gateway_quota_after_status": "deferred_to_periodic_reconciliation",
             "gateway_quota_delta": quota_delta,
             "gateway_cost_usd": (
                 None if quota_delta is None else quota_delta / points_per_usd
@@ -2264,11 +2334,7 @@ def _record_study_call(
             "accounting_error": (
                 None if accounting_error is None else type(accounting_error).__name__
             ),
-            "quota_after_error": (
-                None
-                if quota_after_error is None
-                else type(quota_after_error).__name__
-            ),
+            "quota_after_error": None,
             "evidence": (
                 "campaign ledger, exact Result, and provider token-usage endpoint"
             ),
@@ -2426,6 +2492,8 @@ def reconcile_study_resource_ledger(
         gateway_accounting = dict(
             _required_mapping(ledger, "gateway_accounting")
         )
+        gateway_accounting["latest_live_total_used"] = quota["total_used"]
+        gateway_accounting["latest_live_observed_at"] = _utc_now()
         gateway_accounting["per_call_accounting"] = (
             "model/time token-log rows with exact Result token-total match"
         )

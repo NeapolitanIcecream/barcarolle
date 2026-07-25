@@ -176,6 +176,20 @@ aggregate attributed log quota later equaled the global balance movement
 exactly. Metadata queries now use bounded retry, and a missing post-call
 balance does not erase an exact Result or its log receipt.
 
+Repeated `/api/usage/token` requests then remained rate limited for more than
+three minutes without a `Retry-After` or rate-limit header, while the exact
+per-call token-log route remained available. Per-cell balance sampling was
+therefore both operationally brittle and scientifically misleading. The
+execution driver now takes one live global-balance checkpoint every six frozen
+schedule cells, reuses an already-live snapshot for at most five minutes across
+campaign boundaries, uses exact attributed token-log quota between
+checkpoints, and defers the next global reconciliation instead of querying a
+post-call balance. Six cells correspond to three paired Task blocks; five
+minutes covers the observed greater-than-three-minute rate-limit window and
+leaves the original per-call reserve in force. This cadence detects concurrent
+external movement periodically; the endpoint still does not provide a
+provider-enforced study-specific hard cap.
+
 ### Route portfolio
 
 | Route | Mechanism | First decisive test | Status / reopening rule |

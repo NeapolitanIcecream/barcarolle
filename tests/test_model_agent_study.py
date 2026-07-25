@@ -93,6 +93,99 @@ def test_global_quota_guard_reserves_the_full_per_call_limit() -> None:
         )
 
 
+def test_quota_checkpoint_uses_live_balance_once_per_six_cells(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    output = tmp_path / "study"
+    output.mkdir()
+    ledger = {
+        "gateway_accounting": {
+            "baseline_total_used": 1000,
+            "baseline_total_available": 9000,
+            "latest_live_total_used": 1150,
+            "latest_live_observed_at": "2026-07-25T00:00:00Z",
+        },
+        "entries": [
+            {
+                "gateway_quota_before": 1100,
+                "gateway_quota_after": None,
+            },
+            {
+                "gateway_quota_before": 1100,
+                "gateway_quota_after": 1150,
+            },
+        ],
+    }
+    write_json(output / study.STUDY_LEDGER_NAME, ledger)
+    paths = study.StudyPaths(
+        plan_path=study.DEFAULT_PLAN,
+        study_output=output,
+        pilot_output=tmp_path / "pilot",
+    )
+    live = {
+        "total_granted": 10_000,
+        "total_used": 1200,
+        "total_available": 8800,
+    }
+    monkeypatch.setattr(study, "_gateway_quota", lambda: live)
+    monkeypatch.setattr(study, "_utc_now", lambda: "2026-07-25T00:10:00Z")
+
+    observed_live, live_source, live_at = study._quota_checkpoint_for_cell(paths, 12)
+    observed_cached, cached_source, cached_at = study._quota_checkpoint_for_cell(
+        paths,
+        13,
+    )
+
+    assert observed_live == live
+    assert live_source == "live_six_cell_checkpoint"
+    assert live_at == "2026-07-25T00:10:00Z"
+    assert observed_cached == {
+        "total_granted": 10_000,
+        "total_used": 1150,
+        "total_available": 8850,
+    }
+    assert cached_source == "cached_between_six_cell_checkpoints"
+    assert cached_at == "2026-07-25T00:00:00Z"
+
+
+def test_quota_checkpoint_reuses_a_recent_live_snapshot(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    output = tmp_path / "study"
+    output.mkdir()
+    write_json(
+        output / study.STUDY_LEDGER_NAME,
+        {
+            "gateway_accounting": {
+                "baseline_total_used": 1000,
+                "baseline_total_available": 9000,
+                "latest_live_total_used": 1200,
+                "latest_live_observed_at": "2026-07-25T00:00:00Z",
+            },
+            "entries": [],
+        },
+    )
+    paths = study.StudyPaths(
+        plan_path=study.DEFAULT_PLAN,
+        study_output=output,
+        pilot_output=tmp_path / "pilot",
+    )
+    monkeypatch.setattr(study, "_utc_now", lambda: "2026-07-25T00:04:59Z")
+    monkeypatch.setattr(
+        study,
+        "_gateway_quota",
+        lambda: pytest.fail("recent live quota should be reused"),
+    )
+
+    observed, source, observed_at = study._quota_checkpoint_for_cell(paths, 0)
+
+    assert observed["total_used"] == 1200
+    assert source == "recent_live_checkpoint_reuse"
+    assert observed_at == "2026-07-25T00:00:00Z"
+
+
 def test_main_selection_keeps_performance_then_seeks_disagreement() -> None:
     rows = {
         "best": _agent_row(7, 5.0, "a"),
