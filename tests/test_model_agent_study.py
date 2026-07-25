@@ -42,6 +42,22 @@ def test_committed_amendment_is_self_digested_and_reallocates_budget() -> None:
     assert len(amendment["canaries"]) == 2
 
 
+def test_decision_amendment_freezes_one_connected_replacement_panel() -> None:
+    plan = study._load_plan(study.DEFAULT_PLAN)
+    decision = study._load_decision_amendment(
+        study.DEFAULT_DECISION_AMENDMENT,
+        plan,
+    )
+
+    assert decision["previous_amendment_digest"] == study._load_amendment(
+        study.DEFAULT_AMENDMENT,
+        plan,
+    )["amendment_digest"]
+    assert decision["canary_eligible_agent_keys"] == ["gpt-5.4-mini-high"]
+    assert len(decision["replacement_calibration_campaigns"]) == 1
+    assert decision["control_agent_key"] == "gpt-5.6-terra-high"
+
+
 def test_study_agent_homes_are_distinct_for_same_effort(tmp_path: Path) -> None:
     first = _agent("first-high", "model-a")
     second = _agent("second-high", "model-b")
@@ -318,6 +334,7 @@ def _agent_row(passes: int, cost: float, provider: str) -> dict[str, object]:
         "result_count": 12,
         "base_pass_count": passes,
         "repriced_estimated_cost_usd": cost,
+        "attributed_gateway_cost_usd": cost,
         "provider_family": provider,
     }
 

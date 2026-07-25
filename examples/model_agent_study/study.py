@@ -93,6 +93,7 @@ from examples.swe_bench_static.certify_pool import (  # noqa: E402
 HERE = Path(__file__).resolve().parent
 DEFAULT_PLAN = HERE / "study-plan.json"
 DEFAULT_AMENDMENT = HERE / "study-amendment-1.json"
+DEFAULT_DECISION_AMENDMENT = HERE / "study-amendment-2.json"
 DEFAULT_STUDY_OUTPUT = Path("outputs/research/2026-07-25-model-agent-study")
 DEFAULT_PILOT_OUTPUT = DEFAULT_STUDY_OUTPUT / "pylint-pool"
 STUDY_LEDGER_NAME = "resource-ledger.json"
@@ -137,137 +138,17 @@ def prepare_calibration(paths: StudyPaths) -> Mapping[str, Any]:
     endpoint_digest = _activate_llm_proxy_environment(plan)
     calibration = _required_mapping(plan, "calibration")
     campaigns = _required_mapping_sequence(calibration, "campaigns")
-    models = _required_mapping(plan, "models")
-    pilot_paths = _pilot_paths(paths.pilot_output)
-    summaries: list[Mapping[str, Any]] = []
-    for campaign_config in campaigns:
-        campaign_id = _required_string(campaign_config, "campaign_id")
-        campaign_dir = paths.study_output / "calibration" / campaign_id
-        if campaign_dir.exists():
-            raise FileExistsError(
-                f"refusing to overwrite calibration campaign: {campaign_dir}"
-            )
-        campaign_dir.mkdir(parents=True)
-        records_dir = campaign_dir / "records"
-        records_dir.mkdir()
-        pilot = build_pilot_context(
-            pilot_paths,
-            campaign_dir / "campaign-ledger.json",
-        )
-        agent_keys = _required_string_sequence(campaign_config, "agent_keys")
-        if len(agent_keys) != 2 or len(set(agent_keys)) != 2:
-            raise ValueError("calibration campaign requires two unique agent keys")
-        agents = tuple(
-            _build_agent(
-                model_key=agent_key,
-                model_config=_required_mapping(models, agent_key),
-                campaign_id=campaign_id,
-                campaign_dir=campaign_dir,
-                tasks=pilot.tasks,
-                plan=plan,
-                endpoint_digest=endpoint_digest,
-            )
-            for agent_key in agent_keys
-        )
-        runtime = _base_runtime_config(
-            campaign_id,
-            agents,
-            timeout_seconds=900,
-        )
-        schedule = build_replicate_schedule(
-            pilot.task_pool,
-            pilot.tasks,
-            tuple(pilot.checks.values()),
-            agents,
-            runtime,
-            campaign_id=campaign_id,
-            seed=_required_int(calibration, "schedule_seed"),
-            replicate_fraction=_required_number(calibration, "replicate_fraction"),
-            replicate_count=_required_int(calibration, "replicate_count"),
-        )
-        rates = _numeric_mapping(
-            _required_mapping(campaign_config, "authority_rates"),
-            "authority_rates",
-        )
-        scoring = ScoringConfig(
-            pricing_version=f"gateway-conservative-{campaign_id}",
-            cost_rates=rates,
-        )
-        context = _calibration_context(
-            pilot=pilot,
-            campaign_dir=campaign_dir,
-            agents=agents,
-            runtime=runtime,
-            schedule=schedule,
-            scoring=scoring,
-        )
-        write_jsonl_records(records_dir / "agents.jsonl", agents)
-        write_jsonl_records(records_dir / "runtime-config.jsonl", (runtime,))
-        write_jsonl_records(
-            records_dir / "replicate-schedule.jsonl",
-            (schedule,),
-        )
-        metadata = {
-            "schema_version": "model_calibration_campaign_v1",
-            "study_plan_digest": plan["study_plan_digest"],
-            "campaign_id": campaign_id,
-            "agent_keys": list(agent_keys),
-            "agent_pricing": {
-                agent_key: canonical_data_mapping(
-                    _required_mapping(
-                        _required_mapping(models, agent_key),
-                        "pricing",
-                    )
-                )
-                for agent_key in agent_keys
-            },
-            "scoring_config": {
-                "pricing_version": scoring.pricing_version,
-                "cost_rates": dict(scoring.cost_rates),
-                "scoring_config_digest": scoring.scoring_config_digest,
-            },
-            "endpoint_digest": endpoint_digest,
-            "task_pool_id": pilot.task_pool.task_pool_id,
-            "task_pool_digest": pilot.task_pool.task_pool_digest,
-            "schedule_digest": schedule.schedule_digest,
-        }
-        write_json(campaign_dir / CAMPAIGN_METADATA_NAME, metadata)
-        ledger = initialize_replicate_campaign_ledger(
-            context,
-            approved_at=_required_string(plan, "approved_at"),
+    summaries = [
+        _prepare_calibration_campaign(
+            paths,
+            plan,
+            campaign_config,
             endpoint_digest=endpoint_digest,
-            maximum_estimated_cost_usd=_required_number(
-                campaign_config,
-                "maximum_estimated_cost_usd",
-            ),
-            maximum_estimated_cost_per_call_usd=_required_number(
-                campaign_config,
-                "maximum_estimated_cost_per_call_usd",
-            ),
-            pricing_sources=(
-                "authenticated gateway /api/pricing view observed 2026-07-25",
-            ),
-            accounting_basis=(
-                "per-pair conservative token rates; final Results are repriced "
-                "per exact Agent and reconciled to gateway quota"
-            ),
-            scope=(
-                "frozen 10-task Pylint calibration with two deterministic "
-                "replicate Tasks; canary is the first complete Agent block"
-            ),
+            approved_at=_required_string(plan, "approved_at"),
+            decision_amendment_digest=None,
         )
-        summaries.append(
-            {
-                "campaign_id": campaign_id,
-                "agent_ids": [agent.agent_id for agent in agents],
-                "cell_count": len(schedule.cells),
-                "replicated_task_count": len(schedule.replicated_task_ids),
-                "maximum_estimated_cost_usd": (
-                    _required_mapping(ledger, "authorization")["budget_usd"]
-                ),
-                "campaign_dir": str(campaign_dir.resolve()),
-            }
-        )
+        for campaign_config in campaigns
+    ]
     summary = {
         "stage": "calibration_authorized",
         "study_plan_digest": plan["study_plan_digest"],
@@ -278,6 +159,187 @@ def prepare_calibration(paths: StudyPaths) -> Mapping[str, Any]:
     }
     write_json(paths.study_output / "calibration-authority-summary.json", summary)
     return summary
+
+
+def prepare_replacement_calibration(
+    paths: StudyPaths,
+    decision_amendment_path: Path,
+) -> Mapping[str, Any]:
+    plan = _load_plan(paths.plan_path)
+    decision = _load_decision_amendment(decision_amendment_path, plan)
+    protocol = _load_json(paths.study_output / "protocol-canary-summary.json")
+    if (
+        protocol.get("stage") != "complete"
+        or protocol.get("study_plan_digest") != plan["study_plan_digest"]
+        or protocol.get("study_amendment_digest")
+        != decision["previous_amendment_digest"]
+        or protocol.get("eligible_agent_keys")
+        != decision["canary_eligible_agent_keys"]
+    ):
+        raise RuntimeError("protocol canary evidence does not match amendment 2")
+    endpoint_digest = _activate_llm_proxy_environment(plan)
+    campaigns = _required_mapping_sequence(
+        decision,
+        "replacement_calibration_campaigns",
+    )
+    summaries = [
+        _prepare_calibration_campaign(
+            paths,
+            plan,
+            campaign_config,
+            endpoint_digest=endpoint_digest,
+            approved_at=_required_string(decision, "approved_at"),
+            decision_amendment_digest=_required_string(
+                decision,
+                "amendment_digest",
+            ),
+        )
+        for campaign_config in campaigns
+    ]
+    summary = {
+        "stage": "replacement_calibration_authorized",
+        "study_plan_digest": plan["study_plan_digest"],
+        "study_decision_amendment_digest": decision["amendment_digest"],
+        "endpoint_digest": endpoint_digest,
+        "campaigns": summaries,
+        "maximum_paid_calls": sum(item["cell_count"] for item in summaries),
+    }
+    write_json(
+        paths.study_output / "replacement-calibration-authority-summary.json",
+        summary,
+    )
+    return summary
+
+
+def _prepare_calibration_campaign(
+    paths: StudyPaths,
+    plan: Mapping[str, Any],
+    campaign_config: Mapping[str, Any],
+    *,
+    endpoint_digest: str,
+    approved_at: str,
+    decision_amendment_digest: str | None,
+) -> Mapping[str, Any]:
+    calibration = _required_mapping(plan, "calibration")
+    models = _required_mapping(plan, "models")
+    campaign_id = _required_string(campaign_config, "campaign_id")
+    campaign_dir = paths.study_output / "calibration" / campaign_id
+    if campaign_dir.exists():
+        raise FileExistsError(
+            f"refusing to overwrite calibration campaign: {campaign_dir}"
+        )
+    campaign_dir.mkdir(parents=True)
+    records_dir = campaign_dir / "records"
+    records_dir.mkdir()
+    pilot = build_pilot_context(
+        _pilot_paths(paths.pilot_output),
+        campaign_dir / "campaign-ledger.json",
+    )
+    agent_keys = _required_string_sequence(campaign_config, "agent_keys")
+    if len(agent_keys) != 2 or len(set(agent_keys)) != 2:
+        raise ValueError("calibration campaign requires two unique agent keys")
+    agents = tuple(
+        _build_agent(
+            model_key=agent_key,
+            model_config=_required_mapping(models, agent_key),
+            campaign_id=campaign_id,
+            campaign_dir=campaign_dir,
+            tasks=pilot.tasks,
+            plan=plan,
+            endpoint_digest=endpoint_digest,
+        )
+        for agent_key in agent_keys
+    )
+    runtime = _base_runtime_config(campaign_id, agents, timeout_seconds=900)
+    schedule = build_replicate_schedule(
+        pilot.task_pool,
+        pilot.tasks,
+        tuple(pilot.checks.values()),
+        agents,
+        runtime,
+        campaign_id=campaign_id,
+        seed=_required_int(calibration, "schedule_seed"),
+        replicate_fraction=_required_number(calibration, "replicate_fraction"),
+        replicate_count=_required_int(calibration, "replicate_count"),
+    )
+    scoring = ScoringConfig(
+        pricing_version=f"gateway-conservative-{campaign_id}",
+        cost_rates=_numeric_mapping(
+            _required_mapping(campaign_config, "authority_rates"),
+            "authority_rates",
+        ),
+    )
+    context = _calibration_context(
+        pilot=pilot,
+        campaign_dir=campaign_dir,
+        agents=agents,
+        runtime=runtime,
+        schedule=schedule,
+        scoring=scoring,
+    )
+    write_jsonl_records(records_dir / "agents.jsonl", agents)
+    write_jsonl_records(records_dir / "runtime-config.jsonl", (runtime,))
+    write_jsonl_records(records_dir / "replicate-schedule.jsonl", (schedule,))
+    metadata = {
+        "schema_version": "model_calibration_campaign_v1",
+        "study_plan_digest": plan["study_plan_digest"],
+        "study_decision_amendment_digest": decision_amendment_digest,
+        "campaign_id": campaign_id,
+        "agent_keys": list(agent_keys),
+        "agent_pricing": {
+            agent_key: canonical_data_mapping(
+                _required_mapping(
+                    _required_mapping(models, agent_key),
+                    "pricing",
+                )
+            )
+            for agent_key in agent_keys
+        },
+        "scoring_config": {
+            "pricing_version": scoring.pricing_version,
+            "cost_rates": dict(scoring.cost_rates),
+            "scoring_config_digest": scoring.scoring_config_digest,
+        },
+        "endpoint_digest": endpoint_digest,
+        "task_pool_id": pilot.task_pool.task_pool_id,
+        "task_pool_digest": pilot.task_pool.task_pool_digest,
+        "schedule_digest": schedule.schedule_digest,
+    }
+    write_json(campaign_dir / CAMPAIGN_METADATA_NAME, metadata)
+    ledger = initialize_replicate_campaign_ledger(
+        context,
+        approved_at=approved_at,
+        endpoint_digest=endpoint_digest,
+        maximum_estimated_cost_usd=_required_number(
+            campaign_config,
+            "maximum_estimated_cost_usd",
+        ),
+        maximum_estimated_cost_per_call_usd=_required_number(
+            campaign_config,
+            "maximum_estimated_cost_per_call_usd",
+        ),
+        pricing_sources=(
+            "authenticated gateway /api/pricing view observed 2026-07-25",
+        ),
+        accounting_basis=(
+            "per-pair conservative token rates; final Results are repriced "
+            "per exact Agent and reconciled to gateway quota"
+        ),
+        scope=(
+            "frozen 10-task Pylint calibration with two deterministic "
+            "replicate Tasks"
+        ),
+    )
+    return {
+        "campaign_id": campaign_id,
+        "agent_ids": [agent.agent_id for agent in agents],
+        "cell_count": len(schedule.cells),
+        "replicated_task_count": len(schedule.replicated_task_ids),
+        "maximum_estimated_cost_usd": (
+            _required_mapping(ledger, "authorization")["budget_usd"]
+        ),
+        "campaign_dir": str(campaign_dir.resolve()),
+    }
 
 
 def prepare_protocol_canaries(
@@ -440,6 +502,7 @@ def preflight_protocol_canary(
     next_cell = preflight_replicate_campaign(context)
     quota = _gateway_quota()
     _require_study_budget_guard(paths, plan, quota, config)
+    _record_live_quota_checkpoint(paths, plan, quota, "protocol_canary_preflight")
     summary = {
         "stage": "preflight_passed" if next_cell is not None else "complete",
         "campaign_id": campaign_id,
@@ -569,15 +632,27 @@ def summarize_protocol_canaries(
 def preflight_calibration_campaign(
     paths: StudyPaths,
     campaign_id: str,
+    decision_amendment_path: Path = DEFAULT_DECISION_AMENDMENT,
 ) -> Mapping[str, Any]:
     plan = _load_plan(paths.plan_path)
+    decision = _load_decision_amendment(decision_amendment_path, plan)
     endpoint_digest = _activate_llm_proxy_environment(plan)
-    campaign_config = _calibration_campaign_config(plan, campaign_id)
-    context = _load_calibration_context(paths, plan, campaign_config)
+    campaign_config = _calibration_campaign_config(
+        plan,
+        campaign_id,
+        decision,
+    )
+    context = _load_calibration_context(
+        paths,
+        plan,
+        campaign_config,
+        decision,
+    )
     images = verify_pylint_verifier_images(context.tasks)
     next_cell = preflight_replicate_campaign(context)
     quota = _gateway_quota()
     _require_study_budget_guard(paths, plan, quota, campaign_config)
+    _record_live_quota_checkpoint(paths, plan, quota, "calibration_preflight")
     summary = {
         "stage": "preflight_passed" if next_cell is not None else "complete",
         "campaign_id": campaign_id,
@@ -600,12 +675,23 @@ def preflight_calibration_campaign(
 def run_next_calibration_cell(
     paths: StudyPaths,
     campaign_id: str,
+    decision_amendment_path: Path = DEFAULT_DECISION_AMENDMENT,
 ) -> Mapping[str, Any]:
     plan = _load_plan(paths.plan_path)
+    decision = _load_decision_amendment(decision_amendment_path, plan)
     _activate_llm_proxy_environment(plan)
-    campaign_config = _calibration_campaign_config(plan, campaign_id)
+    campaign_config = _calibration_campaign_config(
+        plan,
+        campaign_id,
+        decision,
+    )
     campaign_dir = paths.study_output / "calibration" / campaign_id
-    context = _load_calibration_context(paths, plan, campaign_config)
+    context = _load_calibration_context(
+        paths,
+        plan,
+        campaign_config,
+        decision,
+    )
     _require_preflight_marker(campaign_dir, plan, context)
     next_cell = preflight_replicate_campaign(context)
     if next_cell is None:
@@ -639,16 +725,37 @@ def run_next_calibration_cell(
     }
 
 
-def summarize_calibration(paths: StudyPaths) -> Mapping[str, Any]:
+def summarize_calibration(
+    paths: StudyPaths,
+    decision_amendment_path: Path = DEFAULT_DECISION_AMENDMENT,
+) -> Mapping[str, Any]:
     plan = _load_plan(paths.plan_path)
-    campaigns = _required_mapping_sequence(
-        _required_mapping(plan, "calibration"),
-        "campaigns",
+    decision = _load_decision_amendment(decision_amendment_path, plan)
+    campaigns = tuple(
+        _calibration_campaign_config(plan, campaign_id, decision)
+        for campaign_id in _required_string_sequence(
+            decision,
+            "analysis_campaign_ids",
+        )
     )
     models = _required_mapping(plan, "models")
+    canonical_value = _required_mapping(decision, "canonical_agent_campaigns")
+    canonical_campaign_by_agent = {
+        key: value
+        for key, value in canonical_value.items()
+        if isinstance(key, str)
+        and key
+        and isinstance(value, str)
+        and value
+    }
+    if len(canonical_campaign_by_agent) != len(canonical_value):
+        raise ValueError("canonical Agent campaigns must map strings to strings")
+    study_ledger = _load_json(paths.study_output / STUDY_LEDGER_NAME)
+    ledger_entries = _required_mapping_sequence(study_ledger, "entries")
     agent_rows: dict[str, dict[str, Any]] = {}
     base_outcome_by_agent_task: dict[tuple[str, str], str] = {}
     pairwise_rows: list[Mapping[str, Any]] = []
+    panel_outcomes: dict[str, dict[tuple[str, str], str]] = {}
     repeat_cells = 0
     repeat_flips = 0
     for campaign_config in campaigns:
@@ -678,6 +785,7 @@ def summarize_calibration(paths: StudyPaths) -> Mapping[str, Any]:
             ): result
             for result in results
         }
+        local_outcomes: dict[tuple[str, str], str] = {}
         for agent_key in _required_string_sequence(campaign_config, "agent_keys"):
             model_config = _required_mapping(models, agent_key)
             agent_id = _required_string(model_config, "agent_id")
@@ -690,6 +798,12 @@ def summarize_calibration(paths: StudyPaths) -> Mapping[str, Any]:
                 if runtime_index_by_digest[result.cache_identity.runtime_config_digest]
                 == 0
             )
+            for result in base_results:
+                local_outcomes[(agent_key, result.task_id)] = result.outcome
+            if canonical_campaign_by_agent.get(agent_key) != campaign_id:
+                continue
+            if agent_key in agent_rows:
+                raise RuntimeError(f"duplicate canonical Agent panel: {agent_key}")
             pricing = _required_mapping(model_config, "pricing")
             rates = {
                 key: _required_number(pricing, key)
@@ -707,6 +821,18 @@ def summarize_calibration(paths: StudyPaths) -> Mapping[str, Any]:
                 cast(float, compute_cost(result.usage, scoring)["total_cost"])
                 for result in agent_results
             )
+            attributed_costs = [
+                float(entry["gateway_log_cost_usd"])
+                for entry in ledger_entries
+                if entry.get("campaign_id") == campaign_id
+                and entry.get("agent_id") == agent_id
+                and isinstance(entry.get("gateway_log_cost_usd"), int | float)
+                and not isinstance(entry.get("gateway_log_cost_usd"), bool)
+            ]
+            if len(attributed_costs) != len(agent_results):
+                raise RuntimeError(
+                    f"canonical Agent lacks exact gateway receipts: {agent_key}"
+                )
             row = {
                 "agent_key": agent_key,
                 "agent_id": agent_id,
@@ -723,6 +849,8 @@ def summarize_calibration(paths: StudyPaths) -> Mapping[str, Any]:
                     result.outcome == "pass" for result in base_results
                 ),
                 "repriced_estimated_cost_usd": repriced_cost,
+                "attributed_gateway_cost_usd": sum(attributed_costs),
+                "canonical_campaign_id": campaign_id,
                 "workspace_seconds": sum(
                     _result_number(result.latency, "workspace_seconds")
                     for result in agent_results
@@ -736,23 +864,27 @@ def summarize_calibration(paths: StudyPaths) -> Mapping[str, Any]:
                 second = result_by_cell[(agent_id, task_id, 1)]
                 repeat_cells += 1
                 repeat_flips += int(first.outcome != second.outcome)
+        panel_outcomes[campaign_id] = local_outcomes
         left_key, right_key = _required_string_sequence(campaign_config, "agent_keys")
         task_ids = sorted(
-            task_id for key, task_id in base_outcome_by_agent_task if key == left_key
+            task_id for key, task_id in local_outcomes if key == left_key
         )
         disagreements = sum(
-            base_outcome_by_agent_task[(left_key, task_id)]
-            != base_outcome_by_agent_task[(right_key, task_id)]
+            local_outcomes[(left_key, task_id)]
+            != local_outcomes[(right_key, task_id)]
             for task_id in task_ids
         )
         pairwise_rows.append(
             {
+                "campaign_id": campaign_id,
                 "left_agent_key": left_key,
                 "right_agent_key": right_key,
                 "paired_task_count": len(task_ids),
                 "disagreement_count": disagreements,
             }
         )
+    if set(agent_rows) != set(canonical_campaign_by_agent):
+        raise RuntimeError("canonical calibration panels are incomplete")
     all_keys = tuple(sorted(agent_rows))
     for left_index, left_key in enumerate(all_keys):
         for right_key in all_keys[left_index + 1 :]:
@@ -771,13 +903,14 @@ def summarize_calibration(paths: StudyPaths) -> Mapping[str, Any]:
             if not paired_tasks:
                 continue
             if any(
-                row["left_agent_key"] == left_key
-                and row["right_agent_key"] == right_key
+                {row["left_agent_key"], row["right_agent_key"]}
+                == {left_key, right_key}
                 for row in pairwise_rows
             ):
                 continue
             pairwise_rows.append(
                 {
+                    "campaign_id": "cross_panel_canonical_view",
                     "left_agent_key": left_key,
                     "right_agent_key": right_key,
                     "paired_task_count": len(paired_tasks),
@@ -788,15 +921,47 @@ def summarize_calibration(paths: StudyPaths) -> Mapping[str, Any]:
                     ),
                 }
             )
+    control_key = _required_string(decision, "control_agent_key")
+    control_campaign = canonical_campaign_by_agent.get(control_key)
+    if control_campaign is None:
+        raise RuntimeError("amendment 2 control Agent lacks a canonical panel")
+    control_tasks = {
+        task_id
+        for key, task_id in base_outcome_by_agent_task
+        if key == control_key
+    }
+    control_bridges: list[Mapping[str, Any]] = []
+    for campaign_id, outcomes in panel_outcomes.items():
+        if campaign_id == control_campaign:
+            continue
+        bridge_tasks = sorted(
+            control_tasks
+            & {task_id for key, task_id in outcomes if key == control_key}
+        )
+        if not bridge_tasks:
+            continue
+        control_bridges.append(
+            {
+                "control_agent_key": control_key,
+                "canonical_campaign_id": control_campaign,
+                "bridge_campaign_id": campaign_id,
+                "paired_task_count": len(bridge_tasks),
+                "outcome_flip_count": sum(
+                    base_outcome_by_agent_task[(control_key, task_id)]
+                    != outcomes[(control_key, task_id)]
+                    for task_id in bridge_tasks
+                ),
+            }
+        )
     selected = _select_main_agents(
         plan,
         agent_rows,
         base_outcome_by_agent_task,
     )
-    study_ledger = _load_json(paths.study_output / STUDY_LEDGER_NAME)
     summary = {
         "schema_version": "model_calibration_summary_v1",
         "study_plan_digest": plan["study_plan_digest"],
+        "study_decision_amendment_digest": decision["amendment_digest"],
         "stage": "complete",
         "agents": [agent_rows[key] for key in sorted(agent_rows)],
         "pairwise": sorted(
@@ -806,6 +971,7 @@ def summarize_calibration(paths: StudyPaths) -> Mapping[str, Any]:
                 row["right_agent_key"],
             ),
         ),
+        "control_bridges": control_bridges,
         "repeatability": {
             "agent_task_repeat_cell_count": repeat_cells,
             "flip_count": repeat_flips,
@@ -825,13 +991,19 @@ def summarize_calibration(paths: StudyPaths) -> Mapping[str, Any]:
     return summary
 
 
-def prepare_main(paths: StudyPaths) -> Mapping[str, Any]:
+def prepare_main(
+    paths: StudyPaths,
+    decision_amendment_path: Path = DEFAULT_DECISION_AMENDMENT,
+) -> Mapping[str, Any]:
     plan = _load_plan(paths.plan_path)
+    decision = _load_decision_amendment(decision_amendment_path, plan)
     endpoint_digest = _activate_llm_proxy_environment(plan)
     calibration = _load_json(paths.study_output / "calibration-summary.json")
     if (
         calibration.get("stage") != "complete"
         or calibration.get("study_plan_digest") != plan["study_plan_digest"]
+        or calibration.get("study_decision_amendment_digest")
+        != decision["amendment_digest"]
     ):
         raise RuntimeError("complete calibration evidence is required before main")
     selected = calibration.get("selected_main_agent_keys")
@@ -871,13 +1043,88 @@ def prepare_main(paths: StudyPaths) -> Mapping[str, Any]:
         replicate_task_count * (_required_int(main_plan, "replicate_count") - 1)
     )
     projected_cost = sum(per_agent_p90[key] * calls_per_agent for key in selected_keys)
-    authority_budget = _required_number(
-        _required_mapping(plan, "budget"),
-        "main_and_repeat_authority_usd",
+    budget_decision = _required_mapping(decision, "main_budget")
+    actual_projection_limit = _required_number(
+        budget_decision,
+        "actual_p90_projection_limit_usd",
     )
-    if projected_cost > authority_budget:
+    reserve_usd = _required_number(budget_decision, "unallocated_reserve_usd")
+    global_budget_usd = _required_number(
+        _required_mapping(plan, "budget"),
+        "total_usd",
+    )
+    consumed_usd = _resource_total(
+        study_ledger,
+        "conservative_gateway_budget_consumption",
+    )
+    if (
+        projected_cost > actual_projection_limit
+        or consumed_usd + projected_cost + reserve_usd > global_budget_usd
+    ):
         raise RuntimeError(
-            "full 75-Task main campaign exceeds the frozen p90 budget gate"
+            "full 75-Task main campaign exceeds the actual p90 budget gate"
+        )
+    authority_rates = {
+        token_key: max(
+            _required_number(
+                _required_mapping(config, "pricing"),
+                token_key,
+            )
+            for config in model_configs
+        )
+        for token_key in (
+            "uncached_input_tokens",
+            "cached_input_tokens",
+            "output_tokens",
+        )
+    }
+    scoring = ScoringConfig(
+        pricing_version=f"gateway-conservative-{MAIN_CAMPAIGN_ID}",
+        cost_rates=authority_rates,
+    )
+    calibration_agents = {
+        row["agent_key"]: row
+        for row in _required_mapping_sequence(calibration, "agents")
+        if isinstance(row.get("agent_key"), str)
+    }
+    conservative_p90: dict[str, float] = {}
+    for key, config in zip(selected_keys, model_configs, strict=True):
+        row = calibration_agents.get(key)
+        if row is None:
+            raise RuntimeError(f"selected Agent lacks canonical calibration: {key}")
+        campaign_id = _required_string(row, "canonical_campaign_id")
+        agent_id = _required_string(config, "agent_id")
+        results = tuple(
+            result
+            for result in load_jsonl_records(
+                paths.study_output
+                / "calibration"
+                / campaign_id
+                / "records"
+                / "results.jsonl",
+                ResultRecord,
+            )
+            if result.agent_id == agent_id
+        )
+        if not results:
+            raise RuntimeError(f"selected Agent has no canonical Results: {key}")
+        conservative_p90[key] = _nearest_rank(
+            tuple(
+                cast(float, compute_cost(result.usage, scoring)["total_cost"])
+                for result in results
+            ),
+            0.90,
+        )
+    conservative_projected_cost = sum(
+        conservative_p90[key] * calls_per_agent for key in selected_keys
+    )
+    authority_budget = _required_number(
+        budget_decision,
+        "conservative_ledger_authority_limit_usd",
+    )
+    if conservative_projected_cost > authority_budget:
+        raise RuntimeError(
+            "full main campaign exceeds the conservative ledger authority"
         )
 
     campaign_dir = paths.study_output / "main" / MAIN_CAMPAIGN_ID
@@ -914,24 +1161,6 @@ def prepare_main(paths: StudyPaths) -> Mapping[str, Any]:
         replicate_fraction=_required_number(main_plan, "replicate_fraction"),
         replicate_count=_required_int(main_plan, "replicate_count"),
     )
-    authority_rates = {
-        token_key: max(
-            _required_number(
-                _required_mapping(config, "pricing"),
-                token_key,
-            )
-            for config in model_configs
-        )
-        for token_key in (
-            "uncached_input_tokens",
-            "cached_input_tokens",
-            "output_tokens",
-        )
-    }
-    scoring = ScoringConfig(
-        pricing_version=f"gateway-conservative-{MAIN_CAMPAIGN_ID}",
-        cost_rates=authority_rates,
-    )
     source = _load_static_source_context(
         paths,
         agents=agents,
@@ -945,13 +1174,14 @@ def prepare_main(paths: StudyPaths) -> Mapping[str, Any]:
         schedule=schedule,
         scoring=scoring,
     )
-    per_call_limit = max(2.0, min(10.0, 3 * max(per_agent_p90.values())))
+    per_call_limit = max(2.0, min(10.0, 3 * max(conservative_p90.values())))
     write_jsonl_records(records_dir / "agents.jsonl", agents)
     write_jsonl_records(records_dir / "runtime-config.jsonl", (runtime,))
     write_jsonl_records(records_dir / "replicate-schedule.jsonl", (schedule,))
     metadata = {
         "schema_version": "model_main_campaign_v1",
         "study_plan_digest": plan["study_plan_digest"],
+        "study_decision_amendment_digest": decision["amendment_digest"],
         "campaign_id": MAIN_CAMPAIGN_ID,
         "selected_agent_keys": list(selected_keys),
         "agent_pricing": {
@@ -967,15 +1197,17 @@ def prepare_main(paths: StudyPaths) -> Mapping[str, Any]:
         "task_pool_id": source.bundle.task_pool.task_pool_id,
         "task_pool_digest": source.bundle.task_pool.task_pool_digest,
         "schedule_digest": schedule.schedule_digest,
-        "projected_p90_cost_usd": projected_cost,
-        "calibration_p90_cost_usd_by_agent_key": per_agent_p90,
+        "projected_actual_p90_cost_usd": projected_cost,
+        "calibration_actual_p90_cost_usd_by_agent_key": per_agent_p90,
+        "projected_conservative_p90_cost_usd": conservative_projected_cost,
+        "calibration_conservative_p90_cost_usd_by_agent_key": conservative_p90,
         "maximum_estimated_cost_usd": authority_budget,
         "maximum_estimated_cost_per_call_usd": per_call_limit,
     }
     write_json(campaign_dir / CAMPAIGN_METADATA_NAME, metadata)
     initialize_replicate_campaign_ledger(
         context,
-        approved_at=_required_string(plan, "approved_at"),
+        approved_at=_required_string(decision, "approved_at"),
         endpoint_digest=endpoint_digest,
         maximum_estimated_cost_usd=authority_budget,
         maximum_estimated_cost_per_call_usd=per_call_limit,
@@ -1001,7 +1233,10 @@ def prepare_main(paths: StudyPaths) -> Mapping[str, Any]:
         ),
         "replicated_task_count": len(schedule.replicated_task_ids),
         "paid_cell_count": len(schedule.cells),
-        "projected_p90_cost_usd": projected_cost,
+        "projected_actual_p90_cost_usd": projected_cost,
+        "projected_conservative_p90_cost_usd": conservative_projected_cost,
+        "actual_spend_before_main_usd": consumed_usd,
+        "unallocated_reserve_usd": reserve_usd,
         "maximum_estimated_cost_usd": authority_budget,
         "maximum_estimated_cost_per_call_usd": per_call_limit,
     }
@@ -1023,6 +1258,7 @@ def preflight_main(paths: StudyPaths) -> Mapping[str, Any]:
     next_cell = preflight_replicate_campaign(context)
     quota = _gateway_quota()
     _require_study_budget_guard(paths, plan, quota, metadata)
+    _record_live_quota_checkpoint(paths, plan, quota, "main_preflight")
     summary = {
         "stage": "preflight_passed" if next_cell is not None else "complete",
         "campaign_id": MAIN_CAMPAIGN_ID,
@@ -1502,8 +1738,11 @@ def _load_main_context(
 ]:
     campaign_dir = paths.study_output / "main" / MAIN_CAMPAIGN_ID
     metadata = _load_json(campaign_dir / CAMPAIGN_METADATA_NAME)
+    decision = _load_decision_amendment(DEFAULT_DECISION_AMENDMENT, plan)
     if (
         metadata.get("study_plan_digest") != plan["study_plan_digest"]
+        or metadata.get("study_decision_amendment_digest")
+        != decision["amendment_digest"]
         or metadata.get("campaign_id") != MAIN_CAMPAIGN_ID
     ):
         raise RuntimeError("main campaign metadata does not match the study plan")
@@ -1549,12 +1788,19 @@ def _load_calibration_context(
     paths: StudyPaths,
     plan: Mapping[str, Any],
     campaign_config: Mapping[str, Any],
+    decision_amendment: Mapping[str, Any] | None = None,
 ) -> ReplicateCampaignContext:
     campaign_id = _required_string(campaign_config, "campaign_id")
     campaign_dir = paths.study_output / "calibration" / campaign_id
     metadata = _load_json(campaign_dir / CAMPAIGN_METADATA_NAME)
     if metadata.get("study_plan_digest") != plan["study_plan_digest"]:
         raise RuntimeError("campaign metadata does not match the study plan")
+    metadata_decision_digest = metadata.get("study_decision_amendment_digest")
+    if metadata_decision_digest is not None and (
+        decision_amendment is None
+        or metadata_decision_digest != decision_amendment.get("amendment_digest")
+    ):
+        raise RuntimeError("campaign metadata does not match amendment 2")
     pilot = build_pilot_context(
         _pilot_paths(paths.pilot_output),
         campaign_dir / "campaign-ledger.json",
@@ -1659,6 +1905,17 @@ def _gateway_costs_by_agent_id(
             raise RuntimeError("study ledger gateway cost entry is invalid")
         costs.setdefault(agent_id, []).append(float(cost))
     return {agent_id: tuple(values) for agent_id, values in sorted(costs.items())}
+
+
+def _resource_total(ledger: Mapping[str, Any], resource: str) -> float:
+    matches = tuple(
+        row
+        for row in _required_mapping_sequence(ledger, "totals")
+        if row.get("resource") == resource
+    )
+    if len(matches) != 1:
+        raise RuntimeError(f"study ledger lacks one {resource} total")
+    return _required_number(matches[0], "amount")
 
 
 def _nearest_rank(values: Sequence[float], probability: float) -> float:
@@ -2102,6 +2359,31 @@ def _require_study_budget_guard(
         raise RuntimeError("study-attributed quota guard cannot cover the next call")
 
 
+def _record_live_quota_checkpoint(
+    paths: StudyPaths,
+    plan: Mapping[str, Any],
+    quota: Mapping[str, int],
+    source: str,
+) -> None:
+    ledger_path = paths.study_output / STUDY_LEDGER_NAME
+    ledger = dict(_load_json(ledger_path))
+    accounting = dict(_required_mapping(ledger, "gateway_accounting"))
+    accounting["latest_live_total_used"] = quota["total_used"]
+    accounting["latest_live_observed_at"] = _utc_now()
+    accounting["latest_live_source"] = source
+    ledger["gateway_accounting"] = accounting
+    _write_study_resource_ledger(
+        ledger_path,
+        ledger,
+        _required_mapping_sequence(ledger, "entries"),
+        points_per_usd=_required_int(
+            _required_mapping(plan, "budget"),
+            "quota_points_per_usd",
+        ),
+        latest_gateway_total_used=quota["total_used"],
+    )
+
+
 def _quota_checkpoint_for_cell(
     paths: StudyPaths,
     sequence_index: int,
@@ -2277,6 +2559,7 @@ def _record_study_call(
         accounting = dict(_required_mapping(ledger, "gateway_accounting"))
         accounting["latest_live_total_used"] = quota_before["total_used"]
         accounting["latest_live_observed_at"] = quota_before_observed_at
+        accounting["latest_live_source"] = "paid_cell_preflight"
         ledger["gateway_accounting"] = accounting
     entries = list(_required_mapping_sequence(ledger, "entries"))
     quota_delta = (
@@ -2357,10 +2640,12 @@ def _record_study_call(
 def reconcile_study_resource_ledger(
     paths: StudyPaths,
     amendment_path: Path = DEFAULT_AMENDMENT,
+    decision_amendment_path: Path = DEFAULT_DECISION_AMENDMENT,
 ) -> Mapping[str, Any]:
     """Reconcile campaign Results to exact token logs and the eventual balance."""
     plan = _load_plan(paths.plan_path)
     amendment = _load_amendment(amendment_path, plan)
+    decision = _load_decision_amendment(decision_amendment_path, plan)
     _activate_llm_proxy_environment(plan)
     ledger_path = paths.study_output / STUDY_LEDGER_NAME
     with _study_call_guard(paths):
@@ -2383,6 +2668,22 @@ def reconcile_study_resource_ledger(
             )
             if results_path.exists():
                 contexts.append(_load_calibration_context(paths, plan, config))
+        for config in _required_mapping_sequence(
+            decision,
+            "replacement_calibration_campaigns",
+        ):
+            campaign_id = _required_string(config, "campaign_id")
+            results_path = (
+                paths.study_output
+                / "calibration"
+                / campaign_id
+                / "records"
+                / "results.jsonl"
+            )
+            if results_path.exists():
+                contexts.append(
+                    _load_calibration_context(paths, plan, config, decision)
+                )
         for config in _required_mapping_sequence(amendment, "canaries"):
             campaign_id = _required_string(config, "campaign_id")
             results_path = (
@@ -2494,6 +2795,7 @@ def reconcile_study_resource_ledger(
         )
         gateway_accounting["latest_live_total_used"] = quota["total_used"]
         gateway_accounting["latest_live_observed_at"] = _utc_now()
+        gateway_accounting["latest_live_source"] = "resource_ledger_reconciliation"
         gateway_accounting["per_call_accounting"] = (
             "model/time token-log rows with exact Result token-total match"
         )
@@ -2645,7 +2947,7 @@ def _select_main_agents(
         eligible,
         key=lambda key: (
             -cast(int, agent_rows[key]["base_pass_count"]),
-            cast(float, agent_rows[key]["repriced_estimated_cost_usd"]),
+            cast(float, agent_rows[key]["attributed_gateway_cost_usd"]),
             key,
         ),
     )
@@ -2670,7 +2972,7 @@ def _select_main_agents(
         return (
             -disagreement,
             -cast(int, agent_rows[key]["base_pass_count"]),
-            cast(float, agent_rows[key]["repriced_estimated_cost_usd"]),
+            cast(float, agent_rows[key]["attributed_gateway_cost_usd"]),
             (
                 agent_rows[key]["provider_family"]
                 == agent_rows[first]["provider_family"]
@@ -2705,8 +3007,9 @@ def _require_preflight_marker(
 def _calibration_campaign_config(
     plan: Mapping[str, Any],
     campaign_id: str,
+    decision_amendment: Mapping[str, Any] | None = None,
 ) -> Mapping[str, Any]:
-    matches = tuple(
+    base_matches = tuple(
         campaign
         for campaign in _required_mapping_sequence(
             _required_mapping(plan, "calibration"),
@@ -2714,9 +3017,21 @@ def _calibration_campaign_config(
         )
         if campaign.get("campaign_id") == campaign_id
     )
-    if len(matches) != 1:
+    if len(base_matches) == 1:
+        return base_matches[0]
+    replacement_matches: tuple[Mapping[str, Any], ...] = ()
+    if decision_amendment is not None:
+        replacement_matches = tuple(
+            campaign
+            for campaign in _required_mapping_sequence(
+                decision_amendment,
+                "replacement_calibration_campaigns",
+            )
+            if campaign.get("campaign_id") == campaign_id
+        )
+    if len(base_matches) + len(replacement_matches) != 1:
         raise ValueError(f"unknown calibration campaign: {campaign_id}")
-    return matches[0]
+    return next(iter(replacement_matches))
 
 
 def _canary_config(
@@ -2771,6 +3086,29 @@ def _load_amendment(
         raise ValueError("study amendment schema is unsupported")
     if amendment.get("base_study_plan_digest") != plan["study_plan_digest"]:
         raise ValueError("study amendment does not bind the base plan")
+    return amendment
+
+
+def _load_decision_amendment(
+    path: Path,
+    plan: Mapping[str, Any],
+) -> Mapping[str, Any]:
+    amendment = _load_json(path)
+    digest = _required_string(amendment, "amendment_digest")
+    payload = dict(amendment)
+    payload.pop("amendment_digest")
+    if canonical_digest(payload) != digest:
+        raise ValueError("study decision amendment digest does not match")
+    if (
+        amendment.get("schema_version")
+        != "barcarolle_model_agent_study_amendment_v2"
+    ):
+        raise ValueError("study decision amendment schema is unsupported")
+    if amendment.get("base_study_plan_digest") != plan["study_plan_digest"]:
+        raise ValueError("study decision amendment does not bind the base plan")
+    protocol = _load_amendment(DEFAULT_AMENDMENT, plan)
+    if amendment.get("previous_amendment_digest") != protocol["amendment_digest"]:
+        raise ValueError("study decision amendment does not bind amendment 1")
     return amendment
 
 
@@ -2904,10 +3242,16 @@ def _parse_args(argv: Sequence[str] | None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--plan", type=Path, default=DEFAULT_PLAN)
     parser.add_argument("--amendment", type=Path, default=DEFAULT_AMENDMENT)
+    parser.add_argument(
+        "--decision-amendment",
+        type=Path,
+        default=DEFAULT_DECISION_AMENDMENT,
+    )
     parser.add_argument("--study-output", type=Path, default=DEFAULT_STUDY_OUTPUT)
     parser.add_argument("--pilot-output", type=Path, default=DEFAULT_PILOT_OUTPUT)
     actions = parser.add_subparsers(dest="action", required=True)
     actions.add_parser("prepare-calibration")
+    actions.add_parser("prepare-replacement-calibration")
     actions.add_parser("prepare-protocol-canaries")
     preflight = actions.add_parser("preflight-calibration")
     preflight.add_argument("--campaign-id", required=True)
@@ -2936,10 +3280,19 @@ def main(argv: Sequence[str] | None = None) -> int:
     )
     if args.action == "prepare-calibration":
         summary = prepare_calibration(paths)
+    elif args.action == "prepare-replacement-calibration":
+        summary = prepare_replacement_calibration(
+            paths,
+            args.decision_amendment.resolve(),
+        )
     elif args.action == "prepare-protocol-canaries":
         summary = prepare_protocol_canaries(paths, args.amendment.resolve())
     elif args.action == "preflight-calibration":
-        summary = preflight_calibration_campaign(paths, args.campaign_id)
+        summary = preflight_calibration_campaign(
+            paths,
+            args.campaign_id,
+            args.decision_amendment.resolve(),
+        )
     elif args.action == "preflight-protocol-canary":
         summary = preflight_protocol_canary(
             paths,
@@ -2947,7 +3300,11 @@ def main(argv: Sequence[str] | None = None) -> int:
             args.campaign_id,
         )
     elif args.action == "run-next-calibration":
-        summary = run_next_calibration_cell(paths, args.campaign_id)
+        summary = run_next_calibration_cell(
+            paths,
+            args.campaign_id,
+            args.decision_amendment.resolve(),
+        )
     elif args.action == "run-next-protocol-canary":
         summary = run_next_protocol_canary(
             paths,
@@ -2955,17 +3312,21 @@ def main(argv: Sequence[str] | None = None) -> int:
             args.campaign_id,
         )
     elif args.action == "summarize-calibration":
-        summary = summarize_calibration(paths)
+        summary = summarize_calibration(
+            paths,
+            args.decision_amendment.resolve(),
+        )
     elif args.action == "summarize-protocol-canaries":
         summary = summarize_protocol_canaries(paths, args.amendment.resolve())
     elif args.action == "prepare-main":
-        summary = prepare_main(paths)
+        summary = prepare_main(paths, args.decision_amendment.resolve())
     elif args.action == "preflight-main":
         summary = preflight_main(paths)
     elif args.action == "reconcile-resource-ledger":
         summary = reconcile_study_resource_ledger(
             paths,
             args.amendment.resolve(),
+            args.decision_amendment.resolve(),
         )
     elif args.action == "summarize-main":
         summary = summarize_main(paths)

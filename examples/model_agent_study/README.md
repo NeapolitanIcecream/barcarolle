@@ -16,7 +16,8 @@ Accounting uses two different gateway signals:
   Result input/output token totals; their quota sum is the per-call attributed
   cost;
 - the token balance is eventually consistent, so it is used only for the
-  global budget guard and aggregate reconciliation.
+  global budget guard and aggregate reconciliation. A live snapshot is
+  requested every six cells and may be reused for at most five minutes.
 
 This distinction matters: an immediate before/after balance delta can move
 cost between adjacent calls. `reconcile-resource-ledger` recovers exact Results
@@ -30,6 +31,10 @@ prepare-protocol-canaries
 preflight-protocol-canary --campaign-id ...
 run-next-protocol-canary --campaign-id ...
 summarize-protocol-canaries
+prepare-replacement-calibration
+preflight-calibration --campaign-id ...
+run-next-calibration --campaign-id ...
+summarize-calibration
 prepare-main
 preflight-main
 run-next-main

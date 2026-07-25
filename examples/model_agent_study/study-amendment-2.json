@@ -1,0 +1,68 @@
+{
+  "schema_version": "barcarolle_model_agent_study_amendment_v2",
+  "amendment_digest": "affeef281bd2b907dec67090cfd6cbff4c8a19b8b401a16691e62505147b4f49",
+  "base_study_plan_digest": "445398963a6e703953f4a4f5c758034b8d4f377b3a0a575197b4d3282191834f",
+  "previous_amendment_digest": "4ad5965c73c995de346a4644a7f2167f7b4ed67a90298c2b1e8af204126aea3e",
+  "approved_at": "2026-07-25T16:02:00Z",
+  "reason": "The frontier campaign completed with identical 5/10 base outcomes and no observed repeat flips for Sol and Terra, while Terra cost 2.41 times less. Protocol canaries admitted only GPT-5.4 mini. Freeze one connected mini-versus-Terra replacement panel before any additional calibration call.",
+  "evidence_inputs": {
+    "protocol_canary_summary_digest": "42fa2b5187b47d1a1af8b0f4de504f59e613a659cb051a79c4c38198fde26141",
+    "frontier_result_records_digest": "a9e614b350c841f3f4c2cf0bde619ab011b1fe12be4ceda18193b267520d5eaa",
+    "sympy_certification_summary_digest": "46bb2b0bffda046a02c8e166806d8111d5bf5b1c813f666e08f4596f55ec330c",
+    "observed_gateway_cost_before_replacement_usd": 8.976324,
+    "observed_benchmark_call_count": 28
+  },
+  "decisions": {
+    "frontier_result": "Sol and Terra each passed 5 of 10 base Tasks, had zero base-outcome disagreements, and reproduced one pass and one fail on their two repeated Tasks.",
+    "control_choice": "Use Terra as the one common control because it matched Sol on every base outcome and cost USD 2.491162 versus USD 6.013130.",
+    "canary_result": "GPT-5.4 mini was scoreable with priceable usage. Claude Sonnet 4.6 was Agent-invalid with empty usage and zero attributed gateway quota.",
+    "claim_boundary": "Protocol failures exclude only the tested proxy, Codex CLI, requested model, and configuration path. Calibration outcomes are source-conditional and are not a universal model rank."
+  },
+  "canary_eligible_agent_keys": [
+    "gpt-5.4-mini-high"
+  ],
+  "retired_agent_keys": [
+    "deepseek-v4-pro-high",
+    "gemini-3.1-pro-preview-thinking-high",
+    "claude-sonnet-4-6-thinking-high"
+  ],
+  "control_agent_key": "gpt-5.6-terra-high",
+  "replacement_calibration_campaigns": [
+    {
+      "campaign_id": "model-calibration-mini-terra-2026-07-25",
+      "agent_keys": [
+        "gpt-5.4-mini-high",
+        "gpt-5.6-terra-high"
+      ],
+      "maximum_estimated_cost_usd": 25.0,
+      "maximum_estimated_cost_per_call_usd": 3.0,
+      "authority_rates": {
+        "uncached_input_tokens": 2.5e-06,
+        "cached_input_tokens": 7.5e-07,
+        "output_tokens": 1.5e-05
+      }
+    }
+  ],
+  "analysis_campaign_ids": [
+    "model-calibration-frontier-2026-07-25",
+    "model-calibration-mini-terra-2026-07-25"
+  ],
+  "canonical_agent_campaigns": {
+    "gpt-5.6-sol-high": "model-calibration-frontier-2026-07-25",
+    "gpt-5.6-terra-high": "model-calibration-frontier-2026-07-25",
+    "gpt-5.4-mini-high": "model-calibration-mini-terra-2026-07-25"
+  },
+  "selection_rule": {
+    "status": "unchanged_from_base_plan",
+    "control_reexecution": "Terra Results in the replacement panel connect the graph and measure bridge variation. They do not replace or double-weight Terra's canonical frontier pass count or cost.",
+    "candidate_evidence": "Mini's replacement panel supplies its canonical ten base outcomes, two repeat outcomes, and observed cost.",
+    "main_portfolio": "Apply the base-plan performance, observed-cost, disagreement, and provider-family ordering to the three canonical Agent views."
+  },
+  "main_budget": {
+    "actual_p90_projection_limit_usd": 180.0,
+    "conservative_ledger_authority_limit_usd": 260.0,
+    "unallocated_reserve_usd": 30.0,
+    "rule": "The exact gateway p90 projection plus spend already observed plus reserve must fit the USD 300 global cap. The larger ledger ceiling only accommodates one common conservative ScoringConfig and is not an additional actual-spend allowance."
+  },
+  "next_decision": "Complete the 24-cell mini-versus-Terra panel, reconcile all receipts, apply the frozen selection rule, then authorize the already certified SymPy main schedule only if both actual and conservative projections pass."
+}

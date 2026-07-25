@@ -37,22 +37,25 @@ The authorized coding-agent/model study is frozen by:
 
 - `docs/experiments/2026-07-25-model-agent-study.md`;
 - `examples/model_agent_study/study-plan.json`; and
-- append-only `examples/model_agent_study/study-amendment-1.json`.
+- append-only `examples/model_agent_study/study-amendment-1.json` and
+  `study-amendment-2.json`.
 
 Current evidence:
 
 - The certified ten-Task Pylint pool is the calibration anchor.
 - A 75-Task, 54-dependency-cluster SymPy SWE-bench Verified package is frozen.
-  Full base-fail/reference-pass certification is running; no main Agent call may
-  start before all 75 Tasks certify and the published bundle reopens.
+  All 75 base-fail/reference-pass pairs certified in about 66 minutes, and the
+  published 75-Task/75-Check bundle reopens.
 - DeepSeek V4 Pro and Gemini 3.1 Pro failed Codex Responses compatibility
   without gateway charge. These are harness/proxy protocol failures, not model
   capability results.
-- Sol and Terra passed the protocol/scoreability gate; their frozen paired
-  calibration is active.
-- Single-Agent one-call canaries for GPT-5.4 mini and Claude Sonnet 4.6 are
-  authorized and preflighted. Execute them serially only after the active
-  frontier campaign stops or completes.
+- Sol and Terra completed the 24-cell paired calibration with 24 scoreable
+  Results. Each passed 5/10 base Tasks, their base outcomes were identical, and
+  neither of the two repeated Tasks flipped. Sol cost $6.013130 versus Terra
+  $2.491162 by exact gateway receipts.
+- GPT-5.4 mini passed the protocol canary with a scoreable hidden failure and
+  priceable usage. Claude Sonnet 4.6 was Agent-invalid with empty usage and
+  zero attributed quota. Only mini enters replacement calibration.
 - Per-call accounting comes from sanitized gateway token-log rows whose
   prompt/completion totals exactly match the Result. The token balance is
   eventually consistent and is used only for the global guard and aggregate
@@ -63,16 +66,12 @@ Current evidence:
 
 Research sequence:
 
-1. Finish SymPy certification and the current frontier calibration.
-2. Run the mini and Claude protocol canaries without retrying a scored or
-   invalid cell.
-3. Freeze a second amendment naming only scoreable replacement calibration
-   campaigns and a connected comparison graph.
-4. Select two main configurations by the predeclared pass, attributed-cost,
+1. Complete the frozen 24-cell mini-versus-Terra replacement panel.
+2. Select two main configurations by the predeclared pass, attributed-cost,
    disagreement, and family rule.
-5. Run the frozen 75-Task paired main schedule and three executions on the
+3. Run the frozen 75-Task paired main schedule and three executions on the
    preselected 30% repeat subset.
-6. Reconcile Result, campaign, token-log, balance, artifact, and certification
+4. Reconcile Result, campaign, token-log, balance, artifact, and certification
    evidence; run the adversarial audit; publish the decision report.
 
 ## Paid-Call Boundary
@@ -122,9 +121,10 @@ Commit only sanitized summaries, digests, plans, reports, schemas, and tests.
   remains serial because attribution and isolation are part of its evidence.
   Reopen with a concrete concurrency authority, one Result writer, and
   per-call attribution that remains unambiguous.
-- Certification checkpointing: record the completed 75-Task wall time first.
-  If interruption loss is material, add one single-writer checkpoint keyed by
-  exact package/candidate/config/Check identity; do not add a workflow engine.
+- Certification checkpointing: the 66-minute 75-Task run makes interruption
+  loss material. Before the next comparable pool, add one single-writer
+  checkpoint keyed by exact package/candidate/config/Check/mode identity; do
+  not add a workflow engine.
 - Concrete Generator development remains outside this sprint.
 
 Before commits, run scoped tests, Ruff, Pyright, and `git diff --check`. Preserve

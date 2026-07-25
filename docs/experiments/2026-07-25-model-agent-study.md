@@ -190,12 +190,32 @@ leaves the original per-call reserve in force. This cadence detects concurrent
 external movement periodically; the endpoint still does not provide a
 provider-enforced study-specific hard cap.
 
+`study-amendment-2.json` was frozen after the complete frontier panel and both
+single-Agent canaries:
+
+- Sol and Terra each passed 5/10 Pylint base Tasks, disagreed on none, and
+  reproduced one frozen pass and one frozen fail. Exact gateway receipts cost
+  USD 6.013130 for Sol and USD 2.491162 for Terra, so Terra is the common
+  control.
+- GPT-5.4 mini completed the full protocol with priceable usage and a scoreable
+  hidden failure. Claude Sonnet 4.6 returned an Agent-invalid Result with empty
+  usage and zero attributed quota. Hidden outcome did not determine either
+  eligibility decision.
+- One 24-cell mini-versus-Terra panel is the only replacement calibration.
+  Mini receives a canonical ten-Task/two-repeat view. Terra's repeated panel
+  connects the graph and measures bridge variation but does not replace or
+  double-weight its canonical frontier view.
+- Main admission now separates an actual gateway p90 projection capped at USD
+  180 from a USD 260 conservative campaign-ledger ceiling. The latter exists
+  only because one shared ScoringConfig prices both Agents at the larger rate;
+  it does not enlarge the USD 300 actual-spend cap or remove the USD 30 reserve.
+
 ### Route portfolio
 
 | Route | Mechanism | First decisive test | Status / reopening rule |
 | --- | --- | --- | --- |
-| R1: fixed Pylint anchor | Reuse the already audited, certified ten-Task Pylint SWE-bench pool and compare diverse models on the same hidden checks. | All ten candidates certify; model canaries are scoreable and quota-accounted. | Active calibration route. The proposed 15-Task union was not needed once the 75-Task SymPy route passed offline feasibility; changing the anchor after outcomes would weaken comparability. |
-| R2: broader static classic source | Implement one explicit dataset-import adapter for a larger single-repository SWE-bench Verified slice, with pinned source and verifier manifests. | Package replay, base-fail/reference-pass certification, arm64 image/base binding, and disk/time feasibility. | Candidate main route. Use only if it passes before outcomes and the conservative cost bound leaves the reserve. |
+| R1: fixed Pylint anchor | Reuse the already audited, certified ten-Task Pylint SWE-bench pool and compare diverse models on the same hidden checks. | All ten candidates certify; model canaries are scoreable and quota-accounted. | Frontier panel complete; one frozen mini-versus-Terra replacement panel remains. The proposed 15-Task union was not needed once the 75-Task SymPy route passed offline feasibility; changing the anchor after outcomes would weaken comparability. |
+| R2: broader static classic source | Implement one explicit dataset-import adapter for a larger single-repository SWE-bench Verified slice, with pinned source and verifier manifests. | Package replay, base-fail/reference-pass certification, arm64 image/base binding, and disk/time feasibility. | Admitted: all 75 SymPy candidates passed 150 fresh base/reference checks in about 66 minutes, and the published 75-Task/54-cluster bundle reopens. Main calls remain gated on calibration selection and cost. |
 | R3: repeatability-first | Run outcome-independent repeated cells and estimate pass/fail flip probability. | Two or three executions exist for every frozen repeat cell without replacement. | Mandatory analysis route. Promote replicate-aware core design only if the interval crosses the predeclared decision gates. |
 | R4: retrospective Selector simulation | Reconstruct historical origins from newly generated Results. | Statistical-protocol audit. | Rejected: Result observation time makes it non-prospective. Reopen only with Results observed under a future authorized rolling campaign. |
 | R5: multiple coding-agent harnesses | Compare Codex CLI with another coding-agent implementation. | Identity/isolation parity and a separately certified harness. | Deferred. It confounds model and harness in this sprint and no equally mature local adapter is installed. Reopen after the fixed-harness model decision. |
