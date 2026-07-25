@@ -1297,6 +1297,9 @@ and rehashes the resulting tree before Check execution.
 | RI-158 | P0 | reproduced, resolved 2026-07-25 | complete | Immediate gateway token-balance before/after deltas did not equal individual call cost because balance updates were delayed across adjacent calls; one successful Result was already durable when the post-call balance query returned 429. Calling that delta per-call cost would misattribute evidence, while failing before the study ledger write omitted the exact Result. | Per-call accounting now selects sanitized gateway token-log rows by bound model and Result time and requires their prompt/completion totals to equal the Result exactly. Log quota is attributed cost; eventual balance is only the global guard and aggregate reconciliation. Metadata uses bounded retry, paid calls are study-serialized, Result recovery never retries a cell, and the local guard uses the larger of attributed logs and global movement. The first eight calls reconciled 1,195,672 attributed points exactly to the later global movement. |
 | RI-159 | P1 | experiment-needed; active 2026-07-25 | paid study | Barcarolle lacked empirical evidence for a default model portfolio and for the stability of one cached Result per Agent×Task. | Complete the frozen Pylint calibration, select two configurations by the predeclared performance/cost/disagreement rule, run the 75-Task SymPy paired main comparison plus three-run repeats on 30% of Tasks, and report dependency-cluster and Agent×Task-cluster uncertainty. Historical Results remain retrospective and cannot support prospective Selector MAE. |
 | RI-160 | P2 | measured workload pending completion | future-work decision | Full static certification is serial and has no resumable candidate checkpoint. The SymPy run is the first concrete workload large enough to measure whether interruption loss justifies RI-129. | Record wall time and interruption exposure when all 75 base/reference pairs finish. Add only a single-writer checkpoint keyed by exact package, candidate, Workspace, Runtime, and Check binding if the completed measurement makes rerun loss material; do not infer a parallel certification service from one run. |
+| RI-161 | P1 | reproduced, resolved 2026-07-25 | complete | Two model configurations with the same reasoning effort initially derived the same isolated Codex home path. Their credentials and harness state could therefore collide even though their Agent identities differed. | Derive each study Codex home from the exact Agent ID as well as reasoning effort, and bind the resulting path through the existing Agent harness identity. This stays an experiment-specific path rule; it does not add an Agent registry. |
+| RI-162 | P0 | reproduced, resolved 2026-07-25 | complete | A campaign cell could durably append its exact Result and then fail during post-call quota metadata or the caller-side study-ledger write. The campaign correctly refused to rerun it, but the resource ledger omitted the call and its Result ID. | Reconciliation now discovers exact scheduled Results absent from the study ledger, reconstructs a token-matched sanitized receipt, and appends the missing call without executing the Agent. Persisted receipts are validated against Result tokens and remain sufficient after the gateway log retention window moves on. |
+| RI-163 | P2 | reproduced 2026-07-25 | future refactor | The Pylint Generator behavior identity hashes the entire executable pilot file. A formatting-only change outside candidate generation therefore invalidated campaign resume even though the prepared Task Pool and schedule were unchanged. The fail-closed gate prevented a paid call, but the identity is broader than the claimed behavior. | After the active frozen campaign, replace the whole-file proxy with a small explicit Generator behavior/version payload plus digests of directly executed generation helpers. Preserve exact package, Task Pool, harness, and Check binding; do not relabel the current pool or weaken resume validation mid-study. |
 
 Decisions from the 2026-07-22 maintainer review:
 
@@ -3573,6 +3576,19 @@ and show material wall-clock or paid-cost improvement.
   routing evidence, with no automatic module split, baseline, or CI gate.
 
 ## Update Log
+
+- 2026-07-25: opened the bounded USD 300 coding-Agent/model study and added
+  RI-154 through RI-163. A thin static SWE-bench adapter froze a 75-Task SymPy
+  Verified slice with 54 dependency clusters; full base/reference certification
+  is active. Pylint calibration exposed three infrastructure facts before they
+  could corrupt capability claims: advertised proxy inventory does not prove
+  Codex Responses compatibility, immediate token-balance deltas are eventually
+  consistent rather than per-call receipts, and whole-file Generator hashing
+  overbinds formatting to behavior. Single-Agent protocol canaries, exact
+  token-log receipts, Result-first reconciliation, Agent-specific Codex homes,
+  a global budget guard, and serialized paid calls now preserve the frozen
+  evidence boundary. DeepSeek V4 Pro and Gemini 3.1 Pro failures are retained
+  only as protocol evidence; the scoreable Sol/Terra calibration is continuing.
 
 - 2026-07-24: closed the generic pre-Generator infrastructure slice
   (RI-120–RI-124, RI-131–RI-138, and RI-141–RI-153, with concrete-adapter

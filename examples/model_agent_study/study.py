@@ -1990,7 +1990,7 @@ def _gateway_log_receipt(
         raise RuntimeError(
             "gateway token logs do not exactly reconcile Result token usage"
         )
-    return {
+    receipt = {
         "source": "new_api_token_log",
         "model_name": result.cache_identity.requested_model_id,
         "result_started_at": result.started_at,
@@ -2006,6 +2006,46 @@ def _gateway_log_receipt(
             "match rejects overlapping or missing successful rows"
         ),
     }
+    _validate_gateway_log_receipt(result, receipt)
+    return receipt
+
+
+def _validate_gateway_log_receipt(
+    result: ResultRecord,
+    receipt: Mapping[str, Any],
+) -> None:
+    expected_usage_match = bool(result.usage)
+    if (
+        receipt.get("source") != "new_api_token_log"
+        or receipt.get("model_name") != result.cache_identity.requested_model_id
+        or receipt.get("result_started_at") != result.started_at
+        or receipt.get("result_finished_at") != result.finished_at
+        or not isinstance(receipt.get("success_log_count"), int)
+        or cast(int, receipt["success_log_count"]) < 0
+        or not isinstance(receipt.get("quota_points"), int)
+        or cast(int, receipt["quota_points"]) < 0
+        or not isinstance(receipt.get("prompt_tokens"), int)
+        or cast(int, receipt["prompt_tokens"]) < 0
+        or not isinstance(receipt.get("completion_tokens"), int)
+        or cast(int, receipt["completion_tokens"]) < 0
+        or not isinstance(receipt.get("sanitized_rows_digest"), str)
+        or not receipt["sanitized_rows_digest"]
+        or (
+            expected_usage_match
+            and (
+                receipt.get("result_usage_match") is not True
+                or receipt.get("prompt_tokens")
+                != result.usage.get("input_tokens")
+                or receipt.get("completion_tokens")
+                != result.usage.get("output_tokens")
+            )
+        )
+        or (
+            not expected_usage_match
+            and receipt.get("result_usage_match") is not None
+        )
+    ):
+        raise RuntimeError("persisted gateway token-log receipt is invalid")
 
 
 def _require_global_quota_guard(
@@ -2316,7 +2356,7 @@ def reconcile_study_resource_ledger(
                 raise RuntimeError("study resource ledger has duplicate campaign cells")
             entry_by_cell[key] = entry
 
-        gateway_logs = _gateway_token_logs()
+        gateway_logs: tuple[Mapping[str, Any], ...] | None = None
         points_per_usd = _required_int(
             _required_mapping(plan, "budget"),
             "quota_points_per_usd",
@@ -2329,7 +2369,6 @@ def reconcile_study_resource_ledger(
                 if result is None:
                     continue
                 key = (context.schedule.campaign_id, cell.sequence_index)
-                receipt = _gateway_log_receipt(result, gateway_logs)
                 entry = entry_by_cell.get(key)
                 if entry is None:
                     entry = {
@@ -2354,6 +2393,14 @@ def reconcile_study_resource_ledger(
                     entries.append(entry)
                     entry_by_cell[key] = entry
                     appended += 1
+                persisted_receipt = entry.get("gateway_log_receipt")
+                if isinstance(persisted_receipt, Mapping):
+                    receipt = cast(Mapping[str, Any], persisted_receipt)
+                    _validate_gateway_log_receipt(result, receipt)
+                else:
+                    if gateway_logs is None:
+                        gateway_logs = _gateway_token_logs()
+                    receipt = _gateway_log_receipt(result, gateway_logs)
                 entry["result_id"] = result.result_id
                 entry["result_state"] = result.scoreable_state
                 entry["estimated_cost_usd"] = _optional_result_number(

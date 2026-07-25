@@ -162,6 +162,13 @@ uses:
 - the eventual token balance only for the global guard and aggregate
   reconciliation.
 
+The two management surfaces are documented separately by New API:
+[`/api/log/token`](https://doc.newapi.pro/api/fei-log/) exposes token-key log
+rows, while [`/api/usage/token`](https://doc.newapi.pro/api/token-usage/)
+exposes the token's aggregate granted/used/remaining balance. The observed
+eventual-consistency behavior is an empirical result of this gateway, not a
+claim made by those documents.
+
 One Terra Result was already durable when its immediate post-call balance
 query returned HTTP 429. It was not retried. Its ten successful gateway log
 rows reproduced all Result tokens and recovered 69,552 quota points; the
