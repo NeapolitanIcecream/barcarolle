@@ -14,7 +14,8 @@ Accounting uses two different gateway signals:
 
 - token-log rows selected by bound model and Result time must exactly reproduce
   Result input/output token totals; their quota sum is the per-call attributed
-  cost;
+  cost. One snapshot reconciles each six-cell block, while pending calls reserve
+  their full per-call ceilings;
 - the token balance is eventually consistent, so it is used only for the
   global budget guard and aggregate reconciliation. A live snapshot is
   requested every six cells and may be reused for at most five minutes.
@@ -34,6 +35,7 @@ summarize-protocol-canaries
 prepare-replacement-calibration
 preflight-calibration --campaign-id ...
 run-next-calibration --campaign-id ...
+reconcile-campaign-receipts --campaign-id ...
 summarize-calibration
 prepare-main
 preflight-main

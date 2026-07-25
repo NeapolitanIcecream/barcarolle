@@ -202,6 +202,35 @@ def test_quota_checkpoint_reuses_a_recent_live_snapshot(
     assert observed_at == "2026-07-25T00:00:00Z"
 
 
+def test_pending_receipt_must_close_before_the_next_six_cell_block(
+    tmp_path: Path,
+) -> None:
+    output = tmp_path / "study"
+    output.mkdir()
+    write_json(
+        output / study.STUDY_LEDGER_NAME,
+        {
+            "gateway_accounting": {},
+            "entries": [
+                {
+                    "campaign_id": "campaign-a",
+                    "sequence_index": 4,
+                    "gateway_log_receipt": None,
+                }
+            ],
+        },
+    )
+    paths = study.StudyPaths(
+        plan_path=study.DEFAULT_PLAN,
+        study_output=output,
+        pilot_output=tmp_path / "pilot",
+    )
+
+    study._require_no_overdue_campaign_receipts(paths, "campaign-a", 5)
+    with pytest.raises(RuntimeError, match="prior campaign block"):
+        study._require_no_overdue_campaign_receipts(paths, "campaign-a", 6)
+
+
 def test_main_selection_keeps_performance_then_seeks_disagreement() -> None:
     rows = {
         "best": _agent_row(7, 5.0, "a"),
@@ -336,6 +365,90 @@ def test_gateway_log_receipt_waits_for_all_result_tokens(
     assert sleeps == [1]
 
 
+def test_campaign_receipt_checkpoint_reconciles_one_snapshot_for_the_block(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    output = tmp_path / "study"
+    output.mkdir()
+    write_json(
+        output / study.STUDY_LEDGER_NAME,
+        {
+            "gateway_accounting": {
+                "baseline_total_used": 1000,
+                "latest_live_total_used": 1200,
+                "quota_points_per_usd": 500_000,
+            },
+            "entries": [
+                {
+                    "action": "execute frozen benchmark campaign cell",
+                    "campaign_id": "campaign-a",
+                    "sequence_index": sequence_index,
+                    "result_id": result_id,
+                    "estimated_cost_usd": 0.1,
+                    "gateway_log_receipt": None,
+                }
+                for sequence_index, result_id in enumerate(("result-a", "result-b"))
+            ],
+        },
+    )
+    paths = study.StudyPaths(
+        plan_path=study.DEFAULT_PLAN,
+        study_output=output,
+        pilot_output=tmp_path / "pilot",
+    )
+    results = (
+        _result_stub(
+            "result-a",
+            "2026-07-25T00:00:00Z",
+            "2026-07-25T00:00:04Z",
+            20,
+            5,
+        ),
+        _result_stub(
+            "result-b",
+            "2026-07-25T00:00:05Z",
+            "2026-07-25T00:00:10Z",
+            30,
+            7,
+        ),
+    )
+    context = cast(
+        study.ReplicateCampaignContext,
+        SimpleNamespace(
+            schedule=SimpleNamespace(campaign_id="campaign-a"),
+            result_store=SimpleNamespace(path=tmp_path / "results.jsonl"),
+        ),
+    )
+    rows = (
+        _gateway_row(1784937602, "model-a", 20, 5, 11, "request-a"),
+        _gateway_row(1784937607, "model-a", 30, 7, 13, "request-b"),
+    )
+    token_log_calls = 0
+
+    def token_logs() -> tuple[dict[str, object], ...]:
+        nonlocal token_log_calls
+        token_log_calls += 1
+        return rows
+
+    monkeypatch.setattr(study, "load_jsonl_records", lambda *_args: results)
+    monkeypatch.setattr(study, "_gateway_token_logs", token_logs)
+
+    receipt = study._reconcile_campaign_pending_receipts(
+        paths,
+        study._load_plan(study.DEFAULT_PLAN),
+        context,
+        "result-b",
+    )
+
+    assert receipt["quota_points"] == 13
+    assert token_log_calls == 1
+    ledger = study._load_json(output / study.STUDY_LEDGER_NAME)
+    assert [
+        entry["gateway_log_receipt_status"] for entry in ledger["entries"]
+    ] == ["exact", "exact"]
+
+
 def _agent(agent_id: str, model: str) -> AgentRecord:
     return AgentRecord(
         agent_id=agent_id,
@@ -384,3 +497,26 @@ def _gateway_row(
         "quota": quota,
         "request_id": request_id,
     }
+
+
+def _result_stub(
+    result_id: str,
+    started_at: str,
+    finished_at: str,
+    input_tokens: int,
+    output_tokens: int,
+) -> ResultRecord:
+    return cast(
+        ResultRecord,
+        SimpleNamespace(
+            result_id=result_id,
+            started_at=started_at,
+            finished_at=finished_at,
+            cache_identity=SimpleNamespace(requested_model_id="model-a"),
+            usage={
+                "input_tokens": input_tokens,
+                "output_tokens": output_tokens,
+            },
+            scoreable_state="scoreable",
+        ),
+    )

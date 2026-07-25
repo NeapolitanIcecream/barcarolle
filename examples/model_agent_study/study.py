@@ -124,7 +124,7 @@ class AccountedCall:
     result: ResultRecord
     quota_before: Mapping[str, int]
     quota_after: Mapping[str, int] | None
-    gateway_log_receipt: Mapping[str, Any]
+    gateway_log_receipt: Mapping[str, Any] | None
 
 
 class GatewayReceiptIncomplete(RuntimeError):
@@ -135,6 +135,12 @@ def _accounted_balance_delta(call: AccountedCall) -> int | None:
     if call.quota_after is None:
         return None
     return call.quota_after["total_used"] - call.quota_before["total_used"]
+
+
+def _accounted_receipt_quota(call: AccountedCall) -> int | None:
+    if call.gateway_log_receipt is None:
+        return None
+    return cast(int, call.gateway_log_receipt["quota_points"])
 
 
 def prepare_calibration(paths: StudyPaths) -> Mapping[str, Any]:
@@ -560,12 +566,16 @@ def run_next_protocol_canary(
         "scoreable_state": result.scoreable_state,
         "estimated_cost_usd": result.cost["total_cost"],
         "gateway_balance_window_delta": _accounted_balance_delta(accounted),
-        "gateway_log_quota_points": accounted.gateway_log_receipt["quota_points"],
-        "gateway_log_cost_usd": cast(
-            int,
-            accounted.gateway_log_receipt["quota_points"],
-        )
-        / _required_int(_required_mapping(plan, "budget"), "quota_points_per_usd"),
+        "gateway_log_quota_points": _accounted_receipt_quota(accounted),
+        "gateway_log_cost_usd": (
+            None
+            if _accounted_receipt_quota(accounted) is None
+            else cast(int, _accounted_receipt_quota(accounted))
+            / _required_int(
+                _required_mapping(plan, "budget"),
+                "quota_points_per_usd",
+            )
+        ),
     }
 
 
@@ -720,12 +730,16 @@ def run_next_calibration_cell(
         "scoreable_state": result.scoreable_state,
         "estimated_cost_usd": result.cost["total_cost"],
         "gateway_balance_window_delta": _accounted_balance_delta(accounted),
-        "gateway_log_quota_points": accounted.gateway_log_receipt["quota_points"],
-        "gateway_log_cost_usd": cast(
-            int,
-            accounted.gateway_log_receipt["quota_points"],
-        )
-        / _required_int(_required_mapping(plan, "budget"), "quota_points_per_usd"),
+        "gateway_log_quota_points": _accounted_receipt_quota(accounted),
+        "gateway_log_cost_usd": (
+            None
+            if _accounted_receipt_quota(accounted) is None
+            else cast(int, _accounted_receipt_quota(accounted))
+            / _required_int(
+                _required_mapping(plan, "budget"),
+                "quota_points_per_usd",
+            )
+        ),
     }
 
 
@@ -1311,12 +1325,16 @@ def run_next_main_cell(paths: StudyPaths) -> Mapping[str, Any]:
         "scoreable_state": result.scoreable_state,
         "estimated_cost_usd": result.cost["total_cost"],
         "gateway_balance_window_delta": _accounted_balance_delta(accounted),
-        "gateway_log_quota_points": accounted.gateway_log_receipt["quota_points"],
-        "gateway_log_cost_usd": cast(
-            int,
-            accounted.gateway_log_receipt["quota_points"],
-        )
-        / _required_int(_required_mapping(plan, "budget"), "quota_points_per_usd"),
+        "gateway_log_quota_points": _accounted_receipt_quota(accounted),
+        "gateway_log_cost_usd": (
+            None
+            if _accounted_receipt_quota(accounted) is None
+            else cast(int, _accounted_receipt_quota(accounted))
+            / _required_int(
+                _required_mapping(plan, "budget"),
+                "quota_points_per_usd",
+            )
+        ),
     }
 
 
@@ -2374,7 +2392,19 @@ def _require_study_budget_guard(
         )
         * _required_int(budget, "quota_points_per_usd")
     )
-    if max(attributed, global_movement) + reserve > allowance:
+    pending_reserved_quota = sum(
+        (
+            cast(int, entry["pending_receipt_reserve_quota_points"])
+            if isinstance(entry.get("pending_receipt_reserve_quota_points"), int)
+            else reserve
+        )
+        for entry in entries
+        if entry.get("action") == "execute frozen benchmark campaign cell"
+        and isinstance(entry.get("result_id"), str)
+        and not isinstance(entry.get("gateway_log_quota_points"), int)
+    )
+    attributed_with_pending_reserve = attributed + pending_reserved_quota
+    if max(attributed_with_pending_reserve, global_movement) + reserve > allowance:
         raise RuntimeError("study-attributed quota guard cannot cover the next call")
 
 
@@ -2459,6 +2489,27 @@ def _quota_checkpoint_for_cell(
     )
 
 
+def _require_no_overdue_campaign_receipts(
+    paths: StudyPaths,
+    campaign_id: str,
+    next_sequence_index: int,
+) -> None:
+    current_block_start = (
+        next_sequence_index // QUOTA_CHECKPOINT_CELL_INTERVAL
+    ) * QUOTA_CHECKPOINT_CELL_INTERVAL
+    ledger = _load_json(paths.study_output / STUDY_LEDGER_NAME)
+    overdue = [
+        entry
+        for entry in _required_mapping_sequence(ledger, "entries")
+        if entry.get("campaign_id") == campaign_id
+        and isinstance(entry.get("sequence_index"), int)
+        and cast(int, entry["sequence_index"]) < current_block_start
+        and not isinstance(entry.get("gateway_log_receipt"), Mapping)
+    ]
+    if overdue:
+        raise RuntimeError("prior campaign block has unreconciled token receipts")
+
+
 def _run_accounted_campaign_cell(
     paths: StudyPaths,
     plan: Mapping[str, Any],
@@ -2474,6 +2525,11 @@ def _run_accounted_campaign_cell(
             or current_cell.schedule_cell != expected_cell.schedule_cell
         ):
             raise RuntimeError("campaign cell changed while waiting for study lock")
+        _require_no_overdue_campaign_receipts(
+            paths,
+            context.schedule.campaign_id,
+            current_cell.schedule_cell.sequence_index,
+        )
         (
             quota_before,
             quota_before_source,
@@ -2505,13 +2561,7 @@ def _run_accounted_campaign_cell(
                 context,
                 current_cell.schedule_cell,
             )
-        accounting_error: BaseException | None = None
         gateway_log_receipt: Mapping[str, Any] | None = None
-        if result is not None:
-            try:
-                gateway_log_receipt = _eventual_gateway_log_receipt(result)
-            except BaseException as exc:
-                accounting_error = exc
         quota_after: Mapping[str, int] | None = None
         _record_study_call(
             paths,
@@ -2524,10 +2574,45 @@ def _run_accounted_campaign_cell(
             result,
             error,
             gateway_log_receipt,
-            accounting_error,
+            None,
             quota_before_source,
             quota_before_observed_at,
+            math.ceil(
+                _required_number(
+                    campaign_config,
+                    "maximum_estimated_cost_per_call_usd",
+                )
+                * _required_int(
+                    _required_mapping(plan, "budget"),
+                    "quota_points_per_usd",
+                )
+            ),
         )
+        accounting_error: BaseException | None = None
+        should_reconcile_receipts = (
+            (current_cell.schedule_cell.sequence_index + 1)
+            % QUOTA_CHECKPOINT_CELL_INTERVAL
+            == 0
+            or current_cell.schedule_cell.sequence_index + 1
+            == len(context.schedule.cells)
+            or error is not None
+        )
+        if result is not None and should_reconcile_receipts:
+            try:
+                gateway_log_receipt = _reconcile_campaign_pending_receipts(
+                    paths,
+                    plan,
+                    context,
+                    result.result_id,
+                )
+            except BaseException as exc:
+                accounting_error = exc
+                _mark_study_call_accounting_error(
+                    paths,
+                    context.schedule.campaign_id,
+                    current_cell.schedule_cell.sequence_index,
+                    exc,
+                )
         if error is not None:
             raise error
         if accounting_error is not None:
@@ -2538,7 +2623,7 @@ def _run_accounted_campaign_cell(
             result,
             quota_before,
             quota_after,
-            cast(Mapping[str, Any], gateway_log_receipt),
+            gateway_log_receipt,
         )
 
 
@@ -2568,6 +2653,7 @@ def _record_study_call(
     accounting_error: BaseException | None,
     quota_before_source: str,
     quota_before_observed_at: str,
+    pending_receipt_reserve_quota_points: int,
 ) -> None:
     ledger_path = paths.study_output / STUDY_LEDGER_NAME
     ledger = dict(_load_json(ledger_path))
@@ -2618,6 +2704,12 @@ def _record_study_call(
                 None if quota_delta is None else quota_delta / points_per_usd
             ),
             "gateway_log_receipt": gateway_log_receipt,
+            "gateway_log_receipt_status": (
+                "pending" if gateway_log_receipt is None else "exact"
+            ),
+            "pending_receipt_reserve_quota_points": (
+                pending_receipt_reserve_quota_points
+            ),
             "gateway_log_quota_points": (
                 None
                 if gateway_log_receipt is None
@@ -2650,6 +2742,187 @@ def _record_study_call(
             if quota_after is None
             else quota_after["total_used"]
         ),
+    )
+
+
+def _reconcile_campaign_pending_receipts(
+    paths: StudyPaths,
+    plan: Mapping[str, Any],
+    context: ReplicateCampaignContext,
+    current_result_id: str,
+) -> Mapping[str, Any]:
+    ledger_path = paths.study_output / STUDY_LEDGER_NAME
+    ledger = dict(_load_json(ledger_path))
+    entries = [
+        dict(entry) for entry in _required_mapping_sequence(ledger, "entries")
+    ]
+    pending = [
+        entry
+        for entry in entries
+        if entry.get("action") == "execute frozen benchmark campaign cell"
+        and entry.get("campaign_id") == context.schedule.campaign_id
+        and isinstance(entry.get("result_id"), str)
+        and not isinstance(entry.get("gateway_log_receipt"), Mapping)
+    ]
+    if not pending:
+        raise RuntimeError("receipt checkpoint has no pending campaign Results")
+    result_records = tuple(
+        load_jsonl_records(context.result_store.path, ResultRecord)
+    )
+    results = {result.result_id: result for result in result_records}
+    if len(results) != len(result_records):
+        raise RuntimeError("campaign Result Store has duplicate Result IDs")
+    receipt_by_result_id: dict[str, Mapping[str, Any]] = {}
+    for attempt in range(6):
+        rows = _gateway_token_logs()
+        try:
+            receipt_by_result_id = {
+                cast(str, entry["result_id"]): _gateway_log_receipt(
+                    results[cast(str, entry["result_id"])],
+                    rows,
+                )
+                for entry in pending
+            }
+            break
+        except KeyError as exc:
+            raise RuntimeError("pending receipt lacks its exact Result") from exc
+        except GatewayReceiptIncomplete:
+            if attempt == 5:
+                raise
+            time.sleep(min(2**attempt, 16))
+    points_per_usd = _required_int(
+        _required_mapping(plan, "budget"),
+        "quota_points_per_usd",
+    )
+    for entry in pending:
+        result_id = cast(str, entry["result_id"])
+        receipt = receipt_by_result_id[result_id]
+        entry["gateway_log_receipt"] = receipt
+        entry["gateway_log_receipt_status"] = "exact"
+        entry["gateway_log_quota_points"] = receipt["quota_points"]
+        entry["gateway_log_cost_usd"] = (
+            cast(int, receipt["quota_points"]) / points_per_usd
+        )
+        entry["accounting_error"] = None
+        entry["receipt_reconciled_at"] = _utc_now()
+        entry["reconciliation"] = (
+            "one campaign-block token-log snapshot with exact Result token match"
+        )
+    latest_live_total_used = _required_int(
+        _required_mapping(ledger, "gateway_accounting"),
+        "latest_live_total_used",
+    )
+    _write_study_resource_ledger(
+        ledger_path,
+        ledger,
+        entries,
+        points_per_usd=points_per_usd,
+        latest_gateway_total_used=latest_live_total_used,
+    )
+    receipt = receipt_by_result_id.get(current_result_id)
+    if receipt is None:
+        raise RuntimeError("receipt checkpoint omitted the current Result")
+    return receipt
+
+
+def reconcile_campaign_receipts(
+    paths: StudyPaths,
+    campaign_id: str,
+    amendment_path: Path = DEFAULT_AMENDMENT,
+    decision_amendment_path: Path = DEFAULT_DECISION_AMENDMENT,
+) -> Mapping[str, Any]:
+    """Reconcile one campaign's pending Results from one token-log snapshot."""
+    plan = _load_plan(paths.plan_path)
+    amendment = _load_amendment(amendment_path, plan)
+    decision = _load_decision_amendment(decision_amendment_path, plan)
+    _activate_llm_proxy_environment(plan)
+    if (paths.study_output / "calibration" / campaign_id).exists():
+        config = _calibration_campaign_config(plan, campaign_id, decision)
+        context = _load_calibration_context(paths, plan, config, decision)
+    elif (paths.study_output / "calibration-canaries" / campaign_id).exists():
+        config = _canary_config(amendment, campaign_id)
+        context, _ = _load_canary_context(paths, plan, amendment, config)
+    elif (
+        campaign_id == MAIN_CAMPAIGN_ID
+        and (paths.study_output / "main" / MAIN_CAMPAIGN_ID).exists()
+    ):
+        context, _, _ = _load_main_context(paths, plan)
+    else:
+        raise ValueError(f"unknown prepared study campaign: {campaign_id}")
+    ledger_path = paths.study_output / STUDY_LEDGER_NAME
+    with _study_call_guard(paths):
+        ledger = _load_json(ledger_path)
+        pending = tuple(
+            entry
+            for entry in _required_mapping_sequence(ledger, "entries")
+            if entry.get("action") == "execute frozen benchmark campaign cell"
+            and entry.get("campaign_id") == campaign_id
+            and isinstance(entry.get("sequence_index"), int)
+            and isinstance(entry.get("result_id"), str)
+            and not isinstance(entry.get("gateway_log_receipt"), Mapping)
+        )
+        if not pending:
+            return {
+                "stage": "complete",
+                "campaign_id": campaign_id,
+                "reconciled_receipt_count": 0,
+                "pending_receipt_count": 0,
+            }
+        latest = max(pending, key=lambda entry: cast(int, entry["sequence_index"]))
+        current_result_id = cast(str, latest["result_id"])
+        _reconcile_campaign_pending_receipts(
+            paths,
+            plan,
+            context,
+            current_result_id,
+        )
+        refreshed = _load_json(ledger_path)
+        remaining = tuple(
+            entry
+            for entry in _required_mapping_sequence(refreshed, "entries")
+            if entry.get("action") == "execute frozen benchmark campaign cell"
+            and entry.get("campaign_id") == campaign_id
+            and isinstance(entry.get("result_id"), str)
+            and not isinstance(entry.get("gateway_log_receipt"), Mapping)
+        )
+    return {
+        "stage": "campaign_receipts_reconciled",
+        "campaign_id": campaign_id,
+        "reconciled_receipt_count": len(pending),
+        "pending_receipt_count": len(remaining),
+    }
+
+
+def _mark_study_call_accounting_error(
+    paths: StudyPaths,
+    campaign_id: str,
+    sequence_index: int,
+    error: BaseException,
+) -> None:
+    ledger_path = paths.study_output / STUDY_LEDGER_NAME
+    ledger = dict(_load_json(ledger_path))
+    entries = [
+        dict(entry) for entry in _required_mapping_sequence(ledger, "entries")
+    ]
+    matches = [
+        entry
+        for entry in entries
+        if entry.get("campaign_id") == campaign_id
+        and entry.get("sequence_index") == sequence_index
+    ]
+    if len(matches) != 1:
+        raise RuntimeError("cannot mark one study accounting error")
+    matches[0]["accounting_error"] = type(error).__name__
+    matches[0]["gateway_log_receipt_status"] = "pending"
+    matches[0]["decision_changed"] = True
+    accounting = _required_mapping(ledger, "gateway_accounting")
+    latest = _required_int(accounting, "latest_live_total_used")
+    _write_study_resource_ledger(
+        ledger_path,
+        ledger,
+        entries,
+        points_per_usd=_required_int(accounting, "quota_points_per_usd"),
+        latest_gateway_total_used=latest,
     )
 
 
@@ -3285,6 +3558,8 @@ def _parse_args(argv: Sequence[str] | None) -> argparse.Namespace:
     run_next.add_argument("--campaign-id", required=True)
     run_next_canary = actions.add_parser("run-next-protocol-canary")
     run_next_canary.add_argument("--campaign-id", required=True)
+    reconcile_receipts = actions.add_parser("reconcile-campaign-receipts")
+    reconcile_receipts.add_argument("--campaign-id", required=True)
     actions.add_parser("summarize-calibration")
     actions.add_parser("summarize-protocol-canaries")
     actions.add_parser("prepare-main")
@@ -3334,6 +3609,13 @@ def main(argv: Sequence[str] | None = None) -> int:
             paths,
             args.amendment.resolve(),
             args.campaign_id,
+        )
+    elif args.action == "reconcile-campaign-receipts":
+        summary = reconcile_campaign_receipts(
+            paths,
+            args.campaign_id,
+            args.amendment.resolve(),
+            args.decision_amendment.resolve(),
         )
     elif args.action == "summarize-calibration":
         summary = summarize_calibration(

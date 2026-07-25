@@ -214,10 +214,13 @@ The fifth replacement-panel Result was scoreable and durable before all of its
 successful token-log rows were visible. The immediate receipt check therefore
 stopped after the Result without rerunning it. Receipt acquisition now makes at
 most six observations with bounded 1/2/4/8/16-second gaps and still accepts
-only an exact input/output token match. Reconciliation samples the live global
-balance only when no receipt is missing. A receipt-recovery pass uses the last
-live balance checkpoint; the next receipt-complete pass refreshes the global
-balance. This avoids issuing two rate-limited management requests back to back.
+only an exact input/output token match. Results are attributed in six-cell
+batches from one snapshot: global balance checkpoints occur before cells
+0/6/12/18, and receipt checkpoints after cells 5/11/17/23. Every pending call
+reserves its full per-call quota ceiling, and the next block cannot start until
+the prior block has exact receipts. A receipt-recovery pass uses the last live
+balance checkpoint; the next receipt-complete pass refreshes the global
+balance.
 
 ### Route portfolio
 

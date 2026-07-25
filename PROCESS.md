@@ -67,6 +67,11 @@ Current evidence:
   reruns the Agent. A pass that recovers a missing receipt defers live-balance
   refresh to the next receipt-complete reconciliation.
 
+Persist each Result immediately, but batch token-log attribution every six
+cells. Pending calls reserve their full per-call ceilings, and a new block
+cannot start until the previous block's receipts are exact. This keeps live
+balance checkpoints at 0/6/12/18 and receipt checkpoints at 5/11/17/23.
+
 Research sequence:
 
 1. Complete the frozen 24-cell mini-versus-Terra replacement panel.
