@@ -19,7 +19,6 @@ import sys
 import time
 from typing import Any, cast
 import urllib.error
-import urllib.parse
 import urllib.request
 
 
@@ -2185,10 +2184,7 @@ def _gateway_quota() -> Mapping[str, int]:
 
 
 def _gateway_token_logs() -> tuple[Mapping[str, Any], ...]:
-    key = os.environ["LLM_API_KEY"]
-    payload = _gateway_json(
-        "/api/log/token?key=" + urllib.parse.quote(key, safe=""),
-    )
+    payload = _gateway_json("/api/log/token")
     if (
         not isinstance(payload, Mapping)
         or payload.get("success") is not True

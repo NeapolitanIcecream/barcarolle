@@ -230,9 +230,22 @@ and the
 use `CriticalRateLimit`. Its
 [default configuration](https://github.com/QuantumNous/new-api/blob/08f88d25e588e90012ec9f0594f6ea8f8a1a2c3a/common/init.go#L129-L131)
 is 20 requests per 1,200-second fixed window, though a deployment may override
-both values. The observed proxy did not return the `Retry-After` header present
-in current upstream code, so the study treats the exact reset time as unknown
-and uses a full quiet window rather than polling.
+both values. `/api/status` identifies the observed deployment as
+`v1.0.0-rc.4`; that exact tag has the same route and default-window behavior.
+The proxy did not return the `Retry-After` header present in current upstream
+code, so the study treats the exact reset time as unknown and uses a full quiet
+window rather than polling. The rc.4 token-log route authenticates from the
+`Authorization` header, so the client does not duplicate the key in its query
+string.
+
+The block size also respects log retention. Upstream
+[`GetLogByTokenId`](https://github.com/QuantumNous/new-api/blob/08f88d25e588e90012ec9f0594f6ea8f8a1a2c3a/model/log.go#L134-L141)
+returns at most
+[`MaxRecentItems = 1000`](https://github.com/QuantumNous/new-api/blob/08f88d25e588e90012ec9f0594f6ea8f8a1a2c3a/common/constants.go#L60).
+Across the first 32 exact or zero-usage receipts, one cell used at most 28
+successful log rows (p90 22); six times the observed maximum is 168. This is
+not a guarantee against unrelated traffic, so a missing exact token match
+still stops the campaign rather than accepting a partial receipt.
 
 ### Route portfolio
 

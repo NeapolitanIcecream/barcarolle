@@ -411,6 +411,22 @@ def test_gateway_metadata_rate_limit_fails_after_one_request(
     assert calls == 1
 
 
+def test_gateway_token_log_credential_stays_out_of_the_url(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    paths: list[str] = []
+
+    def gateway_json(path: str) -> dict[str, object]:
+        paths.append(path)
+        return {"success": True, "data": []}
+
+    monkeypatch.setenv("LLM_API_KEY", "secret-query-unsafe-key")
+    monkeypatch.setattr(study, "_gateway_json", gateway_json)
+
+    assert study._gateway_token_logs() == ()
+    assert paths == ["/api/log/token"]
+
+
 def test_campaign_receipt_checkpoint_reconciles_one_snapshot_for_the_block(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
