@@ -101,6 +101,25 @@ def test_recovery_amendment_authorizes_one_outcome_blind_terra_canary() -> None:
     assert "Hidden pass/fail is ignored" in amendment["decisions"]["recovery_rule"]
 
 
+def test_continuation_amendment_retains_one_repeat_without_retry() -> None:
+    plan = study._load_plan(study.DEFAULT_PLAN)
+    amendment = study._load_continuation_amendment(
+        study.DEFAULT_CONTINUATION_AMENDMENT,
+        plan,
+    )
+    continuation = amendment["continuation"]
+
+    assert amendment["previous_amendment_digest"] == study._load_amendment(
+        study.DEFAULT_RECOVERY_AMENDMENT,
+        plan,
+    )["amendment_digest"]
+    assert continuation["next_sequence_index"] == 43
+    assert continuation["remaining_frozen_cell_count"] == 195
+    assert continuation["cell_retries"] == 0
+    assert continuation["replacement_cells"] == 0
+    assert len(continuation["allowed_non_scoreable_result_ids"]) == 1
+
+
 def test_study_agent_homes_are_distinct_for_same_effort(tmp_path: Path) -> None:
     first = _agent("first-high", "model-a")
     second = _agent("second-high", "model-b")
@@ -285,6 +304,17 @@ def test_non_scoreable_result_stops_a_paid_campaign() -> None:
 
     with pytest.raises(RuntimeError, match="result-invalid"):
         study._require_scoreable_results((invalid,), "campaign-a")
+    study._require_scoreable_results(
+        (invalid,),
+        "campaign-a",
+        allowed_non_scoreable_result_ids=("result-invalid",),
+    )
+    with pytest.raises(RuntimeError, match="continuation evidence is missing"):
+        study._require_scoreable_results(
+            (),
+            "campaign-a",
+            allowed_non_scoreable_result_ids=("result-invalid",),
+        )
 
 
 def test_main_selection_keeps_performance_then_seeks_disagreement() -> None:

@@ -50,6 +50,7 @@ from examples.experiment_ledger import (  # noqa: E402
 )
 from examples.pylint_swe_bench_verified.replicate_campaign import (  # noqa: E402
     ReplicateCampaignContext,
+    continue_replicate_campaign_after_retained_agent_invalid,
     initialize_replicate_campaign_ledger,
     preflight_replicate_campaign,
     reauthorize_stopped_replicate_campaign_call,
@@ -775,6 +776,97 @@ def test_replicate_campaign_reauthorizes_exact_cost_stop_without_rerun(
         "authority_amendment_digest": amendment["authority_amendment_digest"],
         "reauthorized_at": "2026-07-22T00:00:02Z",
     }
+
+
+def test_replicate_campaign_retains_one_agent_availability_failure_without_retry(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    context = _campaign_context(tmp_path)
+    _initialize_campaign_ledger(context)
+    _stub_campaign_preflight(monkeypatch)
+    executed: list[int] = []
+
+    def invalid_run(
+        task,
+        check,
+        agent,
+        workspace_config,
+        runtime_config,
+        run_context,
+        artifact_config,
+    ):
+        del workspace_config, run_context, artifact_config
+        cell = next(
+            candidate
+            for candidate in context.schedule.cells
+            if candidate.task_id == task.task_id
+            and candidate.check_id == check.check_id
+            and candidate.agent_id == agent.agent_id
+            and candidate.runtime_config_id == runtime_config.runtime_config_id
+        )
+        executed.append(cell.sequence_index)
+        return WorkspaceRunResult(
+            replace(
+                _workspace_run_for_schedule_cell(cell, task, check, agent),
+                terminal_status="error",
+                check_outcome="invalid",
+                invalid_owner=None,
+                failure_label="agent_failed",
+                usage={},
+            )
+        )
+
+    monkeypatch.setattr(
+        "examples.pylint_swe_bench_verified.replicate_campaign."
+        "run_agent_on_task_with_artifacts",
+        invalid_run,
+    )
+    with pytest.raises(RuntimeError, match="not scoreable"):
+        run_next_replicate_campaign_cell(context)
+
+    ledger = continue_replicate_campaign_after_retained_agent_invalid(
+        context,
+        source_amendment_digest="continuation-study-amendment",
+        approved_at="2026-07-22T00:00:02Z",
+        reason="retain one provider availability failure",
+    )
+    event_count = len(load_ledger_events(ledger_events_path(context.ledger_path)))
+    repeated = continue_replicate_campaign_after_retained_agent_invalid(
+        context,
+        source_amendment_digest="continuation-study-amendment",
+        approved_at="2026-07-22T00:00:02Z",
+        reason="retain one provider availability failure",
+    )
+    next_cell = preflight_replicate_campaign(context)
+
+    assert next_cell is not None
+    assert next_cell.schedule_cell.sequence_index == 1
+    assert executed == [0]
+    assert len(load_ledger_events(ledger_events_path(context.ledger_path))) == event_count
+    assert repeated["campaign_authority_digest"] == ledger["campaign_authority_digest"]
+    continuation = ledger["continuation_amendment"]
+    calls = ledger["calls"]
+    assert isinstance(continuation, dict)
+    assert isinstance(calls, list)
+    assert continuation["source_amendment_digest"] == (
+        "continuation-study-amendment"
+    )
+    assert calls[0]["state"] == "completed"
+    assert calls[0]["scoreable_state"] == "agent_invalid"
+    assert calls[0]["reauthorized_after_stop"] == {
+        "authority_amendment_digest": continuation[
+            "continuation_amendment_digest"
+        ],
+        "reauthorized_at": "2026-07-22T00:00:02Z",
+    }
+    with pytest.raises(RuntimeError, match="different continuation"):
+        continue_replicate_campaign_after_retained_agent_invalid(
+            context,
+            source_amendment_digest="another-amendment",
+            approved_at="2026-07-22T00:00:03Z",
+            reason="must not allow a second retained invalid",
+        )
 
 
 def test_replicate_campaign_rejects_authority_drift_before_result_store_access(

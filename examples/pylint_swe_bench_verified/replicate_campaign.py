@@ -56,6 +56,9 @@ CANARY_CAMPAIGN_LEDGER_SCHEMA_VERSION = "single_agent_canary_campaign_ledger_v1"
 CAMPAIGN_AUTHORITY_AMENDMENT_SCHEMA_VERSION = (
     "replicate_campaign_authority_amendment_v1"
 )
+CAMPAIGN_CONTINUATION_AMENDMENT_SCHEMA_VERSION = (
+    "replicate_campaign_continuation_amendment_v1"
+)
 _CREDENTIAL_VARIABLES = ["OPENAI_BASE_URL", "OPENAI_API_KEY"]
 _STOP_CONDITIONS = (
     "authorized endpoint cannot be proven",
@@ -363,6 +366,196 @@ def reauthorize_stopped_replicate_campaign_call(
     return ledger
 
 
+def continue_replicate_campaign_after_retained_agent_invalid(
+    context: ReplicateCampaignContext,
+    *,
+    source_amendment_digest: str,
+    approved_at: str,
+    reason: str,
+) -> dict[str, object]:
+    """Retain one exact Agent availability failure and continue without retry."""
+    _validate_context(context)
+    _require_nonempty_string(source_amendment_digest, "source_amendment_digest")
+    _validate_approved_at(approved_at)
+    _require_nonempty_string(reason, "continuation reason")
+    ledger = _load_and_validate_ledger(context)
+    authorization = cast(Mapping[str, object], ledger["authorization"])
+    limits = cast(Mapping[str, object], ledger["limits"])
+    pricing = cast(Mapping[str, object], ledger["pricing"])
+    schema_version = cast(str, ledger["schema_version"])
+    authority_amendment = _validate_authority_amendment(
+        ledger.get("authority_amendment"),
+        authorization=authorization,
+        limits=limits,
+        pricing=pricing,
+        schema_version=schema_version,
+    )
+    continuation = _validate_continuation_amendment(
+        ledger.get("continuation_amendment"),
+        authorization=authorization,
+        limits=limits,
+        pricing=pricing,
+        authority_amendment=authority_amendment,
+        schema_version=schema_version,
+    )
+    if (
+        continuation is not None
+        and continuation.get("source_amendment_digest")
+        != source_amendment_digest
+    ):
+        raise RuntimeError(
+            "replicate campaign already has a different continuation amendment"
+        )
+    if continuation is not None and (
+        continuation.get("approved_at") != approved_at
+        or continuation.get("reason") != reason
+    ):
+        raise RuntimeError(
+            "replicate campaign continuation parameters changed"
+        )
+    if continuation is not None:
+        existing_call = next(
+            (
+                call
+                for call in _ledger_calls(ledger)
+                if call.get("call_id") == continuation.get("call_id")
+            ),
+            None,
+        )
+        if existing_call is None:
+            raise RuntimeError("replicate campaign continuation call is missing")
+        if existing_call.get("state") == "completed":
+            _validate_reauthorization_evidence(
+                existing_call,
+                amendment_digest=cast(
+                    str,
+                    continuation["continuation_amendment_digest"],
+                ),
+                approved_at=approved_at,
+            )
+            with open_result_store_session(context.result_store) as session:
+                _campaign_state(context, ledger, session)
+            return ledger
+
+    with open_result_store_session(context.result_store) as session:
+        call, result, resolved = _terminal_agent_invalid_for_continuation(
+            context,
+            ledger,
+            session,
+        )
+        if continuation is None:
+            unchanged_authority = {
+                "campaign_id": authorization.get("campaign_id"),
+                "schedule_digest": authorization.get("schedule_digest"),
+                "budget_usd": authorization.get("budget_usd"),
+                "maximum_paid_calls": limits.get("maximum_paid_calls"),
+                "maximum_estimated_cost_per_call_usd": limits.get(
+                    "maximum_estimated_cost_per_call_usd"
+                ),
+                "cell_retries": limits.get("cell_retries"),
+                "pricing_version": pricing.get("pricing_version"),
+                "scoring_config_digest": pricing.get("scoring_config_digest"),
+            }
+            continuation_payload: dict[str, object] = {
+                "schema_version": (
+                    CAMPAIGN_CONTINUATION_AMENDMENT_SCHEMA_VERSION
+                ),
+                "previous_campaign_authority_digest": ledger[
+                    "campaign_authority_digest"
+                ],
+                "source_amendment_digest": source_amendment_digest,
+                "approved_at": approved_at,
+                "reason": reason,
+                "call_id": call["call_id"],
+                "result_id": result.result_id,
+                "result_digest": result.result_digest,
+                "scoreable_state": result.scoreable_state,
+                "terminal_status": result.terminal_status,
+                "failure_label": result.failure_label,
+                "invalid_owner": result.invalid_owner,
+                "unchanged_authority": unchanged_authority,
+            }
+            continuation = {
+                **continuation_payload,
+                "continuation_amendment_digest": canonical_digest(
+                    continuation_payload
+                ),
+            }
+        continuation_digest = cast(
+            str,
+            continuation["continuation_amendment_digest"],
+        )
+        synthetic_calls = [dict(item) for item in _ledger_calls(ledger)]
+        synthetic_calls[-1]["state"] = "completed"
+        synthetic_calls[-1]["reauthorized_after_stop"] = {
+            "authority_amendment_digest": continuation_digest,
+            "reauthorized_at": approved_at,
+        }
+        synthetic_ledger = {
+            **ledger,
+            "calls": synthetic_calls,
+            "continuation_amendment": continuation,
+        }
+        _validate_calls_and_results(
+            context,
+            synthetic_ledger,
+            resolved,
+            session,
+        )
+
+    if ledger.get("continuation_amendment") is None:
+        updated_ledger = dict(ledger)
+        updated_ledger["continuation_amendment"] = continuation
+        updated_ledger["campaign_authority_digest"] = _campaign_authority_digest(
+            authorization,
+            limits,
+            pricing,
+            schema_version=schema_version,
+            authority_amendment=authority_amendment,
+            continuation_amendment=continuation,
+        )
+        updated_ledger["updated_at"] = utc_now_timestamp()
+        write_json(context.ledger_path, updated_ledger)
+        ledger = _load_and_validate_ledger(context)
+
+    continuation_digest = cast(
+        str,
+        continuation["continuation_amendment_digest"],
+    )
+    amended_call = next(
+        (
+            candidate
+            for candidate in _ledger_calls(ledger)
+            if candidate.get("call_id") == continuation["call_id"]
+        ),
+        None,
+    )
+    if amended_call is None:
+        raise RuntimeError("replicate campaign continuation call is missing")
+    if amended_call.get("state") == "stopped":
+        append_ledger_event(
+            ledger_events_path(context.ledger_path),
+            {
+                "event_type": "reauthorization",
+                "call_id": continuation["call_id"],
+                "authority_amendment_digest": continuation_digest,
+                "reauthorized_at": approved_at,
+            },
+        )
+    elif amended_call.get("state") == "completed":
+        _validate_reauthorization_evidence(
+            amended_call,
+            amendment_digest=continuation_digest,
+            approved_at=approved_at,
+        )
+    else:
+        raise RuntimeError("replicate campaign continuation call state is invalid")
+    ledger = _load_and_validate_ledger(context)
+    with open_result_store_session(context.result_store) as session:
+        _campaign_state(context, ledger, session)
+    return ledger
+
+
 def preflight_replicate_campaign(
     context: ReplicateCampaignContext,
 ) -> ResolvedReplicateScheduleCell | None:
@@ -482,6 +675,7 @@ def _campaign_authority_digest(
     *,
     schema_version: str = CAMPAIGN_LEDGER_SCHEMA_VERSION,
     authority_amendment: Mapping[str, object] | None = None,
+    continuation_amendment: Mapping[str, object] | None = None,
 ) -> str:
     payload: dict[str, object] = {
         "schema_version": schema_version,
@@ -491,6 +685,8 @@ def _campaign_authority_digest(
     }
     if authority_amendment is not None:
         payload["authority_amendment"] = authority_amendment
+    if continuation_amendment is not None:
+        payload["continuation_amendment"] = continuation_amendment
     return canonical_digest(payload)
 
 
@@ -622,6 +818,120 @@ def _validate_authority_amendment(
     return amendment
 
 
+def _validate_continuation_amendment(
+    value: object,
+    *,
+    authorization: Mapping[str, object],
+    limits: Mapping[str, object],
+    pricing: Mapping[str, object],
+    authority_amendment: Mapping[str, object] | None,
+    schema_version: str,
+) -> Mapping[str, object] | None:
+    if value is None:
+        return None
+    if not isinstance(value, Mapping):
+        raise RuntimeError("replicate campaign continuation amendment is invalid")
+    amendment = cast(Mapping[str, object], value)
+    expected_fields = {
+        "schema_version",
+        "continuation_amendment_digest",
+        "previous_campaign_authority_digest",
+        "source_amendment_digest",
+        "approved_at",
+        "reason",
+        "call_id",
+        "result_id",
+        "result_digest",
+        "scoreable_state",
+        "terminal_status",
+        "failure_label",
+        "invalid_owner",
+        "unchanged_authority",
+    }
+    if set(amendment) != expected_fields:
+        raise RuntimeError(
+            "replicate campaign continuation amendment fields are invalid"
+        )
+    if (
+        amendment.get("schema_version")
+        != CAMPAIGN_CONTINUATION_AMENDMENT_SCHEMA_VERSION
+    ):
+        raise RuntimeError(
+            "replicate campaign continuation amendment schema is unsupported"
+        )
+    amendment_digest = amendment.get("continuation_amendment_digest")
+    payload = dict(amendment)
+    payload.pop("continuation_amendment_digest")
+    if (
+        not isinstance(amendment_digest, str)
+        or not amendment_digest
+        or canonical_digest(payload) != amendment_digest
+    ):
+        raise RuntimeError(
+            "replicate campaign continuation amendment digest does not match"
+        )
+    for field_name in (
+        "previous_campaign_authority_digest",
+        "source_amendment_digest",
+        "approved_at",
+        "reason",
+        "call_id",
+        "result_id",
+        "result_digest",
+    ):
+        field_value = amendment.get(field_name)
+        if not isinstance(field_value, str) or not field_value:
+            raise RuntimeError(
+                f"replicate campaign continuation {field_name} is invalid"
+            )
+    try:
+        _validate_approved_at(amendment["approved_at"])
+    except ValueError as exc:
+        raise RuntimeError(
+            "replicate campaign continuation approved_at is invalid"
+        ) from exc
+    if (
+        amendment.get("scoreable_state") != "agent_invalid"
+        or amendment.get("terminal_status") != "error"
+        or amendment.get("failure_label") != "agent_failed"
+        or amendment.get("invalid_owner") != "agent"
+    ):
+        raise RuntimeError(
+            "replicate campaign continuation Result class is unsupported"
+        )
+    expected_unchanged = {
+        "campaign_id": authorization.get("campaign_id"),
+        "schedule_digest": authorization.get("schedule_digest"),
+        "budget_usd": authorization.get("budget_usd"),
+        "maximum_paid_calls": limits.get("maximum_paid_calls"),
+        "maximum_estimated_cost_per_call_usd": limits.get(
+            "maximum_estimated_cost_per_call_usd"
+        ),
+        "cell_retries": limits.get("cell_retries"),
+        "pricing_version": pricing.get("pricing_version"),
+        "scoring_config_digest": pricing.get("scoring_config_digest"),
+    }
+    if amendment.get("unchanged_authority") != expected_unchanged:
+        raise RuntimeError(
+            "replicate campaign continuation changed frozen authority"
+        )
+    expected_previous_digest = _campaign_authority_digest(
+        authorization,
+        limits,
+        pricing,
+        schema_version=schema_version,
+        authority_amendment=authority_amendment,
+    )
+    if (
+        amendment.get("previous_campaign_authority_digest")
+        != expected_previous_digest
+    ):
+        raise RuntimeError(
+            "replicate campaign continuation does not bind prior authority"
+        )
+    return amendment
+
+
 def _campaign_ledger_schema_version(schedule: ReplicateSchedule) -> str:
     if schedule.schema_version == SINGLE_AGENT_CANARY_SCHEMA_VERSION:
         return CANARY_CAMPAIGN_LEDGER_SCHEMA_VERSION
@@ -663,6 +973,14 @@ def _validate_ledger(
         pricing=pricing,
         schema_version=expected_schema_version,
     )
+    continuation_amendment = _validate_continuation_amendment(
+        ledger.get("continuation_amendment"),
+        authorization=authorization,
+        limits=limits,
+        pricing=pricing,
+        authority_amendment=authority_amendment,
+        schema_version=expected_schema_version,
+    )
     observed_authority_digest = ledger.get("campaign_authority_digest")
     expected_authority_digest = _campaign_authority_digest(
         authorization,
@@ -670,6 +988,7 @@ def _validate_ledger(
         pricing,
         schema_version=expected_schema_version,
         authority_amendment=authority_amendment,
+        continuation_amendment=continuation_amendment,
     )
     if observed_authority_digest != expected_authority_digest:
         raise RuntimeError("replicate campaign authority digest does not match")
@@ -868,6 +1187,79 @@ def _reconcile_started_call(
     return _load_and_validate_ledger(context)
 
 
+def _terminal_agent_invalid_for_continuation(
+    context: ReplicateCampaignContext,
+    ledger: Mapping[str, object],
+    session: ResultStoreSession,
+) -> tuple[
+    Mapping[str, object],
+    ResultRecord,
+    tuple[ResolvedReplicateScheduleCell, ...],
+]:
+    resolved = resolve_replicate_schedule_cells(
+        context.schedule,
+        context.task_pool,
+        context.tasks,
+        context.checks,
+        context.agents,
+        context.base_runtime_config,
+        context.workspace_config,
+        context.result_store,
+        context.cache_config,
+        context.scoring_config,
+        session=session,
+    )
+    calls = _ledger_calls(ledger)
+    if not calls or len(calls) > len(resolved):
+        raise RuntimeError(
+            "replicate campaign has no terminal Agent-invalid call to retain"
+        )
+    terminal_index = len(calls) - 1
+    call = calls[terminal_index]
+    cell = resolved[terminal_index]
+    _validate_call_binding(context, call, cell)
+    results = _exact_results_for_cell(context, cell, session)
+    if (
+        call.get("state") != "stopped"
+        or call.get("stop_reason") != "RuntimeError"
+        or len(results) != 1
+    ):
+        raise RuntimeError(
+            "replicate campaign terminal stop lacks one exact Agent-invalid Result"
+        )
+    result = results[0]
+    _validate_call_result(call, result)
+    _validate_retained_agent_invalid_result(context, result)
+    for later in resolved[len(calls) :]:
+        if _exact_results_for_cell(context, later, session):
+            raise RuntimeError(
+                "replicate Result exists after the terminal stopped call"
+            )
+    return call, result, resolved
+
+
+def _validate_retained_agent_invalid_result(
+    context: ReplicateCampaignContext,
+    result: ResultRecord,
+) -> None:
+    if (
+        result.scoring_config_digest
+        != context.scoring_config.scoring_config_digest
+        or result.pricing_version != context.scoring_config.pricing_version
+        or result.scoreable_state != "agent_invalid"
+        or result.terminal_status != "error"
+        or result.outcome != "invalid"
+        or result.invalid_owner != "agent"
+        or result.failure_label != "agent_failed"
+        or bool(result.usage)
+        or result.cost != {"total_cost": None}
+    ):
+        raise RuntimeError(
+            "replicate campaign retained Result is not an eligible "
+            "Agent availability failure"
+        )
+
+
 def _validate_cost_stop_for_reauthorization(
     context: ReplicateCampaignContext,
     ledger: Mapping[str, object],
@@ -1004,6 +1396,17 @@ def _validate_calls_and_results(
         raw_amendment,
     )
     amendment_consumed = False
+    raw_continuation = ledger.get("continuation_amendment")
+    if raw_continuation is not None and not isinstance(
+        raw_continuation,
+        Mapping,
+    ):
+        raise RuntimeError("replicate campaign continuation amendment is invalid")
+    continuation_amendment = cast(
+        Mapping[str, object] | None,
+        raw_continuation,
+    )
+    continuation_consumed = False
     if len(calls) > len(resolved):
         raise RuntimeError("replicate campaign has more calls than scheduled cells")
     for index, cell in enumerate(resolved):
@@ -1025,7 +1428,40 @@ def _validate_calls_and_results(
             raise RuntimeError("completed replicate call must have one exact Result")
         result = results[0]
         _validate_call_result(call, result)
-        _validate_paid_result(context, ledger, result, include_recorded_spend=False)
+        if (
+            continuation_amendment is not None
+            and continuation_amendment.get("call_id") == call.get("call_id")
+        ):
+            _validate_retained_agent_invalid_result(context, result)
+            _validate_reauthorization_evidence(
+                call,
+                amendment_digest=cast(
+                    str,
+                    continuation_amendment[
+                        "continuation_amendment_digest"
+                    ],
+                ),
+                approved_at=cast(
+                    str,
+                    continuation_amendment["approved_at"],
+                ),
+            )
+            if (
+                continuation_amendment.get("result_id") != result.result_id
+                or continuation_amendment.get("result_digest")
+                != result.result_digest
+            ):
+                raise RuntimeError(
+                    "replicate campaign continuation Result evidence does not match"
+                )
+            continuation_consumed = True
+        else:
+            _validate_paid_result(
+                context,
+                ledger,
+                result,
+                include_recorded_spend=False,
+            )
         if (
             authority_amendment is not None
             and authority_amendment.get("call_id") == call.get("call_id")
@@ -1051,6 +1487,10 @@ def _validate_calls_and_results(
     if authority_amendment is not None and not amendment_consumed:
         raise RuntimeError(
             "replicate campaign authority amendment call is missing"
+        )
+    if continuation_amendment is not None and not continuation_consumed:
+        raise RuntimeError(
+            "replicate campaign continuation amendment call is missing"
         )
 
 

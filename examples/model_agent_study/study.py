@@ -68,6 +68,7 @@ from examples.pylint_swe_bench_verified.pilot import (  # noqa: E402
 )
 from examples.pylint_swe_bench_verified.replicate_campaign import (  # noqa: E402
     ReplicateCampaignContext,
+    continue_replicate_campaign_after_retained_agent_invalid,
     initialize_replicate_campaign_ledger,
     preflight_replicate_campaign,
     reauthorize_stopped_replicate_campaign_call,
@@ -99,6 +100,7 @@ DEFAULT_AMENDMENT = HERE / "study-amendment-1.json"
 DEFAULT_DECISION_AMENDMENT = HERE / "study-amendment-2.json"
 DEFAULT_EXECUTION_AMENDMENT = HERE / "study-amendment-3.json"
 DEFAULT_RECOVERY_AMENDMENT = HERE / "study-amendment-4.json"
+DEFAULT_CONTINUATION_AMENDMENT = HERE / "study-amendment-5.json"
 DEFAULT_STUDY_OUTPUT = Path("outputs/research/2026-07-25-model-agent-study")
 DEFAULT_PILOT_OUTPUT = DEFAULT_STUDY_OUTPUT / "pylint-pool"
 STUDY_LEDGER_NAME = "resource-ledger.json"
@@ -1494,6 +1496,238 @@ def apply_main_cost_amendment(
     return summary
 
 
+def apply_main_continuation_amendment(
+    paths: StudyPaths,
+    continuation_amendment_path: Path = DEFAULT_CONTINUATION_AMENDMENT,
+) -> Mapping[str, Any]:
+    """Retain the frozen availability failure without retrying its cell."""
+    plan = _load_plan(paths.plan_path)
+    amendment = _load_continuation_amendment(
+        continuation_amendment_path,
+        plan,
+    )
+    _activate_llm_proxy_environment(plan)
+    context, metadata, _ = _load_main_context(paths, plan)
+    amendment_digest = _required_string(amendment, "amendment_digest")
+    main_failure = _required_mapping(amendment, "main_failure")
+    recovery = _required_mapping(amendment, "recovery_canary")
+    continuation = _required_mapping(amendment, "continuation")
+    campaign_dir = paths.study_output / "main" / MAIN_CAMPAIGN_ID
+    campaign_ledger = load_resource_ledger(
+        context.ledger_path,
+        updated_at=_utc_now(),
+    )
+    raw_campaign_continuation = campaign_ledger.get("continuation_amendment")
+    if raw_campaign_continuation is not None and not isinstance(
+        raw_campaign_continuation,
+        Mapping,
+    ):
+        raise RuntimeError("main campaign continuation amendment is invalid")
+    if (
+        isinstance(raw_campaign_continuation, Mapping)
+        and raw_campaign_continuation.get("source_amendment_digest")
+        != amendment_digest
+    ):
+        raise RuntimeError("main campaign binds a different continuation")
+    metadata_digest = metadata.get("study_continuation_amendment_digest")
+    if metadata_digest not in (None, amendment_digest):
+        raise RuntimeError("main metadata binds a different continuation")
+
+    calls = _required_mapping_sequence(campaign_ledger, "calls")
+    results = tuple(load_jsonl_records(context.result_store.path, ResultRecord))
+    next_index = _required_int(continuation, "next_sequence_index")
+    if len(calls) != next_index or len(results) != len(calls):
+        raise RuntimeError("main continuation boundary changed")
+    if not calls:
+        raise RuntimeError("main continuation has no failed terminal call")
+    trigger_call = calls[-1]
+    trigger_matches = tuple(
+        result
+        for result in results
+        if result.result_id == main_failure.get("result_id")
+    )
+    if len(trigger_matches) != 1:
+        raise RuntimeError("main continuation Result is missing")
+    trigger_result = trigger_matches[0]
+    terminal_state = (
+        "completed"
+        if raw_campaign_continuation is not None
+        else "stopped"
+    )
+    prior_authority_matches = (
+        campaign_ledger.get("campaign_authority_digest")
+        == main_failure.get("previous_campaign_authority_digest")
+        if raw_campaign_continuation is None
+        else raw_campaign_continuation.get(
+            "previous_campaign_authority_digest"
+        )
+        == main_failure.get("previous_campaign_authority_digest")
+    )
+    if (
+        context.schedule.campaign_id != main_failure.get("campaign_id")
+        or context.schedule.schedule_digest
+        != main_failure.get("schedule_digest")
+        or not prior_authority_matches
+        or trigger_call.get("state") != terminal_state
+        or trigger_call.get("call_id") != main_failure.get("call_id")
+        or trigger_call.get("sequence_index")
+        != main_failure.get("sequence_index")
+        or trigger_call.get("replicate_index")
+        != main_failure.get("replicate_index")
+        or trigger_call.get("result_id") != trigger_result.result_id
+        or trigger_call.get("result_digest")
+        != trigger_result.result_digest
+        or trigger_result.result_digest
+        != main_failure.get("result_digest")
+        or trigger_result.scoreable_state
+        != main_failure.get("scoreable_state")
+        or trigger_result.terminal_status
+        != main_failure.get("terminal_status")
+        or trigger_result.failure_label
+        != main_failure.get("failure_label")
+        or trigger_result.invalid_owner
+        != main_failure.get("invalid_owner")
+        or trigger_result.outcome != "invalid"
+        or bool(trigger_result.usage)
+        or trigger_result.cost.get("total_cost") is not None
+    ):
+        raise RuntimeError("main continuation failure evidence changed")
+    trigger_cell = context.schedule.cells[
+        _required_int(main_failure, "sequence_index")
+    ]
+    if (
+        trigger_cell.sequence_index != main_failure.get("sequence_index")
+        or trigger_cell.replicate_index != main_failure.get("replicate_index")
+        or trigger_cell.replicate_index == 0
+    ):
+        raise RuntimeError("main continuation cell is not the frozen repeat")
+
+    study_ledger = _load_json(paths.study_output / STUDY_LEDGER_NAME)
+    trigger_receipt_entry = _exact_study_receipt_entry(
+        study_ledger,
+        trigger_result.result_id,
+    )
+    _validate_amendment_receipt(
+        trigger_receipt_entry,
+        expected_digest=_required_string(
+            main_failure,
+            "gateway_receipt_digest",
+        ),
+        expected_cost=_required_number(
+            main_failure,
+            "observed_gateway_cost_usd",
+        ),
+        label="main continuation failure",
+    )
+
+    recovery_campaign_id = _required_string(recovery, "campaign_id")
+    recovery_dir = (
+        paths.study_output / "calibration-canaries" / recovery_campaign_id
+    )
+    recovery_metadata = _load_json(recovery_dir / CAMPAIGN_METADATA_NAME)
+    recovery_results = tuple(
+        load_jsonl_records(
+            recovery_dir / "records" / "results.jsonl",
+            ResultRecord,
+        )
+    )
+    if len(recovery_results) != 1:
+        raise RuntimeError("recovery canary must have exactly one Result")
+    recovery_result = recovery_results[0]
+    if (
+        recovery_metadata.get("campaign_id") != recovery_campaign_id
+        or recovery_metadata.get("study_amendment_digest")
+        != recovery.get("study_recovery_amendment_digest")
+        or recovery_result.result_id != recovery.get("result_id")
+        or recovery_result.result_digest != recovery.get("result_digest")
+        or recovery_result.scoreable_state
+        != recovery.get("scoreable_state")
+        or recovery_result.scoreable_state != "scoreable"
+        or not recovery_result.usage
+    ):
+        raise RuntimeError("recovery canary evidence changed")
+    _require_matching_numeric_evidence(
+        recovery_result.cost.get("total_cost"),
+        recovery.get("estimated_cost_usd"),
+        label="recovery canary estimated cost",
+    )
+    recovery_receipt_entry = _exact_study_receipt_entry(
+        study_ledger,
+        recovery_result.result_id,
+    )
+    _validate_amendment_receipt(
+        recovery_receipt_entry,
+        expected_digest=_required_string(
+            recovery,
+            "gateway_receipt_digest",
+        ),
+        expected_cost=_required_number(
+            recovery,
+            "observed_gateway_cost_usd",
+        ),
+        label="recovery canary",
+    )
+
+    limits = _required_mapping(campaign_ledger, "limits")
+    allowed_ids = _required_string_sequence(
+        continuation,
+        "allowed_non_scoreable_result_ids",
+    )
+    if (
+        allowed_ids != (trigger_result.result_id,)
+        or _required_int(continuation, "remaining_frozen_cell_count")
+        != len(context.schedule.cells) - next_index
+        or _required_int(continuation, "maximum_additional_main_calls")
+        != len(context.schedule.cells) - next_index
+        or _required_int(continuation, "cell_retries")
+        != limits.get("cell_retries")
+        or _required_int(continuation, "replacement_cells") != 0
+        or continuation.get("unchanged_schedule_digest")
+        != context.schedule.schedule_digest
+        or continuation.get("unchanged_maximum_paid_calls")
+        != limits.get("maximum_paid_calls")
+        or continuation.get("unchanged_maximum_estimated_cost_per_call_usd")
+        != limits.get("maximum_estimated_cost_per_call_usd")
+        or continuation.get("unchanged_maximum_estimated_cost_usd")
+        != metadata.get("maximum_estimated_cost_usd")
+    ):
+        raise RuntimeError("main continuation changed frozen authority")
+
+    amended_ledger = (
+        continue_replicate_campaign_after_retained_agent_invalid(
+            context,
+            source_amendment_digest=amendment_digest,
+            approved_at=_required_string(amendment, "approved_at"),
+            reason=_required_string(amendment, "reason"),
+        )
+    )
+    updated_metadata = dict(metadata)
+    updated_metadata["study_continuation_amendment_digest"] = amendment_digest
+    write_json(campaign_dir / CAMPAIGN_METADATA_NAME, updated_metadata)
+    summary = {
+        "stage": "main_continuation_amendment_applied",
+        "campaign_id": MAIN_CAMPAIGN_ID,
+        "study_continuation_amendment_digest": amendment_digest,
+        "retained_result_id": trigger_result.result_id,
+        "retained_sequence_index": trigger_call["sequence_index"],
+        "next_sequence_index": next_index,
+        "remaining_frozen_cell_count": len(context.schedule.cells) - next_index,
+        "paid_model_calls_executed": 0,
+        "campaign_authority_digest": amended_ledger[
+            "campaign_authority_digest"
+        ],
+        "second_non_scoreable_rule": continuation[
+            "second_non_scoreable_rule"
+        ],
+        "next": "preflight-main",
+    }
+    write_json(
+        paths.study_output / "main-continuation-amendment-summary.json",
+        summary,
+    )
+    return summary
+
+
 def preflight_main(paths: StudyPaths) -> Mapping[str, Any]:
     plan = _load_plan(paths.plan_path)
     endpoint_digest = _activate_llm_proxy_environment(plan)
@@ -1533,7 +1767,12 @@ def run_next_main_cell(paths: StudyPaths) -> Mapping[str, Any]:
     _activate_llm_proxy_environment(plan)
     context, metadata, _ = _load_main_context(paths, plan)
     campaign_dir = paths.study_output / "main" / MAIN_CAMPAIGN_ID
-    _require_scoreable_campaign_history(context)
+    _require_scoreable_campaign_history(
+        context,
+        allowed_non_scoreable_result_ids=(
+            _allowed_main_non_scoreable_result_ids(metadata, plan)
+        ),
+    )
     _require_preflight_marker(campaign_dir, plan, context)
     next_cell = preflight_replicate_campaign(context)
     if next_cell is None:
@@ -1581,8 +1820,15 @@ def summarize_main(paths: StudyPaths) -> Mapping[str, Any]:
     )
     if len(results) != len(context.schedule.cells):
         raise RuntimeError("main campaign is incomplete")
-    if any(result.scoreable_state != "scoreable" for result in results):
-        raise RuntimeError("main campaign contains non-scoreable Results")
+    allowed_non_scoreable = _allowed_main_non_scoreable_result_ids(
+        metadata,
+        plan,
+    )
+    _require_scoreable_results(
+        results,
+        MAIN_CAMPAIGN_ID,
+        allowed_non_scoreable_result_ids=allowed_non_scoreable,
+    )
     result_by_cell = {
         (
             result.agent_id,
@@ -1625,6 +1871,13 @@ def summarize_main(paths: StudyPaths) -> Mapping[str, Any]:
     for task_id in context.task_pool.task_ids:
         left_result = result_for(left.agent_id, task_id, 0)
         right_result = result_for(right.agent_id, task_id, 0)
+        if (
+            left_result.scoreable_state != "scoreable"
+            or right_result.scoreable_state != "scoreable"
+        ):
+            raise RuntimeError(
+                "main base comparison contains a non-scoreable Result"
+            )
         left_pass = int(left_result.outcome == "pass")
         right_pass = int(right_result.outcome == "pass")
         difference = float(left_pass - right_pass)
@@ -1652,24 +1905,62 @@ def summarize_main(paths: StudyPaths) -> Mapping[str, Any]:
 
     repeat_pair_values: dict[str, list[float]] = {}
     repeat_cluster_rows: list[Mapping[str, Any]] = []
+    censored_repeat_execution_count = 0
+    censored_repeat_cluster_count = 0
+    unestimable_repeat_cluster_count = 0
     for agent in agents:
         for task_id in context.schedule.replicated_task_ids:
-            outcomes = tuple(
-                result_for(agent.agent_id, task_id, replicate_index).outcome
+            cluster_results = tuple(
+                result_for(agent.agent_id, task_id, replicate_index)
                 for replicate_index in range(context.schedule.replicate_count)
             )
+            scoreable_outcomes = tuple(
+                result.outcome
+                for result in cluster_results
+                if result.scoreable_state == "scoreable"
+            )
             pair_disagreements = tuple(
-                float(outcomes[left_index] != outcomes[right_index])
-                for left_index in range(len(outcomes))
-                for right_index in range(left_index + 1, len(outcomes))
+                float(
+                    scoreable_outcomes[left_index]
+                    != scoreable_outcomes[right_index]
+                )
+                for left_index in range(len(scoreable_outcomes))
+                for right_index in range(
+                    left_index + 1,
+                    len(scoreable_outcomes),
+                )
             )
             cluster_key = f"{agent.agent_id}:{task_id}"
-            repeat_pair_values[cluster_key] = list(pair_disagreements)
+            cluster_censored_count = sum(
+                result.scoreable_state != "scoreable"
+                for result in cluster_results
+            )
+            censored_repeat_execution_count += cluster_censored_count
+            censored_repeat_cluster_count += int(cluster_censored_count > 0)
+            if pair_disagreements:
+                repeat_pair_values[cluster_key] = list(pair_disagreements)
+            else:
+                unestimable_repeat_cluster_count += 1
             repeat_cluster_rows.append(
                 {
                     "agent_id": agent.agent_id,
                     "task_id": task_id,
-                    "outcomes": list(outcomes),
+                    "executions": [
+                        {
+                            "replicate_index": replicate_index,
+                            "scoreable_state": result.scoreable_state,
+                            "outcome": (
+                                result.outcome
+                                if result.scoreable_state == "scoreable"
+                                else None
+                            ),
+                        }
+                        for replicate_index, result in enumerate(
+                            cluster_results
+                        )
+                    ],
+                    "scoreable_execution_count": len(scoreable_outcomes),
+                    "censored_execution_count": cluster_censored_count,
                     "pairwise_disagreements": list(pair_disagreements),
                     "any_flip": any(pair_disagreements),
                 }
@@ -1677,6 +1968,8 @@ def summarize_main(paths: StudyPaths) -> Mapping[str, Any]:
     all_repeat_pairs = [
         value for values in repeat_pair_values.values() for value in values
     ]
+    if not all_repeat_pairs:
+        raise RuntimeError("main repeatability evidence has no scoreable pairs")
     flip_rate = sum(all_repeat_pairs) / len(all_repeat_pairs)
     flip_interval = _cluster_bootstrap_interval(
         repeat_pair_values,
@@ -1710,6 +2003,20 @@ def summarize_main(paths: StudyPaths) -> Mapping[str, Any]:
         agent_results = tuple(
             result for result in results if result.agent_id == agent.agent_id
         )
+        repriced_costs: list[float] = []
+        for result in agent_results:
+            total_cost = compute_cost(result.usage, scoring)["total_cost"]
+            if isinstance(total_cost, int | float) and not isinstance(
+                total_cost,
+                bool,
+            ):
+                repriced_costs.append(float(total_cost))
+        failure_class_counts: dict[str, int] = {}
+        for result in agent_results:
+            failure_class = result.failure_label or "none"
+            failure_class_counts[failure_class] = (
+                failure_class_counts.get(failure_class, 0) + 1
+            )
         latencies = tuple(
             _result_number(result.latency, "workspace_seconds")
             for result in agent_results
@@ -1743,11 +2050,33 @@ def summarize_main(paths: StudyPaths) -> Mapping[str, Any]:
                     for task_id in context.task_pool.task_ids
                 ),
                 "result_count": len(agent_results),
-                "token_totals": token_totals,
-                "repriced_estimated_cost_usd": sum(
-                    cast(float, compute_cost(result.usage, scoring)["total_cost"])
+                "scoreable_result_count": sum(
+                    result.scoreable_state == "scoreable"
                     for result in agent_results
                 ),
+                "non_scoreable_result_count": sum(
+                    result.scoreable_state != "scoreable"
+                    for result in agent_results
+                ),
+                "failure_class_counts": dict(
+                    sorted(failure_class_counts.items())
+                ),
+                "end_to_end_success_count": sum(
+                    result.scoreable_state == "scoreable"
+                    and result.outcome == "pass"
+                    for result in agent_results
+                ),
+                "end_to_end_success_rate": sum(
+                    result.scoreable_state == "scoreable"
+                    and result.outcome == "pass"
+                    for result in agent_results
+                )
+                / len(agent_results),
+                "token_totals": token_totals,
+                "repriced_result_count": len(repriced_costs),
+                "unpriced_result_count": len(agent_results)
+                - len(repriced_costs),
+                "repriced_estimated_cost_usd": sum(repriced_costs),
                 "observed_gateway_attributed_cost_usd": sum(gateway_windows),
                 "workspace_seconds": {
                     "total": sum(latencies),
@@ -1758,14 +2087,34 @@ def summarize_main(paths: StudyPaths) -> Mapping[str, Any]:
         )
 
     summary = {
-        "schema_version": "model_agent_main_summary_v1",
+        "schema_version": "model_agent_main_summary_v2",
         "study_plan_digest": plan["study_plan_digest"],
+        "study_continuation_amendment_digest": metadata.get(
+            "study_continuation_amendment_digest"
+        ),
         "stage": "complete",
         "campaign_id": MAIN_CAMPAIGN_ID,
         "task_pool_id": context.task_pool.task_pool_id,
         "task_count": len(context.task_pool.task_ids),
         "dependency_cluster_count": len(differences_by_cluster),
         "result_count": len(results),
+        "scoreability": {
+            "scoreable_result_count": sum(
+                result.scoreable_state == "scoreable"
+                for result in results
+            ),
+            "non_scoreable_result_count": sum(
+                result.scoreable_state != "scoreable"
+                for result in results
+            ),
+            "allowed_non_scoreable_result_ids": list(
+                allowed_non_scoreable
+            ),
+            "policy": (
+                "Retain declared Agent-invalid executions as operational "
+                "evidence; never relabel them as hidden-check failures."
+            ),
+        },
         "comparison": {
             "left_agent_key": selected_keys[0],
             "right_agent_key": selected_keys[1],
@@ -1784,6 +2133,14 @@ def summarize_main(paths: StudyPaths) -> Mapping[str, Any]:
         },
         "repeatability": {
             "agent_task_cluster_count": len(repeat_pair_values),
+            "scheduled_agent_task_cluster_count": len(repeat_cluster_rows),
+            "censored_execution_count": censored_repeat_execution_count,
+            "censored_agent_task_cluster_count": (
+                censored_repeat_cluster_count
+            ),
+            "unestimable_agent_task_cluster_count": (
+                unestimable_repeat_cluster_count
+            ),
             "pairwise_disagreement_count": int(sum(all_repeat_pairs)),
             "pairwise_comparison_count": len(all_repeat_pairs),
             "observed_flip_rate": flip_rate,
@@ -1794,7 +2151,9 @@ def summarize_main(paths: StudyPaths) -> Mapping[str, Any]:
         "operations": operational_rows,
         "claim_boundary": (
             "Retrospective, source-conditional SymPy SWE-bench evidence; not a "
-            "universal model rank and not prospective Selector evidence."
+            "universal model rank and not prospective Selector evidence. "
+            "The end-to-end sensitivity counts Agent-invalid executions as "
+            "not successful, while hidden-outcome estimates censor them."
         ),
     }
     write_json(paths.study_output / "main-summary.json", summary)
@@ -2030,6 +2389,21 @@ def _load_main_context(
         ):
             raise RuntimeError(
                 "main campaign metadata does not match amendment 3"
+            )
+    continuation_amendment_digest = metadata.get(
+        "study_continuation_amendment_digest"
+    )
+    if continuation_amendment_digest is not None:
+        continuation_amendment = _load_continuation_amendment(
+            DEFAULT_CONTINUATION_AMENDMENT,
+            plan,
+        )
+        if (
+            continuation_amendment_digest
+            != continuation_amendment["amendment_digest"]
+        ):
+            raise RuntimeError(
+                "main campaign metadata does not match amendment 5"
             )
     agents = tuple(
         load_jsonl_records(campaign_dir / "records" / "agents.jsonl", AgentRecord)
@@ -2340,6 +2714,40 @@ def _require_matching_numeric_evidence(
         return
     if observed != expected:
         raise RuntimeError(f"{label} evidence does not match")
+
+
+def _exact_study_receipt_entry(
+    study_ledger: Mapping[str, Any],
+    result_id: str,
+) -> Mapping[str, Any]:
+    matches = tuple(
+        entry
+        for entry in _required_mapping_sequence(study_ledger, "entries")
+        if entry.get("result_id") == result_id
+    )
+    if len(matches) != 1:
+        raise RuntimeError(f"Result {result_id} must have one study receipt")
+    entry = matches[0]
+    if entry.get("gateway_log_receipt_status") != "exact":
+        raise RuntimeError(f"Result {result_id} receipt is not exact")
+    return entry
+
+
+def _validate_amendment_receipt(
+    entry: Mapping[str, Any],
+    *,
+    expected_digest: str,
+    expected_cost: float,
+    label: str,
+) -> None:
+    receipt = _required_mapping(entry, "gateway_log_receipt")
+    if canonical_digest(receipt) != expected_digest:
+        raise RuntimeError(f"{label} receipt digest changed")
+    _require_matching_numeric_evidence(
+        entry.get("gateway_log_cost_usd"),
+        expected_cost,
+        label=f"{label} gateway cost",
+    )
 
 
 def _replicate_count_for_plan(task_count: int, fraction: float) -> int:
@@ -3815,6 +4223,8 @@ def _require_preflight_marker(
 
 def _require_scoreable_campaign_history(
     context: ReplicateCampaignContext,
+    *,
+    allowed_non_scoreable_result_ids: Sequence[str] = (),
 ) -> None:
     results_path = context.result_store.path
     if not results_path.exists():
@@ -3822,23 +4232,54 @@ def _require_scoreable_campaign_history(
     _require_scoreable_results(
         tuple(load_jsonl_records(results_path, ResultRecord)),
         context.schedule.campaign_id,
+        allowed_non_scoreable_result_ids=allowed_non_scoreable_result_ids,
     )
 
 
 def _require_scoreable_results(
     results: Sequence[ResultRecord],
     campaign_id: str,
+    *,
+    allowed_non_scoreable_result_ids: Sequence[str] = (),
 ) -> None:
-    invalid = tuple(
+    allowed = set(allowed_non_scoreable_result_ids)
+    invalid = {
         result.result_id
         for result in results
         if result.scoreable_state != "scoreable"
-    )
-    if invalid:
+    }
+    unexpected = sorted(invalid - allowed)
+    missing = sorted(allowed - invalid)
+    if unexpected:
         raise RuntimeError(
             f"campaign {campaign_id} stopped after non-scoreable Result "
-            + ", ".join(invalid)
+            + ", ".join(unexpected)
         )
+    if missing:
+        raise RuntimeError(
+            f"campaign {campaign_id} continuation evidence is missing "
+            + ", ".join(missing)
+        )
+
+
+def _allowed_main_non_scoreable_result_ids(
+    metadata: Mapping[str, Any],
+    plan: Mapping[str, Any],
+) -> tuple[str, ...]:
+    digest = metadata.get("study_continuation_amendment_digest")
+    if digest is None:
+        return ()
+    amendment = _load_continuation_amendment(
+        DEFAULT_CONTINUATION_AMENDMENT,
+        plan,
+    )
+    if digest != amendment["amendment_digest"]:
+        raise RuntimeError("main continuation metadata digest changed")
+    continuation = _required_mapping(amendment, "continuation")
+    return _required_string_sequence(
+        continuation,
+        "allowed_non_scoreable_result_ids",
+    )
 
 
 def _calibration_campaign_config(
@@ -3975,6 +4416,29 @@ def _load_execution_amendment(
     decision = _load_decision_amendment(DEFAULT_DECISION_AMENDMENT, plan)
     if amendment.get("previous_amendment_digest") != decision["amendment_digest"]:
         raise ValueError("study execution amendment does not bind amendment 2")
+    return amendment
+
+
+def _load_continuation_amendment(
+    path: Path,
+    plan: Mapping[str, Any],
+) -> Mapping[str, Any]:
+    amendment = _load_json(path)
+    digest = _required_string(amendment, "amendment_digest")
+    payload = dict(amendment)
+    payload.pop("amendment_digest")
+    if canonical_digest(payload) != digest:
+        raise ValueError("study continuation amendment digest does not match")
+    if (
+        amendment.get("schema_version")
+        != "barcarolle_model_agent_study_amendment_v5"
+    ):
+        raise ValueError("study continuation amendment schema is unsupported")
+    if amendment.get("base_study_plan_digest") != plan["study_plan_digest"]:
+        raise ValueError("study continuation amendment does not bind the base plan")
+    recovery = _load_amendment(DEFAULT_RECOVERY_AMENDMENT, plan)
+    if amendment.get("previous_amendment_digest") != recovery["amendment_digest"]:
+        raise ValueError("study continuation amendment does not bind amendment 4")
     return amendment
 
 
@@ -4118,6 +4582,11 @@ def _parse_args(argv: Sequence[str] | None) -> argparse.Namespace:
         type=Path,
         default=DEFAULT_EXECUTION_AMENDMENT,
     )
+    parser.add_argument(
+        "--continuation-amendment",
+        type=Path,
+        default=DEFAULT_CONTINUATION_AMENDMENT,
+    )
     parser.add_argument("--study-output", type=Path, default=DEFAULT_STUDY_OUTPUT)
     parser.add_argument("--pilot-output", type=Path, default=DEFAULT_PILOT_OUTPUT)
     actions = parser.add_subparsers(dest="action", required=True)
@@ -4138,6 +4607,7 @@ def _parse_args(argv: Sequence[str] | None) -> argparse.Namespace:
     actions.add_parser("summarize-protocol-canaries")
     actions.add_parser("prepare-main")
     actions.add_parser("apply-main-cost-amendment")
+    actions.add_parser("apply-main-continuation-amendment")
     actions.add_parser("preflight-main")
     actions.add_parser("run-next-main")
     actions.add_parser("summarize-main")
@@ -4205,6 +4675,11 @@ def main(argv: Sequence[str] | None = None) -> int:
         summary = apply_main_cost_amendment(
             paths,
             args.execution_amendment.resolve(),
+        )
+    elif args.action == "apply-main-continuation-amendment":
+        summary = apply_main_continuation_amendment(
+            paths,
+            args.continuation_amendment.resolve(),
         )
     elif args.action == "preflight-main":
         summary = preflight_main(paths)

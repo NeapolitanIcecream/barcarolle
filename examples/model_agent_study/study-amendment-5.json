@@ -1,0 +1,69 @@
+{
+  "schema_version": "barcarolle_model_agent_study_amendment_v5",
+  "amendment_digest": "199848ad7d5bea8afab7f53ae082055800736fd4b748777a8032f17d47c1f307",
+  "base_study_plan_digest": "445398963a6e703953f4a4f5c758034b8d4f377b3a0a575197b4d3282191834f",
+  "previous_amendment_digest": "33bf7681c6822e0a4aa12c714fc67de1b3df8bc263492b46313d20eec70026d4",
+  "approved_at": "2026-07-25T20:04:49Z",
+  "reason": "The outcome-blind Terra recovery canary completed with scoreable, priceable usage and an exact receipt. Main sequence 42 is a repeat-2 availability failure rather than a base cell. Retain it without retry and continue only the already frozen remaining cells so the 75-Task base comparison and nearly complete repeatability study remain identifiable.",
+  "main_failure": {
+    "campaign_id": "model-main-sympy-2026-07-25",
+    "schedule_digest": "be9507012c54b6bc7185fa1117c22ab79175d5b342e5c5e874cf594e1278cbae",
+    "previous_campaign_authority_digest": "938ef3bc507657679d3e9db31640d1b03b3d6ceb0b288fae77e01fb50b7f69c7",
+    "sequence_index": 42,
+    "call_id": "replicate-cell-0042",
+    "replicate_index": 2,
+    "result_id": "result_6ae405842aca171a383d1cf08971b81bd3e3fe141b3170b3ae31c59f9ca0e285",
+    "result_digest": "47972280a4db5ab75ffb57f606c732bc0e9dd4289df0463316a8d6a96ff89c0c",
+    "scoreable_state": "agent_invalid",
+    "terminal_status": "error",
+    "failure_label": "agent_failed",
+    "invalid_owner": "agent",
+    "usage_observed": false,
+    "gateway_receipt_digest": "fab7a6eca6f7c9fcccd512a5d0f3a2ac68a12d4612e5f9cc7dcce93a78851f4b",
+    "observed_gateway_cost_usd": 0.019584
+  },
+  "recovery_canary": {
+    "campaign_id": "model-recovery-canary-terra-2026-07-25",
+    "study_recovery_amendment_digest": "33bf7681c6822e0a4aa12c714fc67de1b3df8bc263492b46313d20eec70026d4",
+    "result_id": "result_82f1c15ee826a4ee56769da58f6bbee5cfc6ebd6752333f9c39498d25796f45d",
+    "result_digest": "7f25313874b2ec1f08aceb4f38a477e20af201a6e2c35185335145b7e5ee31b0",
+    "scoreable_state": "scoreable",
+    "usage_observed": true,
+    "estimated_cost_usd": 0.39905050000000003,
+    "gateway_receipt_digest": "1bb38463e7845440e152e63b377003c3e92f97c2afbab5c5f91bd0b017d5ab40",
+    "observed_gateway_cost_usd": 0.291302,
+    "decision_input": "scoreability, nonempty priceable usage, and exact receipt only; hidden pass/fail excluded"
+  },
+  "continuation": {
+    "next_sequence_index": 43,
+    "remaining_frozen_cell_count": 195,
+    "maximum_additional_main_calls": 195,
+    "cell_retries": 0,
+    "replacement_cells": 0,
+    "allowed_non_scoreable_result_ids": [
+      "result_6ae405842aca171a383d1cf08971b81bd3e3fe141b3170b3ae31c59f9ca0e285"
+    ],
+    "second_non_scoreable_rule": "Stop the Terra main route permanently before any later call. No further continuation amendment is allowed.",
+    "unchanged_schedule_digest": "be9507012c54b6bc7185fa1117c22ab79175d5b342e5c5e874cf594e1278cbae",
+    "unchanged_maximum_paid_calls": 238,
+    "unchanged_maximum_estimated_cost_per_call_usd": 10.0,
+    "unchanged_maximum_estimated_cost_usd": 260.0
+  },
+  "analysis_policy": {
+    "primary_base_comparison": "Require all replicate-index-0 Results to be scoreable; sequence 42 is not a base cell and cannot enter the 75 paired base outcomes.",
+    "repeatability": "Treat sequence 42 as one censored execution. Estimate hidden-outcome flips from observed scoreable execution pairs within each Agent-by-Task cluster and report the censored execution and cluster counts.",
+    "operational_sensitivity": "Also report end-to-end success where every non-scoreable execution is not successful; never relabel the Result as a hidden fail.",
+    "scoreability": "Report exact scoreable and invalid counts by Agent and failure class.",
+    "claim_boundary": "One recovery canary supports resuming the current path, not guaranteed future availability. Main continuation remains subject to the one-strike stop."
+  },
+  "budget": {
+    "observed_gateway_attributed_cost_usd": 33.767056,
+    "conservative_gateway_budget_consumption_usd": 36.864126,
+    "global_budget_usd": 300.0,
+    "unallocated_reserve_usd": 30.0,
+    "main_actual_projection_limit_usd": 180.0,
+    "main_conservative_authority_usd": 260.0,
+    "rule": "No budget, reserve, schedule, pricing, timeout, or retry limit changes."
+  },
+  "next_decision": "Continue from sequence 43 under the existing six-cell accounting cadence. Stop permanently on any new non-scoreable Result; otherwise complete reconciliation, censored-repeat analysis, and adversarial audit."
+}
