@@ -11,7 +11,7 @@ import pytest
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPOSITORY_ROOT))
 
-from examples.pylint_swe_bench_verified import check  # noqa: E402
+from examples.swe_bench_static import check  # noqa: E402
 
 
 INSTANCE_ID = "pylint-dev__pylint-4551"

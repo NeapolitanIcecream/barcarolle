@@ -100,7 +100,7 @@ from examples.pylint_swe_bench_verified.dependency_evidence import (  # noqa: E4
 HERE = Path(__file__).resolve().parent
 HARNESS = (HERE.parent / "harnesses/codex-cli/run-agent.zsh").resolve()
 EXTRACT_SOURCE = (HERE / "extract_source.py").resolve()
-CHECK = (HERE / "check.py").resolve()
+CHECK = (HERE.parent / "swe_bench_static/check.py").resolve()
 TASK_SOURCES = (HERE / "task_sources.json").resolve()
 DEFAULT_OUTPUT_DIR = Path(
     "outputs/user-journeys/2026-07-17-swe-bench-verified-pylint-pilot-default-retries"
