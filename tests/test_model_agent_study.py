@@ -347,8 +347,47 @@ def test_gateway_log_receipt_requires_exact_result_token_totals() -> None:
     assert receipt["quota_points"] == 24
     assert receipt["result_usage_match"] is True
 
-    with pytest.raises(RuntimeError, match="do not exactly reconcile"):
+    with pytest.raises(RuntimeError, match="exact Result-token"):
         study._gateway_log_receipt(result, rows[:1])
+
+
+def test_gateway_log_receipt_excludes_one_unique_overlapping_call() -> None:
+    result = _result_stub(
+        "result-a",
+        "2026-07-25T00:00:00Z",
+        "2026-07-25T00:00:10Z",
+        30,
+        7,
+    )
+    rows = (
+        _gateway_row(1784937602, "model-a", 20, 5, 11, "request-a"),
+        _gateway_row(1784937607, "model-a", 10, 2, 13, "request-b"),
+        _gateway_row(1784937608, "model-a", 562, 628, 17, "overlap"),
+    )
+
+    receipt = study._gateway_log_receipt(result, rows)
+
+    assert receipt["selection_method"] == "unique_exact_result_token_subset"
+    assert receipt["candidate_row_count"] == 3
+    assert receipt["excluded_candidate_row_count"] == 1
+    assert receipt["quota_points"] == 24
+
+
+def test_gateway_log_receipt_rejects_ambiguous_overlapping_calls() -> None:
+    result = _result_stub(
+        "result-a",
+        "2026-07-25T00:00:00Z",
+        "2026-07-25T00:00:10Z",
+        10,
+        2,
+    )
+    rows = (
+        _gateway_row(1784937602, "model-a", 10, 2, 11, "request-a"),
+        _gateway_row(1784937607, "model-a", 10, 2, 13, "request-b"),
+    )
+
+    with pytest.raises(RuntimeError, match="one exact Result-token subset"):
+        study._gateway_log_receipt(result, rows)
 
 
 def test_gateway_log_receipt_waits_for_all_result_tokens(

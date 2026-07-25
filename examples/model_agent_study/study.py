@@ -2238,7 +2238,7 @@ def _gateway_log_receipt(
 ) -> Mapping[str, Any]:
     started = math.floor(parse_utc_timestamp(result.started_at).timestamp())
     finished = math.ceil(parse_utc_timestamp(result.finished_at).timestamp())
-    selected = tuple(
+    candidates = tuple(
         row
         for row in rows
         if row.get("type") == 2
@@ -2246,9 +2246,9 @@ def _gateway_log_receipt(
         and isinstance(row.get("created_at"), int)
         and started <= cast(int, row["created_at"]) <= finished + 2
     )
-    sanitized_rows: list[Mapping[str, Any]] = []
-    for row in selected:
-        sanitized_rows.append(
+    candidate_rows: list[Mapping[str, Any]] = []
+    for row in candidates:
+        candidate_rows.append(
             {
                 "created_at": _required_int(row, "created_at"),
                 "model_name": _required_string(row, "model_name"),
@@ -2260,6 +2260,21 @@ def _gateway_log_receipt(
                 ),
             }
         )
+    selection_method = "all_model_time_rows"
+    sanitized_rows = candidate_rows
+    if result.usage and (
+        sum(cast(int, row["prompt_tokens"]) for row in sanitized_rows)
+        != result.usage.get("input_tokens")
+        or sum(cast(int, row["completion_tokens"]) for row in sanitized_rows)
+        != result.usage.get("output_tokens")
+    ):
+        selected_indices = _unique_exact_token_subset_indices(
+            sanitized_rows,
+            prompt_tokens=cast(int, result.usage["input_tokens"]),
+            completion_tokens=cast(int, result.usage["output_tokens"]),
+        )
+        sanitized_rows = [sanitized_rows[index] for index in selected_indices]
+        selection_method = "unique_exact_result_token_subset"
     prompt_tokens = sum(
         cast(int, row["prompt_tokens"]) for row in sanitized_rows
     )
@@ -2288,14 +2303,97 @@ def _gateway_log_receipt(
         "prompt_tokens": prompt_tokens,
         "completion_tokens": completion_tokens,
         "result_usage_match": usage_match,
+        "candidate_row_count": len(candidate_rows),
+        "excluded_candidate_row_count": len(candidate_rows) - len(sanitized_rows),
+        "selection_method": selection_method,
+        "candidate_sanitized_rows_digest": canonical_digest(candidate_rows),
         "sanitized_rows_digest": canonical_digest(sanitized_rows),
         "limitations": (
-            "selected by bound model and Result time window; exact token-total "
-            "match rejects overlapping or missing successful rows"
+            "candidates selected by bound model and Result time window; an "
+            "overlap is accepted only when one row subset uniquely reproduces "
+            "the exact Result token totals"
         ),
     }
     _validate_gateway_log_receipt(result, receipt)
     return receipt
+
+
+def _unique_exact_token_subset_indices(
+    rows: Sequence[Mapping[str, Any]],
+    *,
+    prompt_tokens: int,
+    completion_tokens: int,
+) -> tuple[int, ...]:
+    if (
+        prompt_tokens < 0
+        or completion_tokens < 0
+        or not rows
+        or len(rows) > 36
+    ):
+        raise GatewayReceiptIncomplete(
+            "gateway token rows cannot be bounded for unique attribution"
+        )
+    midpoint = len(rows) // 2
+
+    def subset_sums(
+        start: int,
+        end: int,
+    ) -> Mapping[tuple[int, int], tuple[int, int]]:
+        width = end - start
+        sums: dict[tuple[int, int], tuple[int, int]] = {}
+        for mask in range(1 << width):
+            prompt = 0
+            completion = 0
+            for offset in range(width):
+                if mask & (1 << offset):
+                    row = rows[start + offset]
+                    prompt += _required_int(row, "prompt_tokens")
+                    completion += _required_int(row, "completion_tokens")
+            if prompt > prompt_tokens or completion > completion_tokens:
+                continue
+            key = (prompt, completion)
+            previous = sums.get(key)
+            if previous is None:
+                sums[key] = (1, mask)
+            else:
+                sums[key] = (min(2, previous[0] + 1), previous[1])
+        return sums
+
+    left = subset_sums(0, midpoint)
+    right = subset_sums(midpoint, len(rows))
+    solution_count = 0
+    solution_masks: tuple[int, int] | None = None
+    for (left_prompt, left_completion), (left_count, left_mask) in left.items():
+        right_value = right.get(
+            (
+                prompt_tokens - left_prompt,
+                completion_tokens - left_completion,
+            )
+        )
+        if right_value is None:
+            continue
+        right_count, right_mask = right_value
+        combination_count = min(2, left_count * right_count)
+        solution_count = min(2, solution_count + combination_count)
+        if solution_masks is None:
+            solution_masks = (left_mask, right_mask)
+        if solution_count > 1:
+            break
+    if solution_count != 1 or solution_masks is None:
+        raise GatewayReceiptIncomplete(
+            "gateway token rows do not have one exact Result-token subset"
+        )
+    left_mask, right_mask = solution_masks
+    return tuple(
+        index
+        for index in range(len(rows))
+        if (
+            index < midpoint
+            and left_mask & (1 << index)
+            or index >= midpoint
+            and right_mask & (1 << (index - midpoint))
+        )
+    )
 
 
 def _eventual_gateway_log_receipt(

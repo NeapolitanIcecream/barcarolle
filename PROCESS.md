@@ -57,9 +57,11 @@ Current evidence:
   priceable usage. Claude Sonnet 4.6 was Agent-invalid with empty usage and
   zero attributed quota. Only mini enters replacement calibration.
 - Per-call accounting comes from sanitized gateway token-log rows whose
-  prompt/completion totals exactly match the Result. The token balance is
-  eventually consistent and is used only for the global guard and aggregate
-  reconciliation. Take one live balance checkpoint every six frozen cells and
+  prompt/completion totals exactly match the Result. If same-model calls
+  overlap a Result window, only one uniquely matching row subset is
+  admissible. The token balance is eventually consistent and is used only for
+  the global guard and aggregate reconciliation. Take one live balance
+  checkpoint every six frozen cells and
   reuse a live snapshot across campaigns for at most five minutes; use exact
   attributed quota between checkpoints. Do not query or interpret an immediate
   post-call balance as one call's cost. Token-log receipt acquisition may wait

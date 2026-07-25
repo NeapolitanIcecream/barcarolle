@@ -154,9 +154,9 @@ gate that the base plan had treated too coarsely:
 The first six scoreable frontier calls also established an accounting
 correction. Immediate token-balance before/after deltas did not equal the quota
 recorded for the same call because the global balance is eventually
-consistent. Gateway token-log rows selected by the bound model and Result time
-exactly reproduced each Result's input and output token totals. The study now
-uses:
+consistent. Gateway token-log candidates selected by the bound model and
+Result time exactly reproduced each Result's input and output token totals.
+The study now uses:
 
 - sanitized, token-matched log receipts for per-call quota attribution; and
 - the eventual token balance only for the global guard and aggregate
@@ -222,30 +222,40 @@ the prior block has exact receipts. A receipt-recovery pass uses the last live
 balance checkpoint; the next receipt-complete pass refreshes the global
 balance.
 
-This cadence is also consistent with the gateway's upstream implementation at
-commit `08f88d25`: both the
-[`/api/usage/token` route](https://github.com/QuantumNous/new-api/blob/08f88d25e588e90012ec9f0594f6ea8f8a1a2c3a/router/api-router.go#L250-L257)
+This cadence is also consistent with the observed gateway's reported
+`v1.0.0-rc.4` source at commit `e8cfb546`: both the
+[`/api/usage/token` route](https://github.com/QuantumNous/new-api/blob/e8cfb546fa7e1d5bf266c5998181c0021826e045/router/api-router.go#L274-L281)
 and the
-[`/api/log/token` route](https://github.com/QuantumNous/new-api/blob/08f88d25e588e90012ec9f0594f6ea8f8a1a2c3a/router/api-router.go#L303-L306)
+[`/api/log/token` route](https://github.com/QuantumNous/new-api/blob/e8cfb546fa7e1d5bf266c5998181c0021826e045/router/api-router.go#L310-L313)
 use `CriticalRateLimit`. Its
-[default configuration](https://github.com/QuantumNous/new-api/blob/08f88d25e588e90012ec9f0594f6ea8f8a1a2c3a/common/init.go#L129-L131)
+[default configuration](https://github.com/QuantumNous/new-api/blob/e8cfb546fa7e1d5bf266c5998181c0021826e045/common/init.go#L121-L123)
 is 20 requests per 1,200-second fixed window, though a deployment may override
 both values. `/api/status` identifies the observed deployment as
 `v1.0.0-rc.4`; that exact tag has the same route and default-window behavior.
 The proxy did not return the `Retry-After` header present in current upstream
 code, so the study treats the exact reset time as unknown and uses a full quiet
-window rather than polling. The rc.4 token-log route authenticates from the
-`Authorization` header, so the client does not duplicate the key in its query
-string.
+window rather than polling. The rc.4
+[`TokenAuthReadOnly`](https://github.com/QuantumNous/new-api/blob/e8cfb546fa7e1d5bf266c5998181c0021826e045/middleware/auth.go#L214-L232)
+authenticates from the `Authorization` header, so the client does not duplicate
+the key in its query string.
 
 The block size also respects log retention. Upstream
-[`GetLogByTokenId`](https://github.com/QuantumNous/new-api/blob/08f88d25e588e90012ec9f0594f6ea8f8a1a2c3a/model/log.go#L134-L141)
+[`GetLogByTokenId`](https://github.com/QuantumNous/new-api/blob/e8cfb546fa7e1d5bf266c5998181c0021826e045/model/log.go#L69-L72)
 returns at most
-[`MaxRecentItems = 1000`](https://github.com/QuantumNous/new-api/blob/08f88d25e588e90012ec9f0594f6ea8f8a1a2c3a/common/constants.go#L60).
+[`MaxRecentItems = 1000`](https://github.com/QuantumNous/new-api/blob/e8cfb546fa7e1d5bf266c5998181c0021826e045/common/constants.go#L61).
 Across the first 32 exact or zero-usage receipts, one cell used at most 28
 successful log rows (p90 22); six times the observed maximum is 168. This is
 not a guarantee against unrelated traffic, so a missing exact token match
 still stops the campaign rather than accepting a partial receipt.
+
+The first recovery snapshot exposed a different shared-gateway hazard. Terra's
+sixth replacement Result matched 12 candidate rows exactly, while mini's fifth
+Result window contained 23 candidates totaling 562 input and 628 output tokens
+more than the Result. This was an overlapping same-model call, not eventual
+log incompleteness. Attribution now accepts all model/time candidates when
+their totals match; otherwise it requires exactly one candidate-row subset to
+reproduce both Result totals. The receipt records candidate and excluded
+counts plus digests. A missing or non-unique subset remains an accounting stop.
 
 ### Route portfolio
 

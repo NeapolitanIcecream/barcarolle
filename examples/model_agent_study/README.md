@@ -12,10 +12,11 @@ variables only after proving the frozen endpoint digest.
 
 Accounting uses two different gateway signals:
 
-- token-log rows selected by bound model and Result time must exactly reproduce
-  Result input/output token totals; their quota sum is the per-call attributed
-  cost. One snapshot reconciles each six-cell block, while pending calls reserve
-  their full per-call ceilings;
+- token-log candidates selected by bound model and Result time must exactly
+  reproduce Result input/output token totals. If unrelated same-model calls
+  overlap, only one uniquely matching row subset is admissible. Its quota sum
+  is the per-call attributed cost. One snapshot reconciles each six-cell block,
+  while pending calls reserve their full per-call ceilings;
 - the token balance is eventually consistent, so it is used only for the
   global budget guard and aggregate reconciliation. A live snapshot is
   requested every six cells and may be reused for at most five minutes.
