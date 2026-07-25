@@ -62,7 +62,10 @@ Current evidence:
   reconciliation. Take one live balance checkpoint every six frozen cells and
   reuse a live snapshot across campaigns for at most five minutes; use exact
   attributed quota between checkpoints. Do not query or interpret an immediate
-  post-call balance as one call's cost.
+  post-call balance as one call's cost. Token-log receipt acquisition may wait
+  through six bounded observations for an exact Result token match; it never
+  reruns the Agent. A pass that recovers a missing receipt defers live-balance
+  refresh to the next receipt-complete reconciliation.
 
 Research sequence:
 

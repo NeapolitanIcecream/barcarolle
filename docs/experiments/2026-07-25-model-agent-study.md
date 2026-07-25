@@ -210,6 +210,15 @@ single-Agent canaries:
   only because one shared ScoringConfig prices both Agents at the larger rate;
   it does not enlarge the USD 300 actual-spend cap or remove the USD 30 reserve.
 
+The fifth replacement-panel Result was scoreable and durable before all of its
+successful token-log rows were visible. The immediate receipt check therefore
+stopped after the Result without rerunning it. Receipt acquisition now makes at
+most six observations with bounded 1/2/4/8/16-second gaps and still accepts
+only an exact input/output token match. Reconciliation samples the live global
+balance only when no receipt is missing. A receipt-recovery pass uses the last
+live balance checkpoint; the next receipt-complete pass refreshes the global
+balance. This avoids issuing two rate-limited management requests back to back.
+
 ### Route portfolio
 
 | Route | Mechanism | First decisive test | Status / reopening rule |

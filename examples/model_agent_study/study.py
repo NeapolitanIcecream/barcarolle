@@ -127,6 +127,10 @@ class AccountedCall:
     gateway_log_receipt: Mapping[str, Any]
 
 
+class GatewayReceiptIncomplete(RuntimeError):
+    """The Result is durable but its successful token-log rows are not complete."""
+
+
 def _accounted_balance_delta(call: AccountedCall) -> int | None:
     if call.quota_after is None:
         return None
@@ -2246,7 +2250,7 @@ def _gateway_log_receipt(
         else None
     )
     if result.scoreable_state == "scoreable" and usage_match is not True:
-        raise RuntimeError(
+        raise GatewayReceiptIncomplete(
             "gateway token logs do not exactly reconcile Result token usage"
         )
     receipt = {
@@ -2267,6 +2271,21 @@ def _gateway_log_receipt(
     }
     _validate_gateway_log_receipt(result, receipt)
     return receipt
+
+
+def _eventual_gateway_log_receipt(
+    result: ResultRecord,
+    *,
+    attempts: int = 6,
+) -> Mapping[str, Any]:
+    for attempt in range(attempts):
+        try:
+            return _gateway_log_receipt(result, _gateway_token_logs())
+        except GatewayReceiptIncomplete:
+            if attempt + 1 == attempts:
+                raise
+            time.sleep(min(2**attempt, 16))
+    raise AssertionError("bounded gateway receipt loop did not return")
 
 
 def _validate_gateway_log_receipt(
@@ -2490,10 +2509,7 @@ def _run_accounted_campaign_cell(
         gateway_log_receipt: Mapping[str, Any] | None = None
         if result is not None:
             try:
-                gateway_log_receipt = _gateway_log_receipt(
-                    result,
-                    _gateway_token_logs(),
-                )
+                gateway_log_receipt = _eventual_gateway_log_receipt(result)
             except BaseException as exc:
                 accounting_error = exc
         quota_after: Mapping[str, int] | None = None
@@ -2723,13 +2739,13 @@ def reconcile_study_resource_ledger(
                 raise RuntimeError("study resource ledger has duplicate campaign cells")
             entry_by_cell[key] = entry
 
-        gateway_logs: tuple[Mapping[str, Any], ...] | None = None
         points_per_usd = _required_int(
             _required_mapping(plan, "budget"),
             "quota_points_per_usd",
         )
         reconciled = 0
         appended = 0
+        recovered_missing_receipt = False
         for context in contexts:
             for cell in context.schedule.cells:
                 result = _exact_result_for_study_cell(context, cell)
@@ -2765,9 +2781,8 @@ def reconcile_study_resource_ledger(
                     receipt = cast(Mapping[str, Any], persisted_receipt)
                     _validate_gateway_log_receipt(result, receipt)
                 else:
-                    if gateway_logs is None:
-                        gateway_logs = _gateway_token_logs()
-                    receipt = _gateway_log_receipt(result, gateway_logs)
+                    receipt = _eventual_gateway_log_receipt(result)
+                    recovered_missing_receipt = True
                 entry["result_id"] = result.result_id
                 entry["result_state"] = result.scoreable_state
                 entry["estimated_cost_usd"] = _optional_result_number(
@@ -2789,13 +2804,22 @@ def reconcile_study_resource_ledger(
                     "receipt, and eventual provider token-usage balance"
                 )
                 reconciled += 1
-        quota = _gateway_quota()
-        gateway_accounting = dict(
-            _required_mapping(ledger, "gateway_accounting")
+        if recovered_missing_receipt:
+            quota, _, _ = _quota_checkpoint_for_cell(paths, 1)
+        else:
+            quota = _gateway_quota()
+        gateway_accounting = dict(_required_mapping(ledger, "gateway_accounting"))
+        if not recovered_missing_receipt:
+            gateway_accounting["latest_live_total_used"] = quota["total_used"]
+            gateway_accounting["latest_live_observed_at"] = _utc_now()
+            gateway_accounting["latest_live_source"] = (
+                "resource_ledger_reconciliation"
+            )
+        gateway_accounting["last_reconciliation_balance_status"] = (
+            "deferred_while_recovering_missing_receipt"
+            if recovered_missing_receipt
+            else "live"
         )
-        gateway_accounting["latest_live_total_used"] = quota["total_used"]
-        gateway_accounting["latest_live_observed_at"] = _utc_now()
-        gateway_accounting["latest_live_source"] = "resource_ledger_reconciliation"
         gateway_accounting["per_call_accounting"] = (
             "model/time token-log rows with exact Result token-total match"
         )

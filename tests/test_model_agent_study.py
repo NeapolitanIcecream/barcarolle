@@ -308,6 +308,34 @@ def test_gateway_log_receipt_requires_exact_result_token_totals() -> None:
         study._gateway_log_receipt(result, rows[:1])
 
 
+def test_gateway_log_receipt_waits_for_all_result_tokens(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    result = cast(
+        ResultRecord,
+        SimpleNamespace(
+            started_at="2026-07-25T00:00:00Z",
+            finished_at="2026-07-25T00:00:10Z",
+            cache_identity=SimpleNamespace(requested_model_id="model-a"),
+            usage={"input_tokens": 30, "output_tokens": 7},
+            scoreable_state="scoreable",
+        ),
+    )
+    partial = (_gateway_row(1784937602, "model-a", 20, 5, 11, "request-a"),)
+    complete = partial + (
+        _gateway_row(1784937607, "model-a", 10, 2, 13, "request-b"),
+    )
+    observations = iter((partial, complete))
+    sleeps: list[int] = []
+    monkeypatch.setattr(study, "_gateway_token_logs", lambda: next(observations))
+    monkeypatch.setattr(study.time, "sleep", sleeps.append)
+
+    receipt = study._eventual_gateway_log_receipt(result, attempts=2)
+
+    assert receipt["quota_points"] == 24
+    assert sleeps == [1]
+
+
 def _agent(agent_id: str, model: str) -> AgentRecord:
     return AgentRecord(
         agent_id=agent_id,
