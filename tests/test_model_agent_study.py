@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from email.message import Message
 from pathlib import Path
 import sys
 from types import SimpleNamespace
@@ -363,6 +364,38 @@ def test_gateway_log_receipt_waits_for_all_result_tokens(
 
     assert receipt["quota_points"] == 24
     assert sleeps == [1]
+
+
+def test_gateway_metadata_rate_limit_fails_after_one_request(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    calls = 0
+
+    def rate_limited(*_args: object, **_kwargs: object) -> None:
+        nonlocal calls
+        calls += 1
+        headers = Message()
+        headers["Retry-After"] = "1200"
+        raise study.urllib.error.HTTPError(
+            "https://proxy.invalid/api/log/token",
+            429,
+            "rate limited",
+            headers,
+            None,
+        )
+
+    monkeypatch.setenv("LLM_BASE_URL", "https://proxy.invalid/v1")
+    monkeypatch.setenv("LLM_API_KEY", "test-key")
+    monkeypatch.setattr(study.urllib.request, "urlopen", rate_limited)
+    monkeypatch.setattr(
+        study.time,
+        "sleep",
+        lambda _seconds: pytest.fail("a fixed-window 429 must not be polled"),
+    )
+
+    with pytest.raises(RuntimeError, match="retry after 1200 seconds"):
+        study._gateway_json("/api/log/token")
+    assert calls == 1
 
 
 def test_campaign_receipt_checkpoint_reconciles_one_snapshot_for_the_block(

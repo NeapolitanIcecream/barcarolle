@@ -222,6 +222,18 @@ the prior block has exact receipts. A receipt-recovery pass uses the last live
 balance checkpoint; the next receipt-complete pass refreshes the global
 balance.
 
+This cadence is also consistent with the gateway's upstream implementation at
+commit `08f88d25`: both the
+[`/api/usage/token` route](https://github.com/QuantumNous/new-api/blob/08f88d25e588e90012ec9f0594f6ea8f8a1a2c3a/router/api-router.go#L250-L257)
+and the
+[`/api/log/token` route](https://github.com/QuantumNous/new-api/blob/08f88d25e588e90012ec9f0594f6ea8f8a1a2c3a/router/api-router.go#L303-L306)
+use `CriticalRateLimit`. Its
+[default configuration](https://github.com/QuantumNous/new-api/blob/08f88d25e588e90012ec9f0594f6ea8f8a1a2c3a/common/init.go#L129-L131)
+is 20 requests per 1,200-second fixed window, though a deployment may override
+both values. The observed proxy did not return the `Retry-After` header present
+in current upstream code, so the study treats the exact reset time as unknown
+and uses a full quiet window rather than polling.
+
 ### Route portfolio
 
 | Route | Mechanism | First decisive test | Status / reopening rule |

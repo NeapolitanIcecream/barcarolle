@@ -2212,10 +2212,17 @@ def _gateway_json(path: str, *, attempts: int = 5) -> Any:
                 raise RuntimeError(
                     f"gateway metadata request failed with HTTP {exc.code}"
                 ) from None
-            if attempt + 1 == attempts:
-                raise RuntimeError(
-                    "gateway metadata request remained rate limited"
-                ) from None
+            retry_after = (
+                None if exc.headers is None else exc.headers.get("Retry-After")
+            )
+            retry_hint = (
+                ""
+                if retry_after is None
+                else f"; retry after {retry_after} seconds"
+            )
+            raise RuntimeError(
+                "gateway metadata request is rate limited" + retry_hint
+            ) from None
         except urllib.error.URLError as exc:
             if attempt + 1 == attempts:
                 raise RuntimeError(
