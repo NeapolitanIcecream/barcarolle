@@ -1,187 +1,130 @@
-# Barcarolle Internal Process Notes
+# Barcarolle Cross-Session Handoff
 
-Last updated: 2026-07-24.
+Last updated: 2026-07-25.
 
-This is the short cross-session handoff. Intended behavior lives in
-`docs/design/`; completed findings and future work live in
+This file records only active direction and stop conditions. Intended behavior
+lives in `docs/design/`; findings and future work live in
 `docs/research-improvement-backlog.md`.
 
-## Current State
+## Stable Boundaries
 
-The generic pre-Generator infrastructure is at its stop line:
+- Keep the eight-module graph: Records, Task Pool, Verification, Workspace,
+  Result Store, Selection, Reporting, and Runner.
+- Generators end at one strict prepared-candidate package. Barcarolle owns
+  certification and immutable Task Pool publication. Downstream modules consume
+  a validated `TaskPoolBundle`, never a Generator object.
+- A user-maintained complete Task Pool is a separate read-only input. Opening
+  it does not generate, copy, recertify, or republish it.
+- Task Pool storage and Result storage remain independent. Result reuse is by
+  exact Task/Check/Agent/Workspace/Runtime identity, not Task Pool ID.
+- Scoreable execution keeps a clean solver workspace, captures its diff, and
+  applies that diff in a fresh verifier workspace where private oracle material
+  is first introduced.
+- Imported Results require an immutable source manifest and receipt. Default
+  availability has an import-time floor; producer-attested history is explicit
+  and cannot silently become Barcarolle-managed evidence.
+- Keep final-form rolling-origin, FeatureSnapshot, SelectorInput, fitted
+  Selector, lazy fill, and prospective replay contracts. Learned algorithms
+  wait for sufficient prospective evidence; their infrastructure is not
+  deleted merely because current data underuses it.
+- Prefer direct records and functions. Do not add a Generator registry, plugin
+  host, model service, workflow DAG, Feature Store, distributed scheduler, or
+  simulator platform without a concrete implementation that needs it.
 
-- Downstream evidence-producing Runner paths consume a validated complete
-  `TaskPoolBundle`, not Generator objects or parallel Task/Check lists.
-- A Generator, adapter, or user process may hand over one strict,
-  language-neutral prepared-candidate package. Barcarolle loads its candidates,
-  excluded events, certification material, optional adapter sidecar, and
-  optional generation provenance; it still owns certification and immutable
-  Task Pool publication. Generic packages are external evidence: they cannot
-  claim Barcarolle-managed runs or source-authoritative frames.
-- A user-maintained latest-schema Task Pool can be opened and validated in
-  place through the read-only API or `barcarolle task-pool validate`. Opening
-  does not generate, copy, recertify, or republish it.
-- Generation provenance is optional. When present it independently digests
-  Generator behavior, source protocol, observed frame, run authority, outputs,
-  and adapter evidence. Binding it replaces any pre-binding Task Pool ID with
-  the final content-derived ID. A frame must have an exact sorted event
-  inventory and receipt/attestation semantics. Every frame observation must be
-  no later than run completion; its declared window must also end by that
-  completion, which must be no later than Task Pool creation. Without the
-  manifest, both behavior and source-protocol digests are null; absence remains
-  valid but supports no Generator, frame, or population claim. Reports
-  enumerate the manifest plus its frame inventory and adapter sidecar.
-- The existing fixed Pylint pilot binds dependency evidence as run-specific
-  adapter sidecar data together with sanitized F2P/P2P summaries, keeps core
-  certification evidence schema-exact and behavior identity
-  inventory-independent, and opens the complete bundle before paid stages.
-  This is migration of an existing adapter, not a new Generator implementation.
-- External Results are admitted through a content-digested source manifest and
-  immutable import receipt into the local append-only Result Store. Import
-  checks Task/Check membership and Agent/Workspace/Runtime identity, leaves the
-  source byte-identical, labels external attestation, and applies an explicit
-  availability policy. The implementation records the first local observation
-  time; receipt replay is read-only and reuses that time. Store- and
-  receipt-scoped import locks serialize observation lookup, Result admission,
-  and receipt publication. Success is returned only after the receipt file and
-  its parent directory are synced.
-- Default external availability is
-  `max(source_result_available_at, evidence_imported_at)`. Historical
-  availability requires the explicit producer-attested policy and is labeled
-  as such in Reporting.
-- Equal cache identity plus different execution evidence is ambiguous and
-  cannot be auto-reused. Repricing or evidence views of the same execution may
-  coexist. Records derives and validates every Result ID from execution,
-  scoring, and evidence identity; historical views choose the lowest Result ID
-  per identical execution, independent of append order.
-- Multi-origin selection reads one physical Result snapshot and derives every
-  cutoff view from it. `fill_results` and `prepare_evaluation_cells` replay the
-  persisted Selection, Origin, SelectorInput, FeatureSnapshot, Selector, and
-  frozen Agent identities before cache or Agent access. Lazy fill persists an
-  exact `EvaluationCellSet`. Its identity binds the requested scoring config
-  and benchmark-invalid reuse policy: changing either creates a new resolution
-  view, while an unchanged policy resumes the frozen cells.
+## Active Research Sprint
 
-No concrete built-in Generator, Generator registry, plugin host, workflow
-engine, model service, Feature Store, simulator platform, distributed
-scheduler, network call, or paid benchmark call was added in this work.
+The authorized coding-agent/model study is frozen by:
 
-## Design Decisions
+- `docs/experiments/2026-07-25-model-agent-study.md`;
+- `examples/model_agent_study/study-plan.json`; and
+- append-only `examples/model_agent_study/study-amendment-1.json`.
 
-1. Keep the eight-module graph. Generator implementations end at the prepared
-   package; Task Pool remains the downstream boundary.
-2. Keep Task Pool and Result storage independent. Reuse is by exact
-   Task/Check/Agent/Workspace/Runtime cell identity, never by Task Pool ID.
-3. Keep build and open distinct:
-   `package -> certify -> publish` versus
-   `existing bundle -> read-only validate/use`.
-4. Do not invent provenance for a direct user pool. Missing provenance causes
-   claim abstention, not a dummy Generator identity.
-5. Treat evidence support as a lattice, not a ladder. Bundle consistency,
-   Result-cell completeness, generated-pool prediction, observed-frame bridge
-   evidence, Check/semantic calibration, and field calibration are separate
-   axes. No axis is implied by another.
-6. The v1 observed-frame bridge intentionally supports zero/one output per
-   source event in core records. Zero/one/many derivation edges remain in an
-   adapter sidecar until two concrete adapters demonstrate a simpler shared
-   relation.
-7. Strict-prospective comparison requires bound, unchanged Generator behavior
-   and source protocol plus a later immutable Task Pool whose source window
-   covers the declared future interval. The later pool may be incremental or
-   cumulative; overlapping same-ID Task/Check records must remain unchanged.
-   Counterfactual replay and direct pool use do not require Generator
-   provenance.
-8. Report Generator strata separately by default. A declared disjoint-strata
-   union is an operational pool, not an estimated target mixture. Automatic
-   mixture weights wait for a target frame, overlap/positivity, event weights,
-   and an outer holdout.
-9. Programmatic Workspace bindings remain the local execution boundary for a
-   user-maintained pool. Add a binding-file CLI only when a concrete command
-   needs it; the existing binders already prove repository, command, manifest,
-   and hidden-material digests before Agent execution.
+Current evidence:
 
-## Research Route
+- The certified ten-Task Pylint pool is the calibration anchor.
+- A 75-Task, 54-dependency-cluster SymPy SWE-bench Verified package is frozen.
+  Full base-fail/reference-pass certification is running; no main Agent call may
+  start before all 75 Tasks certify and the published bundle reopens.
+- DeepSeek V4 Pro and Gemini 3.1 Pro failed Codex Responses compatibility
+  without gateway charge. These are harness/proxy protocol failures, not model
+  capability results.
+- Sol and Terra passed the protocol/scoreability gate; their frozen paired
+  calibration is active.
+- Single-Agent one-call canaries for GPT-5.4 mini and Claude Sonnet 4.6 are
+  authorized and preflighted. Execute them serially only after the active
+  frontier campaign stops or completes.
+- Per-call accounting comes from sanitized gateway token-log rows whose
+  prompt/completion totals exactly match the Result. The token balance is
+  eventually consistent and is used only for the global guard and aggregate
+  reconciliation. Never interpret an immediate balance delta as one call's
+  cost.
 
-The next concrete Generator is deliberately not selected or implemented in
-this phase. When Generator work resumes:
+Research sequence:
 
-1. Choose one actual source and declare whether the adapter imports a frozen
-   dataset, wraps official code, or reimplements a published paradigm.
-2. Use the prepared-package contract unchanged. Add only source-specific
-   collection and sidecar evidence.
-3. Start with a static classic paradigm whose source and oracle material are
-   locally available. Use the first synthetic/base-overlay paradigm as the
-   second contract test before extracting shared adapter code.
-4. For a native Generator, predeclare the classic failure it targets, the
-   common frame, event-level multiplicity/weights, compute budget, funnel,
-   semantic and Check audits, crossed Agent treatments, and later-pool metric.
-5. Managed LLM generation waits for a concrete adapter, API endpoint, immutable
-   authority, and budget. Large-pool certification waits for that workload.
-6. A concrete simulator-conditioned interactive adapter may later define one
-   narrow episode contract. A held-out human branch-policy pilot gates claims
-   that simulator behavior stands in for human interaction, not implementation
-   of the adapter itself; field calibration remains a separate study.
-
-The existing offline Selector algorithms remain candidates, not empirical
-winners. Learned selection waits for sufficient authorized rolling-origin
-evidence, but its persisted training/inference boundary is retained.
+1. Finish SymPy certification and the current frontier calibration.
+2. Run the mini and Claude protocol canaries without retrying a scored or
+   invalid cell.
+3. Freeze a second amendment naming only scoreable replacement calibration
+   campaigns and a connected comparison graph.
+4. Select two main configurations by the predeclared pass, attributed-cost,
+   disagreement, and family rule.
+5. Run the frozen 75-Task paired main schedule and three executions on the
+   preselected 30% repeat subset.
+6. Reconcile Result, campaign, token-log, balance, artifact, and certification
+   evidence; run the adversarial audit; publish the decision report.
 
 ## Paid-Call Boundary
 
-Benchmark and evidence-producing calls must use only:
+This sprint is the explicit exception to the repository's default variable
+names: the user authorized at most USD 300 through `LLM_BASE_URL` and
+`LLM_API_KEY`. The study driver proves their endpoint/key values match the
+`OPENAI_BASE_URL` and `OPENAI_API_KEY` values consumed by the harness before
+each campaign.
 
-```text
-OPENAI_BASE_URL
-OPENAI_API_KEY
-```
+Every paid cell requires immutable schedule authority, exact endpoint/model/
+harness/config identity, a per-call ceiling, a total campaign ceiling, and
+enough remaining global allowance for the next ceiling. A study-scoped lock
+keeps Barcarolle paid calls serial. Metadata queries use bounded retry; Agent
+cells have zero campaign retry.
 
-If either is missing, source `~/.zshrc` and check again. Do not use subscription
-authentication or alternate provider variables unless the user changes this
-rule. Repository maintenance and PR review use local Codex authentication.
+The hard allowance is 150,000,000 quota points above the frozen
+`total_used=707840389` baseline, with 500,000 points per USD. Before a call,
+guard against the larger of:
 
-Every paid Agent or managed-Generator call needs an immutable authority binding
-the schedule or generation plan, inputs, endpoint/model identity, configs,
-call and cost caps, and pricing basis. Raw URLs and credentials are not
-persisted. No authority can be inferred from the historical USD 300 note.
+- later global balance movement; and
+- the sum of exact attributed token-log quota.
+
+Raw credentials, URLs, prompts, completions, transcripts, workspaces, verifier
+output, and gateway payloads stay under ignored outputs or are not persisted.
+Commit only sanitized summaries, digests, plans, reports, schemas, and tests.
 
 ## Claim Boundary
 
-- `task_pool_bundle_internal_consistency` proves only that the supplied bundle
-  and its cross-record links validate.
-- `future_pass_rate_mae` is Generator/Check-process-conditional future
-  Task/Check prediction error, not real-work utility.
-- Imported Results prove accepted producer attestation, not
-  Barcarolle-managed execution.
-- Source-authoritative and producer-attested observed frames are distinct.
-  Neither proves representativeness of a target work population.
-- Interactive simulator outcomes are treatment-conditional and cannot stand in
-  for held-out human responses without calibration.
-- Missing evidence produces an unsupported claim or abstention, never an
-  inferred value.
+- The current study is retrospective and source-conditional. It can support a
+  practical model portfolio for the frozen Pylint/SymPy populations, not a
+  universal leaderboard.
+- Newly observed 2026 Results cannot be backdated into historical rolling
+  origins and do not establish prospective Selector MAE.
+- Task Pool bundle consistency proves artifact/link consistency, not source
+  population coverage.
+- Generator behavior, source-frame authority, Check quality, generated-pool
+  prediction, and field calibration are separate evidence axes.
+- Run repeats stay in the experiment layer unless the predeclared flip-rate
+  interval crosses its promotion gate.
 
-## Storage And Deferred Scale Work
+## Deferred Work And Reopening Triggers
 
-Core readers accept only the latest schema. Use non-destructive one-off
-migrations for valuable older Results; do not add runtime compatibility
-branches. A Result migration changes canonical Result IDs/digests; rebuild
-FeatureSnapshots, SelectorInputs, Selections, fitted Selectors, CellSets,
-matrices, and metrics that bind them. Raw prompts, completions, trajectories,
-workspaces, credentials, and large outputs stay under ignored paths.
+- Checkout caching: reopen only when checkout plus cleanup exceeds 5% of
+  scoreable-cell wall time or p95 blocks target throughput.
+- Bounded Agent parallelism: the duration threshold is now met, but this study
+  remains serial because attribution and isolation are part of its evidence.
+  Reopen with a concrete concurrency authority, one Result writer, and
+  per-call attribution that remains unambiguous.
+- Certification checkpointing: record the completed 75-Task wall time first.
+  If interruption loss is material, add one single-writer checkpoint keyed by
+  exact package/candidate/config/Check identity; do not add a workflow engine.
+- Concrete Generator development remains outside this sprint.
 
-- Reopen checkout caching only when warm/cold repository-size measurements put
-  checkout plus cleanup above 5% of scoreable-cell wall time or p95 blocks
-  target throughput.
-- Reopen bounded parallelism when a planned serial campaign exceeds one hour
-  or the API has explicit controlled concurrency. Keep one Result writer and
-  `max_concurrency=1` by default.
-- Reopen certification checkpoints only after a concrete measured Generator
-  workload demonstrates material interruption loss.
-
-## Handoff
-
-Before any Generator or paid campaign work, keep the full suite, Ruff, Pyright,
-and `git diff --check` green. If old managed Results need the new provenance
-fields, run `scripts/migrate_result_evidence_provenance.py` into a new file and
-rebuild the complete derived evidence chain named above. The next research
-decision is source-specific: select a concrete adapter and evidence source,
-then reopen only the matching deferred items above.
+Before commits, run scoped tests, Ruff, Pyright, and `git diff --check`. Preserve
+all ignored campaign outputs until the final sanitized report and audit replay
+their digests.

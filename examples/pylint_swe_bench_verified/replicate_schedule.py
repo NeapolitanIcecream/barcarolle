@@ -43,6 +43,7 @@ from barcarolle.task_pool import validate_task_pool_members  # noqa: E402
 
 
 SCHEDULE_SCHEMA_VERSION = "paired_replicate_schedule_v1"
+SINGLE_AGENT_CANARY_SCHEMA_VERSION = "single_agent_canary_schedule_v1"
 RUNTIME_SLOT_VERSION = "experiment_replicate_runtime_slot_v1"
 
 
@@ -212,6 +213,77 @@ def build_replicate_schedule(
     )
 
 
+def build_single_agent_canary_schedule(
+    task_pool: TaskPoolRecord,
+    tasks: Sequence[TaskRecord],
+    checks: Sequence[CheckRecord],
+    agents: Sequence[AgentRecord],
+    base_runtime_config: RuntimeConfig,
+    *,
+    campaign_id: str,
+    seed: int,
+    task_id: str,
+) -> ReplicateSchedule:
+    """Build one exact protocol canary cell without authorizing a paired block."""
+    task_by_id = {task.task_id: task for task in tasks}
+    check_by_id = {check.check_id: check for check in checks}
+    if len(task_by_id) != len(tasks) or set(task_by_id) != set(task_pool.task_ids):
+        raise ValueError("tasks must exactly match the frozen Task Pool")
+    if len(check_by_id) != len(checks) or set(check_by_id) != set(task_pool.check_ids):
+        raise ValueError("checks must exactly match the frozen Task Pool")
+    normalized_tasks = tuple(task_by_id[item] for item in task_pool.task_ids)
+    normalized_checks = tuple(check_by_id[item] for item in task_pool.check_ids)
+    normalized_agents = tuple(sorted(agents, key=lambda agent: agent.agent_id))
+    _validate_canary_inputs(
+        task_pool,
+        normalized_tasks,
+        normalized_checks,
+        normalized_agents,
+        base_runtime_config,
+        campaign_id=campaign_id,
+        seed=seed,
+        task_id=task_id,
+    )
+    task = task_by_id[task_id]
+    check_by_task_id = {check.task_id: check for check in normalized_checks}
+    check = check_by_task_id[task.task_id]
+    runtime = _runtime_config_for_slot(base_runtime_config, campaign_id, 0)
+    runtime_digest = canonical_digest(runtime)
+    return record_with_digest(
+        ReplicateSchedule(
+            schema_version=SINGLE_AGENT_CANARY_SCHEMA_VERSION,
+            campaign_id=campaign_id,
+            task_pool_id=task_pool.task_pool_id,
+            task_pool_digest=task_pool.task_pool_digest,
+            task_records_digest=canonical_digest(normalized_tasks),
+            check_records_digest=canonical_digest(normalized_checks),
+            agent_records_digest=canonical_digest(normalized_agents),
+            base_runtime_config_digest=canonical_digest(base_runtime_config),
+            seed=seed,
+            requested_replicate_fraction=0.0,
+            actual_replicate_fraction=0.0,
+            replicate_count=1,
+            replicated_task_ids=(),
+            runtime_configs=(runtime,),
+            cells=(
+                ReplicateScheduleCell(
+                    sequence_index=0,
+                    block_index=0,
+                    within_block_index=0,
+                    task_id=task.task_id,
+                    check_id=check.check_id,
+                    agent_id=normalized_agents[0].agent_id,
+                    replicate_index=0,
+                    runtime_config_id=runtime.runtime_config_id,
+                    runtime_config_digest=runtime_digest,
+                ),
+            ),
+            schedule_digest="",
+        ),
+        "schedule_digest",
+    )
+
+
 def validate_replicate_schedule(
     schedule: ReplicateSchedule,
     task_pool: TaskPoolRecord,
@@ -221,17 +293,35 @@ def validate_replicate_schedule(
     base_runtime_config: RuntimeConfig,
 ) -> ValidationResult:
     try:
-        expected = build_replicate_schedule(
-            task_pool,
-            tasks,
-            checks,
-            agents,
-            base_runtime_config,
-            campaign_id=schedule.campaign_id,
-            seed=schedule.seed,
-            replicate_fraction=schedule.requested_replicate_fraction,
-            replicate_count=schedule.replicate_count,
-        )
+        if schedule.schema_version == SCHEDULE_SCHEMA_VERSION:
+            expected = build_replicate_schedule(
+                task_pool,
+                tasks,
+                checks,
+                agents,
+                base_runtime_config,
+                campaign_id=schedule.campaign_id,
+                seed=schedule.seed,
+                replicate_fraction=schedule.requested_replicate_fraction,
+                replicate_count=schedule.replicate_count,
+            )
+        elif schedule.schema_version == SINGLE_AGENT_CANARY_SCHEMA_VERSION:
+            if len(schedule.cells) != 1:
+                raise ValueError("single-Agent canary schedule must contain one cell")
+            expected = build_single_agent_canary_schedule(
+                task_pool,
+                tasks,
+                checks,
+                agents,
+                base_runtime_config,
+                campaign_id=schedule.campaign_id,
+                seed=schedule.seed,
+                task_id=schedule.cells[0].task_id,
+            )
+        else:
+            raise ValueError(
+                f"unsupported replicate schedule schema: {schedule.schema_version}"
+            )
     except (TypeError, ValueError) as exc:
         return ValidationResult.fail((f"schedule inputs are invalid: {exc}",))
     if schedule != expected:
@@ -395,6 +485,28 @@ def _validate_inputs(
     _validate_base_runtime_config(base_runtime_config)
 
 
+def _validate_canary_inputs(
+    task_pool: TaskPoolRecord,
+    tasks: Sequence[TaskRecord],
+    checks: Sequence[CheckRecord],
+    agents: Sequence[AgentRecord],
+    base_runtime_config: RuntimeConfig,
+    *,
+    campaign_id: str,
+    seed: int,
+    task_id: str,
+) -> None:
+    if not isinstance(campaign_id, str) or not campaign_id:
+        raise ValueError("campaign_id must be a nonempty string")
+    if isinstance(seed, bool) or not isinstance(seed, int):
+        raise ValueError("seed must be an integer")
+    _validate_schedule_members(task_pool, tasks, checks)
+    _validate_canary_agent(agents, campaign_id)
+    _validate_base_runtime_config(base_runtime_config)
+    if not isinstance(task_id, str) or task_id not in set(task_pool.task_ids):
+        raise ValueError("canary task_id must identify one Task Pool member")
+
+
 def _validate_schedule_parameters(
     *,
     campaign_id: str,
@@ -456,6 +568,31 @@ def _validate_schedule_agents(
 ) -> None:
     if len(agents) != 2 or len({agent.agent_id for agent in agents}) != 2:
         raise ValueError("paired replicate scheduling requires two unique Agents")
+    _validate_agent_records(agents, campaign_id)
+    configuration_digests = {
+        canonical_digest(replace(agent, agent_id="")) for agent in agents
+    }
+    if len(configuration_digests) != 2:
+        raise ValueError(
+            "paired replicate scheduling requires two distinct Agent configurations"
+        )
+
+
+def _validate_canary_agent(
+    agents: Sequence[AgentRecord],
+    campaign_id: str,
+) -> None:
+    if len(agents) != 1:
+        raise ValueError("single-Agent canary scheduling requires exactly one Agent")
+    _validate_agent_records(agents, campaign_id)
+
+
+def _validate_agent_records(
+    agents: Sequence[AgentRecord],
+    campaign_id: str,
+) -> None:
+    if len({agent.agent_id for agent in agents}) != len(agents):
+        raise ValueError("scheduled Agents must have unique agent_id values")
     for agent in agents:
         validation = validate_agent(agent)
         if not validation.ok:
@@ -469,13 +606,6 @@ def _validate_schedule_agents(
             raise ValueError(
                 "unresolved Agent model scope must equal the schedule campaign_id"
             )
-    configuration_digests = {
-        canonical_digest(replace(agent, agent_id="")) for agent in agents
-    }
-    if len(configuration_digests) != 2:
-        raise ValueError(
-            "paired replicate scheduling requires two distinct Agent configurations"
-        )
 
 
 def _validate_base_runtime_config(base_runtime_config: RuntimeConfig) -> None:

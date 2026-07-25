@@ -1,0 +1,248 @@
+from __future__ import annotations
+
+from pathlib import Path
+import sys
+from types import SimpleNamespace
+from typing import cast
+
+import pytest
+
+REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(REPOSITORY_ROOT))
+
+from barcarolle.records import AgentRecord, ResultRecord  # noqa: E402
+from examples.experiment_ledger import write_json  # noqa: E402
+from examples.model_agent_study import study  # noqa: E402
+
+
+def test_committed_study_plan_is_self_digested_and_budget_partitioned() -> None:
+    plan = study._load_plan(study.DEFAULT_PLAN)
+    budget = plan["budget"]
+    assert isinstance(budget, dict)
+    assert budget["total_usd"] == 300.0
+    assert (
+        budget["calibration_authority_usd"]
+        + budget["main_and_repeat_authority_usd"]
+        + budget["unallocated_reserve_usd"]
+        == budget["total_usd"]
+    )
+    calibration = plan["calibration"]
+    assert isinstance(calibration, dict)
+    campaigns = calibration["campaigns"]
+    assert isinstance(campaigns, list)
+    assert sum(item["maximum_estimated_cost_usd"] for item in campaigns) == 90.0
+
+
+def test_committed_amendment_is_self_digested_and_reallocates_budget() -> None:
+    plan = study._load_plan(study.DEFAULT_PLAN)
+    amendment = study._load_amendment(study.DEFAULT_AMENDMENT, plan)
+
+    assert amendment["base_study_plan_digest"] == plan["study_plan_digest"]
+    assert amendment["budget"]["protocol_canary_authority_usd"] == 6.0
+    assert len(amendment["canaries"]) == 2
+
+
+def test_study_agent_homes_are_distinct_for_same_effort(tmp_path: Path) -> None:
+    first = _agent("first-high", "model-a")
+    second = _agent("second-high", "model-b")
+
+    first_command = study._agent_command(tmp_path, first)
+    second_command = study._agent_command(tmp_path, second)
+
+    first_home = next(
+        item for item in first_command if item.startswith("BARCAROLLE_CODEX_HOME=")
+    )
+    second_home = next(
+        item for item in second_command if item.startswith("BARCAROLLE_CODEX_HOME=")
+    )
+    assert first_home != second_home
+    assert first_command[1] == "BARCAROLLE_CODEX_MODEL=model-a"
+    assert second_command[1] == "BARCAROLLE_CODEX_MODEL=model-b"
+
+
+def test_global_quota_guard_reserves_the_full_per_call_limit() -> None:
+    plan = study._load_plan(study.DEFAULT_PLAN)
+    campaign = study._calibration_campaign_config(
+        plan,
+        "model-calibration-frontier-2026-07-25",
+    )
+    budget = plan["budget"]
+    assert isinstance(budget, dict)
+    maximum = budget["quota_maximum_total_used"]
+    assert isinstance(maximum, int)
+    reserve = int(campaign["maximum_estimated_cost_per_call_usd"] * 500000)
+
+    study._require_global_quota_guard(
+        plan,
+        {
+            "total_granted": 1_500_000_000,
+            "total_used": maximum - reserve,
+            "total_available": 1_500_000_000 - maximum + reserve,
+        },
+        campaign,
+    )
+    with pytest.raises(RuntimeError, match="cannot cover"):
+        study._require_global_quota_guard(
+            plan,
+            {
+                "total_granted": 1_500_000_000,
+                "total_used": maximum - reserve + 1,
+                "total_available": 1_500_000_000 - maximum + reserve - 1,
+            },
+            campaign,
+        )
+
+
+def test_main_selection_keeps_performance_then_seeks_disagreement() -> None:
+    rows = {
+        "best": _agent_row(7, 5.0, "a"),
+        "same": _agent_row(7, 6.0, "a"),
+        "diverse": _agent_row(6, 6.0, "b"),
+        "weak": _agent_row(3, 1.0, "c"),
+    }
+    outcomes = {
+        ("best", "t1"): "pass",
+        ("best", "t2"): "pass",
+        ("same", "t1"): "pass",
+        ("same", "t2"): "pass",
+        ("diverse", "t1"): "fail",
+        ("diverse", "t2"): "pass",
+        ("weak", "t1"): "fail",
+        ("weak", "t2"): "fail",
+    }
+
+    assert study._select_main_agents({}, rows, outcomes) == ("best", "diverse")
+
+
+def test_cluster_bootstrap_and_exact_mcnemar_are_deterministic() -> None:
+    first = study._cluster_bootstrap_interval(
+        {"cluster-a": (0.0, 0.0), "cluster-b": (1.0,)},
+        seed=7,
+        iterations=200,
+    )
+    second = study._cluster_bootstrap_interval(
+        {"cluster-b": (1.0,), "cluster-a": (0.0, 0.0)},
+        seed=7,
+        iterations=200,
+    )
+
+    assert first == second
+    assert 0.0 <= first["lower"] <= first["upper"] <= 1.0
+    assert study._mcnemar_exact_two_sided(0, 0) == 1.0
+    assert study._mcnemar_exact_two_sided(4, 0) == 0.125
+
+
+def test_resource_ledger_separates_call_windows_from_global_movement(
+    tmp_path: Path,
+) -> None:
+    ledger_path = tmp_path / "resource-ledger.json"
+    ledger = {
+        "gateway_accounting": {"baseline_total_used": 1000},
+    }
+    write_json(ledger_path, ledger)
+    entries = [
+        {
+            "action": "execute frozen benchmark campaign cell",
+            "estimated_cost_usd": 0.1,
+            "gateway_quota_delta": 10,
+            "gateway_log_quota_points": 8,
+        },
+        {
+            "action": "execute frozen benchmark campaign cell",
+            "estimated_cost_usd": 0.2,
+            "gateway_quota_delta": 20,
+            "gateway_log_quota_points": 19,
+        },
+    ]
+
+    study._write_study_resource_ledger(
+        ledger_path,
+        ledger,
+        entries,
+        points_per_usd=500_000,
+        latest_gateway_total_used=1100,
+    )
+
+    observed = study._load_json(ledger_path)
+    totals = {item["resource"]: item["amount"] for item in observed["totals"]}
+    assert totals["observed_gateway_attributed_quota"] == 27
+    assert totals["gateway_balance_window_delta_sum"] == 30
+    assert totals["observed_gateway_global_total_used_movement"] == 100
+
+
+def test_gateway_log_receipt_requires_exact_result_token_totals() -> None:
+    result = cast(
+        ResultRecord,
+        SimpleNamespace(
+            started_at="2026-07-25T00:00:00Z",
+            finished_at="2026-07-25T00:00:10Z",
+            cache_identity=SimpleNamespace(requested_model_id="model-a"),
+            usage={"input_tokens": 30, "output_tokens": 7},
+            scoreable_state="scoreable",
+        ),
+    )
+    rows = (
+        _gateway_row(1784937602, "model-a", 20, 5, 11, "request-a"),
+        _gateway_row(1784937607, "model-a", 10, 2, 13, "request-b"),
+        _gateway_row(1784937605, "model-b", 999, 999, 999, "other-model"),
+    )
+
+    receipt = study._gateway_log_receipt(result, rows)
+
+    assert receipt["success_log_count"] == 2
+    assert receipt["prompt_tokens"] == 30
+    assert receipt["completion_tokens"] == 7
+    assert receipt["quota_points"] == 24
+    assert receipt["result_usage_match"] is True
+
+    with pytest.raises(RuntimeError, match="do not exactly reconcile"):
+        study._gateway_log_receipt(result, rows[:1])
+
+
+def _agent(agent_id: str, model: str) -> AgentRecord:
+    return AgentRecord(
+        agent_id=agent_id,
+        agent_manifest_digest=f"manifest-{agent_id}",
+        requested_model_id=model,
+        model_snapshot_id=None,
+        model_resolution_scope_id="campaign",
+        model_resolution_scope_started_at="2026-07-25T00:00:00Z",
+        model_resolution_scope_ended_at="2026-08-01T00:00:00Z",
+        harness_digest="harness",
+        repository_instruction_digest="instructions",
+        prompt_digest="prompt",
+        tools_digest="tools",
+        retrieval_digest="retrieval",
+        skills_digest="skills",
+        network_policy_digest="network",
+        adapter_digest="adapter",
+    )
+
+
+def _agent_row(passes: int, cost: float, provider: str) -> dict[str, object]:
+    return {
+        "scoreable_count": 12,
+        "result_count": 12,
+        "base_pass_count": passes,
+        "repriced_estimated_cost_usd": cost,
+        "provider_family": provider,
+    }
+
+
+def _gateway_row(
+    created_at: int,
+    model_name: str,
+    prompt_tokens: int,
+    completion_tokens: int,
+    quota: int,
+    request_id: str,
+) -> dict[str, object]:
+    return {
+        "type": 2,
+        "created_at": created_at,
+        "model_name": model_name,
+        "prompt_tokens": prompt_tokens,
+        "completion_tokens": completion_tokens,
+        "quota": quota,
+        "request_id": request_id,
+    }

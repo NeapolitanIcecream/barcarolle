@@ -45,12 +45,14 @@ from examples.experiment_ledger import (
 from examples.pylint_swe_bench_verified.replicate_schedule import (
     ReplicateSchedule,
     ResolvedReplicateScheduleCell,
+    SINGLE_AGENT_CANARY_SCHEMA_VERSION,
     resolve_replicate_schedule_cells,
     validate_replicate_schedule,
 )
 
 
 CAMPAIGN_LEDGER_SCHEMA_VERSION = "paired_replicate_campaign_ledger_v2"
+CANARY_CAMPAIGN_LEDGER_SCHEMA_VERSION = "single_agent_canary_campaign_ledger_v1"
 _CREDENTIAL_VARIABLES = ["OPENAI_BASE_URL", "OPENAI_API_KEY"]
 _STOP_CONDITIONS = (
     "authorized endpoint cannot be proven",
@@ -150,12 +152,14 @@ def initialize_replicate_campaign_ledger(
         "sources": list(pricing_sources),
         "accounting_basis": accounting_basis,
     }
+    ledger_schema_version = _campaign_ledger_schema_version(context.schedule)
     ledger: dict[str, object] = {
-        "schema_version": CAMPAIGN_LEDGER_SCHEMA_VERSION,
+        "schema_version": ledger_schema_version,
         "campaign_authority_digest": _campaign_authority_digest(
             authorization,
             limits,
             pricing,
+            schema_version=ledger_schema_version,
         ),
         "authorization": authorization,
         "limits": limits,
@@ -286,15 +290,23 @@ def _campaign_authority_digest(
     authorization: Mapping[str, object],
     limits: Mapping[str, object],
     pricing: Mapping[str, object],
+    *,
+    schema_version: str = CAMPAIGN_LEDGER_SCHEMA_VERSION,
 ) -> str:
     return canonical_digest(
         {
-            "schema_version": CAMPAIGN_LEDGER_SCHEMA_VERSION,
+            "schema_version": schema_version,
             "authorization": authorization,
             "limits": limits,
             "pricing": pricing,
         }
     )
+
+
+def _campaign_ledger_schema_version(schedule: ReplicateSchedule) -> str:
+    if schedule.schema_version == SINGLE_AGENT_CANARY_SCHEMA_VERSION:
+        return CANARY_CAMPAIGN_LEDGER_SCHEMA_VERSION
+    return CAMPAIGN_LEDGER_SCHEMA_VERSION
 
 
 def _load_and_validate_ledger(
@@ -322,13 +334,15 @@ def _validate_ledger(
     authorization = cast(Mapping[str, object], authorization)
     limits = cast(Mapping[str, object], limits)
     pricing = cast(Mapping[str, object], pricing)
-    if ledger.get("schema_version") != CAMPAIGN_LEDGER_SCHEMA_VERSION:
+    expected_schema_version = _campaign_ledger_schema_version(context.schedule)
+    if ledger.get("schema_version") != expected_schema_version:
         raise RuntimeError("replicate campaign ledger schema is not supported")
     observed_authority_digest = ledger.get("campaign_authority_digest")
     expected_authority_digest = _campaign_authority_digest(
         authorization,
         limits,
         pricing,
+        schema_version=expected_schema_version,
     )
     if observed_authority_digest != expected_authority_digest:
         raise RuntimeError("replicate campaign authority digest does not match")

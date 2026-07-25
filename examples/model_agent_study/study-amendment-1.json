@@ -1,0 +1,48 @@
+{
+  "schema_version": "barcarolle_model_agent_study_amendment_v1",
+  "amendment_digest": "4ad5965c73c995de346a4644a7f2167f7b4ed67a90298c2b1e8af204126aea3e",
+  "base_study_plan_digest": "445398963a6e703953f4a4f5c758034b8d4f377b3a0a575197b4d3282191834f",
+  "approved_at": "2026-07-25T14:37:16Z",
+  "reason": "The first paired cells showed that advertised OpenAI endpoint support does not prove Codex Responses compatibility. A failed first Agent also prevents the paired campaign from observing its second Agent. Add one-call protocol canaries before replacement calibration.",
+  "decisions": {
+    "retired_agent_keys": [
+      "deepseek-v4-pro-high",
+      "gemini-3.1-pro-preview-thinking-high"
+    ],
+    "retired_campaign_ids": [
+      "model-calibration-cheap-2026-07-25",
+      "model-calibration-cross-provider-2026-07-25"
+    ],
+    "retirement_scope": "No further calls under these two authorities. Their exact invalid Results remain protocol evidence and are not model-capability evidence.",
+    "frontier_campaign": "Continue only because both gpt-5.6-sol-high and gpt-5.6-terra-high produced scoreable Results in the first paired block.",
+    "eligibility_rule": "A canary candidate is eligible for replacement calibration only if its exact Result is scoreable, usage is nonempty and priceable, and the campaign ledger completes without an infrastructure stop.",
+    "outcome_rule": "Hidden pass or fail does not affect protocol eligibility."
+  },
+  "budget": {
+    "parent_calibration_envelope_usd": 90.0,
+    "protocol_canary_authority_usd": 6.0,
+    "maximum_estimated_cost_per_call_usd": 3.0,
+    "accounting_rule": "The amendment reallocates unused calibration authority; it does not increase the study's $300 global cap."
+  },
+  "canary_task": {
+    "task_id": "task_86ee9662a4f6f9c3e3b56f5480d333ff797e68943179b67a62dcd0ab9c28fa85",
+    "source_ref": "https://github.com/pylint-dev/pylint/issues/4901",
+    "selection_basis": "Reuse the already observed first calibration Task so protocol eligibility is not selected from hidden outcome evidence."
+  },
+  "canaries": [
+    {
+      "campaign_id": "model-protocol-canary-gpt-5-4-mini-2026-07-25",
+      "agent_key": "gpt-5.4-mini-high",
+      "maximum_estimated_cost_usd": 3.0,
+      "maximum_estimated_cost_per_call_usd": 3.0
+    },
+    {
+      "campaign_id": "model-protocol-canary-claude-sonnet-4-6-2026-07-25",
+      "agent_key": "claude-sonnet-4-6-thinking-high",
+      "maximum_estimated_cost_usd": 3.0,
+      "maximum_estimated_cost_per_call_usd": 3.0
+    }
+  ],
+  "next_decision": "After both canaries and the frontier calibration, freeze a second amendment that names only scoreable replacement calibration campaigns and preserves a connected comparison graph.",
+  "claim_boundary": "Canaries identify harness/proxy protocol compatibility, not general coding ability or benchmark rank."
+}

@@ -58,6 +58,7 @@ from examples.pylint_swe_bench_verified import replicate_campaign_cli  # noqa: E
 from examples.pylint_swe_bench_verified.replicate_schedule import (  # noqa: E402
     ReplicateSchedule,
     build_replicate_schedule,
+    build_single_agent_canary_schedule,
     find_next_missing_replicate_schedule_cell,
     resolve_replicate_schedule_cells,
     validate_replicate_schedule,
@@ -65,6 +66,39 @@ from examples.pylint_swe_bench_verified.replicate_schedule import (  # noqa: E40
 
 
 CAMPAIGN_ID = "pylint-replicates-2026-08"
+
+
+def test_single_agent_canary_schedule_is_one_exact_replayable_cell() -> None:
+    task_pool, tasks, checks, agents, runtime = _inputs()
+    task_id = tasks[3].task_id
+    canary_agent = (agents[0],)
+
+    schedule = build_single_agent_canary_schedule(
+        task_pool,
+        tasks,
+        checks,
+        canary_agent,
+        runtime,
+        campaign_id=CAMPAIGN_ID,
+        seed=20260725,
+        task_id=task_id,
+    )
+
+    assert schedule.schema_version == "single_agent_canary_schedule_v1"
+    assert schedule.replicate_count == 1
+    assert schedule.replicated_task_ids == ()
+    assert len(schedule.runtime_configs) == 1
+    assert len(schedule.cells) == 1
+    assert schedule.cells[0].task_id == task_id
+    assert schedule.cells[0].agent_id == canary_agent[0].agent_id
+    assert validate_replicate_schedule(
+        schedule,
+        task_pool,
+        tasks,
+        checks,
+        canary_agent,
+        runtime,
+    ).ok
 
 
 def test_replicate_schedule_is_deterministic_stratified_and_paired() -> None:
@@ -964,7 +998,17 @@ def test_replicate_campaign_cli_loads_frozen_execution_inputs(
                         f"BARCAROLLE_CODEX_MODEL={agent.requested_model_id}",
                         f"BARCAROLLE_CODEX_REASONING_EFFORT={effort}",
                         "BARCAROLLE_CODEX_HOME="
-                        + str((campaign_dir / f"codex-home-{effort}").resolve()),
+                        + str(
+                            (
+                                campaign_dir
+                                / (
+                                    "codex-home-"
+                                    + canonical_digest({"agent_id": agent.agent_id})[
+                                        :16
+                                    ]
+                                )
+                            ).resolve()
+                        ),
                         str(replicate_campaign_cli.HARNESS),
                     )
                 }
