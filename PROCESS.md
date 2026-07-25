@@ -53,21 +53,21 @@ Current evidence:
   Results. Each passed 5/10 base Tasks, their base outcomes were identical, and
   neither of the two repeated Tasks flipped. Sol cost $6.013130 versus Terra
   $2.491162 by exact gateway receipts.
-- GPT-5.4 mini passed the protocol canary with a scoreable hidden failure and
-  priceable usage. Claude Sonnet 4.6 was Agent-invalid with empty usage and
-  zero attributed quota. Only mini enters replacement calibration.
+- GPT-5.4 mini completed its replacement calibration with 4/10 base passes,
+  one disagreement with Terra, and no flip on two repeated Tasks. The frozen
+  rule selected Terra plus mini for main. Claude Sonnet 4.6 was Agent-invalid
+  with empty usage and zero attributed quota.
+- Main is authorized for 238 cells over 75 SymPy Tasks and 22 preselected
+  repeat Tasks. Actual p90 projection is $128.355304; the common-ScoringConfig
+  projection is $242.984137 under its separate $260 ledger ceiling.
 - Per-call accounting comes from sanitized gateway token-log rows whose
   prompt/completion totals exactly match the Result. If same-model calls
   overlap a Result window, only one uniquely matching row subset is
   admissible. The token balance is eventually consistent and is used only for
   the global guard and aggregate reconciliation. Take one live balance
-  checkpoint every six frozen cells and
-  reuse a live snapshot across campaigns for at most five minutes; use exact
-  attributed quota between checkpoints. Do not query or interpret an immediate
-  post-call balance as one call's cost. Token-log receipt acquisition may wait
-  through six bounded observations for an exact Result token match; it never
-  reruns the Agent. A pass that recovers a missing receipt defers live-balance
-  refresh to the next receipt-complete reconciliation.
+  checkpoint every six frozen cells and reuse a live snapshot across campaigns
+  for at most five minutes; use exact attributed quota between checkpoints.
+  Do not interpret an immediate post-call balance as one call's cost.
 
 Persist each Result immediately, but batch token-log attribution every six
 cells. Pending calls reserve their full per-call ceilings, and a new block
@@ -76,12 +76,9 @@ balance checkpoints at 0/6/12/18 and receipt checkpoints at 5/11/17/23.
 
 Research sequence:
 
-1. Complete the frozen 24-cell mini-versus-Terra replacement panel.
-2. Select two main configurations by the predeclared pass, attributed-cost,
-   disagreement, and family rule.
-3. Run the frozen 75-Task paired main schedule and three executions on the
+1. Run the frozen 75-Task paired main schedule and three executions on the
    preselected 30% repeat subset.
-4. Reconcile Result, campaign, token-log, balance, artifact, and certification
+2. Reconcile Result, campaign, token-log, balance, artifact, and certification
    evidence; run the adversarial audit; publish the decision report.
 
 ## Paid-Call Boundary

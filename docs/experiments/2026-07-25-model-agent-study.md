@@ -257,12 +257,24 @@ their totals match; otherwise it requires exactly one candidate-row subset to
 reproduce both Result totals. The receipt records candidate and excluded
 counts plus digests. A missing or non-unique subset remains an accounting stop.
 
+The replacement panel then completed with 24/24 scoreable Results and exact
+receipts. Mini passed 4/10 base Tasks; Terra retained its canonical 5/10
+frontier view and reproduced all ten outcomes in the bridge panel. Mini
+disagreed with Terra and Sol on one Task; Sol and Terra disagreed on none.
+All six calibration Agent×repeat-Task comparisons reproduced their base
+outcomes. The frozen rule selected Terra first (best pass count, lower
+attributed cost) and mini second (within two passes and the only disagreement).
+At main admission, the 238-cell schedule projected $128.355304 from actual
+gateway p90 costs and $242.984137 under the common conservative ScoringConfig.
+Both passed their separate $180 and $260 gates; $20.537588 of conservative
+global budget consumption was observed before main.
+
 ### Route portfolio
 
 | Route | Mechanism | First decisive test | Status / reopening rule |
 | --- | --- | --- | --- |
-| R1: fixed Pylint anchor | Reuse the already audited, certified ten-Task Pylint SWE-bench pool and compare diverse models on the same hidden checks. | All ten candidates certify; model canaries are scoreable and quota-accounted. | Frontier panel complete; one frozen mini-versus-Terra replacement panel remains. The proposed 15-Task union was not needed once the 75-Task SymPy route passed offline feasibility; changing the anchor after outcomes would weaken comparability. |
-| R2: broader static classic source | Implement one explicit dataset-import adapter for a larger single-repository SWE-bench Verified slice, with pinned source and verifier manifests. | Package replay, base-fail/reference-pass certification, arm64 image/base binding, and disk/time feasibility. | Admitted: all 75 SymPy candidates passed 150 fresh base/reference checks in about 66 minutes, and the published 75-Task/54-cluster bundle reopens. Main calls remain gated on calibration selection and cost. |
+| R1: fixed Pylint anchor | Reuse the already audited, certified ten-Task Pylint SWE-bench pool and compare diverse models on the same hidden checks. | All ten candidates certify; model canaries are scoreable and quota-accounted. | Complete: Terra 5/10, Sol 5/10, mini 4/10; only mini disagreed with the frontier pair. The proposed 15-Task union was not needed once the 75-Task SymPy route passed offline feasibility. |
+| R2: broader static classic source | Implement one explicit dataset-import adapter for a larger single-repository SWE-bench Verified slice, with pinned source and verifier manifests. | Package replay, base-fail/reference-pass certification, arm64 image/base binding, and disk/time feasibility. | Admitted and main authorized: all 75 SymPy candidates passed 150 fresh base/reference checks, the 75-Task/54-cluster bundle reopens, and both main cost gates passed. |
 | R3: repeatability-first | Run outcome-independent repeated cells and estimate pass/fail flip probability. | Two or three executions exist for every frozen repeat cell without replacement. | Mandatory analysis route. Promote replicate-aware core design only if the interval crosses the predeclared decision gates. |
 | R4: retrospective Selector simulation | Reconstruct historical origins from newly generated Results. | Statistical-protocol audit. | Rejected: Result observation time makes it non-prospective. Reopen only with Results observed under a future authorized rolling campaign. |
 | R5: multiple coding-agent harnesses | Compare Codex CLI with another coding-agent implementation. | Identity/isolation parity and a separately certified harness. | Deferred. It confounds model and harness in this sprint and no equally mature local adapter is installed. Reopen after the fixed-harness model decision. |
