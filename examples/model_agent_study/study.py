@@ -706,6 +706,7 @@ def run_next_calibration_cell(
         campaign_config,
         decision,
     )
+    _require_scoreable_campaign_history(context)
     _require_preflight_marker(campaign_dir, plan, context)
     next_cell = preflight_replicate_campaign(context)
     if next_cell is None:
@@ -719,6 +720,7 @@ def run_next_calibration_cell(
         next_cell,
     )
     result = accounted.result
+    _require_scoreable_results((result,), campaign_id)
     return {
         "stage": "cell_recorded",
         "campaign_id": campaign_id,
@@ -1301,6 +1303,7 @@ def run_next_main_cell(paths: StudyPaths) -> Mapping[str, Any]:
     _activate_llm_proxy_environment(plan)
     context, metadata, _ = _load_main_context(paths, plan)
     campaign_dir = paths.study_output / "main" / MAIN_CAMPAIGN_ID
+    _require_scoreable_campaign_history(context)
     _require_preflight_marker(campaign_dir, plan, context)
     next_cell = preflight_replicate_campaign(context)
     if next_cell is None:
@@ -1314,6 +1317,7 @@ def run_next_main_cell(paths: StudyPaths) -> Mapping[str, Any]:
         next_cell,
     )
     result = accounted.result
+    _require_scoreable_results((result,), MAIN_CAMPAIGN_ID)
     return {
         "stage": "cell_recorded",
         "campaign_id": MAIN_CAMPAIGN_ID,
@@ -3306,6 +3310,34 @@ def _require_preflight_marker(
         or marker.get("stage") not in {"preflight_passed", "complete"}
     ):
         raise RuntimeError("calibration preflight marker is stale")
+
+
+def _require_scoreable_campaign_history(
+    context: ReplicateCampaignContext,
+) -> None:
+    results_path = context.result_store.path
+    if not results_path.exists():
+        return
+    _require_scoreable_results(
+        tuple(load_jsonl_records(results_path, ResultRecord)),
+        context.schedule.campaign_id,
+    )
+
+
+def _require_scoreable_results(
+    results: Sequence[ResultRecord],
+    campaign_id: str,
+) -> None:
+    invalid = tuple(
+        result.result_id
+        for result in results
+        if result.scoreable_state != "scoreable"
+    )
+    if invalid:
+        raise RuntimeError(
+            f"campaign {campaign_id} stopped after non-scoreable Result "
+            + ", ".join(invalid)
+        )
 
 
 def _calibration_campaign_config(

@@ -232,6 +232,19 @@ def test_pending_receipt_must_close_before_the_next_six_cell_block(
         study._require_no_overdue_campaign_receipts(paths, "campaign-a", 6)
 
 
+def test_non_scoreable_result_stops_a_paid_campaign() -> None:
+    invalid = cast(
+        ResultRecord,
+        SimpleNamespace(
+            result_id="result-invalid",
+            scoreable_state="agent_invalid",
+        ),
+    )
+
+    with pytest.raises(RuntimeError, match="result-invalid"):
+        study._require_scoreable_results((invalid,), "campaign-a")
+
+
 def test_main_selection_keeps_performance_then_seeks_disagreement() -> None:
     rows = {
         "best": _agent_row(7, 5.0, "a"),
