@@ -38,7 +38,8 @@ The authorized coding-agent/model study is frozen by:
 - `docs/experiments/2026-07-25-model-agent-study.md`;
 - `examples/model_agent_study/study-plan.json`; and
 - append-only `examples/model_agent_study/study-amendment-1.json`,
-  `study-amendment-2.json`, and `study-amendment-3.json`.
+  `study-amendment-2.json`, `study-amendment-3.json`, and
+  `study-amendment-4.json`.
 
 Current evidence:
 
@@ -67,6 +68,13 @@ Current evidence:
   are $119.952162 actual and $235.142591 conservative; the 238-cell schedule,
   zero retries, $180 actual gate, $260 ledger authority, $300 global cap, and
   $30 reserve do not change.
+- Cells 37–41 then completed with exact receipts. Cell 42, a preselected
+  Terra repeat-2 execution, retained an `agent_invalid` Result after the proxy
+  returned distributor 503/no-available-channel through all five in-call
+  network retries. Its exact receipt cost $0.019584; it has no hidden outcome
+  and is not retried or relabeled. Amendment 4 authorizes one separate,
+  outcome-blind Pylint Terra recovery canary for at most $2. No later main cell
+  is authorized until that canary and a separate continuation decision.
 - Per-call accounting comes from sanitized gateway token-log rows whose
   prompt/completion totals exactly match the Result. If same-model calls
   overlap a Result window, only one uniquely matching row subset is
@@ -84,8 +92,10 @@ receipt; subsequent blocks resume the ordinary six-cell cadence.
 
 Research sequence:
 
-1. Run the frozen 75-Task paired main schedule and three executions on the
-   preselected 30% repeat subset.
+1. Run the frozen one-call Terra recovery canary. If it is not scoreable,
+   terminate the Terra main route. If it is scoreable, decide and record
+   whether the retained repeat-only invalid cell permits a no-retry
+   continuation; do not infer permission from the canary itself.
 2. Reconcile Result, campaign, token-log, balance, artifact, and certification
    evidence; run the adversarial audit; publish the decision report.
 

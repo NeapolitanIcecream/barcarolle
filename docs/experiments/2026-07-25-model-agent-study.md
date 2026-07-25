@@ -294,6 +294,24 @@ failure in the calibration-derived per-call guard:
   and changes that one call to completed without invoking the Agent. A future
   conservative Result above $10 still stops.
 
+`study-amendment-4.json` was frozen when main sequence 42 hit the scoreability
+stop:
+
+- The bound Terra Responses path returned distributor
+  `503 no-available-channel` after partial Agent work and all five Codex
+  in-call network retries. Barcarolle retained an exact `agent_invalid`
+  Result, empty diff, and $0.019584 token-log receipt. This is Agent
+  availability evidence, not a hidden-check fail.
+- Sequence 42 is a preselected repeat-2 cell. Its invalid state does not remove
+  a base-pair observation, but it censors one repeat cluster. It is never
+  retried, replaced, relabeled, or silently excluded from operational
+  reliability.
+- Main remains stopped. The amendment authorizes one separate Pylint Terra
+  recovery canary for at most $2. Scoreable, priceable usage is the only
+  recovery criterion; hidden pass/fail is ignored. A failed canary terminates
+  the Terra route. A successful canary still requires a separate,
+  pre-call continuation decision.
+
 ### Route portfolio
 
 | Route | Mechanism | First decisive test | Status / reopening rule |

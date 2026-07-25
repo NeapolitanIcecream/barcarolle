@@ -78,6 +78,29 @@ def test_execution_amendment_changes_only_the_main_per_call_ceiling() -> None:
     assert change["unchanged_cell_retries"] == 0
 
 
+def test_recovery_amendment_authorizes_one_outcome_blind_terra_canary() -> None:
+    plan = study._load_plan(study.DEFAULT_PLAN)
+    amendment = study._load_amendment(
+        study.DEFAULT_RECOVERY_AMENDMENT,
+        plan,
+    )
+
+    assert amendment["previous_amendment_digest"] == study._load_execution_amendment(
+        study.DEFAULT_EXECUTION_AMENDMENT,
+        plan,
+    )["amendment_digest"]
+    assert amendment["budget"]["maximum_additional_paid_calls"] == 1
+    assert amendment["canaries"] == [
+        {
+            "campaign_id": "model-recovery-canary-terra-2026-07-25",
+            "agent_key": "gpt-5.6-terra-high",
+            "maximum_estimated_cost_usd": 2.0,
+            "maximum_estimated_cost_per_call_usd": 2.0,
+        }
+    ]
+    assert "Hidden pass/fail is ignored" in amendment["decisions"]["recovery_rule"]
+
+
 def test_study_agent_homes_are_distinct_for_same_effort(tmp_path: Path) -> None:
     first = _agent("first-high", "model-a")
     second = _agent("second-high", "model-b")

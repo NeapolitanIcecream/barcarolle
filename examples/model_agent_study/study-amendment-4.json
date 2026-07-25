@@ -1,0 +1,50 @@
+{
+  "schema_version": "barcarolle_model_agent_study_amendment_v1",
+  "amendment_digest": "33bf7681c6822e0a4aa12c714fc67de1b3df8bc263492b46313d20eec70026d4",
+  "base_study_plan_digest": "445398963a6e703953f4a4f5c758034b8d4f377b3a0a575197b4d3282191834f",
+  "previous_amendment_digest": "560808c453035d98f6ad28175c2729c638c2f0c24dcc5007a1cdc63be24d3fab",
+  "approved_at": "2026-07-25T19:59:47Z",
+  "reason": "Main sequence 42 retained an exact Agent-invalid Result after the bound Terra channel returned five consecutive distributor 503 responses. Before deciding whether any frozen main cells can continue, authorize one separate Pylint protocol-recovery canary. The failed main cell is never retried or replaced, and its hidden outcome is unavailable and unused.",
+  "trigger": {
+    "campaign_id": "model-main-sympy-2026-07-25",
+    "schedule_digest": "be9507012c54b6bc7185fa1117c22ab79175d5b342e5c5e874cf594e1278cbae",
+    "sequence_index": 42,
+    "result_id": "result_6ae405842aca171a383d1cf08971b81bd3e3fe141b3170b3ae31c59f9ca0e285",
+    "result_digest": "47972280a4db5ab75ffb57f606c732bc0e9dd4289df0463316a8d6a96ff89c0c",
+    "scoreable_state": "agent_invalid",
+    "failure_label": "agent_failed",
+    "usage_observed": false,
+    "gateway_receipt_digest": "fab7a6eca6f7c9fcccd512a5d0f3a2ac68a12d4612e5f9cc7dcce93a78851f4b",
+    "gateway_sanitized_rows_digest": "c8f11906dea02d01b56b976e7bd33402d9abae7652a8c05b5044caa76902fad5",
+    "observed_gateway_cost_usd": 0.019584,
+    "failure_class": "bound model distributor returned 503 no-available-channel through all in-call network retries",
+    "cell_role": "preselected repeat Task, replicate index 2; no base-pair outcome is missing"
+  },
+  "decisions": {
+    "failed_main_cell": "Retain it as Agent availability evidence. Do not retry, replace, relabel, or score it as a hidden-check failure.",
+    "main_campaign": "No later main cell is authorized by this amendment.",
+    "recovery_rule": "A separate canary establishes recovery only if it is scoreable with nonempty priceable usage. Hidden pass/fail is ignored.",
+    "failure_rule": "If the recovery canary is not scoreable, terminate the Terra main route. If it is scoreable, freeze a separate continuation decision before any later main call."
+  },
+  "budget": {
+    "maximum_additional_paid_calls": 1,
+    "protocol_canary_authority_usd": 2.0,
+    "maximum_estimated_cost_per_call_usd": 2.0,
+    "accounting_rule": "This uses the existing USD 300 global cap and does not change the main campaign authority or reserve."
+  },
+  "canary_task": {
+    "task_id": "task_86ee9662a4f6f9c3e3b56f5480d333ff797e68943179b67a62dcd0ab9c28fa85",
+    "source_ref": "https://github.com/pylint-dev/pylint/issues/4901",
+    "selection_basis": "Reuse the original protocol-canary Task; neither the failed SymPy Task nor a hidden outcome selects the probe."
+  },
+  "canaries": [
+    {
+      "campaign_id": "model-recovery-canary-terra-2026-07-25",
+      "agent_key": "gpt-5.6-terra-high",
+      "maximum_estimated_cost_usd": 2.0,
+      "maximum_estimated_cost_per_call_usd": 2.0
+    }
+  ],
+  "next_decision": "Use only canary scoreability, usage, exact accounting, and the retained main failure class to decide whether a no-retry continuation is defensible.",
+  "claim_boundary": "One canary tests current Codex/proxy path recovery. It does not erase the main availability failure or establish coding capability, future availability, or a hidden-outcome rank."
+}

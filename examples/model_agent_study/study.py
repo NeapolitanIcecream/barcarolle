@@ -98,6 +98,7 @@ DEFAULT_PLAN = HERE / "study-plan.json"
 DEFAULT_AMENDMENT = HERE / "study-amendment-1.json"
 DEFAULT_DECISION_AMENDMENT = HERE / "study-amendment-2.json"
 DEFAULT_EXECUTION_AMENDMENT = HERE / "study-amendment-3.json"
+DEFAULT_RECOVERY_AMENDMENT = HERE / "study-amendment-4.json"
 DEFAULT_STUDY_OUTPUT = Path("outputs/research/2026-07-25-model-agent-study")
 DEFAULT_PILOT_OUTPUT = DEFAULT_STUDY_OUTPUT / "pylint-pool"
 STUDY_LEDGER_NAME = "resource-ledger.json"
@@ -3922,6 +3923,12 @@ def _load_amendment(
         raise ValueError("study amendment schema is unsupported")
     if amendment.get("base_study_plan_digest") != plan["study_plan_digest"]:
         raise ValueError("study amendment does not bind the base plan")
+    previous = amendment.get("previous_amendment_digest")
+    if previous is not None and previous != _load_execution_amendment(
+        DEFAULT_EXECUTION_AMENDMENT,
+        plan,
+    )["amendment_digest"]:
+        raise ValueError("study recovery amendment does not bind amendment 3")
     return amendment
 
 
