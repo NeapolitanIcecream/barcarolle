@@ -2324,16 +2324,31 @@ def _unique_exact_token_subset_indices(
     prompt_tokens: int,
     completion_tokens: int,
 ) -> tuple[int, ...]:
-    if (
-        prompt_tokens < 0
-        or completion_tokens < 0
-        or not rows
-        or len(rows) > 36
-    ):
+    if prompt_tokens < 0 or completion_tokens < 0 or not rows:
         raise GatewayReceiptIncomplete(
             "gateway token rows cannot be bounded for unique attribution"
         )
-    midpoint = len(rows) // 2
+    total_prompt = sum(_required_int(row, "prompt_tokens") for row in rows)
+    total_completion = sum(
+        _required_int(row, "completion_tokens") for row in rows
+    )
+    excess_prompt = total_prompt - prompt_tokens
+    excess_completion = total_completion - completion_tokens
+    if excess_prompt < 0 or excess_completion < 0:
+        raise GatewayReceiptIncomplete(
+            "gateway token rows contain less usage than the Result"
+        )
+    exclusion_candidates = tuple(
+        index
+        for index, row in enumerate(rows)
+        if _required_int(row, "prompt_tokens") <= excess_prompt
+        and _required_int(row, "completion_tokens") <= excess_completion
+    )
+    if not exclusion_candidates or len(exclusion_candidates) > 36:
+        raise GatewayReceiptIncomplete(
+            "gateway overlap cannot be bounded for unique exclusion"
+        )
+    midpoint = len(exclusion_candidates) // 2
 
     def subset_sums(
         start: int,
@@ -2346,10 +2361,10 @@ def _unique_exact_token_subset_indices(
             completion = 0
             for offset in range(width):
                 if mask & (1 << offset):
-                    row = rows[start + offset]
+                    row = rows[exclusion_candidates[start + offset]]
                     prompt += _required_int(row, "prompt_tokens")
                     completion += _required_int(row, "completion_tokens")
-            if prompt > prompt_tokens or completion > completion_tokens:
+            if prompt > excess_prompt or completion > excess_completion:
                 continue
             key = (prompt, completion)
             previous = sums.get(key)
@@ -2360,14 +2375,14 @@ def _unique_exact_token_subset_indices(
         return sums
 
     left = subset_sums(0, midpoint)
-    right = subset_sums(midpoint, len(rows))
+    right = subset_sums(midpoint, len(exclusion_candidates))
     solution_count = 0
     solution_masks: tuple[int, int] | None = None
     for (left_prompt, left_completion), (left_count, left_mask) in left.items():
         right_value = right.get(
             (
-                prompt_tokens - left_prompt,
-                completion_tokens - left_completion,
+                excess_prompt - left_prompt,
+                excess_completion - left_completion,
             )
         )
         if right_value is None:
@@ -2384,15 +2399,20 @@ def _unique_exact_token_subset_indices(
             "gateway token rows do not have one exact Result-token subset"
         )
     left_mask, right_mask = solution_masks
+    excluded_indices = {
+        exclusion_candidates[position]
+        for position in range(len(exclusion_candidates))
+        if (
+            position < midpoint
+            and left_mask & (1 << position)
+            or position >= midpoint
+            and right_mask & (1 << (position - midpoint))
+        )
+    }
     return tuple(
         index
         for index in range(len(rows))
-        if (
-            index < midpoint
-            and left_mask & (1 << index)
-            or index >= midpoint
-            and right_mask & (1 << (index - midpoint))
-        )
+        if index not in excluded_indices
     )
 
 

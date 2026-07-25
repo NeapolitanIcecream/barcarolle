@@ -243,9 +243,9 @@ The block size also respects log retention. Upstream
 [`GetLogByTokenId`](https://github.com/QuantumNous/new-api/blob/e8cfb546fa7e1d5bf266c5998181c0021826e045/model/log.go#L69-L72)
 returns at most
 [`MaxRecentItems = 1000`](https://github.com/QuantumNous/new-api/blob/e8cfb546fa7e1d5bf266c5998181c0021826e045/common/constants.go#L61).
-Across the first 32 exact or zero-usage receipts, one cell used at most 28
-successful log rows (p90 22); six times the observed maximum is 168. This is
-not a guarantee against unrelated traffic, so a missing exact token match
+Across the first 82 exact or zero-usage receipts, one time window contained at
+most 34 candidate rows (p90 23); six times the observed maximum is 204. This
+is not a guarantee against unrelated traffic, so a missing exact token match
 still stops the campaign rather than accepting a partial receipt.
 
 The first recovery snapshot exposed a different shared-gateway hazard. Terra's
@@ -256,6 +256,11 @@ log incompleteness. Attribution now accepts all model/time candidates when
 their totals match; otherwise it requires exactly one candidate-row subset to
 reproduce both Result totals. The receipt records candidate and excluded
 counts plus digests. A missing or non-unique subset remains an accounting stop.
+After a legitimate main cell used 33 rows, the subset bound was refined:
+unique matching solves for the small excess/excluded set, so the 36-row
+complexity limit applies to plausible overlap rows rather than all legitimate
+study rows. A 41-candidate regression proves that one unique excess row remains
+attributable.
 
 The replacement panel then completed with 24/24 scoreable Results and exact
 receipts. Mini passed 4/10 base Tasks; Terra retained its canonical 5/10

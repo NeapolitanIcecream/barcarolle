@@ -347,7 +347,7 @@ def test_gateway_log_receipt_requires_exact_result_token_totals() -> None:
     assert receipt["quota_points"] == 24
     assert receipt["result_usage_match"] is True
 
-    with pytest.raises(RuntimeError, match="exact Result-token"):
+    with pytest.raises(study.GatewayReceiptIncomplete):
         study._gateway_log_receipt(result, rows[:1])
 
 
@@ -371,6 +371,35 @@ def test_gateway_log_receipt_excludes_one_unique_overlapping_call() -> None:
     assert receipt["candidate_row_count"] == 3
     assert receipt["excluded_candidate_row_count"] == 1
     assert receipt["quota_points"] == 24
+
+
+def test_gateway_log_receipt_bounds_overlap_not_legitimate_row_count() -> None:
+    result = _result_stub(
+        "result-a",
+        "2026-07-25T00:00:00Z",
+        "2026-07-25T00:00:10Z",
+        40_000,
+        4_000,
+    )
+    rows = tuple(
+        _gateway_row(
+            1784937602 + index % 8,
+            "model-a",
+            1000,
+            100,
+            1,
+            f"request-{index}",
+        )
+        for index in range(40)
+    ) + (
+        _gateway_row(1784937609, "model-a", 10, 2, 5, "overlap"),
+    )
+
+    receipt = study._gateway_log_receipt(result, rows)
+
+    assert receipt["candidate_row_count"] == 41
+    assert receipt["excluded_candidate_row_count"] == 1
+    assert receipt["quota_points"] == 40
 
 
 def test_gateway_log_receipt_rejects_ambiguous_overlapping_calls() -> None:
