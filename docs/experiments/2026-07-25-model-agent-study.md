@@ -1,7 +1,7 @@
 # 2026-07-25 Coding-Agent / Model Study
 
-Status: active. The contract was frozen before paid execution; subsequent
-changes are recorded as append-only amendments below.
+Status: complete. The contract was frozen before paid execution; all later
+execution decisions are recorded as five append-only amendments below.
 
 ## Research contract
 
@@ -312,15 +312,29 @@ stop:
   the Terra route. A successful canary still requires a separate,
   pre-call continuation decision.
 
+`study-amendment-5.json` was frozen after the recovery canary and before any
+later main call:
+
+- The outcome-blind Terra canary was scoreable, had priceable nonempty usage,
+  and had an exact $0.291302 gateway receipt. Its hidden pass/fail did not enter
+  the continuation decision.
+- Sequence 42 remained the only permitted non-scoreable main Result. The
+  amendment authorized exactly the 195 remaining frozen cells, with zero
+  retries and zero replacements. A second non-scoreable Result would terminate
+  the Terra route without another amendment.
+- The full schedule then completed at 238/238 cells. Sequence 42 remains
+  censored from hidden-outcome repeatability estimates and is counted as not
+  successful in the operational sensitivity view.
+
 ### Route portfolio
 
 | Route | Mechanism | First decisive test | Status / reopening rule |
 | --- | --- | --- | --- |
 | R1: fixed Pylint anchor | Reuse the already audited, certified ten-Task Pylint SWE-bench pool and compare diverse models on the same hidden checks. | All ten candidates certify; model canaries are scoreable and quota-accounted. | Complete: Terra 5/10, Sol 5/10, mini 4/10; only mini disagreed with the frontier pair. The proposed 15-Task union was not needed once the 75-Task SymPy route passed offline feasibility. |
-| R2: broader static classic source | Implement one explicit dataset-import adapter for a larger single-repository SWE-bench Verified slice, with pinned source and verifier manifests. | Package replay, base-fail/reference-pass certification, arm64 image/base binding, and disk/time feasibility. | Admitted and main authorized: all 75 SymPy candidates passed 150 fresh base/reference checks, the 75-Task/54-cluster bundle reopens, and both main cost gates passed. |
-| R3: repeatability-first | Run outcome-independent repeated cells and estimate pass/fail flip probability. | Two or three executions exist for every frozen repeat cell without replacement. | Mandatory analysis route. Promote replicate-aware core design only if the interval crosses the predeclared decision gates. |
+| R2: broader static classic source | Implement one explicit dataset-import adapter for a larger single-repository SWE-bench Verified slice, with pinned source and verifier manifests. | Package replay, base-fail/reference-pass certification, arm64 image/base binding, and disk/time feasibility. | Complete: all 75 SymPy candidates passed 150 fresh base/reference checks; all 238 main cells over the 75-Task/54-cluster bundle reached a terminal Result. |
+| R3: repeatability-first | Run outcome-independent repeated cells and estimate pass/fail flip probability. | Two or three executions exist for every frozen repeat cell without replacement. | Complete but bounded inconclusive: 18/130 observable pairs flipped; the cluster interval `[6.15%, 21.88%]` crosses neither promotion gate. Retain repeats in the experiment layer. |
 | R4: retrospective Selector simulation | Reconstruct historical origins from newly generated Results. | Statistical-protocol audit. | Rejected: Result observation time makes it non-prospective. Reopen only with Results observed under a future authorized rolling campaign. |
-| R5: multiple coding-agent harnesses | Compare Codex CLI with another coding-agent implementation. | Identity/isolation parity and a separately certified harness. | Deferred. It confounds model and harness in this sprint and no equally mature local adapter is installed. Reopen after the fixed-harness model decision. |
+| R5: multiple coding-agent harnesses | Compare Codex CLI with another coding-agent implementation. | Identity/isolation parity and a separately certified harness. | Deferred. It confounds model and harness in this sprint and no equally mature local adapter is installed. Reopen only after a second harness reaches identity, isolation, oracle, and artifact parity. |
 
 ### Stages and allocation rules
 
@@ -387,3 +401,134 @@ Stop immediately before another call if:
 The final report must state spent and remaining budget, every retired route,
 the strongest supported conclusion, and the exact evidence still needed for
 cross-repository or prospective-Selector claims.
+
+## Final report
+
+### Main comparison
+
+All 238 frozen cells reached a terminal Result. The 150 base cells cover both
+Agents on all 75 Tasks; 22 outcome-independent Tasks received two additional
+runs per Agent. There are 237 scoreable Results and one retained Terra
+`agent_invalid` Result on repeat index 2.
+
+| Paired base outcome | Task count |
+| --- | ---: |
+| Both pass | 43 |
+| Terra only passes | 10 |
+| Mini only passes | 3 |
+| Both fail | 19 |
+
+Terra passed 53/75 (70.67%) base Tasks and mini passed 46/75 (61.33%).
+Terra's paired advantage is 9.33 percentage points. The exact two-sided
+McNemar p-value is 0.092285; a 20,000-draw dependency-cluster bootstrap gives a
+95% interval of `[0, 18.18]` percentage points. This supports Terra as the
+engineering default when combined with its operational advantage, but does
+not support a conventional `p < 0.05` universal superiority claim.
+
+The retrospective union passes 56/75 Tasks, only three more than Terra, while
+running both Agents on the base population costs $60.777452 instead of
+$15.296536 for Terra. Because no prospective policy identifies mini's three
+unique wins, the union is an oracle upper bound rather than Selector evidence.
+
+### Operational evidence
+
+| Measure | Terra-high | Mini-high |
+| --- | ---: | ---: |
+| Calls / scoreable Results | 119 / 118 | 119 / 119 |
+| End-to-end successes | 87 (73.11%) | 73 (61.34%) |
+| Exact gateway cost | $25.036084 | $71.414206 |
+| Exact cost per end-to-end success | $0.287771 | $0.978277 |
+| Exact base cost per pass | $0.288614 | $0.988716 |
+| Per-call cost median / p90 | $0.156190 / $0.334442 | $0.461486 / $1.002772 |
+| Workspace seconds median / p90 | 99.30 / 187.67 | 122.92 / 240.10 |
+| Input / output tokens | 47,674,642 / 626,349 | 120,488,906 / 1,658,003 |
+
+At equal call count, mini cost 2.85 times as much in exact gateway receipts,
+used 2.53 times as many input tokens and 2.65 times as many output tokens, and
+had slower median and p90 workspace time. Its cost per end-to-end success was
+3.40 times Terra's. Sol had the same 5/10 calibration outcomes as Terra but
+cost $6.013130 versus $2.491162, so it is retired for this source.
+
+### Repeatability decision
+
+Across 44 scheduled Agent×Task clusters, one Terra execution is censored. The
+remaining observations provide 130 within-cluster outcome pairs; 18 disagree,
+for an observed flip rate of 13.85%. The 20,000-draw Agent×Task-cluster
+bootstrap interval is `[6.15%, 21.88%]`. Terra has 8/64 pairwise flips and mini
+has 10/66.
+
+The interval's upper bound is not at most 5%, so this experiment does not prove
+that one run is stable. Its lower bound is not at least 10%, so it also does
+not trigger mandatory replicate-aware comparisons. The predeclared decision is
+therefore to keep repeat slots in the experiment layer without changing the
+core Result/controller schema. Future high-stakes comparisons should continue
+to preregister repeats until evidence crosses a gate.
+
+### Budget and accounting
+
+The main comparison's exact attributed cost is $96.450290; its common
+ScoringConfig ledger consumed a conservative $183.336993. Across the complete
+sprint:
+
+- 291 benchmark model calls were recorded: 287 scoreable and four
+  Agent-invalid;
+- exact token-log attribution totals $114.406752;
+- global token-balance movement is $117.795124, including $3.388372 not
+  attributable to retained study receipts; and
+- the sum of conservative call estimates is $216.113623.
+
+Against the $300 cap, $182.204876 remains by the conservative global-balance
+guard and $83.886377 remains against the larger sum of call estimates. The
+study stopped because all frozen cells were complete. It did not spend the
+remainder: there was no predeclared additional sample, and choosing new cells
+after observing outcomes would weaken the comparison.
+
+### Adversarial audit
+
+- `barcarolle task-pool validate` reopened the exact bundle with 75 Tasks,
+  75 Checks, 75 certification evidence records, and 75 source events.
+- Main schedule indices are exactly 0–237. All 238 call IDs and Result IDs are
+  unique; each Agent has one stable manifest digest; the three runtime digests
+  are the three frozen replicate slots shared by both Agents.
+- The campaign has 238 reservation, 238 completion, and two append-only
+  reauthorization events. It has zero cell retries, zero replacements, and
+  zero Results recovered after caller interruption.
+- All 238 main calls have an accounting receipt. Across the whole study, 287
+  receipts exactly match complete Result token totals; the retained
+  availability failure has one exact model/time log receipt without complete
+  Result usage; three protocol-invalid calls have zero usage, zero successful
+  log rows, and zero attributed cost.
+- All 238 main artifact manifests and all 870 artifact refs exist under the
+  expected root. Their digests match and none escapes the artifact root.
+  Scanning all 714 public diff/stdout/stderr files found no hidden-check or
+  reference-patch path marker.
+- Primary uncertainty clusters 75 Tasks into 54 dependency groups.
+  Repeatability resamples complete Agent×Task clusters. There is one
+  predeclared main comparison; protocol canaries and calibration are not
+  interpreted as extra confirmatory superiority tests.
+- The sole main missing hidden outcome is the declared repeat-2 provider
+  failure. It is censored from hidden-outcome estimates and counted as
+  unsuccessful in end-to-end sensitivity; it was never retried, replaced,
+  relabeled, or silently omitted.
+- Base outcomes, McNemar probability, both bootstrap intervals, repeat
+  disagreements, costs, token totals, and latency quantiles were recalculated
+  directly from the schedule, Result, Task Pool, resource-ledger, and artifact
+  records independently of the committed main summarizer.
+
+The committed sanitized snapshot is
+`examples/model_agent_study/study-results.json`; it binds semantic identities
+and SHA-256 hashes of the ignored source summaries and ledgers. Raw workspaces,
+provider payloads, prompts, completions, and verifier material remain ignored.
+
+### Decision and next evidence
+
+Use `gpt-5.6-terra-high` as the default single Agent for this frozen source and
+Codex CLI harness. Keep `gpt-5.4-mini-high` only as a challenger arm for future
+prospective routing research; do not execute both by default. Treat DeepSeek,
+Gemini, and Claude observations only as fixed-harness protocol failures.
+
+Cross-repository generalization requires a preregistered replication on at
+least one different repository/source population. A model-routing claim
+requires a prospective Selector fitted without future Results and evaluated on
+later origins. A harness claim requires a second coding-agent implementation
+with matched identity, isolation, oracle, and artifact contracts.

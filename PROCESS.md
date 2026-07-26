@@ -2,156 +2,102 @@
 
 Last updated: 2026-07-25.
 
-This file records only active direction and stop conditions. Intended behavior
+This file records current direction and stop conditions only. Intended behavior
 lives in `docs/design/`; findings and future work live in
 `docs/research-improvement-backlog.md`.
 
-## Stable Boundaries
+## Stable boundaries
 
 - Keep the eight-module graph: Records, Task Pool, Verification, Workspace,
   Result Store, Selection, Reporting, and Runner.
 - Generators end at one strict prepared-candidate package. Barcarolle owns
-  certification and immutable Task Pool publication. Downstream modules consume
+  certification and immutable Task Pool publication; downstream modules consume
   a validated `TaskPoolBundle`, never a Generator object.
-- A user-maintained complete Task Pool is a separate read-only input. Opening
-  it does not generate, copy, recertify, or republish it.
-- Task Pool storage and Result storage remain independent. Result reuse is by
-  exact Task/Check/Agent/Workspace/Runtime identity, not Task Pool ID.
-- Scoreable execution keeps a clean solver workspace, captures its diff, and
+- User-maintained complete Task Pools open read-only. Opening does not generate,
+  copy, recertify, or republish them.
+- Task Pool and Result storage remain independent. Reuse is by exact
+  Task/Check/Agent/Workspace/Runtime identity, not Task Pool ID.
+- Scoreable execution uses a clean solver workspace, captures its diff, and
   applies that diff in a fresh verifier workspace where private oracle material
   is first introduced.
-- Imported Results require an immutable source manifest and receipt. Default
-  availability has an import-time floor; producer-attested history is explicit
-  and cannot silently become Barcarolle-managed evidence.
-- Keep final-form rolling-origin, FeatureSnapshot, SelectorInput, fitted
-  Selector, lazy fill, and prospective replay contracts. Learned algorithms
-  wait for sufficient prospective evidence; their infrastructure is not
-  deleted merely because current data underuses it.
+- Imported Results require an immutable source manifest and receipt.
+  Producer-attested history stays explicit and cannot silently become
+  Barcarolle-managed evidence.
+- Preserve final-form rolling-origin, FeatureSnapshot, SelectorInput, fitted
+  Selector, lazy-fill, and prospective replay contracts. Learned algorithms
+  wait for prospective evidence; their infrastructure is not removed.
 - Prefer direct records and functions. Do not add a Generator registry, plugin
   host, model service, workflow DAG, Feature Store, distributed scheduler, or
   simulator platform without a concrete implementation that needs it.
 
-## Active Research Sprint
+## Completed model/Agent study
 
-The authorized coding-agent/model study is frozen by:
+The bounded USD 300 study is complete. Its frozen contract, five append-only
+amendments, implementation, sanitized result snapshot, and report are under
+`examples/model_agent_study/` and
+`docs/experiments/2026-07-25-model-agent-study.md`.
 
-- `docs/experiments/2026-07-25-model-agent-study.md`;
-- `examples/model_agent_study/study-plan.json`; and
-- append-only `examples/model_agent_study/study-amendment-1.json`,
-  `study-amendment-2.json`, `study-amendment-3.json`, and
-  `study-amendment-4.json`.
+- The main population is one certified 75-Task, 54-dependency-cluster SymPy
+  SWE-bench Verified pool. The fixed harness is Codex CLI.
+- Main executed all 238 frozen cells: 150 base cells and 88 repeat cells.
+  There are 237 scoreable Results and one retained Terra availability failure
+  on a preselected repeat-2 cell. No cell was retried or replaced.
+- Terra-high passed 53/75 base Tasks; mini-high passed 46/75. The paired
+  difference is +9.33 percentage points for Terra, with exact McNemar
+  `p=0.0923` and dependency-cluster bootstrap 95% interval `[0, 18.18]`
+  percentage points.
+- Terra is the operational default for this source and harness: USD 25.036084
+  for 119 calls and 87 end-to-end successes, versus mini's USD 71.414206 and
+  73 successes. Mini remains a research challenger for future prospective
+  routing work, not a default second execution.
+- The observed run-level flip rate is 18/130 = 13.85%, with an
+  Agent×Task-cluster bootstrap 95% interval `[6.15%, 21.88%]`. It crosses
+  neither predeclared gate. Keep repeats in the experiment layer; do not change
+  the core Result/controller schema or mandate replicate-aware execution yet.
+- Sol matched Terra's 5/10 calibration outcomes at higher cost and is retired
+  for this source. DeepSeek V4 Pro, Gemini 3.1 Pro, and Claude Sonnet 4.6 were
+  incompatible with the fixed Codex Responses protocol; this is not a
+  capability ranking.
 
-Current evidence:
+The whole sprint made 291 benchmark calls. Exact attributed gateway cost was
+USD 114.406752; conservative global balance movement was USD 117.795124; the
+sum of conservative call estimates was USD 216.113623. No more paid calls are
+authorized by this completed contract. Unused budget is intentional: there
+were no remaining frozen cells, and outcome-driven expansion would weaken the
+evidence.
 
-- The certified ten-Task Pylint pool is the calibration anchor.
-- A 75-Task, 54-dependency-cluster SymPy SWE-bench Verified package is frozen.
-  All 75 base-fail/reference-pass pairs certified in about 66 minutes, and the
-  published 75-Task/75-Check bundle reopens.
-- DeepSeek V4 Pro and Gemini 3.1 Pro failed Codex Responses compatibility
-  without gateway charge. These are harness/proxy protocol failures, not model
-  capability results.
-- Sol and Terra completed the 24-cell paired calibration with 24 scoreable
-  Results. Each passed 5/10 base Tasks, their base outcomes were identical, and
-  neither of the two repeated Tasks flipped. Sol cost $6.013130 versus Terra
-  $2.491162 by exact gateway receipts.
-- GPT-5.4 mini completed its replacement calibration with 4/10 base passes,
-  one disagreement with Terra, and no flip on two repeated Tasks. The frozen
-  rule selected Terra plus mini for main. Claude Sonnet 4.6 was Agent-invalid
-  with empty usage and zero attributed quota.
-- Main is authorized for 238 cells over 75 SymPy Tasks and 22 preselected
-  repeat Tasks. Actual p90 projection is $128.355304; the common-ScoringConfig
-  projection is $242.984137 under its separate $260 ledger ceiling.
-- Main has 37 exact scoreable Results. Cell 36 cost $2.968422 at the gateway
-  but $4.909603 under the common conservative ScoringConfig, exceeding the
-  calibration-derived $4.032351 per-call ledger ceiling. Amendment 3 raises
-  only that ceiling to $10. Revised outcome-independent full-main projections
-  are $119.952162 actual and $235.142591 conservative; the 238-cell schedule,
-  zero retries, $180 actual gate, $260 ledger authority, $300 global cap, and
-  $30 reserve do not change.
-- Cells 37–41 then completed with exact receipts. Cell 42, a preselected
-  Terra repeat-2 execution, retained an `agent_invalid` Result after the proxy
-  returned distributor 503/no-available-channel through all five in-call
-  network retries. Its exact receipt cost $0.019584; it has no hidden outcome
-  and is not retried or relabeled. Amendment 4 authorizes one separate,
-  outcome-blind Pylint Terra recovery canary for at most $2. No later main cell
-  is authorized until that canary and a separate continuation decision.
-- Per-call accounting comes from sanitized gateway token-log rows whose
-  prompt/completion totals exactly match the Result. If same-model calls
-  overlap a Result window, only one uniquely matching row subset is
-  admissible. The token balance is eventually consistent and is used only for
-  the global guard and aggregate reconciliation. Take one live balance
-  checkpoint every six frozen cells and reuse a live snapshot across campaigns
-  for at most five minutes; use exact attributed quota between checkpoints.
-  Do not interpret an immediate post-call balance as one call's cost.
+## Claim boundary
 
-Persist each Result immediately, but batch token-log attribution every six
-cells. Pending calls reserve their full per-call ceilings, and a new block
-cannot start until the previous block's receipts are exact. The first resumed
-partial block contains cells 37–41 because cell 36 already has an exact
-receipt; subsequent blocks resume the ordinary six-cell cadence.
+- Results are retrospective and conditional on the frozen SymPy source,
+  certified checks, Codex CLI harness, model configurations, and observed
+  endpoint period. They are not a universal model leaderboard.
+- Newly observed Results cannot be backdated into historical rolling origins
+  and do not establish prospective Selector error.
+- Task Pool consistency proves artifact/link consistency, not source-population
+  coverage. Generator behavior, observed source frame, Check quality,
+  generated-pool prediction, and field calibration remain separate evidence
+  axes.
+- A theoretical two-Agent oracle is not a deployable Selector. Do not claim
+  routing benefit without a prospective policy and held-out origins.
 
-Research sequence:
+## Next work and reopening triggers
 
-1. Run the frozen one-call Terra recovery canary. If it is not scoreable,
-   terminate the Terra main route. If it is scoreable, decide and record
-   whether the retained repeat-only invalid cell permits a no-retry
-   continuation; do not infer permission from the canary itself.
-2. Reconcile Result, campaign, token-log, balance, artifact, and certification
-   evidence; run the adversarial audit; publish the decision report.
+1. Before certifying another pool of comparable size, add one single-writer
+   certification checkpoint keyed by exact package, candidate, Workspace,
+   Runtime, Check, mode, and normalized outcome. Replay every checkpoint before
+   reuse; do not add a workflow engine.
+2. Narrow the Pylint Generator behavior identity from the whole pilot file to
+   an explicit behavior/version payload plus directly executed helper digests.
+3. For model generalization, preregister a second repository/source replication.
+   For Selector evidence, run a future authorized prospective rolling campaign.
+4. Compare another coding-agent harness only after it has identity, isolation,
+   oracle, and artifact parity with the Codex adapter.
+5. Reopen checkout caching when checkout plus cleanup exceeds 5% of scoreable
+   cell wall time or p95 blocks target throughput. Reopen bounded Agent
+   parallelism only with unambiguous per-call attribution, one Result writer,
+   and explicit concurrency authority.
+6. Concrete Generator development remains outside the completed sprint.
 
-## Paid-Call Boundary
-
-This sprint is the explicit exception to the repository's default variable
-names: the user authorized at most USD 300 through `LLM_BASE_URL` and
-`LLM_API_KEY`. The study driver proves their endpoint/key values match the
-`OPENAI_BASE_URL` and `OPENAI_API_KEY` values consumed by the harness before
-each campaign.
-
-Every paid cell requires immutable schedule authority, exact endpoint/model/
-harness/config identity, a per-call ceiling, a total campaign ceiling, and
-enough remaining global allowance for the next ceiling. A study-scoped lock
-keeps Barcarolle paid calls serial. Metadata queries use bounded retry; Agent
-cells have zero campaign retry.
-
-The hard allowance is 150,000,000 quota points above the frozen
-`total_used=707840389` baseline, with 500,000 points per USD. Before a call,
-guard against the larger of:
-
-- later global balance movement; and
-- the sum of exact attributed token-log quota.
-
-Raw credentials, URLs, prompts, completions, transcripts, workspaces, verifier
-output, and gateway payloads stay under ignored outputs or are not persisted.
-Commit only sanitized summaries, digests, plans, reports, schemas, and tests.
-
-## Claim Boundary
-
-- The current study is retrospective and source-conditional. It can support a
-  practical model portfolio for the frozen Pylint/SymPy populations, not a
-  universal leaderboard.
-- Newly observed 2026 Results cannot be backdated into historical rolling
-  origins and do not establish prospective Selector MAE.
-- Task Pool bundle consistency proves artifact/link consistency, not source
-  population coverage.
-- Generator behavior, source-frame authority, Check quality, generated-pool
-  prediction, and field calibration are separate evidence axes.
-- Run repeats stay in the experiment layer unless the predeclared flip-rate
-  interval crosses its promotion gate.
-
-## Deferred Work And Reopening Triggers
-
-- Checkout caching: reopen only when checkout plus cleanup exceeds 5% of
-  scoreable-cell wall time or p95 blocks target throughput.
-- Bounded Agent parallelism: the duration threshold is now met, but this study
-  remains serial because attribution and isolation are part of its evidence.
-  Reopen with a concrete concurrency authority, one Result writer, and
-  per-call attribution that remains unambiguous.
-- Certification checkpointing: the 66-minute 75-Task run makes interruption
-  loss material. Before the next comparable pool, add one single-writer
-  checkpoint keyed by exact package/candidate/config/Check/mode identity; do
-  not add a workflow engine.
-- Concrete Generator development remains outside this sprint.
-
-Before commits, run scoped tests, Ruff, Pyright, and `git diff --check`. Preserve
-all ignored campaign outputs until the final sanitized report and audit replay
-their digests.
+Before commits, run scoped tests, Ruff, Pyright, and `git diff --check`. Raw
+credentials, prompts, completions, transcripts, workspaces, verifier output,
+and provider payloads remain under ignored outputs and must not be committed.
