@@ -1,6 +1,6 @@
 # Module Design: Records
 
-Status: current core records, 2026-07-24.
+Status: current core records, 2026-07-27.
 
 ## Responsibility
 
@@ -204,6 +204,15 @@ Task `known_at` is derived only from `source_resolved_at` and
 `task_material_available_at`. Task/Check `known_at` also includes
 `check_material_available_at`. Certification time is not part of historical
 availability and is not stored on Task or Check.
+
+These timestamps and the two classification fields are algorithm-visible
+inputs. A user import or concrete adapter may supply them, and changing them
+must change the containing Task Pool and downstream Origin identity. A
+timestamp alone does not prove source history. The surrounding package,
+adapter behavior, and experiment lineage determine whether it is
+source-attested, producer-attested, or a user-configured counterfactual. A
+derived scenario keeps the source bundle unchanged and receives a new Task
+Pool ID and digest.
 
 ### CheckRecord
 
@@ -415,6 +424,14 @@ implementation-owned local import-observation time; `import_time_floor_v1`
 makes the effective availability no earlier than that observation, while
 `producer_attested_historical_v1` preserves the source timestamp as an explicit
 producer attestation rather than a Barcarolle observation-time claim.
+
+Result observation time and counterfactual visibility are separate. A
+strict-prospective Selector view may use only Results available by its cutoff.
+A counterfactual replay may use a later persisted Result when its exact
+Task/Check ref is in mature history and its Agent and cache identity match.
+Neither mode rewrites the Result. `FeatureSnapshotRecord` and `SelectorInput`
+freeze the exact visible Result IDs and digests before later outcomes are
+opened.
 
 ### Result admission records
 

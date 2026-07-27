@@ -1,6 +1,6 @@
 # Module Design: Selection
 
-Status: current behavior and planned boundaries, 2026-07-24.
+Status: current behavior and planned boundaries, 2026-07-27.
 
 ## Responsibility
 
@@ -114,6 +114,14 @@ dependency-cluster overlap; it does not silently drop either side. Dependency
 clusters are protocol metadata, not Selector features. A separately named
 `sampling_stratum` may be exposed as `task_stratum`.
 
+Result visibility follows the same mode. Strict-prospective inputs reject a
+Result observed after the Origin cutoff. Counterfactual inputs may use a
+persisted Result observed later only when its exact Task/Check ref is mature
+history and its Agent and cache identity match. The Result timestamp is not
+projected. The exact Result view is frozen in `FeatureSnapshotRecord` and
+`SelectorInput`; a Result appended by later lazy evaluation cannot alter an
+already persisted or resumed Selection.
+
 `SelectionBudget` accepts only `max_task_checks`, which must be a positive
 integer; `budget_digest` is derived from that limit. `FeatureConfig` accepts
 only feature names. It rejects empty, duplicate, non-string, and unsupported
@@ -158,6 +166,9 @@ shape contains all three experts as positive-zero-normalized floats on a unit
 simplex. Overall scaling and omitted zero-weight experts cannot create another
 identity for the same ranking behavior; normalization is idempotent under
 `fsum` even for highly imbalanced weights.
+Inference also uses `fsum` across the weighted expert scores. Mathematical ties
+therefore reach the documented Task/Check ID tie-break instead of depending on
+binary64 operand order.
 `SelectorRecord.config_digest` covers the family and these canonical parameters.
 `SelectorInput` already binds the feature snapshot and budget, while
 `SelectorRecord` binds the algorithm identity. Selection therefore needs no

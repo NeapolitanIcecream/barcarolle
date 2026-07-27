@@ -23,6 +23,14 @@ raw checks, and published artifacts belong below ignored `outputs/`; the
 manifest retains only the small source and image identities needed to replay
 their selection.
 
+`prepare_package.py` requires
+`--check-material-availability-basis`. Use `source_observed_at` when the Check
+material was first available only when this adapter observed it. Use
+`task_material_available_at` only when the imported benchmark contract treats
+the Check label as available with the Task. The chosen basis changes every
+candidate Check timestamp and the Generator behavior digest. It is an
+algorithm input and provenance claim, not a display option.
+
 The first full run certified all 75 frozen candidates in about 66 minutes and
 published 75 Tasks, 75 Checks, and 54 dependency clusters. This is one
 adapter-conformance result, not a certification-throughput benchmark.

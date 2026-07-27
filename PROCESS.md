@@ -2,75 +2,78 @@
 
 Last updated: 2026-07-27.
 
-This file records only current direction and stop conditions. Intended behavior
-lives in `docs/design/`; findings and future work live in
+This file records current direction and reopening conditions. Intended behavior
+lives in `docs/design/`; findings live in
 `docs/research-improvement-backlog.md`.
 
 ## Stable boundaries
 
-- Keep the eight-module graph: Records, Task Pool, Verification, Workspace,
-  Result Store, Selection, Reporting, and Runner.
+- Keep the eight modules: Records, Task Pool, Verification, Workspace, Result
+  Store, Selection, Reporting, and Runner.
 - Generators end at one strict prepared-candidate package. Barcarolle owns
   certification and immutable Task Pool publication. A user-maintained complete
   Task Pool opens read-only.
+- Algorithm-visible Task/Check availability, dependency cluster, and sampling
+  stratum may come from a user or adapter. Their derivation and evidence class
+  must be explicit. A counterfactual scenario gets a new immutable Task Pool;
+  it never overwrites or relabels its source pool.
 - Task Pool and Result storage remain independent. Reuse is by exact
   Task/Check/Agent/Workspace/Runtime identity, not Task Pool ID.
-- Scoreable execution uses a clean solver workspace, captures its diff, and
-  replays it in a fresh verifier workspace where private oracle material is
-  first introduced.
-- Preserve rolling-origin, FeatureSnapshot, SelectorInput, fitted Selector,
-  lazy-fill, and prospective replay contracts. YAGNI applies to machinery, not
-  to this known final data flow.
-- Prefer direct records and functions. Do not add a Generator registry, plugin
-  host, model service, workflow DAG, Feature Store, distributed scheduler, or
-  simulator platform without a concrete implementation that requires it.
+- Strict-prospective Result inputs obey physical availability. Counterfactual
+  inputs obey mature history membership plus exact identity. FeatureSnapshot
+  and SelectorInput freeze the view before lazy testing.
+- Preserve the rolling-origin, fitted Selector, lazy-fill, and prospective
+  replay data flow. Use direct records and functions. Do not add a Generator
+  registry, plugin host, Feature Store, workflow DAG, model service,
+  distributed scheduler, or simulator platform without a concrete caller.
 
 ## Current evidence
 
-The completed model/Agent study is documented at
-`docs/experiments/2026-07-25-model-agent-study.md`. Its 75-Task SymPy panel
-supports Terra as the source-conditional operational default and mini as a
-research challenger. No more paid calls are authorized by that contract.
+The 75-Task SymPy model/Agent study supports Terra as its source-conditional
+operational default and mini as a research challenger. Its paid authority is
+closed.
 
-The zero-call Selector follow-up is documented at
-`docs/experiments/2026-07-27-offline-selector-study.md`.
+The zero-call Selector study now has two evidence views:
 
-- Historical Task source times do not backdate the Checks certified in 2026.
-  All twelve planned historical core Origins have zero mature history and
-  future refs. The existing Results do not establish counterfactual or
-  strict-prospective rolling-origin error.
-- A separately labeled historical Task-order diagnostic rejected the current
-  duration-stratum ALG-002 configuration. Do not tune it on the same outcomes.
-- ALG-001 and ALG-004 retained coverage in every eligible outer block. ALG-003
-  was seed-unstable. None is a Runner default.
-- Coverage is a future hypothesis only. Its exploratory difference from the
-  five-seed random-bank mean was `-0.0383`; repeat, dependency, and block-size
-  diagnostics justify prospective testing, not deployment.
+- The published 2026 Check timestamps are the source-observation negative
+  control. All 12 historical Origins are fully censored.
+- The user-configured `label_at_task_arrival` scenario produces 12 public
+  Origins, 72 Selections, 144 matrices, and 72 MAE metrics. All 150 base Results
+  match exact Task/Check/Agent/cache identity and are reused without calls.
+- Coverage MAE is `0.1833`, versus random seed 5 at `0.2250` and recency at
+  `0.2042`. This supports selection within this counterfactual scenario.
+- The predeclared weighted-stratified rule remains worse than coverage by
+  `0.0536`. ALG-003 is seed-unstable; ALG-001 and ALG-004 retain coverage.
+- Stable rule-mixture summation changes one benchmark membership and one MAE
+  relative to the frozen transparent diagnostic. The disagreement is recorded.
 
-## Next reopening point
+No result establishes strict-prospective performance or promotes a Selector
+into Runner defaults.
 
-Do not spend more money or add learned Selector machinery against the current
-75 outcomes. The next decisive Selector study requires real later Task Pool
-snapshots and mature Results.
+## Stop state and reopening work
 
-Preregister coverage versus the frozen five-seed random-bank mean with at least
-25 independent, non-overlapping five-Task Origins, two frozen Agents,
-dependency/repository reporting, and a preselected repeat subset. The current
-planning estimate is 140 unique Tasks, 280 Agent calls, `$86.47` median and
-`$187.21` sum-of-Agent-p90 cost. These numbers are neither authorization nor a
-provider quote.
+Do not spend more money, tune against the same 75 outcomes, or add learned
+Selector machinery. The current generic infrastructure is sufficient until a
+concrete Task source, later Task Pool, or model API is available.
 
-Before another certification run of comparable size, add the already-justified
-single-writer candidate checkpoint keyed by exact package, candidate,
-Workspace, Runtime, Check, mode, and normalized outcome. Narrow the Pylint
-Generator behavior digest before its next campaign. Concrete Generator
-development remains deferred until a source and any required API are available.
+Highest-value reopening work:
 
-Reopen checkout caching only when checkout plus cleanup exceeds 5% of scoreable
-cell wall time or p95 blocks target throughput. Reopen bounded Agent parallelism
-only with unambiguous per-call attribution, one Result writer, and explicit
-concurrency authority.
+1. Preregister coverage versus the frozen five-seed random-bank mean with at
+   least 25 independent mature five-Task Origins, two frozen Agents,
+   dependency/repository reporting, and a preselected repeat subset. The
+   140-Task, 280-call estimates of `$86.47` median and `$187.21`
+   sum-of-Agent-p90 are planning inputs, not authority or quotes.
+2. Before another comparable certification run, add the single-writer
+   candidate checkpoint from RI-160 and narrow the Pylint Generator behavior
+   digest from RI-163.
+3. Reopen learned Selectors only when enough mature Origins exist for a frozen
+   outer evaluation. Reopen concrete Generator development only with its source
+   and required API.
+4. Reopen checkout caching when checkout plus cleanup exceeds 5% of scoreable
+   cell time or p95 blocks throughput. Reopen bounded Agent parallelism only
+   with exact per-call attribution, one Result writer, and explicit concurrency
+   authority.
 
 Before commits, run focused tests, the full suite, Ruff, Pyright, and
-`git diff --check`. Keep credentials, prompts, completions, transcripts,
+`git diff --check`. Keep credentials, raw prompts/completions, transcripts,
 workspaces, verifier output, and provider payloads under ignored outputs.

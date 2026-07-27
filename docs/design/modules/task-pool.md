@@ -1,6 +1,6 @@
 # Module Design: Task Pool
 
-Status: current behavior and deferred concrete adapters, 2026-07-24.
+Status: current behavior and deferred concrete adapters, 2026-07-27.
 
 ## Responsibility
 
@@ -111,6 +111,21 @@ must be a string sequence. Resource limits must be a mapping with string keys.
 These checks run before the default candidate ID is derived and also apply when
 an event is excluded before certification.
 
+Canonical user imports retain the supplied
+`task_material_available_at`, `check_material_available_at`,
+`dependency_cluster_id`, and `sampling_stratum`. Task Pool does not replace
+them with import time or platform defaults. Because these fields affect
+RollingOrigin or Selector behavior, an adapter must bind its derivation policy
+into Generator behavior provenance. For example, a static benchmark adapter
+must distinguish a Check first observed during import from a benchmark contract
+that makes the Check label available with the Task.
+
+A counterfactual study may derive a new immutable Task Pool with different
+algorithm-visible metadata when it records the source pool, transformation
+rule, and evidence class. It must not overwrite or relabel the source bundle.
+Execution-relevant Task/Check identity is still checked before existing Results
+are reused.
+
 ## Adapter-Owned Dependence Evidence
 
 Task Pool accepts a derived `dependency_cluster_id`; it does not own a generic
@@ -169,6 +184,9 @@ Output:
 Effect:
 
 - Converts a user-provided pool into candidate `Task + Check` records.
+- Preserves canonical caller-supplied availability, dependence, and sampling
+  fields. Import validates their shape; it does not infer their scientific
+  meaning.
 
 ### candidate_batch
 

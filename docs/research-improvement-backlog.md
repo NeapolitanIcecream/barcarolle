@@ -140,16 +140,17 @@ repeat flip rate is 13.85%, but its cluster interval `[6.15%, 21.88%]` crosses
 neither predeclared promotion gate. Results and repeats therefore remain
 experiment-layer evidence; no core cache or controller policy changes.
 
-The 2026-07-27 zero-call follow-up exhausted the valid retrospective use of
-those Results for current Selector triage. All certified Checks materialized in
-2026, so historical source-time Origins correctly contain no mature Task/Check
-refs; the Results cannot support a core counterfactual or strict-prospective
-rolling-origin claim. A separately labeled historical Task-order diagnostic
-rejected the current duration-stratum ALG-002 configuration and found ALG-003
-seed-unstable. ALG-001 and ALG-004 retained coverage on all eight eligible
-outer blocks. Coverage is now only a candidate for a preregistered future
-comparison against a five-seed random bank. No current result promotes a
-Selector into Runner behavior.
+The 2026-07-27 zero-call follow-up now has two evidence views. The published
+2026 Check timestamps produce twelve fully censored historical Origins and
+remain the source-observation negative control. A separate immutable
+`label_at_task_arrival` scenario is explicitly user-configured counterfactual
+evidence. It produces twelve public Origins, 72 Selections, and 150 exact
+cached Result bindings without changing source records or making calls.
+Coverage MAE is `0.1833`, below random seed 5 at `0.2250` and recency at
+`0.2042` in that scenario. The predeclared weighted duration-stratum rule is
+worse than coverage by `0.0536`; ALG-003 remains seed-unstable; ALG-001 and
+ALG-004 retain coverage. No result promotes a Selector into Runner behavior or
+establishes strict-prospective performance.
 
 Rolling-origin cohort controls now reject truthy substitutes and non-string
 cluster filters before policy identity is formed. Verification rejects coercive
@@ -1325,10 +1326,14 @@ and rehashes the resulting tree before Check execution.
 | RI-173 | P1 | main-run measurement, resolved 2026-07-25 | complete | A legitimate main cell used 33 successful rows, leaving almost no headroom under the initial 36-total-candidate complexity bound. An unrelated overlap could therefore stop an otherwise attributable Result even though only the small excess set needs combinatorial search. | Compute candidate totals first and solve uniquely for rows whose tokens sum to the excess over Result usage; the 36-row bound now applies only to plausible exclusion candidates. Return the complement as the receipt. A 41-candidate regression with 40 legitimate rows and one overlap proves total legitimate row count no longer drives the bound. |
 | RI-174 | P0 | main-run cost-tail measurement, resolved 2026-07-25 | complete | Main cell 36 cost $4.909603 under the common conservative ScoringConfig and exceeded the $4.032351 calibration-derived per-call ledger ceiling, although its exact gateway receipt was $2.968422 and revised full-main projections remained below the unchanged $180 actual and $260 conservative gates. A stopped exact Result could not previously resume without rewriting history or rerunning the Agent. | Amendment 3 raises only the per-call conservative ledger ceiling to $10. A strict append-only authority amendment binds the old/new limits, unchanged total authority/schedule/retries/pricing, source amendment, and exact Result. One reauthorization event preserves the original stop reason and makes the call completed without an Agent retry. Repeated application is idempotent; non-scoreable, unpriceable, missing-Result, non-cost, above-$10, or nonterminal stops remain ineligible. |
 | RI-175 | P0 | main-run provider failure, resolved 2026-07-25 | complete | Terra main sequence 42 returned distributor `503 no-available-channel` through all five Codex in-call network retries. The exact Result is `agent_invalid`, has an empty diff and no complete usage, and carries a $0.019584 exact model/time receipt. It is a preselected repeat-2 cell, so primary base pairs remain intact, but one repeat cluster is censored. | Amendment 4 authorized one outcome-blind Pylint recovery canary; it was scoreable with priceable usage and an exact $0.291302 receipt. Amendment 5 then authorized only the 195 remaining frozen cells, with zero retries/replacements and a terminal second-failure rule. Main completed without another invalid Result. Sequence 42 remains availability evidence: never retried, replaced, relabeled, or scored as a hidden fail; it is censored from repeat outcomes and counted unsuccessful in end-to-end sensitivity. |
-| RI-176 | P0 | contract-reproduced, resolved 2026-07-27 | complete | The 75 SymPy Tasks carry 2016–2023 source times, but all certified Checks materialized on 2026-07-25. Each planned historical core Origin therefore had zero mature history refs and zero mature future refs. Projecting the 2026 Check or Result availability backward would manufacture evidence and bypass the intended maturity contract. | Preserve the core rule. The append-only offline-study amendment records the failed path and forbids timestamp rewriting. Any source-time-only analysis stays in an experiment-local historical-order diagnostic namespace and cannot emit or claim core Origin, Selection, Matrix, or Metric evidence. A new strict-prospective claim requires later immutable Task Pool snapshots and actually mature Results. |
+| RI-176 | P0 | contract-reproduced, corrected 2026-07-27 | complete | The published SymPy pool records Checks as observed in 2026, so its 2016–2023 Origins are fully censored. That fact does not prohibit a user or adapter from supplying algorithm-visible Task attributes. The missing distinction was source-observed history versus a labeled counterfactual scenario. | Keep the published pool and Results unchanged. Preserve the source-observed view as a negative control. Permit a new immutable Task Pool scenario to change Task/Check availability, dependency cluster, or sampling stratum when its source pool, transformation, and evidence class are explicit. Such a scenario may support `counterfactual_replay`; it cannot be called source-attested or strict-prospective. |
 | RI-177 | P1 | measured 2026-07-27 | current source configuration rejected; infrastructure preserved | In twelve historical Task-order blocks, weighted duration-stratum ALG-002 had macro MAE `0.2369` versus coverage `0.1833`; the predeclared difference was `+0.0536`. The unfavorable direction survived 5,000 repeat views and strengthened to `+0.1140` after retaining only the earliest Task per dependency cluster. Better composition TV did not produce better outcome MAE. The 36-point parameter grid realized only 18 behaviors, never activated caps 2/3/4, and no point beat coverage. | Do not tune alpha, trailing window, cap, or seed further on these outcomes and do not remove the final-form stratified infrastructure. Reopen ALG-002 only with a different pre-origin feature or source-specific mechanism declared before new mature Origins. Keep duration stratum as descriptive metadata, not a validated prediction mechanism. |
-| RI-178 | P1 | exploratory measured 2026-07-27 | future-work; prospective preregistration required | Coverage was the best fixed diagnostic rule at MAE `0.1833`. Its post-primary difference from the five-seed random-bank mean was `-0.0383`, with descriptive Origin interval `[-0.0767, -0.0042]`; coverage beat that bank in every repeat-noise view and beat random seed 5 across block sizes 3/4/5/6/8. Primary blocks still shared dependency clusters, and this comparison was selected after the failed primary contrast. | Nominate, but do not deploy, coverage versus the frozen random-bank mean. A planning calculation calls for at least 25 independent mature five-Task Origins, two Agents, a 15-Task initial union, and dependency/repository reporting. Existing call-cost distributions imply about `$86.47` median and `$187.21` sum-of-Agent-p90 cost for 280 calls; this is neither authority nor a quote. If 25 independent Origins are unavailable, retain an unresolved claim. |
+| RI-178 | P1 | public counterfactual replay and exploratory diagnostic, measured 2026-07-27 | counterfactual support; prospective preregistration required | The public `label_at_task_arrival` replay produced 12 Origins and coverage MAE `0.1833`, versus random seed 5 at `0.2250` and recency at `0.2042`. The separate post-primary five-seed random-bank difference was `-0.0383`, with descriptive interval `[-0.0767, -0.0042]`. Primary blocks still shared dependency clusters, and the bank comparison followed the failed primary contrast. | Treat coverage as supported only for this configured counterfactual scenario. Nominate, but do not deploy, coverage versus the frozen random-bank mean. A strict-prospective study still needs at least 25 independent mature five-Task Origins, two Agents, dependency/repository reporting, and preregistration. The 280-call cost projections are planning inputs, not authority or quotes. |
 | RI-179 | P2 | measured 2026-07-27 | keep gates; no promotion | ALG-001 and ALG-004 retained coverage in all eight eligible outer blocks and matched it. Raw mean choice switched once and increased outer MAE by `0.0375`. ALG-003's one-standard-error difference from coverage ranged from `-0.04375` to `+0.0250` across three seeds. | Keep conservative choice rules as offline safeguards and leave them out of Runner defaults. Do not expand the simplex grid or choose a favorable seed from these outcomes. Promotion still requires complete core evidence replay and new outer-origin improvement. |
+| RI-180 | P0 | public replay, resolved 2026-07-27 | complete | Counterfactual replay previously rejected persisted history Results solely because they were physically observed after the historical cutoff. That made an exact offline replay impossible even when future Task refs remained hidden and cache identity matched. | Gate strict-prospective Result inputs by physical availability. Gate counterfactual inputs by mature history membership and exact Task/Check/Agent/cache identity. Freeze Result IDs and digests in FeatureSnapshot and SelectorInput. Focused tests prove the same late Result is accepted only in counterfactual mode. |
+| RI-181 | P0 | resume counterexample, resolved 2026-07-27 | complete | Lazy selected-cell execution can append Results after a Selection. Rebuilding a counterfactual SelectorInput from the enlarged store during resume would make the same semantic Origin depend on whether an earlier run reached lazy evaluation. | Reuse the matching persisted FeatureSnapshot and SelectorInput within one Result Store. Missing or duplicate frozen inputs fail closed. A regression proves lazy post-selection Results cannot retroactively change resumed Selection input. |
+| RI-182 | P1 | adapter contract, resolved 2026-07-27 | complete | The static SWE-bench adapter silently used import observation time for every Check. This erased the benchmark contract distinction between a label first observed at import and a label treated as available with the Task. | Require `source_observed_at` or `task_material_available_at` explicitly. Bind the choice into Generator behavior identity and preserve observation provenance. Do not infer one basis for other adapters. |
+| RI-183 | P1 | public replay counterexample, resolved 2026-07-27 | complete | Equal-weight rule-mixture scores used left-to-right binary64 addition. Operand-order rounding broke mathematical ties before the documented Task/Check ID tie-break, changing one of 72 public benchmark memberships and one MAE by `-0.05` versus the frozen diagnostic. | Use `math.fsum` across weighted expert scores. Retain the diagnostic disagreement and add a public regression where two equal mathematical scores reach the ID tie-break. The corrected public mixture MAE is `0.2125`; no Selector promotion follows. |
 
 Decisions from the 2026-07-22 maintainer review:
 
@@ -3609,14 +3614,34 @@ and show material wall-clock or paid-cost improvement.
   public inputs and side effects rather than a private helper patch.
 - RI-119: Cremona has a calibrated code scope and history policy; it remains
   routing evidence, with no automatic module split, baseline, or CI gate.
-- RI-176: historical source ordering cannot override actual Check and Result
-  maturity; projected diagnostics remain outside core evidence records.
+- RI-176: published source-observation time remains immutable, while explicit
+  user-configured metadata may form a separate counterfactual Task Pool.
 - RI-177: the current duration-stratum ALG-002 configuration is rejected for
   the measured SymPy source without removing the generic algorithm boundary.
+- RI-178: coverage has source-conditional counterfactual support and remains a
+  prospective candidate, not a Runner default.
 - RI-179: conservative chooser gates remain offline safeguards; no adaptive
   rule is promoted from the historical-order diagnostic.
+- RI-180: counterfactual Result visibility uses mature history membership and
+  exact identity; strict mode retains the physical-time gate.
+- RI-181: resumed counterfactual Selections reuse their frozen input before
+  lazy Result writes.
+- RI-182: the static adapter requires and binds its Check-availability basis.
+- RI-183: rule-mixture inference uses stable summation before deterministic
+  tie-breaking.
 
 ## Update Log
+
+- 2026-07-27: corrected RI-176 and completed RI-180 through RI-183 without
+  network or paid calls. Amendment 3 froze the user-configured
+  `label_at_task_arrival` scenario and retained the published observed-at view
+  as a negative control. The public replay built 12 Origins, 72 Selections, 144
+  matrices, and 72 MAE metrics from 150 exact cached base Results. Coverage MAE
+  was `0.1833`; the predeclared weighted-stratified contrast remained
+  unfavorable at `+0.0536`. Public results matched the transparent diagnostic
+  for all 60 non-mixture Selector/Origin pairs. Stable mixture summation exposed
+  four order differences, one membership difference, and one MAE difference;
+  the committed replay is byte-reproducible and retains them.
 
 - 2026-07-27: completed the zero-call follow-up over the already-paid SymPy
   Results and recorded RI-176 through RI-179. A self-digested plan and two

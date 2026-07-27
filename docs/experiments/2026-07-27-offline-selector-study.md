@@ -1,4 +1,4 @@
-# Zero-Call Offline Selector Study
+# Zero-Call Offline Selector Study and Public Replay
 
 Date: 2026-07-27.
 
@@ -6,21 +6,21 @@ Status: complete. No network request, model call, or paid call was made.
 
 ## Decision
 
-The existing paid data materially advanced the project, but it did not establish
-the project's rolling-origin research claim.
+The existing paid data supports a bounded counterfactual rolling-origin result.
+It does not establish a strict-prospective result.
 
-It produced four decisions:
-
-1. Do not backdate the 2026 certified Checks or Results. They cannot form valid
-   2016–2023 core rolling-origin evidence.
-2. Reject the current duration-stratum instantiation of ALG-002 for this source.
-   Parameter search does not rescue it.
-3. Keep ALG-001 and ALG-004 as conservative analysis rules. In all eight
-   eligible outer blocks they retained the coverage fallback and avoided the
-   losses incurred by raw choice and ALG-003.
-4. Nominate the boring coverage rule against a frozen random seed bank for a
-   new strict-prospective study. This is a future hypothesis, not a default or a
-   claim from the current data.
+1. Keep the published 2026 Check and Result timestamps unchanged. Under that
+   source-observation view, all twelve historical Origins are fully censored.
+2. Permit user- or adapter-configured Task attributes, including Task and Check
+   material times, to affect algorithms. Freeze them in a new Task Pool
+   scenario with explicit lineage and evidence class.
+3. Under the `label_at_task_arrival` counterfactual scenario, the public
+   Selection, Result Matrix, and Metric APIs produce twelve scoreable Origins
+   and reuse all 150 base Agent Results by exact cache identity.
+4. Reject the current duration-stratum ALG-002 configuration for this source.
+   Its predeclared MAE is worse than coverage by `0.0536`.
+5. Keep coverage as a source-conditional prospective candidate. It is not a
+   Runner default.
 
 ## Frozen question
 
@@ -48,7 +48,7 @@ The source was fixed before outcome inspection:
 The primary contrast was weighted stratified minus coverage. Support required
 at least `0.02` lower macro-Origin MAE and a paired interval wholly below zero.
 
-## Contract failure before outcomes
+## Source-observation negative control
 
 The source-contract check found that all 75 `CheckRecord` values have
 `check_material_available_at=2026-07-25T14:00:00Z`, while Task source times run
@@ -62,20 +62,74 @@ historical cutoffs. Every Origin had:
 - zero mature future refs;
 - five censored future refs.
 
-Rewriting Check, Result, Feature, or Origin timestamps would manufacture the
-availability claim that the core contract correctly withholds. Amendment 1
-therefore downgraded the remaining work to a historical Task-order diagnostic.
-Amendment 2 corrected a one-character Task Pool SHA-256 transcription error;
-all scientific choices remained unchanged and per-Task outcomes were still
-unopened.
+Overwriting those published records or calling projected times source-attested
+would make a false provenance claim. Amendment 1 therefore retained this view
+as an invalid core path and allowed only a transparent Task-order diagnostic.
+Amendment 2 corrected a one-character Task Pool SHA-256 transcription error.
 
-Consequently, no number below is a `RollingOriginRecord`, `MetricRecord`, or
-strict-prospective result. The valid terminal state for the original question
-is `invalid_or_insufficient_evidence`.
+The user then clarified that imported Task attributes must be allowed to affect
+algorithms. Amendment 3 froze a zero-call correction before the public replay:
+
+- retain the published Task Pool and Results byte-for-byte;
+- keep the source-observation view as a negative control;
+- derive a new `label_at_task_arrival` scenario where each Check material time
+  equals its bound Task material time;
+- label that scenario `user_configured_counterfactual`, not source-attested or
+  strict-prospective;
+- run ordinary public RollingOrigin, FeatureSnapshot, SelectorInput, Selection,
+  Result Matrix, and Metric APIs;
+- retain every disagreement with the earlier diagnostic.
+
+This distinction is the contract: algorithm-visible time is configurable;
+evidence strength comes from its lineage and eligibility mode.
+
+## Public counterfactual replay
+
+The scenario changed Check maturity, not Task arrival order. The
+source-observation view had zero scoreable Origins; the configured scenario had
+twelve. All twelve public history and future cohorts matched the frozen
+diagnostic exactly.
+
+Every one of the 150 base Agent×Task Results:
+
+- retained its original Result ID and digest;
+- matched the scenario Task, Check, Agent, and execution cache identity;
+- was physically observed after the historical Task arrival;
+- entered only selected or future matrices after the Selection was frozen.
+
+Lower is better.
+
+| Public fixed rule | Macro-Origin MAE |
+| --- | ---: |
+| coverage | 0.1833 |
+| recency | 0.2042 |
+| equal rank mixture | 0.2125 |
+| random seed 5 | 0.2250 |
+| weighted stratified forecast | 0.2369 |
+| unweighted stratified forecast | 0.2417 |
+
+For coverage, random, recency, and both stratified rules, all 60
+Selector×Origin memberships and MAEs matched the transparent diagnostic. The
+equal rank mixture exposed one numerical defect in the public implementation:
+left-to-right binary64 addition could perturb a mathematical tie before the
+Task ID tie-break. The public implementation now uses `math.fsum`.
+
+Compared with the frozen diagnostic, stable summation changed mixture order at
+four Origins, membership at one Origin, and MAE at one Origin by `-0.05`.
+Mixture macro MAE changed from `0.2167` to `0.2125`. The disagreement was
+retained; the diagnostic was not edited.
+
+The public replay establishes that, within this configured SymPy scenario,
+selection policy affects how closely a ten-Task benchmark approximates the
+next five Tasks. Coverage had lower observed MAE than random seed 5 and recency.
+It does not establish that the projected times are historical facts, that
+coverage is universally best, or that any rule will win on a later
+strict-prospective Task Pool.
 
 ## Historical Task-order diagnostic
 
-Lower is better.
+The original diagnostic remains frozen. Its equal-mixture row uses the earlier
+left-to-right sum and is retained for audit.
 
 | Fixed rule | Macro-Origin MAE |
 | --- | ---: |
@@ -265,9 +319,9 @@ campaign with:
 - a later immutable Task Pool snapshot at each future window;
 - no hyperparameter choice from current or outer-future outcomes.
 
-If collecting 25 independent Origins is infeasible, the honest result is that
-the claim remains unresolved. Overlapping windows or retrospective timestamp
-projection must not be substituted for missing prospective evidence.
+If collecting 25 independent Origins is infeasible, the strict-prospective
+claim remains unresolved. A labeled counterfactual scenario remains valid for
+algorithm development, but it cannot be relabeled as prospective evidence.
 
 ## Reproduction and artifact policy
 
@@ -276,15 +330,20 @@ Committed artifacts:
 - `examples/offline_selector_study/study-plan.json`;
 - `examples/offline_selector_study/study-amendment-1.json`;
 - `examples/offline_selector_study/study-amendment-2.json`;
+- `examples/offline_selector_study/study-amendment-3.json`;
 - `examples/offline_selector_study/study.py`;
-- `examples/offline_selector_study/study-results.json`.
+- `examples/offline_selector_study/study-results.json`;
+- `examples/offline_selector_study/public_replay.py`;
+- `examples/offline_selector_study/public-replay-results.json`.
 
-The result snapshot is self-digested and stores aggregate Origin losses,
-diagnostics, source digests, and audit counts. It stores no per-Task outcome,
-prompt, completion, transcript, solver workspace, verifier workspace, hidden
-material, or credential.
+Both result snapshots are self-digested. The public snapshot stores scenario
+lineage, cohort and selection membership digests, public aggregate losses,
+exact Result-reuse counts, and every diagnostic disagreement. Neither snapshot
+stores per-Task outcomes, prompts, completions, transcripts, workspaces, hidden
+material, or credentials.
 
 The ignored Task Pool, Agent, schedule, and Result sources are bound by exact
-SHA-256. The implementation freezes every diagnostic Selection before opening
-the Result file, independently recomputes all 972 Selector–Origin metric
-calculations, and checks history membership and future-block uniqueness.
+SHA-256. The diagnostic independently recomputes its 972 Selector–Origin metric
+calculations. The public replay separately constructs 12 Origins, 72
+Selections, 144 matrices, and 72 MAE metrics. Two complete public replays
+produced byte-identical sanitized results.

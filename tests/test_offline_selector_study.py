@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 import sys
+from typing import Any
 
 import pytest
 
@@ -152,20 +153,39 @@ def test_committed_public_replay_results_are_self_digested() -> None:
     ] == 150
     assert results["public_pipeline"]["origin_count"] == 12
     assert results["public_pipeline"]["selection_count"] == 72
+    assert results["public_pipeline"]["result_matrix_count"] == 144
     assert results["transparent_diagnostic_comparison"][
         "selection_membership_mismatch_count"
     ] == 1
 
 
-def test_local_source_reproduces_committed_public_replay() -> None:
+def test_local_source_reproduces_committed_public_replay(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     if not study.DEFAULT_TASK_POOL.exists():
         pytest.skip("ignored source artifacts are not present")
 
+    selection_count = 0
+    original_select = public_replay.select_with_selector
+    original_load_outcomes = public_replay.load_outcomes
+
+    def tracked_select(*args: Any, **kwargs: Any) -> Any:
+        nonlocal selection_count
+        selection_count += 1
+        return original_select(*args, **kwargs)
+
+    def guarded_load_outcomes(*args: Any, **kwargs: Any) -> Any:
+        assert selection_count == 72
+        return original_load_outcomes(*args, **kwargs)
+
+    monkeypatch.setattr(public_replay, "select_with_selector", tracked_select)
+    monkeypatch.setattr(public_replay, "load_outcomes", guarded_load_outcomes)
     observed = public_replay.run_public_replay()
     committed = json.loads(
         public_replay.DEFAULT_OUTPUT.read_text(encoding="utf-8")
     )
 
+    assert selection_count == 72
     assert observed["public_replay_results_digest"] == (
         committed["public_replay_results_digest"]
     )

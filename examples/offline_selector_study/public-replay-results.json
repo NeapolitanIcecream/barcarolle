@@ -351,8 +351,11 @@
     ],
     "origin_count": 12,
     "result_matrix_api": "build_result_matrix",
+    "result_matrix_count": 144,
     "rolling_origin_api": "build_rolling_origin",
+    "selected_matrix_count": 72,
     "selection_api": "select_with_selector",
+    "selection_batch_frozen_before_result_file_open": true,
     "selection_count": 72,
     "selector_count": 6,
     "selector_input_api": "build_selector_input",
@@ -450,7 +453,7 @@
     },
     "summary_protocol_digest": "d1d59216b495e902e5505509809c7ce685a673595fb66c78079ec57c33076e88"
   },
-  "public_replay_results_digest": "f208a3775c6da4e4f4f42839b50b8f23816da1ef124d03af3b70066d83bfbac6",
+  "public_replay_results_digest": "128c2c593a9b5a5dc4f3155cf0955bac26afe7686f06697c4978f00d835a79fc",
   "result_reuse_audit": {
     "base_result_count": 150,
     "distinct_execution_identity_count": 150,

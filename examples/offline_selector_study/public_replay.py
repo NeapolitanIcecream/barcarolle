@@ -5,7 +5,7 @@ from __future__ import annotations
 
 import argparse
 from collections.abc import Mapping, Sequence
-from dataclasses import replace
+from dataclasses import dataclass, replace
 import json
 import math
 from pathlib import Path
@@ -18,9 +18,11 @@ if __package__ is None or __package__ == "":
 
 from barcarolle.records import (
     AgentRecord,
+    BenchmarkSelectionRecord,
     EvaluationCellSet,
     ResultCellRef,
     ResultRecord,
+    RollingOriginRecord,
     SelectorRecord,
     SourceEventRecord,
     TaskCheckRef,
@@ -61,6 +63,7 @@ from barcarolle.task_pool import (
 )
 from examples.offline_selector_study.study import (
     PRIMARY_SELECTOR_NAMES,
+    DiagnosticOrigin,
     Metadata,
     StudyPaths,
     audit_core_maturity,
@@ -87,6 +90,15 @@ _ORIGIN_POLICY = RollingOriginPolicy(
 )
 _SELECTION_BUDGET = SelectionBudget(10)
 _JOIN_CONFIG = ResultJoinConfig()
+
+
+@dataclass(frozen=True)
+class _FrozenPublicSelection:
+    diagnostic_origin: DiagnosticOrigin
+    origin: RollingOriginRecord
+    selector_name: str
+    selector: SelectorRecord
+    selection: BenchmarkSelectionRecord
 
 
 def load_replay_amendment(
@@ -505,36 +517,14 @@ def run_public_replay(
         and negative_control["all_future_mature_counts_zero"]
     ):
         raise ValueError("observed-at negative control is no longer fully censored")
-    outcomes = load_outcomes(paths, plan, metadata)
-    diagnostic = fixed_selector_analysis(design, outcomes)
     scenario = build_label_at_task_arrival_scenario(
         metadata.bundle,
         amendment_3,
     )
-    base_results = load_base_results(paths, metadata)
-    reuse_audit = validate_result_reuse(
-        scenario,
-        metadata.agents,
-        base_results,
-    )
     selectors = build_public_selectors(metadata.ordered_tasks)
     checks = scenario.checks_by_id
-    result_by_cell = {
-        (result.agent_id, result.task_id, result.check_id): result
-        for result in base_results
-    }
-    all_selections = []
-    all_mae_metrics = []
-    all_future_matrices = []
-    comparisons = []
+    frozen_selections: list[_FrozenPublicSelection] = []
     origin_comparisons = []
-    diagnostic_loss_rows = {
-        row["origin_number"]: cast(Mapping[str, float], row["mae_by_selector"])
-        for row in cast(
-            Sequence[Mapping[str, object]],
-            diagnostic["origin_losses"],
-        )
-    }
     for diagnostic_origin in design.origins:
         origin = build_rolling_origin(
             scenario.task_pool,
@@ -652,107 +642,150 @@ def run_public_replay(
                 snapshot,
                 selector,
             )
-            cells = _evaluation_cell_set(
-                origin.origin_id,
-                selection.selection_id,
-                selection.selected_task_check_refs,
-                origin.future_holdout_task_check_refs,
-                scenario,
-                metadata.agents,
-                result_by_cell,
-            )
-            selected_matrix = build_result_matrix(
-                cells,
-                selection.selected_task_check_refs,
-                scenario.tasks,
-                checks,
-                metadata.agents,
-                base_results,
-                "selected",
-                _JOIN_CONFIG,
-            )
-            future_matrix = build_result_matrix(
-                cells,
-                origin.future_holdout_task_check_refs,
-                scenario.tasks,
-                checks,
-                metadata.agents,
-                base_results,
-                "future_holdout",
-                _JOIN_CONFIG,
-            )
-            metrics = tuple(
-                evaluate_selection(
-                    selection,
+            frozen_selections.append(
+                _FrozenPublicSelection(
+                    diagnostic_origin,
                     origin,
-                    cells,
-                    selected_matrix,
-                    future_matrix,
+                    selector_name,
+                    selector,
+                    selection,
                 )
             )
-            mae = tuple(
-                metric
-                for metric in metrics
-                if metric.metric_name == "future_pass_rate_mae"
-                and metric.completeness_state == "complete"
+    if len(frozen_selections) != len(design.origins) * len(selectors):
+        raise ValueError("public Selection freeze did not cover the frozen design")
+
+    # The complete Selection batch is frozen before the Result file is opened.
+    outcomes = load_outcomes(paths, plan, metadata)
+    diagnostic = fixed_selector_analysis(design, outcomes)
+    base_results = load_base_results(paths, metadata)
+    reuse_audit = validate_result_reuse(
+        scenario,
+        metadata.agents,
+        base_results,
+    )
+    result_by_cell = {
+        (result.agent_id, result.task_id, result.check_id): result
+        for result in base_results
+    }
+    all_selections = [
+        frozen.selection for frozen in frozen_selections
+    ]
+    all_mae_metrics = []
+    all_future_matrices = []
+    comparisons = []
+    diagnostic_loss_rows = {
+        row["origin_number"]: cast(Mapping[str, float], row["mae_by_selector"])
+        for row in cast(
+            Sequence[Mapping[str, object]],
+            diagnostic["origin_losses"],
+        )
+    }
+    for frozen in frozen_selections:
+        diagnostic_origin = frozen.diagnostic_origin
+        origin = frozen.origin
+        selector_name = frozen.selector_name
+        selector = frozen.selector
+        selection = frozen.selection
+        cells = _evaluation_cell_set(
+            origin.origin_id,
+            selection.selection_id,
+            selection.selected_task_check_refs,
+            origin.future_holdout_task_check_refs,
+            scenario,
+            metadata.agents,
+            result_by_cell,
+        )
+        selected_matrix = build_result_matrix(
+            cells,
+            selection.selected_task_check_refs,
+            scenario.tasks,
+            checks,
+            metadata.agents,
+            base_results,
+            "selected",
+            _JOIN_CONFIG,
+        )
+        future_matrix = build_result_matrix(
+            cells,
+            origin.future_holdout_task_check_refs,
+            scenario.tasks,
+            checks,
+            metadata.agents,
+            base_results,
+            "future_holdout",
+            _JOIN_CONFIG,
+        )
+        metrics = tuple(
+            evaluate_selection(
+                selection,
+                origin,
+                cells,
+                selected_matrix,
+                future_matrix,
             )
-            if (
-                len(mae) != 1
-                or selected_matrix.scoreable_state != "complete"
-                or future_matrix.scoreable_state != "complete"
-            ):
-                raise ValueError("public Result Matrix path did not produce one MAE")
-            public_ids = _task_ids(selection.selected_task_check_refs)
-            diagnostic_selection = diagnostic_origin.selections[selector_name]
-            diagnostic_ids = diagnostic_selection.task_ids
-            public_mae = mae[0].metric_value
-            diagnostic_mae = diagnostic_loss_rows[
-                diagnostic_origin.origin_number
-            ][selector_name]
-            membership_match = set(public_ids) == set(diagnostic_ids)
-            order_match = public_ids == diagnostic_ids
-            mae_delta = public_mae - diagnostic_mae
-            comparisons.append(
-                {
-                    "origin_number": diagnostic_origin.origin_number,
-                    "origin_id": origin.origin_id,
-                    "selector_name": selector_name,
-                    "selector_id": selector.selector_id,
-                    "selection_id": selection.selection_id,
-                    "public_selection_membership_digest": (
-                        _membership_digest(public_ids)
-                    ),
-                    "diagnostic_selection_membership_digest": (
-                        _membership_digest(diagnostic_ids)
-                    ),
-                    "selection_membership_match": membership_match,
-                    "public_selection_order_digest": _order_digest(public_ids),
-                    "diagnostic_selection_order_digest": (
-                        _order_digest(diagnostic_ids)
-                    ),
-                    "selection_order_match": order_match,
-                    "public_future_pass_rate_mae": public_mae,
-                    "diagnostic_future_pass_rate_mae": diagnostic_mae,
-                    "mae_delta": mae_delta,
-                    "mae_match": math.isclose(
-                        public_mae,
-                        diagnostic_mae,
-                        rel_tol=0.0,
-                        abs_tol=1e-12,
-                    ),
-                    **(
-                        {}
-                        if order_match
-                        else {
-                            "public_selected_task_ids": public_ids,
-                            "diagnostic_selected_task_ids": diagnostic_ids,
-                        }
-                    ),
-                }
-            )
-            all_selections.append(selection)
-            all_mae_metrics.append(mae[0])
-            all_future_matrices.append(future_matrix)
+        )
+        mae = tuple(
+            metric
+            for metric in metrics
+            if metric.metric_name == "future_pass_rate_mae"
+            and metric.completeness_state == "complete"
+        )
+        if (
+            len(mae) != 1
+            or selected_matrix.scoreable_state != "complete"
+            or future_matrix.scoreable_state != "complete"
+        ):
+            raise ValueError("public Result Matrix path did not produce one MAE")
+        public_ids = _task_ids(selection.selected_task_check_refs)
+        diagnostic_selection = diagnostic_origin.selections[selector_name]
+        diagnostic_ids = diagnostic_selection.task_ids
+        public_mae = mae[0].metric_value
+        diagnostic_mae = diagnostic_loss_rows[
+            diagnostic_origin.origin_number
+        ][selector_name]
+        membership_match = set(public_ids) == set(diagnostic_ids)
+        order_match = public_ids == diagnostic_ids
+        mae_delta = public_mae - diagnostic_mae
+        comparisons.append(
+            {
+                "origin_number": diagnostic_origin.origin_number,
+                "origin_id": origin.origin_id,
+                "selector_name": selector_name,
+                "selector_id": selector.selector_id,
+                "selection_id": selection.selection_id,
+                "public_selection_membership_digest": (
+                    _membership_digest(public_ids)
+                ),
+                "diagnostic_selection_membership_digest": (
+                    _membership_digest(diagnostic_ids)
+                ),
+                "selection_membership_match": membership_match,
+                "public_selection_order_digest": _order_digest(public_ids),
+                "diagnostic_selection_order_digest": (
+                    _order_digest(diagnostic_ids)
+                ),
+                "selection_order_match": order_match,
+                "public_future_pass_rate_mae": public_mae,
+                "diagnostic_future_pass_rate_mae": diagnostic_mae,
+                "mae_delta": mae_delta,
+                "mae_match": math.isclose(
+                    public_mae,
+                    diagnostic_mae,
+                    rel_tol=0.0,
+                    abs_tol=1e-12,
+                ),
+                **(
+                    {}
+                    if order_match
+                    else {
+                        "public_selected_task_ids": public_ids,
+                        "diagnostic_selected_task_ids": diagnostic_ids,
+                    }
+                ),
+            }
+        )
+        all_mae_metrics.append(mae[0])
+        all_future_matrices.append(future_matrix)
     public_summary = summarize_selector_mae(
         tuple(selectors.values()),
         all_selections,
@@ -878,11 +911,16 @@ def run_public_replay(
             "result_matrix_api": "build_result_matrix",
             "metric_api": "evaluate_selection",
             "aggregate_api": "summarize_selector_mae",
+            "selection_batch_frozen_before_result_file_open": True,
             "origin_count": len(origin_comparisons),
             "selector_count": len(selectors),
             "selection_count": len(all_selections),
             "mae_metric_count": len(all_mae_metrics),
+            "selected_matrix_count": len(all_selections),
             "future_matrix_count": len(all_future_matrices),
+            "result_matrix_count": (
+                len(all_selections) + len(all_future_matrices)
+            ),
             "origin_comparisons": tuple(origin_comparisons),
             "selector_summary": summary_by_name,
             "summary_protocol_digest": public_summary["protocol_digest"],

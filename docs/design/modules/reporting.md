@@ -1,6 +1,6 @@
 # Module Design: Reporting
 
-Status: current, 2026-07-24.
+Status: current, 2026-07-27.
 
 ## Responsibility
 
@@ -193,6 +193,10 @@ Effect:
   Benchmark Selection.
 - Names supported summaries by eligibility mode, so
   `counterfactual_replay` evidence is not presented as prospective evidence.
+- Treats a post-cutoff Result observation as a chronology violation only for
+  strict-prospective evidence. In counterfactual replay, Reporting instead
+  verifies mature history membership plus exact Task/Check/Agent/cache
+  identity, matching Selection and Runner.
 
 ### build_claim_boundary
 
