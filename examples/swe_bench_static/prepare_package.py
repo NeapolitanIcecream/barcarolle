@@ -44,8 +44,12 @@ from examples.swe_bench_static.freeze_source import (  # noqa: E402
 
 HERE = Path(__file__).resolve().parent
 CHECK = (HERE / "check.py").resolve()
-ADAPTER_VERSION = "swe_bench_static_dataset_import_v1"
+ADAPTER_VERSION = "swe_bench_static_dataset_import_v2"
 DEPENDENCY_PROTOCOL_VERSION = "trusted_reference_patch_path_overlap_v1"
+CHECK_MATERIAL_AVAILABILITY_BASES = (
+    "source_observed_at",
+    "task_material_available_at",
+)
 
 
 def prepare_package(
@@ -55,11 +59,17 @@ def prepare_package(
     output_dir: Path,
     harness_python: Path,
     raw_check_output_dir: Path,
+    check_material_availability_basis: str,
     check_timeout_seconds: int = 900,
 ) -> Mapping[str, Any]:
     """Materialize a strict package; do not run a Generator or hidden check."""
     if output_dir.exists():
         raise FileExistsError(f"refusing to overwrite prepared package: {output_dir}")
+    if check_material_availability_basis not in CHECK_MATERIAL_AVAILABILITY_BASES:
+        raise ValueError(
+            "check_material_availability_basis must be one of "
+            f"{CHECK_MATERIAL_AVAILABILITY_BASES}"
+        )
     if (
         isinstance(check_timeout_seconds, bool)
         or not isinstance(check_timeout_seconds, int)
@@ -127,6 +137,14 @@ def prepare_package(
             "timeout_seconds": check_timeout_seconds,
         }
         reference_patch = _required_string(row, "patch")
+        task_material_available_at = _canonical_time(
+            _required_string(row, "created_at")
+        )
+        check_material_available_at = (
+            observed_at
+            if check_material_availability_basis == "source_observed_at"
+            else task_material_available_at
+        )
         patch_ref = f"reference-patches/{instance_id}.diff"
         patch_path = output_dir / patch_ref
         patch_path.parent.mkdir(parents=True, exist_ok=True)
@@ -153,13 +171,9 @@ def prepare_package(
                 base_commit=_required_string(row, "base_commit"),
                 source_family=source_family,
                 source_ref=source_ref,
-                source_resolved_at=_canonical_time(
-                    _required_string(row, "created_at")
-                ),
-                task_material_available_at=_canonical_time(
-                    _required_string(row, "created_at")
-                ),
-                check_material_available_at=observed_at,
+                source_resolved_at=task_material_available_at,
+                task_material_available_at=task_material_available_at,
+                check_material_available_at=check_material_available_at,
                 task_text=_required_string(row, "problem_statement"),
                 solver_material_refs=(),
                 dependency_cluster_id=dependency["cluster_by_source_event_id"][
@@ -236,6 +250,9 @@ def prepare_package(
             "repository_id": repository_id,
             "dataset_revision": _required_string(dataset_config, "revision"),
             "sampling": canonical_data(source["sampling"]),
+            "check_material_availability_basis": (
+                check_material_availability_basis
+            ),
         },
     }
     protocol = {
@@ -333,6 +350,7 @@ def prepare_package(
         ),
         "source_manifest_digest": source["source_manifest_digest"],
         "prepared_package_digest": manifest.manifest_digest,
+        "check_material_availability_basis": check_material_availability_basis,
     }
 
 
@@ -548,6 +566,11 @@ def _parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--harness-python", type=Path, required=True)
     parser.add_argument("--raw-check-output-dir", type=Path, required=True)
+    parser.add_argument(
+        "--check-material-availability-basis",
+        choices=CHECK_MATERIAL_AVAILABILITY_BASES,
+        required=True,
+    )
     parser.add_argument("--check-timeout-seconds", type=int, default=900)
     return parser.parse_args(argv)
 
@@ -560,6 +583,9 @@ def main(argv: Sequence[str] | None = None) -> int:
         output_dir=args.output_dir,
         harness_python=args.harness_python,
         raw_check_output_dir=args.raw_check_output_dir,
+        check_material_availability_basis=(
+            args.check_material_availability_basis
+        ),
         check_timeout_seconds=args.check_timeout_seconds,
     )
     print(json.dumps(summary, sort_keys=True))

@@ -141,6 +141,7 @@ def test_prepare_package_emits_replayable_full_frame_and_dependency_clusters(
         output_dir=output,
         harness_python=Path(sys.executable),
         raw_check_output_dir=tmp_path / "raw-checks",
+        check_material_availability_basis="source_observed_at",
     )
 
     package = load_prepared_candidate_package(
@@ -164,6 +165,88 @@ def test_prepare_package_emits_replayable_full_frame_and_dependency_clusters(
         package.adapter_evidence["source_manifest_digest"]
         == (source_payload["source_manifest_digest"])
     )
+
+
+@pytest.mark.parametrize(
+    ("basis", "expected_check_time"),
+    (
+        ("source_observed_at", "2026-07-25T00:00:00.000000Z"),
+        ("task_material_available_at", "2020-01-01T00:00:00.000000Z"),
+    ),
+)
+def test_prepare_package_binds_explicit_check_availability_basis(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    basis: str,
+    expected_check_time: str,
+) -> None:
+    dataset = tmp_path / "dataset.parquet"
+    dataset.write_bytes(b"fixture dataset")
+    source_path = tmp_path / "source.json"
+    source_payload = {
+        "schema_version": freeze_source.SOURCE_MANIFEST_SCHEMA_VERSION,
+        "dataset": {
+            "repository": "owner/dataset",
+            "revision": "a" * 40,
+            "parquet_sha256": hashlib.sha256(dataset.read_bytes()).hexdigest(),
+        },
+        "repository_id": "owner/repo",
+        "source_family": "swe_bench_verified",
+        "harness": {
+            "repository": "owner/harness",
+            "revision": "b" * 40,
+        },
+        "image_prefix": freeze_source.DEFAULT_IMAGE_PREFIX,
+        "observed_at": "2026-07-25T00:00:00.000000Z",
+        "sampling": {
+            "mode": "all_repository_rows",
+            "order": "instance_id_ascending",
+        },
+        "instances": [
+            {
+                "instance_id": "repo__repo-1",
+                "image_digest": "sha256:" + "1" * 64,
+                "compressed_layer_bytes": 10,
+            },
+        ],
+    }
+    source_payload["source_manifest_digest"] = canonical_digest(source_payload)
+    source_path.write_text(canonical_json(source_payload) + "\n", encoding="utf-8")
+    monkeypatch.setattr(
+        prepare_package,
+        "_selected_rows",
+        lambda path, source: (
+            _row("repo__repo-1", "1" * 40, "a.py", "easy"),
+        ),
+    )
+    monkeypatch.setattr(
+        prepare_package,
+        "_write_check_spec",
+        lambda path, row: path.write_text(
+            canonical_json({"instance_id": row["instance_id"]}) + "\n",
+            encoding="utf-8",
+        ),
+    )
+
+    prepare_package.prepare_package(
+        dataset=dataset,
+        source_manifest_path=source_path,
+        output_dir=tmp_path / "package",
+        harness_python=Path(sys.executable),
+        raw_check_output_dir=tmp_path / "raw-checks",
+        check_material_availability_basis=basis,
+    )
+
+    package = load_prepared_candidate_package(
+        tmp_path / "package" / "prepared-candidate-package.jsonl"
+    )
+    assert package.batch.candidates[0].check_material_available_at == (
+        expected_check_time
+    )
+    assert package.manifest.generator_behavior is not None
+    assert package.manifest.generator_behavior["behavior_config"][
+        "check_material_availability_basis"
+    ] == basis
 
 
 def _row(
