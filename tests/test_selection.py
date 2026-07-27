@@ -2125,6 +2125,61 @@ def test_rule_mixture_coverage_score_round_robins_across_groups() -> None:
     assert selection.selected_task_check_refs == (refs[0], refs[2])
 
 
+def test_rule_mixture_uses_stable_sum_before_tie_breaking() -> None:
+    refs = tuple(
+        TaskCheckRef(f"task-{name}", f"check-{name}")
+        for name in ("a", "b", "c", "d")
+    )
+    task_pool = _task_pool(
+        tuple(ref.task_id for ref in refs),
+        tuple(ref.check_id for ref in refs),
+    )
+    origin = _origin(task_pool, refs=refs)
+    tasks = tuple(_task(ref.task_id, ref.check_id) for ref in refs)
+    checks = {ref.check_id: _check(ref.check_id, ref.task_id) for ref in refs}
+    snapshot = build_feature_snapshot(
+        origin,
+        task_pool,
+        tasks,
+        checks,
+        (),
+        FeatureConfig(("task_count",)),
+    )
+    selector_input = build_selector_input(
+        origin,
+        task_pool,
+        snapshot,
+        (),
+        (_agent(),),
+        SelectionBudget(4),
+        LeakagePolicy(("task_metadata",), origin.as_of_cutoff),
+    )
+    coverage_order = (refs[1], refs[3], refs[2], refs[0])
+    group_by_ref_key = {
+        canonical_digest(ref): f"group-{rank}"
+        for rank, ref in enumerate(coverage_order)
+    }
+    selector = _rule_mixture_selector(
+        {
+            "expert_weights": {
+                "coverage": 1.0 / 3.0,
+                "random": 1.0 / 3.0,
+                "recency": 1.0 / 3.0,
+            },
+            "random_seed": 5,
+            "group_by_ref_key": group_by_ref_key,
+        }
+    )
+
+    selection = select_with_selector(selector_input, snapshot, selector)
+
+    # task-a and task-c have the same mathematical mixture score. Stable
+    # summation preserves the tie so the documented Task ID tie-break applies.
+    assert selection.selected_task_check_refs.index(
+        refs[0]
+    ) < selection.selected_task_check_refs.index(refs[2])
+
+
 def test_build_rule_mixture_grid_freezes_ten_executable_simplex_points() -> None:
     selectors = build_rule_mixture_grid(
         random_seed=7,

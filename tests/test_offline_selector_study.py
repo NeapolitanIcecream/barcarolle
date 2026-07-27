@@ -10,6 +10,7 @@ REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPOSITORY_ROOT))
 
 from barcarolle.records import TaskRecord, canonical_digest  # noqa: E402
+from examples.offline_selector_study import public_replay  # noqa: E402
 from examples.offline_selector_study import study  # noqa: E402
 
 
@@ -21,6 +22,11 @@ def test_offline_study_amendments_form_a_zero_call_chain() -> None:
         plan,
         amendment,
     )
+    replay_amendment = public_replay.load_replay_amendment(
+        public_replay.DEFAULT_AMENDMENT,
+        plan,
+        correction,
+    )
 
     assert plan["authority"]["new_paid_calls"] == 0
     assert amendment["claim_boundary"]["primary_terminal_state"].startswith(
@@ -30,6 +36,11 @@ def test_offline_study_amendments_form_a_zero_call_chain() -> None:
         correction["previous_amendment_digest"]
         == amendment["amendment_digest"]
     )
+    assert replay_amendment["previous_amendment_digest"] == (
+        correction["amendment_digest"]
+    )
+    assert replay_amendment["authority"]["new_paid_calls"] == 0
+    assert replay_amendment["authority"]["network_calls"] == 0
 
 
 def test_chronological_blocks_keep_future_tasks_nonoverlapping() -> None:
@@ -120,6 +131,44 @@ def test_local_source_reproduces_committed_offline_results() -> None:
     committed = json.loads(study.DEFAULT_RESULTS.read_text(encoding="utf-8"))
 
     assert observed["study_results_digest"] == committed["study_results_digest"]
+
+
+def test_committed_public_replay_results_are_self_digested() -> None:
+    results = json.loads(
+        public_replay.DEFAULT_OUTPUT.read_text(encoding="utf-8")
+    )
+    digest = results.pop("public_replay_results_digest")
+
+    assert canonical_digest(results) == digest
+    assert results["status"] == "public_counterfactual_replay_changes_algorithm_results"
+    assert results["observed_at_negative_control"][
+        "all_history_mature_counts_zero"
+    ]
+    assert results["observed_at_negative_control"][
+        "all_future_mature_counts_zero"
+    ]
+    assert results["result_reuse_audit"][
+        "exact_task_check_agent_cache_identity_match_count"
+    ] == 150
+    assert results["public_pipeline"]["origin_count"] == 12
+    assert results["public_pipeline"]["selection_count"] == 72
+    assert results["transparent_diagnostic_comparison"][
+        "selection_membership_mismatch_count"
+    ] == 1
+
+
+def test_local_source_reproduces_committed_public_replay() -> None:
+    if not study.DEFAULT_TASK_POOL.exists():
+        pytest.skip("ignored source artifacts are not present")
+
+    observed = public_replay.run_public_replay()
+    committed = json.loads(
+        public_replay.DEFAULT_OUTPUT.read_text(encoding="utf-8")
+    )
+
+    assert observed["public_replay_results_digest"] == (
+        committed["public_replay_results_digest"]
+    )
 
 
 def _task(index: int, stratum: str) -> TaskRecord:
