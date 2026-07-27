@@ -1,6 +1,6 @@
 # Research Findings And Improvement Backlog
 
-Last reviewed: 2026-07-25.
+Last reviewed: 2026-07-27.
 
 Status: living research record.
 
@@ -139,6 +139,17 @@ Selector challenger rather than a default second execution. The observed
 repeat flip rate is 13.85%, but its cluster interval `[6.15%, 21.88%]` crosses
 neither predeclared promotion gate. Results and repeats therefore remain
 experiment-layer evidence; no core cache or controller policy changes.
+
+The 2026-07-27 zero-call follow-up exhausted the valid retrospective use of
+those Results for current Selector triage. All certified Checks materialized in
+2026, so historical source-time Origins correctly contain no mature Task/Check
+refs; the Results cannot support a core counterfactual or strict-prospective
+rolling-origin claim. A separately labeled historical Task-order diagnostic
+rejected the current duration-stratum ALG-002 configuration and found ALG-003
+seed-unstable. ALG-001 and ALG-004 retained coverage on all eight eligible
+outer blocks. Coverage is now only a candidate for a preregistered future
+comparison against a five-seed random bank. No current result promotes a
+Selector into Runner behavior.
 
 Rolling-origin cohort controls now reject truthy substitutes and non-string
 cluster filters before policy identity is formed. Verification rejects coercive
@@ -1314,6 +1325,10 @@ and rehashes the resulting tree before Check execution.
 | RI-173 | P1 | main-run measurement, resolved 2026-07-25 | complete | A legitimate main cell used 33 successful rows, leaving almost no headroom under the initial 36-total-candidate complexity bound. An unrelated overlap could therefore stop an otherwise attributable Result even though only the small excess set needs combinatorial search. | Compute candidate totals first and solve uniquely for rows whose tokens sum to the excess over Result usage; the 36-row bound now applies only to plausible exclusion candidates. Return the complement as the receipt. A 41-candidate regression with 40 legitimate rows and one overlap proves total legitimate row count no longer drives the bound. |
 | RI-174 | P0 | main-run cost-tail measurement, resolved 2026-07-25 | complete | Main cell 36 cost $4.909603 under the common conservative ScoringConfig and exceeded the $4.032351 calibration-derived per-call ledger ceiling, although its exact gateway receipt was $2.968422 and revised full-main projections remained below the unchanged $180 actual and $260 conservative gates. A stopped exact Result could not previously resume without rewriting history or rerunning the Agent. | Amendment 3 raises only the per-call conservative ledger ceiling to $10. A strict append-only authority amendment binds the old/new limits, unchanged total authority/schedule/retries/pricing, source amendment, and exact Result. One reauthorization event preserves the original stop reason and makes the call completed without an Agent retry. Repeated application is idempotent; non-scoreable, unpriceable, missing-Result, non-cost, above-$10, or nonterminal stops remain ineligible. |
 | RI-175 | P0 | main-run provider failure, resolved 2026-07-25 | complete | Terra main sequence 42 returned distributor `503 no-available-channel` through all five Codex in-call network retries. The exact Result is `agent_invalid`, has an empty diff and no complete usage, and carries a $0.019584 exact model/time receipt. It is a preselected repeat-2 cell, so primary base pairs remain intact, but one repeat cluster is censored. | Amendment 4 authorized one outcome-blind Pylint recovery canary; it was scoreable with priceable usage and an exact $0.291302 receipt. Amendment 5 then authorized only the 195 remaining frozen cells, with zero retries/replacements and a terminal second-failure rule. Main completed without another invalid Result. Sequence 42 remains availability evidence: never retried, replaced, relabeled, or scored as a hidden fail; it is censored from repeat outcomes and counted unsuccessful in end-to-end sensitivity. |
+| RI-176 | P0 | contract-reproduced, resolved 2026-07-27 | complete | The 75 SymPy Tasks carry 2016–2023 source times, but all certified Checks materialized on 2026-07-25. Each planned historical core Origin therefore had zero mature history refs and zero mature future refs. Projecting the 2026 Check or Result availability backward would manufacture evidence and bypass the intended maturity contract. | Preserve the core rule. The append-only offline-study amendment records the failed path and forbids timestamp rewriting. Any source-time-only analysis stays in an experiment-local historical-order diagnostic namespace and cannot emit or claim core Origin, Selection, Matrix, or Metric evidence. A new strict-prospective claim requires later immutable Task Pool snapshots and actually mature Results. |
+| RI-177 | P1 | measured 2026-07-27 | current source configuration rejected; infrastructure preserved | In twelve historical Task-order blocks, weighted duration-stratum ALG-002 had macro MAE `0.2369` versus coverage `0.1833`; the predeclared difference was `+0.0536`. The unfavorable direction survived 5,000 repeat views and strengthened to `+0.1140` after retaining only the earliest Task per dependency cluster. Better composition TV did not produce better outcome MAE. The 36-point parameter grid realized only 18 behaviors, never activated caps 2/3/4, and no point beat coverage. | Do not tune alpha, trailing window, cap, or seed further on these outcomes and do not remove the final-form stratified infrastructure. Reopen ALG-002 only with a different pre-origin feature or source-specific mechanism declared before new mature Origins. Keep duration stratum as descriptive metadata, not a validated prediction mechanism. |
+| RI-178 | P1 | exploratory measured 2026-07-27 | future-work; prospective preregistration required | Coverage was the best fixed diagnostic rule at MAE `0.1833`. Its post-primary difference from the five-seed random-bank mean was `-0.0383`, with descriptive Origin interval `[-0.0767, -0.0042]`; coverage beat that bank in every repeat-noise view and beat random seed 5 across block sizes 3/4/5/6/8. Primary blocks still shared dependency clusters, and this comparison was selected after the failed primary contrast. | Nominate, but do not deploy, coverage versus the frozen random-bank mean. A planning calculation calls for at least 25 independent mature five-Task Origins, two Agents, a 15-Task initial union, and dependency/repository reporting. Existing call-cost distributions imply about `$86.47` median and `$187.21` sum-of-Agent-p90 cost for 280 calls; this is neither authority nor a quote. If 25 independent Origins are unavailable, retain an unresolved claim. |
+| RI-179 | P2 | measured 2026-07-27 | keep gates; no promotion | ALG-001 and ALG-004 retained coverage in all eight eligible outer blocks and matched it. Raw mean choice switched once and increased outer MAE by `0.0375`. ALG-003's one-standard-error difference from coverage ranged from `-0.04375` to `+0.0250` across three seeds. | Keep conservative choice rules as offline safeguards and leave them out of Runner defaults. Do not expand the simplex grid or choose a favorable seed from these outcomes. Promotion still requires complete core evidence replay and new outer-origin improvement. |
 
 Decisions from the 2026-07-22 maintainer review:
 
@@ -2940,10 +2955,10 @@ loop within that history.
 
 | ID | Priority | Proposal | Required baselines and failure criterion |
 | --- | --- | --- | --- |
-| ALG-001 | P1 | Offline choice rule implemented 2026-07-22; empirical comparison pending. Shrink paired improvement toward a fallback and switch only when the conservative score clears minimum-history, margin, and uncertainty gates. | Compare fixed experts, raw mean chooser, no-shrink, no-gate, and hindsight oracle. Reject if outer-origin paired MAE does not improve or switching is unstable. |
-| ALG-002 | P1 | Offline rule, replay diagnostic, and report integration implemented 2026-07-22; empirical comparison pending. Forecast future stratum proportions with Dirichlet-smoothed trailing counts, allocate capacity-constrained largest-remainder quotas, and evaluate with capped post-stratification weights. | Compare random, recency, coverage, and unweighted stratified selection. Report proportion TV error, effective sample size, and weight caps. Reject if outer-origin paired MAE does not improve, TV error is not better than the unweighted mix, or weighting collapses effective sample size. |
-| ALG-003 | P2 | Offline grid and choice rule implemented 2026-07-22; empirical comparison pending. Evaluate a frozen ten-point thirds-simplex rank-mixture grid, then choose toward equal weights with a one-standard-error rule. | Compare equal weights, individual experts, and the current inverse-MAE-style mixture. Reject gains that disappear in outer-origin evaluation or are dominated by seed variation. |
-| ALG-004 | P2 | Offline drift-aware guarded choice implemented 2026-07-22; empirical comparison pending. Rank complete chronological paired losses by EWMA, then require the selected candidate to clear the unweighted full-history safe-switch. | Compare non-decayed history and half-lives 0.5/1/2/4 in nested origins. Reject if outer-origin paired MAE does not improve or half-life choice is unstable. |
+| ALG-001 | P1 | Offline choice rule implemented 2026-07-22. The 2026-07-27 historical-order diagnostic retained coverage in all eight eligible outer blocks; valid prospective comparison remains pending. Shrink paired improvement toward a fallback and switch only when the conservative score clears minimum-history, margin, and uncertainty gates. | Compare fixed experts, raw mean chooser, no-shrink, no-gate, and hindsight oracle. Reject if outer-origin paired MAE does not improve or switching is unstable. The current no-switch result validates caution, not improvement. |
+| ALG-002 | P1 | Offline rule, replay diagnostic, and report integration implemented 2026-07-22. The 2026-07-27 historical-order diagnostic rejects its current duration-stratum configuration on SymPy while preserving the generic final-form boundary. Forecast future stratum proportions with Dirichlet-smoothed trailing counts, allocate capacity-constrained largest-remainder quotas, and evaluate with capped post-stratification weights. | Compare random, recency, coverage, and unweighted stratified selection. Report proportion TV error, effective sample size, and weight caps. Reopen only with a newly declared feature/mechanism and mature outer Origins; do not tune the rejected configuration on the same outcomes. |
+| ALG-003 | P2 | Offline grid and choice rule implemented 2026-07-22. The 2026-07-27 historical-order diagnostic rejects promotion on this source because seed variation changes the outer difference from favorable to unfavorable. Evaluate a frozen ten-point thirds-simplex rank-mixture grid, then choose toward equal weights with a one-standard-error rule. | Compare equal weights, individual experts, and the current inverse-MAE-style mixture. Reject gains that disappear in outer-origin evaluation or are dominated by seed variation. Do not choose the favorable seed post hoc. |
+| ALG-004 | P2 | Offline drift-aware guarded choice implemented 2026-07-22. The 2026-07-27 historical-order diagnostic retained coverage in all eight eligible outer blocks; no drift benefit is established. Rank complete chronological paired losses by EWMA, then require the selected candidate to clear the unweighted full-history safe-switch. | Compare non-decayed history and half-lives 0.5/1/2/4 in nested origins. Reject if outer-origin paired MAE does not improve or half-life choice is unstable. Keep the guard out of Runner until valid prospective evidence exists. |
 | ALG-005 | P2 | Evidence path ready; prediction code deferred pending a concrete resource estimand and observed outer-origin cost problem. Existing Results retain usage, pricing-view cost, latency, exact matrix bindings, and availability time. | Before implementation, choose one predeclared target: per-Cell p90, whole-Selection total, or bounded-concurrency wall time. Then report the relevant error/resource Pareto frontier against unconstrained selection. Do not create a generic ResourceMetric or hide objectives in a scalar score. |
 | ALG-006 | P3 | Model the four paired Agent outcomes with hierarchical partial pooling across repositories or clusters. | Attempt only after many independent clusters, repeated cells, and discordant pairs exist. Compare against the safe-switch baseline. |
 
@@ -2981,8 +2996,10 @@ TV error, effective sample size, maximum weight, and cap activation. Reporting
 now derives these rows from the validated frozen TaskRecords and binds their
 digest only after the complete Selector provenance chain passes. Synthetic
 tests establish mechanism and failure behavior only. Nested hyperparameter
-selection, outer-origin baselines, and empirical benefit remain pending; the
-family is not a Runner default.
+selection and valid mature outer-origin evidence remain pending. The
+2026-07-27 historical-order diagnostic supplied the required baselines and
+rejected the current duration-stratum configuration; it cannot be promoted to
+core evidence, and the family is not a Runner default.
 
 ALG-003's offline boundary is `build_rule_mixture_grid`,
 `SimplexChoiceConfig`, and `choose_rule_mixture_from_grid`. The builder creates
@@ -2995,9 +3012,11 @@ Origins it returns equal weights. Otherwise it finds the lowest-mean-MAE point
 and chooses the grid point closest to equal weights whose mean is within that
 best point's sample standard error. This deliberately requires measured
 mixture Selections: averaging individual-expert losses is not accepted as a
-surrogate. Synthetic and replay-chain tests establish the mechanism only.
-Nested use, outer-origin baselines, seed-bank comparison, and empirical benefit
-remain pending; the inverse-MAE trainer and Runner defaults are unchanged.
+surrogate. Synthetic and replay-chain tests establish the mechanism. The
+2026-07-27 historical-order diagnostic added an outer-loop seed-bank stress
+test and rejected promotion because the observed difference changed sign by
+seed. Valid mature outer-origin evidence remains pending; the inverse-MAE
+trainer and Runner defaults are unchanged.
 
 ALG-004's offline boundary is `EWMASwitchConfig` plus
 `choose_selector_with_ewma_guard`. It reuses exact paired Selection/Metric/
@@ -3014,8 +3033,10 @@ ordinary unweighted, full-history safe-switch; decayed weights are not assigned
 a confidence interpretation. The default half-life is two Origins, while
 0.5/1/2/4 and non-decayed history form the predeclared nested comparison. Tests
 establish chronology, recent-trend ranking, gate refusal, exact Origin coverage,
-and scalar validation only. Outer-origin evidence, half-life selection, and
-empirical benefit remain pending; Runner defaults and schemas are unchanged.
+and scalar validation. The 2026-07-27 historical-order diagnostic exercised
+the default half-life and retained coverage throughout; it did not establish a
+drift benefit. Valid outer-origin evidence and nested half-life selection
+remain pending; Runner defaults and schemas are unchanged.
 
 ALG-005 does not need more infrastructure before evidence exists. `ResultRecord`
 already retains validated usage, repricing-aware cost, phase latency, exact
@@ -3588,8 +3609,30 @@ and show material wall-clock or paid-cost improvement.
   public inputs and side effects rather than a private helper patch.
 - RI-119: Cremona has a calibrated code scope and history policy; it remains
   routing evidence, with no automatic module split, baseline, or CI gate.
+- RI-176: historical source ordering cannot override actual Check and Result
+  maturity; projected diagnostics remain outside core evidence records.
+- RI-177: the current duration-stratum ALG-002 configuration is rejected for
+  the measured SymPy source without removing the generic algorithm boundary.
+- RI-179: conservative chooser gates remain offline safeguards; no adaptive
+  rule is promoted from the historical-order diagnostic.
 
 ## Update Log
+
+- 2026-07-27: completed the zero-call follow-up over the already-paid SymPy
+  Results and recorded RI-176 through RI-179. A self-digested plan and two
+  pre-outcome amendments preserved the source bindings and the discovery that
+  every historical core Origin has zero mature Check refs. The separate
+  historical Task-order diagnostic used twelve five-Task blocks, six fixed
+  rules, three adaptive rules, five random seeds, three mixture seeds, 36
+  stratified configurations, 5,000 repeat-noise views, a no-recurrence
+  dependency slice, five block sizes, hindsight headroom, and cost/power
+  projections. Weighted duration-stratum selection was worse than coverage by
+  `0.0536`; no stratified grid point beat coverage. ALG-001/004 retained
+  coverage; ALG-003 was seed-unstable. Exploratory coverage minus five-seed
+  random-bank mean was `-0.0383`, nominating a new 25-Origin prospective study
+  whose current p90 planning estimate is `$187.21`. No core record, Runner
+  default, endpoint, campaign authority, network request, model call, or paid
+  call was added.
 
 - 2026-07-25: completed the bounded USD 300 coding-Agent/model study and closed
   RI-154 through RI-159 and RI-161 through RI-175; RI-160 and RI-163 remain

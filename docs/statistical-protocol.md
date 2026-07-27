@@ -368,3 +368,13 @@ Selector predicts better, that a reasoning-effort effect is stable, or that the
 bootstrap interval is calibrated for the target repository. Those require a
 larger authorized real-task history with enough independent blocks and explicit
 replicates.
+
+The 2026-07-27 zero-call follow-up does not relax this boundary. The reused
+SymPy Tasks have historical source times, but their certified Checks
+materialized in 2026, so all planned historical core Origins are censored.
+Its source-time-only diagnostic may reject or nominate algorithms for future
+work, but it is not a substitute for counterfactual or strict-prospective
+evidence. The exploratory coverage-versus-five-seed-random-bank result nominates
+a new preregistered study with a planning target of at least 25 independent
+mature Origin blocks; it does not establish a general minimum or authorize that
+campaign.
