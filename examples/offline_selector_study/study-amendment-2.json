@@ -1,0 +1,16 @@
+{
+  "schema_version": "barcarolle_offline_selector_study_amendment_v2",
+  "amendment_id": "offline-selector-study-2026-07-27-amendment-2",
+  "base_study_plan_digest": "419829f3a2b4b832812e6000a364bf9fe1af3c9497950f5275125f60a8acb20a",
+  "previous_amendment_digest": "8852015d8a72ea70236035bfab46e15d84d2af0556de0e769ebb86ac9eb366b2",
+  "approved_at": "2026-07-27T01:55:46Z",
+  "timing": "Frozen before loading Result records or computing any Selector loss.",
+  "trigger": "The first fail-closed source check found a one-character manual transcription error in the planned Task Pool SHA-256. The other three frozen source hashes matched.",
+  "correction": {
+    "field": "source_bindings.task_pool_manifest_sha256",
+    "incorrect": "b28a8ee50e275ec31961761db2bbd0e06f647a8adb8b45392fb6208191a0d4c",
+    "correct": "b28a8ee50e275ec31961761db2bbd0e06f647a8aadb8b45392fb6208191a0d4c"
+  },
+  "unchanged_protocol": "All research questions, source identities, Task ordering, blocks, algorithms, parameters, contrasts, thresholds, claim boundaries, and zero-call authority remain unchanged.",
+  "amendment_digest": "a02aa001ac67189379439bae7dca50929c8afe75846dae8e5bd703b67a4e46f9"
+}
