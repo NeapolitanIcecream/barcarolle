@@ -1,6 +1,6 @@
 # Statistical Protocol
 
-Status: current offline contract, 2026-07-24. Empirical thresholds and model
+Status: current offline contract, 2026-07-27. Empirical thresholds and model
 claims remain pending until a larger authorized paired history exists.
 
 This document fixes the statistical meanings used by rolling-origin evaluation.
@@ -139,6 +139,12 @@ loads the common frozen Task Pool, validates every Origin and Snapshot against
 its Task/Check records, and requires each Result cache identity to project to
 those records before the loss can affect fitted parameters.
 
+An unseen-Agent claim has another evidence boundary. Reference or training
+Agents that supply Selector features must be disjoint from evaluation Agents.
+An outcome-free Selector may be evaluated on a frozen Agent panel, but
+nominating it after inspecting that panel still does not establish transfer to
+a new Agent. Report panel-conditional and held-out-Agent claims separately.
+
 An Origin's future weight is the number of distinct mature Task/Check refs with
 Result cells after common benchmark-owned exclusions. Planned refs with no
 scoreable Result do not increase the weight.
@@ -154,6 +160,40 @@ For Selector `s` with Origin losses `L(s, o)` and future weights `n(o)`, report:
 The pairwise table lets a report identify a predeclared fallback without adding
 fallback identity to Result or Metric records. Choosing a fallback after
 looking at the table is exploratory, not confirmatory.
+
+## Primary Baseline And Landscape Diagnostics
+
+For the current future-pass-rate fidelity claim, the primary baseline is every
+eligible historical Task/Check ref without Selection. Its benchmark may be
+larger and more expensive than the selected benchmark; that is the compression
+comparison.
+
+An equal-budget random Selection is calibration, not the primary baseline.
+Report its loss distribution or a predeclared seed bank and locate the
+candidate within it. State whether Origins draw independently or share a
+reproducible seed. When a finite outcome-category model permits an exact
+distribution, report its expectation, quantiles, candidate percentile,
+as-good-or-better mass, elite means, and expected best-of-draw frontier. A
+fixed-seed sensitivity checks whether cross-Origin coupling changes the
+conclusion.
+
+Continuous historical support and a discrete hindsight budget oracle are
+endpoints. They may open future outcomes to measure representability and search
+density, but cannot enter Selection or be reported as learnable algorithms.
+Low support loss does not establish that pre-origin features can identify the
+corresponding subset.
+
+The current algorithm-promotion gate requires at least `0.02` lower
+macro-Origin MAE than full history and a paired 95% Origin-block interval wholly
+below zero. Random-space position, support, null controls, rank agreement, and
+recommendation regret remain separately labeled diagnostics. Changing the
+primary metric or practical margin after outcomes open is exploratory.
+
+Predeclare the future-block horizon from the deployment question. When more
+than one reasonable horizon exists, report a fixed block-size sensitivity and
+dependency-deduplicated view without selecting the most favorable result.
+Changing sign across those views is a robustness failure even if one point
+estimate is favorable.
 
 ## Shrinkage Safe Switch
 
@@ -272,6 +312,11 @@ For a bank with at least two variants, report the mean and population standard
 deviation of each variant's macro-Origin MAE. Do not pool unrelated fitted
 weights or feature contracts merely because their family names match.
 
+A small seed bank is not a dense estimate of the random search space. Use an
+exact distribution when the outcome structure permits it; otherwise predeclare
+enough seeds or simulation draws for the desired tail resolution and report
+Monte Carlo uncertainty.
+
 ## Uncertainty
 
 The current offline summary treats each non-overlapping rolling Origin future
@@ -369,12 +414,20 @@ bootstrap interval is calibrated for the target repository. Those require a
 larger authorized real-task history with enough independent blocks and explicit
 replicates.
 
-The 2026-07-27 zero-call follow-up does not relax this boundary. The reused
-SymPy Tasks have historical source times, but their certified Checks
-materialized in 2026, so all planned historical core Origins are censored.
-Its source-time-only diagnostic may reject or nominate algorithms for future
-work, but it is not a substitute for counterfactual or strict-prospective
-evidence. The exploratory coverage-versus-five-seed-random-bank result nominates
-a new preregistered study with a planning target of at least 25 independent
-mature Origin blocks; it does not establish a general minimum or authorize that
-campaign.
+The 2026-07-27 follow-ups do not relax this boundary. The source-observed SymPy
+view remains fully censored. A separate `label_at_task_arrival`
+counterfactual replay is valid for development and reuses exact Results, but it
+is not source-attested or strict-prospective.
+
+On that opened development scenario, coverage MAE is `0.1833` versus `0.1933`
+for full history. The `0.0100` point gain and paired interval
+`[-0.0363, +0.0152]` miss the promotion gate. Exact random and support
+diagnostics show headroom, while null controls, decision metrics, fixed
+candidate screens, and the two-Agent panel do not establish learnability or
+transfer.
+
+Normal planning from the panel-conditional primary contrast requires about 44
+independent Origins for 80% power at a true `0.02` effect. The earlier
+25-Origin calculation applies only to coverage versus a five-seed random-bank
+mean. Both counts omit some dependency and Agent-generalization variance, are
+planning inputs rather than guarantees, and authorize no campaign.

@@ -4,6 +4,13 @@ Date: 2026-07-27.
 
 Status: complete. No network request, model call, or paid call was made.
 
+Planning update: the later
+`2026-07-27-selection-landscape-study.md` makes full eligible history the
+primary baseline. The 25-Origin calculation below remains valid only for the
+exploratory coverage-versus-random-bank contrast. Current primary planning is
+44 independent Origins for 80% power at a true `0.02` effect, conditional on
+the frozen two-Agent panel.
+
 ## Decision
 
 The existing paid data supports a bounded counterfactual rolling-origin result.
@@ -306,8 +313,9 @@ repository, and source heterogeneity are modeled honestly.
 
 Do not spend more money or tune the same algorithms on these 75 outcomes.
 
-When new Task supply and API authority exist, preregister a strict-prospective
-campaign with:
+When new Task supply and API authority exist, use the later landscape study's
+primary protocol. The following list records this study's original
+coverage-versus-random-bank nomination:
 
 - coverage as candidate;
 - the frozen five-seed random-bank mean as primary fallback contrast;
@@ -319,9 +327,10 @@ campaign with:
 - a later immutable Task Pool snapshot at each future window;
 - no hyperparameter choice from current or outer-future outcomes.
 
-If collecting 25 independent Origins is infeasible, the strict-prospective
-claim remains unresolved. A labeled counterfactual scenario remains valid for
-algorithm development, but it cannot be relabeled as prospective evidence.
+Twenty-five independent Origins address only that secondary contrast. The
+primary full-history claim currently plans for at least 44. A labeled
+counterfactual scenario remains valid for algorithm development, but it cannot
+be relabeled as prospective evidence.
 
 ## Reproduction and artifact policy
 

@@ -1,79 +1,81 @@
 # Barcarolle Cross-Session Handoff
 
-Last updated: 2026-07-27.
-
-This file records current direction and reopening conditions. Intended behavior
-lives in `docs/design/`; findings live in
+Last updated: 2026-07-27. Design lives in `docs/design/`; findings live in
 `docs/research-improvement-backlog.md`.
 
 ## Stable boundaries
 
-- Keep the eight modules: Records, Task Pool, Verification, Workspace, Result
-  Store, Selection, Reporting, and Runner.
-- Generators end at one strict prepared-candidate package. Barcarolle owns
-  certification and immutable Task Pool publication. A user-maintained complete
-  Task Pool opens read-only.
-- Algorithm-visible Task/Check availability, dependency cluster, and sampling
-  stratum may come from a user or adapter. Their derivation and evidence class
-  must be explicit. A counterfactual scenario gets a new immutable Task Pool;
-  it never overwrites or relabels its source pool.
-- Task Pool and Result storage remain independent. Reuse is by exact
-  Task/Check/Agent/Workspace/Runtime identity, not Task Pool ID.
-- Strict-prospective Result inputs obey physical availability. Counterfactual
-  inputs obey mature history membership plus exact identity. FeatureSnapshot
-  and SelectorInput freeze the view before lazy testing.
-- Preserve the rolling-origin, fitted Selector, lazy-fill, and prospective
-  replay data flow. Use direct records and functions. Do not add a Generator
-  registry, plugin host, Feature Store, workflow DAG, model service,
-  distributed scheduler, or simulator platform without a concrete caller.
+- Keep Records, Task Pool, Verification, Workspace, Result Store, Selection,
+  Reporting, and Runner.
+- Generators end at one prepared package. Barcarolle certifies and publishes
+  immutable Task Pools; user-maintained pools open read-only.
+- Task Pool and Results stay independent. Reuse requires exact
+  Task/Check/Agent/Workspace/Runtime identity.
+- User- or adapter-derived availability, dependency cluster, and sampling
+  stratum require explicit lineage and evidence class. A counterfactual is a
+  new pool, never a relabeled source pool.
+- Strict-prospective inputs obey physical availability. Counterfactual inputs
+  obey mature history plus exact identity. FeatureSnapshot and SelectorInput
+  freeze the pre-selection view before lazy testing.
+- Preserve rolling-origin evaluation, fitted Selector provenance, lazy fill,
+  and prospective replay with direct records/functions. Add no registry,
+  Feature Store, workflow DAG, model service, distributed scheduler, or
+  simulator platform without a concrete caller.
 
 ## Current evidence
 
-The 75-Task SymPy model/Agent study supports Terra as its source-conditional
-operational default and mini as a research challenger. Its paid authority is
-closed.
+The closed 75-Task SymPy study supports Terra as a source-conditional
+operational default and mini as a challenger. The `label_at_task_arrival`
+counterfactual reuses 150 exact Results across twelve Origins; the
+source-observed Check view remains a censored negative control.
 
-The zero-call Selector study now has two evidence views:
+Current Selector decision:
 
-- The published 2026 Check timestamps are the source-observation negative
-  control. All 12 historical Origins are fully censored.
-- The user-configured `label_at_task_arrival` scenario produces 12 public
-  Origins, 72 Selections, 144 matrices, and 72 MAE metrics. All 150 base Results
-  match exact Task/Check/Agent/cache identity and are reused without calls.
-- Coverage MAE is `0.1833`, versus random seed 5 at `0.2250` and recency at
-  `0.2042`. This supports selection within this counterfactual scenario.
-- The predeclared weighted-stratified rule remains worse than coverage by
-  `0.0536`. ALG-003 is seed-unstable; ALG-001 and ALG-004 retain coverage.
-- Stable rule-mixture summation changes one benchmark membership and one MAE
-  relative to the frozen transparent diagnostic. The disagreement is recorded.
+- full eligible history is the no-Selection baseline at MAE `0.1933`;
+- coverage scores `0.1833`; its `0.0100` gain and interval
+  `[-0.0363, +0.0152]` miss promotion gates;
+- exact-random expectation is `0.2150`; coverage beats `88.68%` by midrank,
+  while `12.91%` is as good or better; Origins 6–9 fall below random midrank;
+- support/oracle MAE is `0.0250`/`0.0375`, but exact-oracle random mass is only
+  `2.38e-21`, so sparse pre-origin identification is the observed gap;
+- the full-history contrast changes sign across future block sizes; removing
+  repeated clusters gives a `0.0167` gain but still misses both gates;
+- repeat views average a `0.0071` gain and never reach `0.02`; null controls
+  remain suggestive and no fixed mechanism clears the gate;
+- both Agents favor coverage by less than `0.02`; unseen-Agent transfer is
+  untested.
 
-No result establishes strict-prospective performance or promotes a Selector
-into Runner defaults.
+No Selector is a Runner default and no result is strict-prospective evidence.
 
-## Stop state and reopening work
+## Resource boundary
 
-Do not spend more money, tune against the same 75 outcomes, or add learned
-Selector machinery. The current generic infrastructure is sufficient until a
-concrete Task source, later Task Pool, or model API is available.
+The USD 300 Agent-study authority is closed. This follow-up made zero
+coding-Agent calls and one allowed required-endpoint embedding call
+(`text-embedding-3-small`, 75 Tasks, 22,935 input tokens). Cost was not exposed
+and is not imputed; raw embeddings remain ignored.
 
-Highest-value reopening work:
+Coding-Agent availability is an external blocker, not an architectural signal.
+Future evidence calls need new authority and `OPENAI_BASE_URL` plus
+`OPENAI_API_KEY`.
 
-1. Preregister coverage versus the frozen five-seed random-bank mean with at
-   least 25 independent mature five-Task Origins, two frozen Agents,
-   dependency/repository reporting, and a preselected repeat subset. The
-   140-Task, 280-call estimates of `$86.47` median and `$187.21`
-   sum-of-Agent-p90 are planning inputs, not authority or quotes.
-2. Before another comparable certification run, add the single-writer
-   candidate checkpoint from RI-160 and narrow the Pylint Generator behavior
-   digest from RI-163.
-3. Reopen learned Selectors only when enough mature Origins exist for a frozen
-   outer evaluation. Reopen concrete Generator development only with its source
-   and required API.
-4. Reopen checkout caching when checkout plus cleanup exceeds 5% of scoreable
-   cell time or p95 blocks throughput. Reopen bounded Agent parallelism only
-   with exact per-call attribution, one Result writer, and explicit concurrency
-   authority.
+## Reopening work
 
-Before commits, run focused tests, the full suite, Ruff, Pyright, and
-`git diff --check`. Keep credentials, raw prompts/completions, transcripts,
-workspaces, verifier output, and provider payloads under ignored outputs.
+Do not spend more money or tune the same 75 outcomes.
+
+1. Bring a later pool or second source with mature Origins. Preregister the
+   candidate, full-history baseline, exact-random calibration, support/nulls,
+   and dependency/repository aggregation before opening outcomes.
+2. Plan at least 44 independent five-Task Origins for the primary `0.02`
+   full-history effect; the earlier 25 applies only versus the random bank.
+   This is conditional on the current panel.
+3. On the second source, freeze ALG-007's `centroid_recent_15` primary and
+   `facility_recent_15` control. Keep it offline; RI-189 gates core admission.
+4. Split expanded reference/training and held-out Agent panels before unseen-
+   Agent, difficulty, or learned-model claims.
+5. Before comparable certification, implement RI-160's checkpoint and narrow
+   RI-163's Pylint Generator behavior digest.
+6. Reopen checkout caching above its 5% threshold. Reopen Agent parallelism
+   only with exact attribution, one writer, and authority.
+
+Before commits, run focused/full tests, Ruff, Pyright, and `git diff --check`.
+Keep secrets and raw model/workspace artifacts ignored.
