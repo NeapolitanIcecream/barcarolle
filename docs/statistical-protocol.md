@@ -183,6 +183,14 @@ density, but cannot enter Selection or be reported as learnable algorithms.
 Low support loss does not establish that pre-origin features can identify the
 corresponding subset.
 
+A response-matrix or Item Response Theory subset is first a fixed-universe
+compression comparator. Fit item parameters only from reference-Agent Results
+available before the evaluation boundary, then freeze the subset before
+opening disjoint held-out-Agent or later-Origin outcomes. Report held-out
+reconstruction of the complete historical benchmark separately from
+later-Origin future MAE. Accurate historical score reconstruction cannot by
+itself clear the temporal promotion gate.
+
 The current algorithm-promotion gate requires at least `0.02` lower
 macro-Origin MAE than full history and a paired 95% Origin-block interval wholly
 below zero. Random-space position, support, null controls, rank agreement, and

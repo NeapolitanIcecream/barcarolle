@@ -1340,6 +1340,8 @@ and rehashes the resulting tree before Check execution.
 | RI-187 | P1 | algorithm-validity decision, recorded 2026-07-27 | future prospective work | Level-MAE improvement was previously discussed without a single scorecard separating practical effect, uncertainty, random-space position, support, learnability, design robustness, decision fidelity, and external confirmation. This allowed a good random percentile or low oracle to sound like end-to-end validity. | Require at least `0.02` MAE improvement over full history, a paired interval below zero, robust temporal/stratum controls, and a frozen later source before an algorithm claim. Report random-space position and support as diagnostics. Coverage currently passes only the development random-position and support gates; it does not improve rank agreement or recommendation regret. Its full-history contrast changes from `+0.0012`/`+0.0047` at future block sizes 3/4 to `-0.0100`/`-0.0052`/`-0.0058` at sizes 5/6/8; none clears either gate. Retaining one Task per dependency cluster gives a `0.0167` gain and interval `[-0.0479, +0.0120]`, so recurrence does not explain the direction but the claim still fails. Across the 5,000 preselected repeat-noise views, the mean gain is `0.0071`, the conditional range is `[-0.0147, +0.0050]`, and zero views reach `0.02`. The primary five-Task contrast's Origin-difference SD is `0.04735`; normal planning requires 44 independent Origins for 80% power at a true `0.02` effect, versus 178 at the observed `0.00996`. The earlier 25-Origin sizing applies only to coverage versus the random-bank mean. |
 | RI-188 | P1 | Agent-axis audit, measured 2026-07-27 | held-out Agent evidence required | The two-Agent aggregate could hide treatment heterogeneity, and an outcome-informed Selector could be evaluated on the same Agent panel that supplied its features. Even outcome-free coverage was nominated after this panel was opened. | Coverage minus full-history MAE is `-0.00817` for Terra and `-0.01175` for mini; neither point effect reaches `0.02`, and only mini's descriptive interval excludes zero. State the intended Agent population. For unseen-Agent claims, split reference/training Agents from held-out evaluation Agents and cross that split with later Origins. The 44-Origin planning count is conditional on the current panel and cannot price or power Agent transfer. Keep lazy exact-identity filling for missing held-out Agent×Task cells. |
 | RI-189 | P2 | semantic feature admission, decided 2026-07-27 | evidence-gated future work | The offline semantic study reads an ignored embedding artifact, while core FeatureSnapshot currently supports only explicit task-count, task-stratum, and pre-origin-Result features. Wiring the artifact directly into Runner would bypass replay provenance; expanding core now would build unused infrastructure for a mechanism that did not beat coverage. | Keep ALG-007 offline for its cross-source test. Only if it clears the external promotion gates, add one immutable outcome-free Task projection artifact contract: bind model, input/task-order, dimensions, row, and whole-artifact digests; make Selection network-free; replay per-Task provenance through FeatureSnapshot; never duplicate raw vectors into every Origin. Do not add a Feature Store, embedding service, provider registry, or generic model runtime. |
+| RI-190 | P2 | IRT and adaptive-evaluation literature audit, decided 2026-07-27 | defer until expanded Agent panel | Item Response Theory and adaptive testing can reduce evaluation cost on a fixed item universe, but that estimand can be confused with Barcarolle's temporal claim. The current two-Agent matrix has only three empirical difficulty levels and cannot support stable item discrimination or a held-out-Agent test. | Add ALG-008 only as an offline fixed-universe compression comparator after the reference/training Agent panel expands. Fit item parameters only on reference Agents, then evaluate the frozen subset on disjoint held-out Agents and later Origins. Keep full-history future MAE as primary and report fixed-pool score reconstruction separately. Do not add an IRT service, adaptive controller, question generator, schema, or runtime before this data gate. |
+| RI-191 | P2 | expanded-panel random calibration audit, decided 2026-07-27 | defer until panel size is known | The exact random landscape groups binary outcomes into four joint categories for two Agents. A direct extension has up to `2^A` categories and can make exact enumeration or cross-Origin convolution impractical as the Agent panel grows. | Keep the present routine explicitly study-specific. Before opening an expanded panel, estimate the categorical state size and freeze either a sparse exact dynamic program or fixed-seed Monte Carlo with stated numerical error and sensitivity. Preserve full history as primary; random remains calibration. Do not add a generic probability engine or core API before a concrete panel requires it. |
 
 Decisions from the 2026-07-22 maintainer review:
 
@@ -2973,6 +2975,7 @@ loop within that history.
 | ALG-005 | P2 | Evidence path ready; prediction code deferred pending a concrete resource estimand and observed outer-origin cost problem. Existing Results retain usage, pricing-view cost, latency, exact matrix bindings, and availability time. | Before implementation, choose one predeclared target: per-Cell p90, whole-Selection total, or bounded-concurrency wall time. Then report the relevant error/resource Pareto frontier against unconstrained selection. Do not create a generic ResourceMetric or hide objectives in a scalar score. |
 | ALG-006 | P3 | Model the four paired Agent outcomes with hierarchical partial pooling across repositories or clusters. | Attempt only after many independent clusters, repeated cells, and discordant pairs exist. Compare against the safe-switch baseline. |
 | ALG-007 | P2 | Transfer-test a fixed outcome-free semantic Selector on the next Task source. Nominate `centroid_recent_15` as primary and `facility_recent_15` as a mechanism control; both are post-outcome nominations from the SymPy development source. Do not carry forward the 28-point semantic-conditioned grid or add a learned-model service. | Freeze the embedding model, text projection, recent-window size, tie-breaks, full-history primary baseline, coverage comparator, and exact-random calibration before opening the new source's outcomes. Reject promotion unless the primary improves full history by at least `0.02`, its paired interval is below zero, and horizon/dependency views retain direction. The current source scores `0.1917` for both rules versus `0.1933` full history and `0.1833` coverage, so it supplies a candidate, not positive evidence. |
+| ALG-008 | P2 | After the Agent-panel gate, fit a simple IRT or equivalent response-matrix subset rule as an offline fixed-universe compression comparator. This route estimates benchmark score from fewer observed cells; it is not the temporal Selector claim. | Fit only on reference Agents, freeze item fitting and subset size before held-out-Agent or later-Origin outcomes, and compare score reconstruction with equal-budget random and coverage on disjoint Agents. Also report later-Origin MAE against full history. Reject temporal promotion if it only reconstructs the historical pool, or if gains do not transfer across Agents and Origins. Do not add adaptive generation or a model-serving boundary for this comparator. |
 
 The four current chooser APIs are offline analysis rules, not deployment
 evidence boundaries. They validate internal Selection/Metric/future-matrix
@@ -3648,11 +3651,17 @@ and show material wall-clock or paid-cost improvement.
   current two-Agent result and Origin count are panel-conditional.
 - RI-189: semantic FeatureSnapshot admission is deferred until ALG-007 passes
   cross-source gates; no Feature Store or model service is justified now.
+- RI-190: IRT/adaptive evaluation is a future fixed-universe compression
+  comparator, not a substitute for rolling-origin future-Task evidence; it
+  remains gated on a larger split Agent panel.
+- RI-191: exact random calibration is deliberately two-Agent-specific; choose
+  sparse exact or precision-bounded Monte Carlo only after the next panel size
+  is concrete.
 
 ## Update Log
 
 - 2026-07-27: completed the post-outcome selection-landscape sprint and
-  recorded RI-184 through RI-188. A self-digested plan and executable analysis
+  recorded RI-184 through RI-191. A self-digested plan and executable analysis
   make full history the primary baseline, derive the exact equal-budget random
   PMF, report elite and best-of-random frontiers, separate continuous support
   from the discrete oracle, run three outcome-alignment null controls, and
@@ -3675,8 +3684,12 @@ and show material wall-clock or paid-cost improvement.
   fixed `centroid_recent_15` primary and `facility_recent_15` mechanism control
   to a new source; the exploratory hybrid grid is retired on this source.
   RI-189 defers core embedding-feature admission until that transfer test
-  passes. Exact-PMF state caching reduced the authoritative analysis rerun to
-  `21.91` seconds without changing its result digest.
+  passes. A final literature audit records IRT as ALG-008, an offline
+  fixed-universe compression comparator gated on a larger split Agent panel;
+  it cannot substitute for rolling-origin evidence. RI-191 defers generalized
+  random calibration until the expanded panel makes its `2^A` outcome state
+  concrete. Exact-PMF state caching reduced the authoritative analysis rerun
+  to `21.91` seconds without changing its result digest.
 
 - 2026-07-27: corrected RI-176 and completed RI-180 through RI-183 without
   network or paid calls. Amendment 3 froze the user-configured

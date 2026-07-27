@@ -280,6 +280,16 @@ cannot supply that split.
   twelve-Block development trace is too small to support another tuned adaptive
   chooser; the existing conservative chooser results remain the applicable
   evidence.
+- [tinyBenchmarks](https://arxiv.org/abs/2402.14992) shows that an Item
+  Response Theory representation plus a curated subset can estimate scores on
+  a fixed benchmark with far fewer evaluations. [Reliable and Efficient
+  Amortized Model-based Evaluation](https://proceedings.mlr.press/v267/truong25c.html)
+  extends this direction with content-predicted difficulty and adaptive
+  questions over a large LM panel. These are relevant fixed-universe
+  compression baselines, not evidence that historical Tasks predict later
+  Tasks. Barcarolle should test such a baseline only after it has enough
+  reference Agents to estimate item parameters and disjoint held-out Agents to
+  measure transfer; rolling-origin future MAE remains the primary estimand.
 
 ## Validity scorecard and gap
 
@@ -332,13 +342,21 @@ No more coding-Agent spend or same-source parameter search is justified now.
 3. Expand and split the Agent panel before reopening difficulty or learned
    outcome models. Reference/training Agents may supply historical features;
    held-out Agents measure transfer. Existing cached Results enter
-   exact-identity history; missing Agent×Task cells remain lazy.
+   exact-identity history; missing Agent×Task cells remain lazy. The present
+   exact-random routine is intentionally two-Agent-specific. Before the new
+   panel opens, freeze either a tractable sparse exact calculation or a
+   fixed-seed Monte Carlo calibration with stated numerical precision.
 4. On the second source, freeze ALG-007's `centroid_recent_15` as primary and
    `facility_recent_15` as mechanism control before opening outcomes. Do not
    carry over the 28-point hybrid grid. Embedding availability is independent
    of the temporarily unavailable coding-Agent endpoint. Keep this test
    offline; RI-189 permits core FeatureSnapshot admission only after it passes.
-5. Use nested or prequential model choice only after enough outer Origins
+5. After expanding the Agent panel, fit ALG-008 only as an offline
+   fixed-universe compression comparator. Fit item parameters only on reference
+   Agents, then evaluate the frozen subset on disjoint held-out Agents and later
+   Origins. Do not interpret fixed-pool score reconstruction as future-Task
+   prediction.
+6. Use nested or prequential model choice only after enough outer Origins
    exist. Do not turn the twelve current blocks into pseudo-replication.
 
 The prior 25-Origin sizing applies to coverage versus a five-seed random-bank

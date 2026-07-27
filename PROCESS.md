@@ -71,7 +71,10 @@ Do not spend more money or tune the same 75 outcomes.
 3. On the second source, freeze ALG-007's `centroid_recent_15` primary and
    `facility_recent_15` control. Keep it offline; RI-189 gates core admission.
 4. Split expanded reference/training and held-out Agent panels before unseen-
-   Agent, difficulty, or learned-model claims.
+   Agent, difficulty, or learned-model claims. After that gate, ALG-008 may
+   compare fixed-universe IRT compression offline, but it does not replace
+   later-Origin future-Task evidence. Freeze RI-191's sparse-exact or
+   precision-bounded random calibration after the panel size is concrete.
 5. Before comparable certification, implement RI-160's checkpoint and narrow
    RI-163's Pylint Generator behavior digest.
 6. Reopen checkout caching above its 5% threshold. Reopen Agent parallelism
