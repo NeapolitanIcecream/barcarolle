@@ -360,6 +360,16 @@ loss does improve full history, but not by the required margin. The committed
 snapshot binds that amendment and contains aggregate PMFs, diagnostics,
 metrics, and selection-membership digests. Raw embeddings remain ignored.
 
+The null audit requests 240,000 Origin PMFs but realizes only 27,172 distinct
+four-category history/future states. A bounded exact-PMF cache reuses those
+states `8.83×`; an authoritative local rerun took `21.91` seconds and retained
+result digest
+`c6c15e8a1ffc1ab9f7824ad878b72f3e095aceb8f6968ff6712057368ed884ed`.
+Fresh runs with `PYTHONHASHSEED=1` and `777` were byte-identical, with file
+SHA-256
+`c1a7bc81643ecfc7bea2b807fef51e37ef7f9ba230865738d2265dd18d7fe3f4`.
+This is analysis-tool timing, not Agent or Runner performance evidence.
+
 The embedding artifact was retrieved at `07:11:38Z`, before the formal
 landscape-plan freeze at `07:18:00Z`. That call generated fixed,
 outcome-independent Task-text representations; no mechanism score was computed

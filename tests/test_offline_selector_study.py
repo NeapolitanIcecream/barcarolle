@@ -206,6 +206,12 @@ def test_exact_random_loss_pmf_matches_small_exhaustive_space() -> None:
 
     assert sum(observed.values()) == pytest.approx(1.0)
     assert observed == pytest.approx({0.0: 2 / 6, 0.25: 4 / 6})
+    with pytest.raises(ValueError, match="binary two-Agent outcomes"):
+        landscape.exact_random_loss_pmf(
+            ((0, 0), (2, 1)),
+            (0.5, 0.5),
+            selection_budget=1,
+        )
 
 
 def test_exact_random_loss_pmf_matches_deterministic_exhaustive_cases() -> None:
@@ -284,6 +290,39 @@ def test_selection_landscape_plan_is_self_digested() -> None:
         "selection_landscape_measured_but_no_candidate_clears_promotion_gate"
     )
     assert amendment["authority"]["new_coding_agent_calls"] == 0
+
+
+def test_selection_landscape_plan_and_amendment_reject_tampering(
+    tmp_path: Path,
+) -> None:
+    plan_payload = json.loads(landscape.DEFAULT_PLAN.read_text(encoding="utf-8"))
+    plan_payload["design"]["selection_budget"] = 11
+    tampered_plan = tmp_path / "landscape-plan.json"
+    tampered_plan.write_text(canonical_json(plan_payload), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="plan digest"):
+        landscape.load_landscape_plan(tampered_plan)
+
+    plan = landscape.load_landscape_plan()
+    amendment_payload = json.loads(
+        landscape.DEFAULT_AMENDMENT.read_text(encoding="utf-8")
+    )
+    amendment_payload["previous_landscape_plan_digest"] = "0" * 64
+    amendment_payload["landscape_amendment_digest"] = canonical_digest(
+        {
+            key: value
+            for key, value in amendment_payload.items()
+            if key != "landscape_amendment_digest"
+        }
+    )
+    rebound_amendment = tmp_path / "landscape-amendment.json"
+    rebound_amendment.write_text(
+        canonical_json(amendment_payload),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError, match="bind the plan"):
+        landscape.load_landscape_amendment(rebound_amendment, plan)
 
 
 def test_committed_selection_landscape_is_self_digested() -> None:

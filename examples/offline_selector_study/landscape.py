@@ -7,6 +7,7 @@ import argparse
 from collections import Counter, defaultdict
 from collections.abc import Iterable, Mapping, Sequence
 from dataclasses import dataclass
+from functools import lru_cache
 from hashlib import sha256
 import json
 import math
@@ -122,16 +123,34 @@ def exact_random_loss_pmf(
         raise ValueError("selection budget must fit the history")
     categories = ((0, 0), (0, 1), (1, 0), (1, 1))
     counts = Counter(history_outcomes)
-    denominator = comb(len(history_outcomes), selection_budget)
+    if sum(counts[category] for category in categories) != len(history_outcomes):
+        raise ValueError("exact random loss PMF requires binary two-Agent outcomes")
+    return dict(
+        _exact_random_loss_items(
+            tuple(counts[category] for category in categories),
+            future_rates,
+            selection_budget,
+        )
+    )
+
+
+@lru_cache(maxsize=100_000)
+def _exact_random_loss_items(
+    category_counts: tuple[int, int, int, int],
+    future_rates: tuple[float, float],
+    selection_budget: int,
+) -> tuple[tuple[float, float], ...]:
+    categories = ((0, 0), (0, 1), (1, 0), (1, 1))
+    denominator = comb(sum(category_counts), selection_budget)
     pmf: dict[float, float] = defaultdict(float)
     for selected_counts in _bounded_compositions(
-        tuple(counts[category] for category in categories),
+        category_counts,
         selection_budget,
     ):
         ways = math.prod(
-            comb(counts[category], selected_count)
-            for category, selected_count in zip(
-                categories,
+            comb(category_count, selected_count)
+            for category_count, selected_count in zip(
+                category_counts,
                 selected_counts,
                 strict=True,
             )
@@ -152,7 +171,7 @@ def exact_random_loss_pmf(
         pmf[loss] += ways / denominator
     if not math.isclose(sum(pmf.values()), 1.0, abs_tol=1e-12):
         raise ValueError("exact random loss PMF does not normalize")
-    return dict(sorted(pmf.items()))
+    return tuple(sorted(pmf.items()))
 
 
 def _bounded_compositions(
