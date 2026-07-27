@@ -1,7 +1,10 @@
 from __future__ import annotations
 
+from collections import Counter
+from itertools import combinations
 import json
 from pathlib import Path
+import random
 import sys
 from typing import Any
 
@@ -10,7 +13,8 @@ import pytest
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPOSITORY_ROOT))
 
-from barcarolle.records import TaskRecord, canonical_digest  # noqa: E402
+from barcarolle.records import TaskRecord, canonical_digest, canonical_json  # noqa: E402
+from examples.offline_selector_study import landscape  # noqa: E402
 from examples.offline_selector_study import public_replay  # noqa: E402
 from examples.offline_selector_study import study  # noqa: E402
 
@@ -189,6 +193,222 @@ def test_local_source_reproduces_committed_public_replay(
     assert observed["public_replay_results_digest"] == (
         committed["public_replay_results_digest"]
     )
+
+
+def test_exact_random_loss_pmf_matches_small_exhaustive_space() -> None:
+    history = ((0, 0), (0, 1), (1, 0), (1, 1))
+
+    observed = landscape.exact_random_loss_pmf(
+        history,
+        (0.5, 0.5),
+        selection_budget=2,
+    )
+
+    assert sum(observed.values()) == pytest.approx(1.0)
+    assert observed == pytest.approx({0.0: 2 / 6, 0.25: 4 / 6})
+
+
+def test_exact_random_loss_pmf_matches_deterministic_exhaustive_cases() -> None:
+    rng = random.Random(20_260_727)
+
+    for task_count in range(3, 9):
+        for _ in range(8):
+            history = tuple(
+                (rng.randrange(2), rng.randrange(2)) for _ in range(task_count)
+            )
+            budget = rng.randrange(1, task_count + 1)
+            future_rates = (rng.randrange(6) / 5.0, rng.randrange(6) / 5.0)
+            exhaustive: Counter[float] = Counter()
+            subsets = tuple(combinations(history, budget))
+            for subset in subsets:
+                selected_rates = (
+                    sum(outcome[0] for outcome in subset) / budget,
+                    sum(outcome[1] for outcome in subset) / budget,
+                )
+                loss = round(
+                    (
+                        abs(selected_rates[0] - future_rates[0])
+                        + abs(selected_rates[1] - future_rates[1])
+                    )
+                    / 2.0,
+                    12,
+                )
+                exhaustive[loss] += 1
+
+            observed = landscape.exact_random_loss_pmf(
+                history,
+                future_rates,
+                budget,
+            )
+
+            expected = {
+                loss: count / len(subsets) for loss, count in exhaustive.items()
+            }
+            assert observed == pytest.approx(expected)
+
+
+def test_density_frontier_improves_with_more_random_draws() -> None:
+    pmf = {0.1: 0.1, 0.2: 0.4, 0.4: 0.5}
+
+    best_of_one = landscape.expected_best_of(pmf, 1)
+    best_of_ten = landscape.expected_best_of(pmf, 10)
+
+    assert best_of_one == pytest.approx(0.29)
+    assert best_of_ten < best_of_one
+    assert landscape.elite_mean(pmf, 0.1) == pytest.approx(0.1)
+
+
+def test_continuous_support_loss_separates_support_from_budget() -> None:
+    full_square = ((0, 0), (0, 1), (1, 0), (1, 1))
+    diagonal = ((0, 0), (1, 1))
+
+    assert landscape.continuous_support_loss(full_square, (0.2, 0.8)) == 0.0
+    assert landscape.continuous_support_loss(diagonal, (0.2, 0.8)) == (
+        pytest.approx(0.3)
+    )
+
+
+def test_selection_landscape_plan_is_self_digested() -> None:
+    plan = landscape.load_landscape_plan()
+    amendment = landscape.load_landscape_amendment(
+        landscape.DEFAULT_AMENDMENT,
+        plan,
+    )
+
+    assert plan["epistemic_status"] == "post_outcome_development"
+    assert plan["research_contract"]["primary_baseline"] == (
+        "all eligible historical Task and Check refs without Selection"
+    )
+    assert plan["resources"]["new_coding_agent_calls"] == 0
+    assert amendment["correction"]["corrected_terminal_state"] == (
+        "selection_landscape_measured_but_no_candidate_clears_promotion_gate"
+    )
+    assert amendment["authority"]["new_coding_agent_calls"] == 0
+
+
+def test_committed_selection_landscape_is_self_digested() -> None:
+    results = json.loads(landscape.DEFAULT_OUTPUT.read_text(encoding="utf-8"))
+    digest = results.pop("landscape_results_digest")
+
+    assert canonical_digest(results) == digest
+    assert results["authority"]["new_coding_agent_calls"] == 0
+    assert results["authority"]["local_repeat_noise_views"] == 5_000
+    assert results["status"] == (
+        "selection_landscape_measured_but_no_candidate_clears_promotion_gate"
+    )
+    assert results["decision"]["promotion_allowed"] is False
+    assert results["baseline"]["coverage_minus_full_history"][
+        "macro_origin_mae_difference"
+    ] == pytest.approx(-0.009956432456432449)
+    planning = results["baseline"]["coverage_minus_full_history"][
+        "prospective_planning"
+    ]
+    assert planning["origins_for_80_percent_power_at_practical_effect"] == 44
+    assert planning["origins_for_80_percent_power_at_observed_effect"] == 178
+    for agent_result in results["baseline"]["per_agent"].values():
+        difference = agent_result["coverage_minus_full_history"][
+            "macro_origin_mae_difference"
+        ]
+        assert -0.02 < difference < 0.0
+    semantic_alignment = results["candidate_families"]["semantic_alignment_diagnostic"][
+        "baseline_mean_future_centroid_cosine_distance"
+    ]
+    semantic_best = results["candidate_families"]["semantic_coreset"][0]
+    assert (
+        semantic_best["semantic_future_centroid_cosine_distance"]
+        < semantic_alignment["coverage"]
+    )
+    assert (
+        semantic_best["macro_origin_mae"]
+        > results["baseline"]["coverage"]["macro_origin_mae"]
+    )
+    semantic_outcome = results["candidate_families"]["semantic_outcome_forecast"]
+    assert semantic_outcome["status"] == "post_plan_exploratory_mechanism_probe"
+    assert semantic_outcome["candidates"][0]["macro_origin_mae"] == pytest.approx(
+        0.1875
+    )
+    fixed_seed = results["random_selection_landscape"]["fixed_seed_policy_sensitivity"]
+    assert fixed_seed["seed_range"]["count"] == 100_000
+    assert (
+        abs(
+            fixed_seed["difference_from_independent_exact"][
+                "as_good_or_better_fraction"
+            ]
+        )
+        < 0.001
+    )
+    oracle_density = results["random_selection_landscape"]["oracle_density"]
+    assert oracle_density["discrete_oracle_macro_origin_mae"] == pytest.approx(
+        0.0375
+    )
+    assert oracle_density["exact_oracle_probability"] < 1e-20
+    density = oracle_density["probability_within_excess_mae"]
+    assert density["0.02"] < density["0.05"] < density["0.1"] < 0.01
+    origin_positions = results["random_selection_landscape"]["origin_rows"]
+    assert sum(
+        row["coverage_midrank_fraction_beats"] > 0.5 for row in origin_positions
+    ) == 8
+    assert tuple(
+        row["origin_number"]
+        for row in origin_positions
+        if row["coverage_midrank_fraction_beats"] < 0.5
+    ) == (6, 7, 8, 9)
+    robustness = results["robustness"]
+    block_rows = robustness["future_block_size"]["configurations"]
+    assert block_rows["3"]["coverage_minus_full_history"][
+        "macro_origin_mae_difference"
+    ] > 0.0
+    assert block_rows["4"]["coverage_minus_full_history"][
+        "macro_origin_mae_difference"
+    ] > 0.0
+    assert all(
+        not row["point_gate_cleared"] and not row["interval_gate_cleared"]
+        for row in block_rows.values()
+    )
+    dependency = robustness["dependency_first_task_per_cluster"]
+    assert dependency["cluster_recurrence"] == 0
+    assert dependency["coverage_minus_full_history"][
+        "macro_origin_mae_difference"
+    ] == pytest.approx(-0.016697109156317218)
+    assert not dependency["point_gate_cleared"]
+    assert not dependency["interval_gate_cleared"]
+    repeat_noise = robustness["repeat_noise"]
+    repeat_contrast = repeat_noise["coverage_minus_full_history"]
+    assert repeat_noise["replicated_task_count"] == 22
+    assert repeat_noise["replicated_agent_task_count"] == 44
+    assert repeat_contrast["mean"] == pytest.approx(-0.007087503020128019)
+    assert repeat_contrast["fraction_below_zero"] == pytest.approx(0.883)
+    assert repeat_contrast["fraction_at_most_minus_0_02"] == 0.0
+    assert repeat_contrast["upper_97_5_percentile"] > 0.0
+    nulls = results["null_controls"]
+    assert "(b + 1) / (B + 1)" in nulls["p_value_rule"]
+    assert nulls["unrestricted_outcome_permutation"][
+        "coverage_minus_full_history"
+    ]["one_sided_probability_at_most_observed"] == pytest.approx(
+        1834 / 10001
+    )
+
+
+def test_local_source_reproduces_selection_landscape_outcome_sections() -> None:
+    if (
+        not study.DEFAULT_TASK_POOL.exists()
+        or not landscape.DEFAULT_EMBEDDINGS.exists()
+    ):
+        pytest.skip("ignored source or embedding artifacts are not present")
+
+    observed = landscape.run_landscape(null_resamples=50)
+    normalized_observed = json.loads(canonical_json(observed))
+    committed = json.loads(landscape.DEFAULT_OUTPUT.read_text(encoding="utf-8"))
+
+    for section in (
+        "baseline",
+        "random_selection_landscape",
+        "support",
+        "robustness",
+        "candidate_families",
+        "decision",
+    ):
+        assert normalized_observed[section] == committed[section]
 
 
 def _task(index: int, stratum: str) -> TaskRecord:
