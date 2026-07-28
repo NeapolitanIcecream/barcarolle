@@ -13,6 +13,12 @@ REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPOSITORY_ROOT))
 
 from barcarolle.records import canonical_digest  # noqa: E402
+from examples.multi_repository_study.adaptive_difficulty import (  # noqa: E402
+    choose_prequential_difficulty_model,
+    forecast_stationary_difficulty,
+    load_adaptive_difficulty_plan,
+    materialize_adaptive_selections,
+)
 from examples.multi_repository_study.agent_invariant import (  # noqa: E402
     fit_cutoff_repository_equal_markov,
     forecast_difficulty_markov,
@@ -488,6 +494,79 @@ def test_difficulty_markov_forecast_is_a_probability_distribution() -> None:
     assert all(0.0 <= value <= 1.0 for value in forecast)
 
 
+def test_stationary_difficulty_forecast_is_smoothed() -> None:
+    history = tuple(
+        TaskMetadata(
+            f"task-{index}",
+            "org/repo",
+            f"2020-01-{index + 1:02d}T00:00:00Z",
+            "fixture",
+            "fixture",
+        )
+        for index in range(5)
+    )
+    outcomes = {
+        f"agent-{agent}": {
+            task.instance_id: int(index >= 3)
+            for index, task in enumerate(history)
+        }
+        for agent in range(5)
+    }
+
+    forecast = forecast_stationary_difficulty(
+        history,
+        outcomes,
+        state_count=5,
+        cell_prior_mass=0.2,
+    )
+
+    assert forecast == pytest.approx(
+        (3.2 / 6.0, 0.2 / 6.0, 0.2 / 6.0, 0.2 / 6.0, 2.2 / 6.0)
+    )
+    assert sum(forecast) == pytest.approx(1.0)
+
+
+def test_prequential_choice_detects_predictable_state_transitions() -> None:
+    history = tuple(
+        TaskMetadata(
+            f"task-{index}",
+            "org/repo",
+            f"2020-01-{index + 1:02d}T00:00:00Z",
+            "fixture",
+            "fixture",
+        )
+        for index in range(10)
+    )
+    outcomes = {
+        f"agent-{agent}": {
+            task.instance_id: index % 2
+            for index, task in enumerate(history)
+        }
+        for agent in range(5)
+    }
+    transition = (
+        (0.01, 0.01, 0.01, 0.01, 0.96),
+        (0.2, 0.2, 0.2, 0.2, 0.2),
+        (0.2, 0.2, 0.2, 0.2, 0.2),
+        (0.2, 0.2, 0.2, 0.2, 0.2),
+        (0.96, 0.01, 0.01, 0.01, 0.01),
+    )
+
+    choice = choose_prequential_difficulty_model(
+        history,
+        outcomes,
+        transition,
+        state_count=5,
+        cell_prior_mass=0.2,
+        local_prior_strength=5.0,
+    )
+
+    assert choice["selected_model"] == "markov"
+    assert float(choice["markov_mean_negative_log_likelihood"]) < float(
+        choice["stationary_mean_negative_log_likelihood"]
+    )
+
+
 def test_agent_invariant_materialization_keeps_selections_repository_local() -> None:
     repository_ids = ("org/a", "org/b", "org/c")
     tasks = tuple(
@@ -540,6 +619,62 @@ def test_agent_invariant_materialization_keeps_selections_repository_local() -> 
         "difficulty_markov_match",
     }
     assert diagnostics["symmetric_fallback_origin_count"] == 0
+
+
+def test_adaptive_materialization_uses_only_local_history_tasks() -> None:
+    repository_ids = ("org/a", "org/b", "org/c")
+    tasks = tuple(
+        TaskMetadata(
+            row["instance_id"],
+            row["repo"],
+            row["created_at"],
+            row["difficulty"],
+            "fixture",
+        )
+        for repository_id in repository_ids
+        for row in _task_rows(repository_id, 20)
+    )
+    outcomes = {
+        f"agent-{agent}": {
+            task.instance_id: int((index + agent) % 5 < 2)
+            for index, task in enumerate(tasks)
+        }
+        for agent in range(5)
+    }
+    history_outcomes = {
+        agent_id: values
+        for agent_id, values in outcomes.items()
+        if agent_id in {"agent-0", "agent-1"}
+    }
+
+    origins, memberships, choices = materialize_adaptive_selections(
+        tasks,
+        outcomes,
+        history_outcomes,
+        load_adaptive_difficulty_plan(),
+        load_agent_invariant_plan(),
+        {"portfolio": {"wide_repository_ids": repository_ids}},
+        include_controls=True,
+    )
+
+    assert set(memberships) == {
+        "history_match",
+        "difficulty_markov_match",
+        "stationary_difficulty_match",
+        "adaptive_prequential_difficulty_match",
+    }
+    task_repository = {task.instance_id: task.repository_id for task in tasks}
+    for selector_memberships in memberships.values():
+        for origin_id, selected in selector_memberships.items():
+            repository_id = origin_id.split(":origin-", maxsplit=1)[0]
+            assert len(selected) == 10
+            assert {task_repository[task_id] for task_id in selected} == {
+                repository_id
+            }
+    assert len(choices) == sum(len(rows) for rows in origins.values())
+    assert {
+        choice["selected_model"] for choice in choices.values()
+    } <= {"markov", "stationary"}
 
 
 def test_retrospective_availability_audit_flags_later_training_tasks() -> None:
