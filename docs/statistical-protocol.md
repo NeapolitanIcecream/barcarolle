@@ -1,6 +1,6 @@
 # Statistical Protocol
 
-Status: current offline contract, 2026-07-27. Empirical thresholds and model
+Status: current offline contract, 2026-07-28. Empirical thresholds and model
 claims remain pending until a larger authorized paired history exists.
 
 This document fixes the statistical meanings used by rolling-origin evaluation.
@@ -160,6 +160,81 @@ For Selector `s` with Origin losses `L(s, o)` and future weights `n(o)`, report:
 The pairwise table lets a report identify a predeclared fallback without adding
 fallback identity to Result or Metric records. Choosing a fallback after
 looking at the table is exploratory, not confirmatory.
+
+## Multi-Repository Rolling-Origin Evidence
+
+Each Task Pool, Origin, SelectorInput, and Selection remains repository-local.
+A multi-repository study is a collection of those local replay chains. It does
+not combine Tasks from different repositories into one eligible pool.
+This section governs offline research, training, and validation; a normal
+Runner invocation still consumes one user repository and one local Task Pool.
+Cross-repository aggregation combines effects and evidence, not candidate
+Tasks.
+
+For Selector `s`, repository `r`, and Origin `o`, define the paired contrast
+
+`D(s,r,o) = L(s,r,o) - L(full_history,r,o)`,
+
+where negative values favor Selection. Aggregate Origins within each
+repository first:
+
+`D(s,r) = mean_o D(s,r,o)`.
+
+The primary portability estimand is the macro-repository mean
+`mean_r D(s,r)`. Future-task-count or deployment-volume weighting is secondary
+and must retain the per-repository table. Report the number of repositories
+with favorable direction and the upper quartile of `D(s,r)` so a good mean does
+not imply universal transfer. Origin rows from different
+repositories must not be flattened and treated as independent evidence.
+
+Uncertainty is blocked at the highest dependence level supported by the
+portfolio. Forks, mirrors, shared task lineages, and mechanically derived
+repositories use one declared repository cluster unless independence is
+justified. The primary interval resamples those clusters. Origin-block
+intervals remain within-repository diagnostics. Report leave-one-cluster-out
+sensitivity so one repository family cannot silently determine the result.
+
+A learned policy uses nested held-out-repository evaluation to prove that
+offline training did not overfit its research repositories. For outer target
+repository `r`, fit the complete policy and choose all hyperparameters using
+other repositories and their inner earlier Origins only. Freeze the policy,
+then apply it only to eligible local history in `r`; open `r`'s future Results
+after its Selection is frozen. This is a validation fold, not a
+multi-repository runtime. A target with no eligible local history is a
+different cold-start estimand.
+
+The default training loss gives every training repository equal total weight
+and weights its Origins equally within the repository. Task-count or
+deployment-volume weighting is secondary and may be selected only inside the
+training folds.
+
+Report two portfolio views separately:
+
+- a wide view with many independent repositories and few mature Origins,
+  measuring portability;
+- a deep view with longer histories, measuring temporal drift, horizon
+  robustness, and within-repository learnability.
+
+The first comparison fixes the importer or Generator paradigm, certification
+policy, Agent panel, metric, and budget policy so repository is the primary
+varying axis. Held-out-Agent transfer is a separate crossed study. Random
+landscape, support, oracle, horizon, and dependency diagnostics are first
+computed per repository and only then summarized.
+
+The current practical promotion gate remains at least `0.02` lower
+macro-repository MAE than full history with a paired 95% repository-cluster
+interval wholly below zero. The direction must survive every
+leave-one-cluster-out view and the predeclared horizon and dependency
+sensitivities. A later frozen source or strict-prospective campaign is still
+required for an external predictive-validity claim.
+
+The current `train_selector` implementation requires every training Origin to
+use one Task Pool. Therefore fixed Selectors can be evaluated under this
+protocol now, but a globally fitted policy is not executable evidence yet.
+When a concrete learned family and enough outer folds exist, the minimal
+extension is a sequence of independently validated repository-local training
+evidence groups that produces the existing `SelectorRecord`; inference remains
+one-Task-Pool, repository-local.
 
 ## Primary Baseline And Landscape Diagnostics
 
