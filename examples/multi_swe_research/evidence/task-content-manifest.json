@@ -1,0 +1,37 @@
+{
+  "schema_version": "barcarolle_multi_swe_task_content_manifest_v1",
+  "study_id": "multi-swe-zero-paid-development-2026-07-28",
+  "contract_digest": "1e104613012a95fc534dba23d4adac1b7d6a6c10e70537c732f16da3e6f83307",
+  "dataset_revision": "56ff018c04a38e27ada1e9d0a6d5839a51f88f0d",
+  "task_count": 1632,
+  "task_id_line_digest": "cfbe75888d4eb3ff1062debcbc85c1b9f4ac5dcfe1a2fce48f34d116e2a45a21",
+  "source_file_count": 39,
+  "source_bytes": 1603542672,
+  "source_manifest_digest": "bbd4d5bb6f151d5290ea70d251a7d31f7a36d866b835465d294d56074b2503fd",
+  "task_text_digest": "c40c8b3f6c200020a1e961a54fe7d70392c8e3a7933687a2b4714654601b21cb",
+  "projection_digest": "e4bf0f9f0da706ee4adc129fa59f0ba71ea1f906cf4fb121b7d39271da631dcc",
+  "nonempty_task_count": 1632,
+  "nonempty_fraction": 1.0,
+  "projection_fields": [
+    "instance_id",
+    "repository",
+    "language",
+    "resolved_issues[].number",
+    "resolved_issues[].title",
+    "resolved_issues[].body"
+  ],
+  "excluded_fields": [
+    "pull-request title and body",
+    "fix_patch",
+    "test_patch",
+    "test results",
+    "hints",
+    "Agent outcomes"
+  ],
+  "artifact_policy": "The 1.60 GB source checkout and 3.1 MB text projection remain ignored; this manifest binds their verified identities.",
+  "resource_use": {
+    "paid_api_calls": 0,
+    "embedding_api_calls": 0
+  },
+  "content_manifest_digest": "9b47e946daf2e982e49e552f9a6976315787ae45b3923edda4a5aff9b53e78cb"
+}

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+import subprocess
 import sys
 
 import pytest
@@ -13,10 +14,12 @@ from barcarolle.records import canonical_digest  # noqa: E402
 from examples.multi_swe_research.prepare import (  # noqa: E402
     _graphql_query,
     _line_digest,
+    _project_issue_text,
     _task_identity,
     load_contract,
     main,
     normalize_public_panel,
+    project_task_content,
     project_task_times,
     validate_evidence,
 )
@@ -62,6 +65,14 @@ def test_committed_evidence_is_self_consistent() -> None:
     assert report["task_count"] == 1632
     assert report["configuration_count"] == 36
     assert report["resolved_cell_count"] == 2913
+    assert (
+        report["content_manifest_digest"]
+        == "9b47e946daf2e982e49e552f9a6976315787ae45b3923edda4a5aff9b53e78cb"
+    )
+    assert (
+        report["task_text_digest"]
+        == "c40c8b3f6c200020a1e961a54fe7d70392c8e3a7933687a2b4714654601b21cb"
+    )
     assert report["paid_api_calls"] == 0
     supply = {
         row["future_block_tasks"]: row for row in report["origin_supply"]
@@ -192,6 +203,123 @@ def test_task_identity_and_graphql_are_explicit() -> None:
     assert 'owner: "owner"' in query
     assert "p0: pullRequest(number: 123)" in query
     assert aliases == {"p0": ("owner__repo-name-123", 123)}
+
+
+def test_issue_text_projection_uses_only_sorted_public_issue_fields() -> None:
+    text, count, has_content = _project_issue_text(
+        {
+            "title": "excluded pull request title",
+            "fix_patch": "excluded patch",
+            "resolved_issues": [
+                {"number": 9, "title": "Later", "body": "Second"},
+                {"number": 3, "title": "Earlier", "body": "First"},
+            ],
+        }
+    )
+
+    assert count == 2
+    assert has_content is True
+    assert text == (
+        "Issue #3\nEarlier\n\nFirst\n\n---\n\n"
+        "Issue #9\nLater\n\nSecond"
+    )
+    assert "excluded" not in text
+
+
+def test_issue_text_projection_stably_retains_duplicate_issue_numbers() -> None:
+    text, count, has_content = _project_issue_text(
+        {
+            "resolved_issues": [
+                {"number": 3, "title": "First copy", "body": ""},
+                {"number": 3, "title": "Second copy", "body": ""},
+            ]
+        }
+    )
+
+    assert count == 2
+    assert has_content is True
+    assert text.index("First copy") < text.index("Second copy")
+
+
+def test_content_projection_binds_git_bytes_and_exact_task_universe(
+    tmp_path: Path,
+) -> None:
+    source = tmp_path / "source"
+    source.mkdir()
+    rows = (
+        {
+            "instance_id": "owner__repo-1",
+            "resolved_issues": [
+                {"number": 1, "title": "One", "body": "Body one"}
+            ],
+        },
+        {
+            "instance_id": "owner__repo-2",
+            "resolved_issues": [
+                {"number": 2, "title": "Two", "body": "Body two"}
+            ],
+        },
+    )
+    dataset = source / "tasks.jsonl"
+    dataset.write_text(
+        "".join(json.dumps(row) + "\n" for row in rows),
+        encoding="utf-8",
+    )
+    subprocess.run(("git", "init", "-q", str(source)), check=True)
+    subprocess.run(("git", "-C", str(source), "add", "tasks.jsonl"), check=True)
+    subprocess.run(
+        (
+            "git",
+            "-C",
+            str(source),
+            "-c",
+            "user.name=Barcarolle Test",
+            "-c",
+            "user.email=test@example.invalid",
+            "commit",
+            "-qm",
+            "fixture",
+        ),
+        check=True,
+    )
+    revision = subprocess.run(
+        ("git", "-C", str(source), "rev-parse", "HEAD"),
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.strip()
+    contract = {
+        "study_id": "content-fixture",
+        "contract_digest": "fixture",
+        "dataset": {
+            "revision": revision,
+            "paths": ["tasks.jsonl"],
+            "declared_path_bytes": dataset.stat().st_size,
+        },
+    }
+    tasks = (
+        {
+            "instance_id": "owner__repo-1",
+            "language": "fixture",
+            "repository": "owner/repo",
+        },
+        {
+            "instance_id": "owner__repo-2",
+            "language": "fixture",
+            "repository": "owner/repo",
+        },
+    )
+
+    summary, projected = project_task_content(contract, tasks, source)
+
+    assert summary["task_count"] == 2
+    assert summary["source_file_count"] == 1
+    assert summary["nonempty_fraction"] == 1.0
+    assert tuple(row["instance_id"] for row in projected) == (
+        "owner__repo-1",
+        "owner__repo-2",
+    )
+    assert all("fix_patch" not in row["text"] for row in projected)
 
 
 def _fixture_contract() -> dict[str, object]:

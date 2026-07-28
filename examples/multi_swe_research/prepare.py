@@ -27,6 +27,8 @@ DEFAULT_CONTRACT = HERE / "contract.json"
 CONTRACT_SCHEMA = "barcarolle_multi_swe_research_contract_v1"
 PANEL_SCHEMA = "barcarolle_multi_swe_public_panel_v1"
 TIME_SCHEMA = "barcarolle_multi_swe_task_time_projection_v1"
+CONTENT_SCHEMA = "barcarolle_multi_swe_task_content_projection_v1"
+CONTENT_MANIFEST_SCHEMA = "barcarolle_multi_swe_task_content_manifest_v1"
 _TASK_ID = re.compile(
     r"(?P<owner>[A-Za-z0-9_.-]+)__(?P<repo>[A-Za-z0-9_.-]+)-(?P<number>[1-9][0-9]*)\Z"
 )
@@ -375,6 +377,117 @@ def write_time_projection(
     _write_jsonl(output_dir / "task-times.jsonl", rows)
 
 
+def project_task_content(
+    contract: Mapping[str, Any],
+    tasks: Sequence[Mapping[str, str]],
+    dataset_root: Path,
+) -> tuple[Mapping[str, Any], tuple[Mapping[str, object], ...]]:
+    """Verify the pinned dataset checkout and retain only public issue text."""
+    source_manifest = _git_source_manifest(contract, dataset_root)
+    expected_tasks = {
+        _required_string(task, "instance_id"): task for task in tasks
+    }
+    if len(expected_tasks) != len(tasks):
+        raise ValueError("Task universe contains duplicate Task IDs")
+
+    projected: dict[str, Mapping[str, object]] = {}
+    for source in source_manifest:
+        source_path = dataset_root / _required_string(source, "path")
+        with source_path.open(encoding="utf-8") as stream:
+            for line_number, line in enumerate(stream, start=1):
+                payload = json.loads(line)
+                if not isinstance(payload, Mapping):
+                    raise ValueError(
+                        f"dataset row must be an object: {source_path}:{line_number}"
+                    )
+                instance_id = _required_string(payload, "instance_id")
+                task = expected_tasks.get(instance_id)
+                if task is None:
+                    raise ValueError(
+                        f"dataset source refers outside Task universe: {instance_id}"
+                    )
+                if instance_id in projected:
+                    raise ValueError(f"duplicate dataset Task: {instance_id}")
+                repository, _ = _task_identity(instance_id)
+                if task.get("repository") != repository:
+                    raise ValueError(
+                        f"dataset Task repository changed: {instance_id}"
+                    )
+                text, issue_count, has_content = _project_issue_text(payload)
+                projected[instance_id] = {
+                    "instance_id": instance_id,
+                    "repository": repository,
+                    "language": _required_string(task, "language"),
+                    "issue_count": issue_count,
+                    "has_content": has_content,
+                    "text": text,
+                }
+
+    if set(projected) != set(expected_tasks):
+        missing = sorted(set(expected_tasks) - set(projected))
+        raise ValueError(
+            f"dataset source does not exactly cover Task universe: {missing[:3]}"
+        )
+    rows = tuple(projected[instance_id] for instance_id in sorted(projected))
+    repository_counts: dict[str, list[bool]] = defaultdict(list)
+    for row in rows:
+        repository_counts[str(row["repository"])].append(bool(row["has_content"]))
+    summary: dict[str, Any] = {
+        "schema_version": CONTENT_SCHEMA,
+        "study_id": contract.get("study_id"),
+        "contract_digest": contract.get("contract_digest"),
+        "dataset_revision": _required_string(
+            _mapping(contract, "dataset"), "revision"
+        ),
+        "task_count": len(rows),
+        "task_id_line_digest": _line_digest(
+            str(row["instance_id"]) for row in rows
+        ),
+        "source_file_count": len(source_manifest),
+        "source_bytes": sum(_required_int(row, "size") for row in source_manifest),
+        "source_manifest": source_manifest,
+        "source_manifest_digest": canonical_digest(source_manifest),
+        "task_text_digest": canonical_digest(
+            tuple((row["instance_id"], row["text"]) for row in rows)
+        ),
+        "projection_digest": canonical_digest(rows),
+        "nonempty_task_count": sum(bool(row["has_content"]) for row in rows),
+        "nonempty_fraction": (
+            sum(bool(row["has_content"]) for row in rows) / len(rows)
+        ),
+        "repository_coverage": {
+            repository: {
+                "task_count": len(values),
+                "nonempty_task_count": sum(values),
+                "nonempty_fraction": sum(values) / len(values),
+            }
+            for repository, values in sorted(repository_counts.items())
+        },
+        "excluded_fields": (
+            "pull-request title/body, patches, tests, test results, hints, "
+            "and Agent outcomes"
+        ),
+        "resource_use": {
+            "paid_api_calls": 0,
+            "embedding_api_calls": 0,
+        },
+    }
+    summary["summary_digest"] = canonical_digest(summary)
+    return summary, rows
+
+
+def write_content_projection(
+    summary: Mapping[str, Any],
+    rows: Sequence[Mapping[str, object]],
+    output_dir: Path,
+) -> None:
+    if output_dir.exists():
+        raise FileExistsError(f"refusing to overwrite content output: {output_dir}")
+    output_dir.mkdir(parents=True)
+    _write_json(output_dir / "task-content-summary.json", summary)
+    _write_jsonl(output_dir / "task-content.jsonl", rows)
+
+
 def validate_evidence(
     contract: Mapping[str, Any],
     evidence_root: Path,
@@ -444,11 +557,39 @@ def validate_evidence(
         raise ValueError("committed time projection rows changed")
     origin_supply = _origin_supply(contract, tasks, time_rows)
 
+    content = _load_mapping(evidence_root / "task-content-manifest.json")
+    if content.get("schema_version") != CONTENT_MANIFEST_SCHEMA:
+        raise ValueError("committed content manifest schema is unsupported")
+    if content.get("contract_digest") != contract.get("contract_digest"):
+        raise ValueError("committed content manifest contract identity changed")
+    expected_content_digest = canonical_digest(
+        {
+            key: value
+            for key, value in content.items()
+            if key != "content_manifest_digest"
+        }
+    )
+    if content.get("content_manifest_digest") != expected_content_digest:
+        raise ValueError("committed content manifest digest does not match")
+    if (
+        content.get("task_count") != len(tasks)
+        or content.get("task_id_line_digest")
+        != _required_string(dataset, "task_id_line_digest")
+        or content.get("source_file_count") != len(
+            _string_sequence(dataset, "paths")
+        )
+        or content.get("source_bytes")
+        != _required_int(dataset, "declared_path_bytes")
+    ):
+        raise ValueError("committed content manifest source identity changed")
+
     return {
         "schema_version": "barcarolle_multi_swe_evidence_validation_v1",
         "contract_digest": contract.get("contract_digest"),
         "panel_digest": panel.get("panel_digest"),
         "time_projection_digest": time_summary.get("projection_digest"),
+        "content_manifest_digest": content.get("content_manifest_digest"),
+        "task_text_digest": content.get("task_text_digest"),
         "task_count": len(tasks),
         "configuration_count": len(configurations),
         "resolved_cell_count": len(resolved),
@@ -737,6 +878,114 @@ def _file_sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
+def _git_source_manifest(
+    contract: Mapping[str, Any],
+    dataset_root: Path,
+) -> tuple[Mapping[str, object], ...]:
+    dataset = _mapping(contract, "dataset")
+    expected_revision = _required_string(dataset, "revision")
+    revision = _run_git(dataset_root, "rev-parse", "HEAD").strip()
+    if revision != expected_revision:
+        raise ValueError("dataset checkout revision does not match contract")
+    lfs_output = _run_git(dataset_root, "lfs", "ls-files", "-l")
+    lfs_oids = {}
+    for line in lfs_output.splitlines():
+        parts = line.split(maxsplit=2)
+        if len(parts) == 3 and parts[1] in {"-", "*"}:
+            lfs_oids[parts[2]] = parts[0]
+
+    manifest = []
+    total_bytes = 0
+    for relative in _string_sequence(dataset, "paths"):
+        source = dataset_root / relative
+        if not source.is_file():
+            raise FileNotFoundError(source)
+        tree = _run_git(dataset_root, "ls-tree", "HEAD", "--", relative).strip()
+        prefix, separator, observed_path = tree.partition("\t")
+        fields = prefix.split()
+        if (
+            not separator
+            or observed_path != relative
+            or len(fields) != 3
+            or fields[1] != "blob"
+        ):
+            raise ValueError(f"dataset Git identity is unavailable: {relative}")
+        git_blob_oid = fields[2]
+        size = source.stat().st_size
+        digest = _file_sha256(source)
+        lfs_oid = lfs_oids.get(relative)
+        if lfs_oid is not None:
+            if digest != lfs_oid:
+                raise ValueError(f"dataset LFS identity changed: {relative}")
+            storage = "git_lfs_sha256"
+        else:
+            worktree_blob = _run_git(
+                dataset_root, "hash-object", "--", relative
+            ).strip()
+            if worktree_blob != git_blob_oid:
+                raise ValueError(f"dataset Git blob changed: {relative}")
+            storage = "git_blob"
+        total_bytes += size
+        manifest.append(
+            {
+                "path": relative,
+                "size": size,
+                "sha256": digest,
+                "git_blob_oid": git_blob_oid,
+                "lfs_oid": lfs_oid,
+                "storage": storage,
+            }
+        )
+    if total_bytes != _required_int(dataset, "declared_path_bytes"):
+        raise ValueError("dataset source byte count does not match contract")
+    return tuple(manifest)
+
+
+def _run_git(root: Path, *arguments: str) -> str:
+    process = subprocess.run(
+        ("git", "-C", str(root), *arguments),
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    if process.returncode != 0:
+        message = process.stderr.strip() or "Git source verification failed"
+        raise RuntimeError(message)
+    return process.stdout
+
+
+def _project_issue_text(
+    payload: Mapping[str, Any],
+) -> tuple[str, int, bool]:
+    value = payload.get("resolved_issues")
+    if not isinstance(value, list) or any(
+        not isinstance(item, Mapping) for item in value
+    ):
+        raise ValueError("resolved_issues must be an object list")
+    issues = []
+    has_content = False
+    for issue in value:
+        number = issue.get("number")
+        title = issue.get("title")
+        body = issue.get("body")
+        if (
+            isinstance(number, bool)
+            or not isinstance(number, int)
+            or number <= 0
+            or not isinstance(title, str)
+            or not isinstance(body, str)
+        ):
+            raise ValueError("resolved issue projection is malformed")
+        has_content = has_content or bool(title.strip() or body.strip())
+        issues.append((number, title, body))
+    ordered = sorted(issues)
+    text = "\n\n---\n\n".join(
+        f"Issue #{number}\n{title}\n\n{body}"
+        for number, title, body in ordered
+    )
+    return text, len(ordered), has_content
+
+
 def _load_mapping(path: Path) -> Mapping[str, Any]:
     payload = json.loads(path.read_text(encoding="utf-8"))
     if not isinstance(payload, Mapping):
@@ -854,6 +1103,14 @@ def _parser() -> argparse.ArgumentParser:
         help="verify committed sparse panel and Task-time evidence",
     )
     evidence.add_argument("--evidence-root", type=Path, default=HERE / "evidence")
+
+    content = subparsers.add_parser(
+        "project-content",
+        help="verify pinned source bytes and project public issue text",
+    )
+    content.add_argument("--dataset-root", type=Path, required=True)
+    content.add_argument("--task-universe", type=Path, required=True)
+    content.add_argument("--output", type=Path, required=True)
     return parser
 
 
@@ -906,6 +1163,20 @@ def main(argv: Sequence[str] | None = None) -> int:
     if arguments.command == "verify-evidence":
         report = validate_evidence(contract, arguments.evidence_root)
         print(json.dumps(report, indent=2, sort_keys=True))
+        return 0
+    if arguments.command == "project-content":
+        if arguments.output.exists():
+            raise FileExistsError(
+                f"refusing to overwrite content output: {arguments.output}"
+            )
+        tasks = _load_jsonl(arguments.task_universe)
+        summary, rows = project_task_content(
+            contract,
+            tasks,
+            arguments.dataset_root,
+        )
+        write_content_projection(summary, rows, arguments.output)
+        print(json.dumps(summary, indent=2, sort_keys=True))
         return 0
     raise AssertionError(arguments.command)
 

@@ -47,6 +47,23 @@ only. They do not prove that historical Agent outcomes were available at those
 cutoffs. Public terminal partitions are development evidence, not Results
 independently replayed under Barcarolle verification.
 
+The frozen ALG-012 study needs Task text but not patches or tests. From a
+checkout of the pinned dataset revision with all 39 contract paths
+materialized:
+
+```sh
+uv run python examples/multi_swe_research/prepare.py project-content \
+  --dataset-root /path/to/Multi-SWE-bench \
+  --task-universe examples/multi_swe_research/evidence/task-universe.jsonl \
+  --output outputs/research/2026-07-28-multi-swe-task-content
+```
+
+This command verifies Git blobs and Git LFS SHA-256 identities before retaining
+only sorted `resolved_issues` numbers, titles, and bodies. The 1.60 GB checkout
+and text rows remain ignored. The committed
+`evidence/task-content-manifest.json` binds the 39-file manifest, 1,632 Task
+texts, exclusions, and zero-paid resource boundary.
+
 Validate all committed evidence without network access:
 
 ```sh
