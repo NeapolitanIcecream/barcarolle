@@ -23,6 +23,12 @@ from examples.multi_swe_research.prepare import (  # noqa: E402
     project_task_times,
     validate_evidence,
 )
+from examples.multi_swe_research.semantic_selector import (  # noqa: E402
+    build_embedding_artifact,
+    load_embedding_artifact,
+    load_embedding_manifest,
+    load_selector_plan,
+)
 
 
 def test_committed_contract_is_digest_bound() -> None:
@@ -55,6 +61,7 @@ def test_selector_plan_freezes_one_outcome_free_candidate() -> None:
     assert plan["agent_groups"]["transfer_semantics"].startswith(
         "Selection is outcome-free"
     )
+    assert load_selector_plan()["selector_plan_digest"] == digest
 
 
 def test_committed_evidence_is_self_consistent() -> None:
@@ -320,6 +327,49 @@ def test_content_projection_binds_git_bytes_and_exact_task_universe(
         "owner__repo-2",
     )
     assert all("fix_patch" not in row["text"] for row in projected)
+
+
+def test_embedding_artifact_binds_plan_content_and_vectors(
+    tmp_path: Path,
+) -> None:
+    plan = load_selector_plan()
+    task_ids = ("task-a", "task-b")
+    texts = ("alpha", "beta")
+    content_manifest = {
+        "content_manifest_digest": "content",
+        "task_text_digest": canonical_digest(
+            tuple(zip(task_ids, texts, strict=True))
+        ),
+    }
+    artifact = build_embedding_artifact(
+        task_ids,
+        texts,
+        ((1.0, 0.0), (0.0, 1.0)),
+        plan=plan,
+        content_manifest=content_manifest,
+        package_version="5.1.2",
+    )
+    path = tmp_path / "embeddings.json"
+    path.write_text(json.dumps(artifact), encoding="utf-8")
+
+    vectors, manifest = load_embedding_artifact(
+        path,
+        plan,
+        content_manifest,
+        task_ids,
+    )
+
+    assert vectors == {"task-a": (1.0, 0.0), "task-b": (0.0, 1.0)}
+    assert manifest["vector_values_digest"] == artifact["vector_values_digest"]
+    assert (
+        manifest["embedding_artifact_digest"]
+        == artifact["embedding_artifact_digest"]
+    )
+    committed = load_embedding_manifest()
+    assert (
+        committed["embedding_artifact_digest"]
+        == "cc6f791d2770f1e265240e73e47ccd517ed6bae26b1ed3abc78d17cad14e8a23"
+    )
 
 
 def _fixture_contract() -> dict[str, object]:

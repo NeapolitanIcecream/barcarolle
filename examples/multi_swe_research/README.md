@@ -64,6 +64,20 @@ and text rows remain ignored. The committed
 `evidence/task-content-manifest.json` binds the 39-file manifest, 1,632 Task
 texts, exclusions, and zero-paid resource boundary.
 
+Build the ignored, pinned local embeddings without network model access:
+
+```sh
+uv run --with 'sentence-transformers==5.1.2' \
+  python examples/multi_swe_research/semantic_selector.py embed \
+  --task-content outputs/research/2026-07-28-multi-swe-task-content/task-content.jsonl \
+  --model-snapshot /path/to/c004d8e3e901237d8fa7e9fff12774962e391ce5 \
+  --output outputs/research/2026-07-28-multi-swe-task-embeddings.json
+```
+
+The committed `evidence/embedding-manifest.json` binds the complete ignored
+artifact and vector values. It reuses the frozen local ALG-007 model rather
+than adding a representation search.
+
 Validate all committed evidence without network access:
 
 ```sh
