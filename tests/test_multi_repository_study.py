@@ -109,6 +109,50 @@ def test_frozen_multi_repository_plans_and_portfolio_replay() -> None:
     assert len(portfolio["deep_repository_ids"]) == 3
 
 
+def test_opened_development_plan_is_self_digested_and_zero_cost() -> None:
+    plan = json.loads(
+        (
+            REPOSITORY_ROOT
+            / "examples/multi_repository_study/development-plan.json"
+        ).read_text()
+    )
+    digest = plan.pop("development_plan_digest")
+
+    assert canonical_digest(plan) == digest
+    assert plan["epistemic_status"] == "opened_outcome_development_only"
+    assert plan["authority"]["paid_api_calls"] == 0
+    assert plan["authority"]["embedding_calls"] == 0
+
+
+def test_committed_public_panel_result_is_self_digested_and_negative() -> None:
+    results = json.loads(
+        (
+            REPOSITORY_ROOT
+            / "examples/multi_repository_study/public-panel-results.json"
+        ).read_text()
+    )
+    digest = results.pop("public_panel_results_digest")
+
+    assert canonical_digest(results) == digest
+    assert results["task_count"] == 500
+    assert results["agent_count"] == 3
+    assert all(
+        decision["status"] == "no_exploratory_nomination"
+        and decision["promotion_allowed"] is False
+        for decision in results["decisions"].values()
+    )
+    wide = results["summaries"]["wide"]
+    assert wide["recency"]["macro_repository_difference"] == pytest.approx(
+        0.018900604036508516
+    )
+    assert wide["difficulty_coverage"][
+        "macro_repository_difference"
+    ] == pytest.approx(0.039777311308564635)
+    assert results["random_calibration"]["wide"]["candidate_positions"][
+        "recency"
+    ]["candidate_better_than_random_midrank"] == pytest.approx(0.458325)
+
+
 def test_summarize_contrasts_weights_repositories_before_origins() -> None:
     rows = tuple(
         ContrastRow(

@@ -1,0 +1,124 @@
+{
+  "schema_version": "barcarolle_multi_repository_development_plan_v1",
+  "study_id": "simple-cross-repository-development-2026-07-28",
+  "frozen_at": "2026-07-28T02:10:00Z",
+  "epistemic_status": "opened_outcome_development_only",
+  "source_results": {
+    "public_panel_plan_digest": "0658aa938b34f0f80f6933b8a03f1517b323661eab55031925bd017163759c03",
+    "public_panel_results_digest": "3b1c324779572f8b3143bbe929d6bc398aaabb441c5132554e0c218ded010ba5",
+    "portfolio_digest": "da6372edeae90e1d4a857d61e885ec89632a244c295177752d4cde8e11fb68b1",
+    "outcome_status": "opened before this development plan; no result is confirmatory"
+  },
+  "research_contract": {
+    "target": "Determine whether a tiny interpretable forecast correction learned across research repositories is worth an independent later test.",
+    "deployment_boundary": "At every target Origin, forecast from that repository's eligible historical reference-Agent Results and select only that repository's historical Tasks.",
+    "primary_baseline": "all eligible historical Tasks from the target repository",
+    "primary_loss": "mean across the three frozen public reference Agents of absolute selected-history versus future-cohort pass-rate error",
+    "primary_estimand": "outer leave-one-repository-out macro-repository candidate-minus-full-history loss",
+    "non_solutions": [
+      "mixing Tasks from several repositories into one Selection",
+      "using target-repository future Results during fitting or Selection",
+      "choosing an algorithm or grid point from its outer target result",
+      "claiming confirmation, strict prospectivity, or unseen-Agent transfer",
+      "changing core records or widening the production Runner"
+    ],
+    "allowed_terminal_states": [
+      "freeze_one_simple_candidate_for_independent_validation",
+      "no_simple_cross_repository_route_warrants_paid_validation",
+      "development_protocol_or_data_blocker"
+    ]
+  },
+  "outer_evaluation": {
+    "repository_ids": [
+      "astropy/astropy",
+      "django/django",
+      "matplotlib/matplotlib",
+      "pydata/xarray",
+      "scikit-learn/scikit-learn",
+      "sphinx-doc/sphinx",
+      "sympy/sympy"
+    ],
+    "fold": "hold out one complete repository; train or choose parameters on the other six",
+    "deep_repository_ids": [
+      "django/django",
+      "sphinx-doc/sphinx",
+      "sympy/sympy"
+    ],
+    "repository_weighting": "Origins equal within repository; outer repositories equal",
+    "agent_treatment": "the same frozen three-Agent public panel is used for historical features and future loss"
+  },
+  "selection": {
+    "budget_tasks": 10,
+    "forecast_target": "one pass-rate target per reference Agent",
+    "subset_rule": "deterministic dynamic program minimizing mean absolute distance between selected and forecast Agent pass-rate vectors",
+    "tie_break": "lexicographically earliest tuple under created_at then instance_id",
+    "clipping": "clip every forecast pass rate to [0, 1]"
+  },
+  "candidates": [
+    {
+      "selector_id": "history_match",
+      "role": "compression_control",
+      "forecast": "complete eligible history pass-rate vector",
+      "fitting": "none"
+    },
+    {
+      "selector_id": "cross_repository_drift_match",
+      "role": "cross_repository_probe",
+      "forecast": "complete eligible history vector plus a training-repository mean future-minus-history drift vector",
+      "shrinkage_grid": [
+        0.0,
+        0.5,
+        1.0
+      ],
+      "fitting": "For each outer fold and shrinkage value, estimate drift with inner leave-one-repository-out fits and choose by macro inner validation loss; ties choose smaller shrinkage. Refit drift on all six outer-training repositories."
+    },
+    {
+      "selector_id": "local_trend_match",
+      "role": "local_adaptive_probe",
+      "forecast": "complete eligible history vector plus alpha times the latest-ten minus complete-history vector",
+      "alpha_grid": [
+        0.0,
+        0.25,
+        0.5,
+        0.75,
+        1.0
+      ],
+      "fitting": "Choose alpha on the six outer-training repositories by macro-repository loss; ties choose smaller alpha."
+    }
+  ],
+  "diagnostics": {
+    "random_calibration": "reuse the frozen 20,000-draw, seed-20260728 equal-budget distribution",
+    "required_views": [
+      "per outer repository",
+      "wide macro repository",
+      "deep macro repository",
+      "leave one outer repository out",
+      "chosen parameter by outer fold",
+      "candidate random midrank"
+    ],
+    "support_endpoint": "future-target subset match, labeled hindsight-only"
+  },
+  "nomination_rule": {
+    "candidate_scope": [
+      "cross_repository_drift_match",
+      "local_trend_match"
+    ],
+    "requirements": [
+      "wide macro-repository difference is at most -0.01",
+      "at least five of seven repositories have negative difference",
+      "every leave-one-repository-out summary has negative difference",
+      "deep macro-repository difference is negative",
+      "candidate is better than at least 75 percent of equal-budget random draws",
+      "candidate improves the fixed history_match compression control"
+    ],
+    "effect": "At most one candidate, ordered by wide macro loss then selector_id, is frozen for a later independent test. No production promotion is allowed."
+  },
+  "authority": {
+    "paid_api_calls": 0,
+    "coding_agent_calls": 0,
+    "embedding_calls": 0,
+    "allowed_inputs": "the pinned local dataset and the three already-opened official result blobs",
+    "implementation_scope": "experiment-layer code and tests only"
+  },
+  "development_plan_digest": "91be16cd727dc37fb3f5c0e74ec0443e763b06453c811a3e3744ec31c83d6cf3"
+}
