@@ -1,0 +1,162 @@
+{
+  "schema_version": "barcarolle_multi_swe_response_composition_plan_v1",
+  "study_id": "multi-swe-response-composition-signal-2026-07-28",
+  "frozen_at": "2026-07-28T13:19:20Z",
+  "epistemic_status": "outcome_open_development_with_predeclared_signal_cascade",
+  "source": {
+    "selector_plan_digest": "6619ab258039d3f12cf865421faeba7c23248b302f72b06bb6f311b8f65bde05",
+    "contract_digest": "1e104613012a95fc534dba23d4adac1b7d6a6c10e70537c732f16da3e6f83307",
+    "panel_digest": "f2658d12451bdab4108a71cfae5cd5044a5bd312633239c09425378b4b682deb",
+    "resolved_outcome_digest": "b9a6d0d8e44d747d23789ec23eb4205178f2ae2d4f737c2446a5fcdf5abc116c",
+    "task_time_projection_digest": "56eb7dda0d7fd9787b1e77c432572f212726b92abc189df18ab2a4fe6bb815e5",
+    "task_count": 1632,
+    "configuration_count": 36,
+    "outcome_status": "opened development evidence; no result from this study is confirmatory",
+    "time_status": "GitHub pull-request createdAt projection with public outcomes projected to Task arrival; source-time-safe counterfactual only"
+  },
+  "research_contract": {
+    "target": "Determine whether a target repository's observable response-composition history contains a transferable pre-Origin increment for predicting the next Task cohort, before implementing another budgeted Selector.",
+    "runtime_boundary": "The deployed input remains one target repository and its local Task Pool and cached reference-Agent Results. Other repositories contribute only one source-time-safe shrinkage prior and never candidate Tasks.",
+    "primary_baseline": "the complete eligible target-repository history",
+    "primary_independent_unit": "repository or declared repository cluster",
+    "claim_boundary": "Passing the signal cascade may justify one experiment-layer budgeted Selection. It cannot establish strict historical replay, unseen-source portability, prospective validity, or a Runner default.",
+    "allowed_terminal_states": [
+      "cross_agent_response_signal_rejected",
+      "target_future_increment_rejected",
+      "alg_014_selection_rejected",
+      "nominate_alg_014_for_independent_confirmation",
+      "source_identity_or_runtime_blocker"
+    ],
+    "non_solutions": [
+      "using the held-out configuration in its own difficulty coordinate",
+      "using target future outcomes or hindsight memberships before Selection",
+      "using cutoff-later Tasks or projected Results from another repository",
+      "pooling candidate Tasks across repositories",
+      "promoting static cross-Agent correlation as future-distribution prediction",
+      "tuning a window, decay, threshold, number of bins, prior mass, budget, horizon, or gate after replay",
+      "opening the sealed SWE-bench Agent holdout",
+      "adding a trainer, registry, scheduler, or multi-repository Runner"
+    ]
+  },
+  "rolling_origin": {
+    "minimum_initial_history_tasks": 20,
+    "selection_budget_tasks": 10,
+    "primary_future_tasks": 5,
+    "sensitivity_future_tasks": 10,
+    "repository_sets": "reuse the exact H5 wide/deep and H10 common/deep sets from the bound selector plan",
+    "ordering": "projected created_at then instance_id",
+    "outer_holdout": "evaluate each configuration a with a Task difficulty coordinate built from the other 35 configurations only",
+    "training_cutoff": "the cross-repository shrinkage prior for target cutoff tau uses only other-repository Tasks with projected created_at no later than tau",
+    "result_availability": "public Result is projected to its Task created_at; evidence remains counterfactual"
+  },
+  "candidate": {
+    "algorithm_id": "ALG-014",
+    "name": "prequential response-composition shrinkage",
+    "short_name": "PRCS",
+    "response_coordinate": {
+      "definition": "For held-out configuration a, d[t,a] is the mean binary outcome of the other 35 configurations on Task t.",
+      "range": "[0, 1] in exact increments of 1/35",
+      "held_out_boundary": "configuration a is absent from d, expert scoring, global prior, forecast, and Selection"
+    },
+    "global_prior": {
+      "definition": "At each target Origin, compute each eligible other repository's mean d under the same held-out configuration and average those repository means equally.",
+      "prior_mass": "one pseudo-Task",
+      "reason": "provide bounded partial pooling without allowing long repositories to dominate"
+    },
+    "prequential_forecast": {
+      "experts": [
+        "stationary: mean d over all current target history",
+        "recent: mean d over the latest h current target Tasks"
+      ],
+      "past_evidence": "For the current repository Origin, score both experts by absolute error on every earlier complete rolling Origin from the same H5 or H10 schedule.",
+      "choice": "choose the expert with smaller mean earlier loss; ties and the first Origin choose stationary",
+      "local_mass": "history Task count for stationary and h for recent",
+      "partial_pooling": "forecast = (local_mass * chosen_local_mean + one * global_prior_mean) / (local_mass + one)",
+      "parameters": "no decay, minimum gain, third expert, learned weight, Markov state, or outcome-driven tuning"
+    },
+    "selection_if_signal_passes": {
+      "rule": "For each held-out configuration, choose ten local historical Tasks whose mean d is closest to the frozen forecast by exact dynamic programming over the 36 discrete solved-count capacities.",
+      "tie_break": "lexicographically smallest count vector, then newest projected created_at and instance_id within each solved-count cell",
+      "weights": "equal",
+      "implementation_boundary": "experiment layer only"
+    }
+  },
+  "signal_cascade": {
+    "stage_a_cross_agent_response": {
+      "metric": "For each target Origin and held-out configuration with both terminal classes in target history, compute ROC AUC of d[t,a] for y[t,a]; average configurations, Origins within repository, then repositories equally.",
+      "requirements": [
+        "H5 repository-macro AUC is greater than 0.5",
+        "repository bootstrap 95 percent lower bound is greater than 0.5",
+        "at least 9 of 13 repositories are greater than 0.5",
+        "every leave-one-repository-out macro is greater than 0.5",
+        "a configuration-label circular-shift negative control has corrected upper-tail rate below 0.10"
+      ],
+      "failure_action": "retire ALG-014 without evaluating target future increment"
+    },
+    "stage_b_target_future_increment": {
+      "metric": "absolute error between forecast mean d and the actual future-cohort mean d, evaluated leave-one-configuration-out and aggregated configuration, Origin within repository, then repository equally",
+      "controls": [
+        "complete-history mean d",
+        "latest-h mean d",
+        "prequential chosen local expert without the cross-repository prior",
+        "global prior only",
+        "target-history time-order circular-shift null"
+      ],
+      "requirements": [
+        "H5 repository-macro loss is at least 10 percent lower than complete history",
+        "at least 10 of 13 H5 repositories and every H5 leave-one-repository-out view are favorable",
+        "H5 deep difference is negative",
+        "H5 loss is no higher than recent and no-prior controls",
+        "H10 common-11 and deep differences are negative with at least 8 of 11 repositories favorable",
+        "short- and long-calendar-span H5 groups are both favorable",
+        "one hundred ninety-nine repository-block circular shifts give a corrected lower-tail rate below 0.10",
+        "recent expert selection rate is between 0.10 and 0.90"
+      ],
+      "failure_action": "retire ALG-014 and stop candidate invention on the current opened sources"
+    },
+    "stage_c_budgeted_selection": {
+      "run_condition": "all Stage A and Stage B requirements pass exactly",
+      "primary_outcome": "held-out-configuration pass-rate MAE",
+      "controls": [
+        "full history",
+        "twenty thousand equal-budget random subsets",
+        "static full-history response-composition matching",
+        "fixed recency",
+        "unchanged ALG-007 transfer memberships"
+      ],
+      "requirements": [
+        "H5 repository-macro difference is at most -0.010",
+        "at least 10 of 13 H5 repositories and every leave-one-repository-out view are favorable",
+        "H5 deep difference is negative",
+        "H10 common-11 and deep differences are negative with at least 8 of 11 repositories favorable",
+        "H5 is better than at least 75 percent of random draws and H10 is not below the random median",
+        "leave-one-model, leave-one-harness, leave-one-language, and model-by-harness double holdouts do not reverse aggregate direction",
+        "a target-history circular-shift null has corrected lower-tail rate below 0.10"
+      ],
+      "failure_action": "retire ALG-014 and stop candidate invention on the current opened sources"
+    }
+  },
+  "diagnostics": {
+    "bootstrap_resamples": 10000,
+    "bootstrap_seed": 20260728,
+    "stage_a_null_permutations": 19,
+    "stage_b_null_permutations": 199,
+    "selection_random_draws": 20000,
+    "selection_random_seed": 20260728,
+    "report": [
+      "repository-first wide and deep summaries",
+      "H5 and H10 common-11 comparison",
+      "expert choice and prior effect",
+      "calendar-span short and long directions",
+      "configuration, model, harness, and language directions if Selection is reached",
+      "negative controls and exact stopping decision",
+      "resource use and contamination boundary"
+    ]
+  },
+  "resource_boundary": {
+    "paid_api_calls": 0,
+    "embedding_api_calls": 0,
+    "sealed_holdout_reads": 0
+  },
+  "response_composition_plan_digest": "b703a9fd1484e2bd96376320ad58a2e1495a5f2252f009d2b9bdb49a1cf57fb0"
+}
