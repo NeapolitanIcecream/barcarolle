@@ -130,6 +130,24 @@ def test_opened_development_plan_is_self_digested_and_zero_cost() -> None:
     assert plan["authority"]["embedding_calls"] == 0
 
 
+def test_fixed_semantic_plan_is_self_digested_and_local_only() -> None:
+    plan = json.loads(
+        (
+            REPOSITORY_ROOT
+            / "examples/multi_repository_study/semantic-plan.json"
+        ).read_text()
+    )
+    digest = plan.pop("semantic_plan_digest")
+
+    assert canonical_digest(plan) == digest
+    assert plan["authority"]["paid_api_calls"] == 0
+    assert plan["authority"]["embedding_api_calls"] == 0
+    assert plan["embedding"]["network_policy"] == "local_files_only"
+    assert tuple(
+        candidate["selector_id"] for candidate in plan["selection"]["candidates"]
+    ) == ("centroid_recent_15", "facility_recent_15")
+
+
 def test_committed_public_panel_result_is_self_digested_and_negative() -> None:
     results = json.loads(
         (

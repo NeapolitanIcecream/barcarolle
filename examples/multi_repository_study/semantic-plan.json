@@ -1,0 +1,98 @@
+{
+  "schema_version": "barcarolle_multi_repository_semantic_plan_v1",
+  "study_id": "fixed-semantic-transfer-development-2026-07-28",
+  "frozen_at": "2026-07-28T02:25:00Z",
+  "epistemic_status": "opened_outcome_fixed_route_development",
+  "source_results": {
+    "public_panel_plan_digest": "0658aa938b34f0f80f6933b8a03f1517b323661eab55031925bd017163759c03",
+    "public_panel_results_digest": "3b1c324779572f8b3143bbe929d6bc398aaabb441c5132554e0c218ded010ba5",
+    "portfolio_digest": "da6372edeae90e1d4a857d61e885ec89632a244c295177752d4cde8e11fb68b1",
+    "task_count": 500,
+    "outcome_status": "opened; this is a planned cross-repository replication of the previously frozen ALG-007 rules, not confirmation"
+  },
+  "embedding": {
+    "model_id": "sentence-transformers/all-MiniLM-L12-v2",
+    "model_revision": "c004d8e3e901237d8fa7e9fff12774962e391ce5",
+    "sentence_transformers_version": "5.1.2",
+    "device": "cpu",
+    "input_field": "problem_statement",
+    "normalization": "L2 normalized by SentenceTransformer.encode",
+    "batch_size": 32,
+    "network_policy": "local_files_only",
+    "artifact_policy": "raw vectors remain ignored; commit identities, vector digest, aggregate summaries, and selection digests"
+  },
+  "research_contract": {
+    "target": "Test whether the two frozen ALG-007 semantic coreset rules transfer across repository-local Origins without fitting outcomes.",
+    "primary_baseline": "all eligible historical Tasks from the same repository",
+    "primary_loss": "mean across the three frozen public Agents of absolute selected-history versus future-cohort pass-rate error",
+    "primary_estimand": "macro-repository candidate-minus-full-history loss",
+    "non_solutions": [
+      "choosing another semantic window after seeing these outcomes",
+      "using Agent outcomes or future text in Selection",
+      "mixing repositories into one semantic candidate pool",
+      "treating semantic centroid distance as outcome evidence",
+      "promoting a Runner default from opened development outcomes"
+    ],
+    "allowed_terminal_states": [
+      "freeze_fixed_semantic_route_for_independent_validation",
+      "retire_fixed_alg_007_on_current_source_family",
+      "embedding_identity_or_runtime_blocker"
+    ]
+  },
+  "portfolio": {
+    "wide_repository_ids": [
+      "astropy/astropy",
+      "django/django",
+      "matplotlib/matplotlib",
+      "pydata/xarray",
+      "scikit-learn/scikit-learn",
+      "sphinx-doc/sphinx",
+      "sympy/sympy"
+    ],
+    "deep_repository_ids": [
+      "django/django",
+      "sphinx-doc/sphinx",
+      "sympy/sympy"
+    ]
+  },
+  "selection": {
+    "budget_tasks": 10,
+    "recent_window_tasks": 15,
+    "candidates": [
+      {
+        "selector_id": "centroid_recent_15",
+        "rule": "greedy kernel-mean coreset plus at most 20 improving one-for-one swaps toward the latest-15 text centroid"
+      },
+      {
+        "selector_id": "facility_recent_15",
+        "rule": "greedy facility location covering the latest-15 text embeddings"
+      }
+    ],
+    "tie_break": "earlier created_at then instance_id"
+  },
+  "diagnostics": {
+    "random_calibration_draws": 20000,
+    "random_calibration_seed": 20260728,
+    "bootstrap_resamples": 10000,
+    "bootstrap_seed": 20260728,
+    "semantic_alignment": "selected-versus-future centroid cosine distance is descriptive only"
+  },
+  "nomination_rule": {
+    "requirements": [
+      "wide macro-repository difference is at most -0.01",
+      "at least five of seven repositories have negative difference",
+      "every wide leave-one-repository-out summary is negative",
+      "deep macro-repository difference is negative",
+      "candidate is better than at least 75 percent of equal-budget random draws"
+    ],
+    "effect": "At most one candidate, ordered by wide macro loss then selector_id, is frozen for independent validation. Production promotion remains forbidden."
+  },
+  "authority": {
+    "paid_api_calls": 0,
+    "coding_agent_calls": 0,
+    "embedding_api_calls": 0,
+    "allowed_runtime": "local CPU using the already-cached pinned model snapshot",
+    "implementation_scope": "one direct experiment-layer embedding extractor and one direct semantic replay"
+  },
+  "semantic_plan_digest": "a8d7d2024945813cfdc7ae86a8d6baf26d35ae3a55c17dfb2c9231be8a9f0079"
+}
