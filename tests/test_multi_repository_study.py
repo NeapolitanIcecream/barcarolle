@@ -63,6 +63,11 @@ from examples.multi_repository_study.semantic import (  # noqa: E402
     select_centroid_recent,
     select_facility_recent,
 )
+from examples.multi_repository_study.scale_sensitivity import (  # noqa: E402
+    build_common_scale_origins,
+    load_scale_sensitivity_plan,
+    materialize_scale_selections,
+)
 from examples.multi_repository_study.theory import (  # noqa: E402
     complete_trailing_blocks,
     fit_repository_equal_markov,
@@ -310,6 +315,130 @@ def test_adaptive_difficulty_plan_is_self_digested_and_stops_search() -> None:
     assert plan["current_pool_stop_rule"].startswith(
         "If the adaptive candidate fails"
     )
+
+
+def test_scale_sensitivity_plan_freezes_common_cohort_and_sealed_holdout() -> None:
+    plan = load_scale_sensitivity_plan()
+    digest = plan["scale_sensitivity_plan_digest"]
+
+    assert canonical_digest(
+        {
+            key: value
+            for key, value in plan.items()
+            if key != "scale_sensitivity_plan_digest"
+        }
+    ) == digest
+    assert tuple(plan["response_surface"]["selection_budgets"]) == (5, 10, 15)
+    assert tuple(plan["response_surface"]["task_count_horizons"]) == (3, 5, 10)
+    assert plan["common_origin_cohort"]["expected_origin_count"] == 56
+    assert plan["authority"]["paid_api_calls"] == 0
+    assert plan["authority"]["holdout_result_blob_reads"] == 0
+
+
+def test_common_scale_origins_keep_histories_and_nest_future_prefixes() -> None:
+    repository_ids = ("org/a", "org/b")
+    tasks = tuple(
+        TaskMetadata(
+            row["instance_id"],
+            row["repo"],
+            row["created_at"],
+            row["difficulty"],
+            "fixture",
+        )
+        for repository_id in repository_ids
+        for row in _task_rows(repository_id, 35)
+    )
+
+    short = build_common_scale_origins(
+        tasks,
+        repository_ids,
+        minimum_history_tasks=20,
+        origin_step_tasks=5,
+        maximum_task_count_horizon=10,
+        task_count_horizon=3,
+    )
+    long = build_common_scale_origins(
+        tasks,
+        repository_ids,
+        minimum_history_tasks=20,
+        origin_step_tasks=5,
+        maximum_task_count_horizon=10,
+        task_count_horizon=10,
+    )
+
+    assert {
+        repository_id: len(short[repository_id])
+        for repository_id in repository_ids
+    } == {"org/a": 2, "org/b": 2}
+    for repository_id in repository_ids:
+        for short_origin, long_origin in zip(
+            short[repository_id],
+            long[repository_id],
+            strict=True,
+        ):
+            assert short_origin.origin_id == long_origin.origin_id
+            assert short_origin.history == long_origin.history
+            assert short_origin.future == long_origin.future[:3]
+            assert len(short_origin.history) > 15
+
+
+def test_scale_cell_materialization_is_local_and_budgeted() -> None:
+    repository_ids = ("org/a", "org/b", "org/c")
+    tasks = tuple(
+        TaskMetadata(
+            row["instance_id"],
+            row["repo"],
+            row["created_at"],
+            row["difficulty"],
+            "fixture",
+        )
+        for repository_id in repository_ids
+        for row in _task_rows(repository_id, 35)
+    )
+    outcomes = {
+        f"agent-{agent}": {
+            task.instance_id: int((index + agent) % 5 < 2)
+            for index, task in enumerate(tasks)
+        }
+        for agent in range(5)
+    }
+    evaluation_ids = ("org/a", "org/b")
+    origins = build_common_scale_origins(
+        tasks,
+        evaluation_ids,
+        minimum_history_tasks=20,
+        origin_step_tasks=5,
+        maximum_task_count_horizon=10,
+        task_count_horizon=5,
+    )
+
+    memberships, diagnostics = materialize_scale_selections(
+        tasks,
+        outcomes,
+        origins,
+        evaluation_ids,
+        repository_ids,
+        selection_budget=10,
+        task_count_horizon=5,
+        state_count=5,
+        cell_prior_mass=0.2,
+        local_prior_strength=5.0,
+    )
+
+    task_repository = {task.instance_id: task.repository_id for task in tasks}
+    assert set(memberships) == {
+        "recency",
+        "stationary_difficulty_match",
+        "difficulty_markov_match",
+    }
+    for rows in memberships.values():
+        for origin_id, selected in rows.items():
+            repository_id = origin_id.split(":scale-origin-", maxsplit=1)[0]
+            assert len(selected) == 10
+            assert {task_repository[task_id] for task_id in selected} == {
+                repository_id
+            }
+    assert diagnostics["origin_count"] == 4
 
 
 def test_agent_panel_schema_amendment_is_narrow_and_self_digested() -> None:

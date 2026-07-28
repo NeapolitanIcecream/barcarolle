@@ -1,0 +1,182 @@
+{
+  "schema_version": "barcarolle_budget_horizon_sensitivity_plan_v1",
+  "study_id": "budget-horizon-sensitivity-2026-07-28",
+  "frozen_at": "2026-07-28T07:32:22Z",
+  "epistemic_status": "opened_development_outcome_estimand_sensitivity",
+  "source": {
+    "dataset_sha256": "43ed5a3d1d98da36472c1ade65ddd2085d7b4ff694fcaf6a023a07c5c1f32f21",
+    "portfolio_digest": "da6372edeae90e1d4a857d61e885ec89632a244c295177752d4cde8e11fb68b1",
+    "public_panel_plan_digest": "0658aa938b34f0f80f6933b8a03f1517b323661eab55031925bd017163759c03",
+    "agent_panel_extension_plan_digest": "52f1f3c1dc6159f2c6f17c7b530fe4aab962728c43049d80284690608aad98f6",
+    "agent_invariant_plan_digest": "fccca3c600c56b4a504eb70eacce23dfa9180e1fa427a1d20b1b98046d80f76a",
+    "adaptive_difficulty_plan_digest": "3e9a1264b77a6d06e42232b313ec513f03d10f3c12c6a6e1cd3a5411326c9801",
+    "adaptive_difficulty_results_digest": "5beb67c14a2b8629c0c643650a216393b8a0aeee64aaeddce6198e9f422e4a93",
+    "development_agent_count": 11,
+    "sealed_holdout_agent_count": 6
+  },
+  "research_contract": {
+    "current_task": "Determine whether the fixed ten-Task Selection budget and five-Task future horizon structurally confound the current difficulty-Markov result, and separate task-count, calendar-duration, and evidence-availability meanings before more algorithm research.",
+    "definitions": {
+      "selection_budget": "The number of historical Task Checks in the compiled benchmark.",
+      "task_count_horizon": "The first H eligible local Tasks after one frozen repository-local as-of cutoff.",
+      "calendar_duration": "A source-capacity diagnostic counting eligible local Tasks arriving within a fixed number of days after the cutoff.",
+      "source_time_cutoff_safe_counterfactual": "Cross-repository fitting uses only Task created_at values no later than the target cutoff, while public Agent labels remain projected to Task arrival.",
+      "strict_historical_replay": "Every training Task and mature label was actually available by the target cutoff.",
+      "frozen_external_pretraining": "A policy is frozen from non-target repositories at its own policy cutoff and then evaluated on a repository excluded from training.",
+      "retrospective_mechanism_probe": "Complete non-target histories may be used for mechanism discovery, without supporting a historical deployability claim."
+    },
+    "required_evidence": [
+      "one common-Origin budget by task-count-horizon response surface",
+      "full-history contrast and equal-budget random calibration in every cell",
+      "repository-first wide and deep summaries in every cell",
+      "leave-one-Agent rematerialization for response-derived Selectors",
+      "nested-horizon target disagreement",
+      "calendar span and fixed-duration source-capacity diagnostics",
+      "a decision that distinguishes a stable region from an isolated favorable cell",
+      "self-digested plan, result, and membership identities"
+    ],
+    "insufficient_outcomes": [
+      "choosing the best observed budget or horizon and reporting only that cell",
+      "changing the Origin cohort between cells in the primary response surface",
+      "counting overlapping Origins as independent repositories",
+      "calling projected public Agent labels strict prospective evidence",
+      "opening the six-Agent holdout",
+      "promoting a Selector or Runner default from this opened development grid",
+      "adding a new Selector, prior, state partition, training service, or runtime abstraction"
+    ],
+    "allowed_terminal_states": [
+      "stable_scale_region_found_for_new_prespecified_study_only",
+      "isolated_favorable_cells_do_not_reopen_candidate",
+      "scale_sensitivity_does_not_reopen_candidate",
+      "source_identity_or_common_cohort_blocker"
+    ]
+  },
+  "common_origin_cohort": {
+    "ordering": "created_at_then_instance_id",
+    "minimum_history_tasks": 20,
+    "origin_step_tasks": 5,
+    "maximum_task_count_horizon": 10,
+    "future_rule": "Every horizon uses a prefix of the same next ten Tasks after the same cutoff.",
+    "expected_repository_ids": [
+      "django/django",
+      "matplotlib/matplotlib",
+      "scikit-learn/scikit-learn",
+      "sphinx-doc/sphinx",
+      "sympy/sympy"
+    ],
+    "expected_origin_counts": {
+      "django/django": 41,
+      "matplotlib/matplotlib": 1,
+      "scikit-learn/scikit-learn": 1,
+      "sphinx-doc/sphinx": 3,
+      "sympy/sympy": 10
+    },
+    "expected_origin_count": 56,
+    "primary_weighting": "Origins equal within repository, then repositories equal.",
+    "overlap_policy": "Horizon ten overlaps adjacent future windows because the Origin step is five; repository is the independent cluster and no Origin-count confidence claim is allowed."
+  },
+  "response_surface": {
+    "selection_budgets": [
+      5,
+      10,
+      15
+    ],
+    "task_count_horizons": [
+      3,
+      5,
+      10
+    ],
+    "selectors": [
+      {
+        "selector_id": "recency",
+        "role": "outcome-free compression control",
+        "rule": "Select the most recent B local history Tasks."
+      },
+      {
+        "selector_id": "stationary_difficulty_match",
+        "role": "non-dynamic response-derived control",
+        "rule": "Match the complete local-history five-state difficulty distribution with symmetric cell mass 0.2."
+      },
+      {
+        "selector_id": "difficulty_markov_match",
+        "role": "frozen mechanism under scale sensitivity",
+        "rule": "Reuse the exact five-state representation, repository-equal cutoff-aware transition prior, local prior strength five, and forecast for H steps before selecting B Tasks."
+      }
+    ],
+    "training_repository_rule": "Use the original seven wide repositories except the target repository; include only Tasks with created_at no later than the target cutoff.",
+    "full_history": "Primary no-Selection baseline in every cell.",
+    "random_calibration": {
+      "draws": 10000,
+      "seed": 20260806,
+      "cell_seed_rule": "base + 100 * selection_budget + task_count_horizon"
+    },
+    "aggregation": {
+      "bootstrap_resamples": 10000,
+      "bootstrap_seed": 20260728
+    }
+  },
+  "horizon_diagnostics": {
+    "nested_task_count_pairs": [
+      [
+        3,
+        5
+      ],
+      [
+        5,
+        10
+      ],
+      [
+        3,
+        10
+      ]
+    ],
+    "nonoverlapping_capacity_horizons": [
+      3,
+      5,
+      10,
+      15,
+      20,
+      30
+    ],
+    "nonoverlapping_capacity_minimum_history_tasks": 15,
+    "calendar_duration_days": [
+      30,
+      90,
+      180
+    ],
+    "calendar_duration_status": "source-capacity diagnostic only; no time-horizon Selector is fitted"
+  },
+  "development_decision_rule": {
+    "cell_requirements": {
+      "wide_macro_repository_difference_at_most": -0.01,
+      "minimum_wide_favorable_repositories": 4,
+      "deep_macro_repository_difference_negative": true,
+      "minimum_random_percentile": 0.75,
+      "wide_difference_below_recency": true,
+      "wide_difference_below_stationary": true,
+      "leave_one_agent_wide_macro_negative": true,
+      "minimum_favorable_leave_one_agent_count": 8
+    },
+    "stable_region": "All four difficulty-Markov cells in at least one adjacent two-budget by two-horizon rectangle meet every cell requirement.",
+    "isolated_cell": "One or more cells meet every requirement but no stable region exists.",
+    "priority": "A stable region may motivate a newly prespecified study only. No result may open the holdout, promote a Selector, or choose one observed cell as a default."
+  },
+  "failure_model": [
+    "A horizon-dependent Origin schedule changes the repository population instead of the estimand.",
+    "A budget equal to history creates a trivial zero contrast.",
+    "Short future blocks create a noisy target that favors hindsight or chance.",
+    "Long horizons remove repositories and mature training Origins.",
+    "Same-Agent state construction inflates response-derived Selection evidence.",
+    "An isolated favorable cell is mistaken for a supported operating range.",
+    "Raw created_at chronology is mistaken for attested Result availability.",
+    "Task-count horizons are mistaken for stable calendar durations."
+  ],
+  "stop_rule": "After the complete frozen grid and audits, do not add another scale, threshold, state rule, or Selector on these opened outcomes. Reopen only with a new source, explicit user-demand evidence, or an independently derived mechanism.",
+  "authority": {
+    "paid_api_calls": 0,
+    "coding_agent_calls": 0,
+    "embedding_calls": 0,
+    "holdout_result_blob_reads": 0
+  },
+  "scale_sensitivity_plan_digest": "dd499a18a8bf5270c9c474a26331e32f4bc1e5831cacb9592a85c7d4f2969459"
+}
