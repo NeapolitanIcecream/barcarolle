@@ -3,7 +3,7 @@
   "study_id": "theory-driven-selector-development-2026-07-28",
   "epistemic_status": "opened_outcome_mechanism_development_only",
   "frozen_at": "2026-07-28T03:07:55Z",
-  "theory_plan_digest": "2e11bbc4ed1802ff67fd98721999202f59b850a2d723da93df03be9f6d4125a8",
+  "theory_plan_digest": "ae58832e7bcd335e3c246ae9da351fecf181044757589dabc60b4f30c11fb83b",
   "authority": {
     "paid_api_calls": 0,
     "coding_agent_calls": 0,
@@ -46,6 +46,18 @@
     "selection_budget_tasks": 10,
     "ordering": "created_at_then_instance_id",
     "complete_trailing_block_rule": "Partition backward from the latest history Task into non-overlapping five-Task blocks; ignore only the leading 0-4 Task remainder for block-state estimation."
+  },
+  "fixed_algorithm_constants": {
+    "agent_order": "lexicographic Agent ID",
+    "joint_state_encoding": "Binary Agent outcomes in agent_order interpreted as one bit vector; states are lexicographically ordered bit tuples.",
+    "training_transition_dirichlet_total_mass_per_row": 1.0,
+    "training_transition_dirichlet_cell_mass": 0.125,
+    "target_local_transition_prior_total_mass_per_row": 8.0,
+    "markov_forecast_steps": 5,
+    "analog_state_distance": "Mean absolute difference over full-history, penultimate-block, and latest-block Agent rates.",
+    "even_median": "Arithmetic mean of the two central sorted values.",
+    "semantic_regression": "Per dimension ordinary least squares on block indices 0 through B-1, evaluated at B.",
+    "semantic_swap_pass_limit": 20
   },
   "outer_evaluation": {
     "repository_ids": [
