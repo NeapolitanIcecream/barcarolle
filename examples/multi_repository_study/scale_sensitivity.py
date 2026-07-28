@@ -363,7 +363,7 @@ def horizon_diagnostics(
         calendar_duration_days,
         "calendar duration days",
     ):
-        by_repository = {}
+        counts_by_repository = {}
         for repository_id in evaluation_ids:
             repository_tasks = tasks_by_repository[repository_id]
             counts = []
@@ -376,22 +376,18 @@ def horizon_diagnostics(
                         for task in repository_tasks[len(origin.history) :]
                     )
                 )
-            by_repository[repository_id] = _numeric_summary(tuple(counts))
+            counts_by_repository[repository_id] = tuple(counts)
         all_counts = tuple(
-            int(value)
-            for repository_summary in by_repository.values()
-            for value in repository_summary["values"]
+            value
+            for repository_counts in counts_by_repository.values()
+            for value in repository_counts
         )
         calendar_capacity[str(duration_days)] = {
             "all_origin_task_count": _numeric_summary(all_counts),
             "zero_task_origin_count": sum(value == 0 for value in all_counts),
             "repository_summaries": {
-                repository_id: {
-                    key: value
-                    for key, value in summary.items()
-                    if key != "values"
-                }
-                for repository_id, summary in by_repository.items()
+                repository_id: _numeric_summary(counts)
+                for repository_id, counts in counts_by_repository.items()
             },
         }
 
@@ -1148,7 +1144,6 @@ def _numeric_summary(values: Sequence[int | float]) -> Mapping[str, Any]:
         "median": median(numeric),
         "mean": _mean(numeric),
         "maximum": max(numeric),
-        "values": tuple(values),
     }
 
 

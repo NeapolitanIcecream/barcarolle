@@ -335,6 +335,30 @@ def test_scale_sensitivity_plan_freezes_common_cohort_and_sealed_holdout() -> No
     assert plan["authority"]["holdout_result_blob_reads"] == 0
 
 
+def test_scale_sensitivity_result_is_self_digested_and_closes_scale_search() -> None:
+    result_path = (
+        REPOSITORY_ROOT
+        / "examples/multi_repository_study/scale-sensitivity-results.json"
+    )
+    result = json.loads(result_path.read_text())
+    digest = result.pop("scale_sensitivity_results_digest")
+
+    assert canonical_digest(result) == digest
+    assert len(result["cells"]) == 9
+    assert result["common_origin_cohort"]["origin_count"] == 56
+    assert result["source"]["development_agent_count"] == 11
+    assert result["source"]["holdout_result_blob_reads"] == 0
+    assert result["decision"]["status"] == (
+        "scale_sensitivity_does_not_reopen_candidate"
+    )
+    assert result["decision"]["passing_cells"] == []
+    assert result["decision"]["holdout_open_allowed"] is False
+    assert result["time_semantics"]["executed_mode"] == (
+        "source_time_cutoff_safe_counterfactual"
+    )
+    assert '"values"' not in result_path.read_text()
+
+
 def test_common_scale_origins_keep_histories_and_nest_future_prefixes() -> None:
     repository_ids = ("org/a", "org/b")
     tasks = tuple(
