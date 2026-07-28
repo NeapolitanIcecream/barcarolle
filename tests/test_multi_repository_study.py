@@ -932,6 +932,39 @@ def test_committed_agent_invariant_result_is_self_digested_and_stops() -> None:
     assert results["decision"]["sealed_holdout_open_allowed"] is False
 
 
+def test_committed_adaptive_result_is_self_digested_and_closes_pool_search() -> None:
+    results = json.loads(
+        (
+            REPOSITORY_ROOT
+            / "examples/multi_repository_study/adaptive-difficulty-results.json"
+        ).read_text()
+    )
+    digest = results.pop("adaptive_difficulty_results_digest")
+
+    assert canonical_digest(results) == digest
+    adaptive = results["summaries"]["wide"][
+        "adaptive_prequential_difficulty_match"
+    ]
+    assert adaptive["macro_repository_difference"] == pytest.approx(
+        -0.0023519318123756657
+    )
+    assert adaptive["favorable_repository_count"] == 3
+    assert results["summaries"]["deep"][
+        "adaptive_prequential_difficulty_match"
+    ]["macro_repository_difference"] == pytest.approx(0.009270440012276204)
+    assert results["model_choice_diagnostics"]["overall"] == {
+        "markov": 49,
+        "stationary": 19,
+    }
+    assert results["temporal_null"]["as_good_or_better_rate"] == pytest.approx(
+        0.194
+    )
+    assert results["decision"]["status"] == (
+        "retire_adaptive_candidate_and_close_current_pool_algorithm_search"
+    )
+    assert results["decision"]["sealed_holdout_open_allowed"] is False
+
+
 def test_outcome_match_uses_exact_vector_and_stable_tie_break() -> None:
     history = tuple(
         TaskMetadata(
