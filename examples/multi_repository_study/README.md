@@ -33,6 +33,9 @@ continues to compile and select one repository-local Task Pool.
   endpoint.
 - `agent-invariant-plan.json` and `adaptive-difficulty-plan.json` freeze the
   cutoff-aware difficulty-state and prequential adaptive mechanisms.
+- `scale-sensitivity-plan.json` freezes one common-Origin response surface for
+  budgets 5/10/15 and task-count horizons 3/5/10. It preserves the six-Agent
+  holdout and forbids choosing the best observed cell.
 
 The portfolio is useful but unbalanced: 68 Origins are possible, while Django
 contributes 43. The primary summary therefore averages Origins inside each
@@ -57,11 +60,14 @@ diagnostic only.
   leave-one-Agent audit.
 - `panel_extension.py` evaluates the frozen Joint Markov Selection once on the
   outcome-independent eight-Agent allocation.
-- `agent_invariant.py` enforces cross-repository calendar availability and
+- `agent_invariant.py` enforces cross-repository source-time cutoffs and
   evaluates the five-state difficulty Markov.
 - `adaptive_difficulty.py` makes an Origin-local prequential choice between the
   Markov and stationary difficulty forecasts and records the completed
   cross-repository Origins available at each target cutoff.
+- `scale_sensitivity.py` keeps one 56-Origin cohort fixed while varying
+  Selection budget and task-count horizon, rematerializes leave-one-Agent
+  Selections, and records calendar-span and source-capacity diagnostics.
 
 These are experiment-layer scripts, not a registry, service, Runner extension,
 or general multi-repository abstraction. The only reusable contract is the
@@ -170,3 +176,18 @@ env PYTHONPATH=src:. \
 Every command refuses overwrite, verifies source and result identities, and
 writes a self-digested compact result. Neither difficulty candidate passed all
 gates, so the committed decisions forbid opening the holdout.
+
+The final scale audit reuses only the same eleven opened Agent files:
+
+```bash
+env PYTHONPATH=src:. \
+  outputs/user-journeys/2026-07-17-swe-bench-verified-pylint-pilot/harness-env/bin/python \
+  examples/multi_repository_study/scale_sensitivity.py \
+  --dataset outputs/user-journeys/2026-07-17-swe-bench-verified-pylint-pilot/source/swe-bench-verified-test-91aa3ed.parquet \
+  --result-dir outputs/research/2026-07-28-public-multi-repository/official-results \
+  --output /tmp/barcarolle-scale-sensitivity.json
+```
+
+No budget–horizon cell passed. The interpretation and time-semantics decision
+are in
+[`docs/experiments/2026-07-28-budget-horizon-sensitivity.md`](../../docs/experiments/2026-07-28-budget-horizon-sensitivity.md).

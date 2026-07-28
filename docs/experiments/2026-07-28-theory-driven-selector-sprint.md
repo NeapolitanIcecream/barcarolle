@@ -6,6 +6,11 @@ Status: completed zero-paid-call development sprint. The current Task Pool
 algorithm search is closed. Six outcome-independent Agent results remain
 sealed.
 
+Follow-up: the frozen
+[budget–horizon sensitivity audit](2026-07-28-budget-horizon-sensitivity.md)
+tested budgets 5/10/15 and task-count horizons 3/5/10 on one common cohort. No
+cell passed, so scale tuning did not reopen this mechanism.
+
 ## Outcome
 
 No Selector supports the project claim yet.
@@ -136,7 +141,7 @@ The compact audit is stored in
    not API access or infrastructure.
 3. Close additional temporal-Selector invention on the current opened Task
    Pool. Reopen only for a mechanism derived independently of these results or
-   for more calendar-eligible repository-local Origins.
+   for more source-time-eligible repository-local Origins.
 4. Keep full history as the primary baseline and equal-budget random Selection
    as the sampling-landscape calibration.
 5. Keep the six-Agent panel sealed for a future prespecified candidate. Public

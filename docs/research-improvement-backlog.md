@@ -78,6 +78,14 @@ forward.
 8. Fixed-universe score reconstruction, temporal future-Task prediction,
    held-out-repository transfer, and held-out-Agent transfer are different
    claims and must be reported separately.
+9. Keep `SelectionBudget.max_task_checks` as an absolute positive integer. It
+   matches execution cost. Research reports also show budget-to-history
+   fraction; no percentage-budget policy is justified by current evidence.
+10. Runtime future cohorts use an explicit `TimeRange`. Task-count blocks are a
+    research device for controlling target sample size and must report realized
+    calendar span. Use `source-time-cutoff-safe counterfactual`, `strict
+    historical replay`, or `strict prospective` instead of the ambiguous
+    phrase “calendar-valid”.
 
 ## Current Evidence And Claim Boundary
 
@@ -108,16 +116,32 @@ The theory-driven extension reached the following decisions:
 | Joint response Markov, sealed 8-Agent replication | `+0.00031`, `[-0.01037, +0.01225]`; 4/7 favorable | Deep `+0.00626`; exact original memberships | Retire confirmed; no Agent-panel transfer. |
 | Cutoff-aware Agent-invariant difficulty Markov | `-0.00888`, `[-0.03215, +0.01432]`; 3/7 favorable | Better than 97.78% of random; null `0.066`; deep `+0.00920`; leave-one-Agent 6/11 favorable | Retire; gate failed. |
 | Adaptive prequential difficulty | `-0.00235`, `[-0.02208, +0.01680]`; 3/7 favorable | Better than 90.28% of random; null `0.194`; deep `+0.00927`; leave-one-Agent 6/11 favorable | Retire and close current-pool temporal search. |
+| Difficulty Markov budget–horizon audit | Best of nine cells `-0.00379` at budget 5, horizon 10; 2/5 favorable | 99.97th random percentile, but deep `+0.02550`; leave-one-Agent `+0.01553`, 3/11 favorable; no stable region | Scale tuning does not reopen the candidate. |
 
-The original Joint Markov was also temporally retrospective: 9,467 of 19,985
+The original Joint Markov was temporally retrospective: 9,467 of 19,985
 cross-repository training Task uses (`47.37%`) occurred after the target
 Origin cutoff, affecting 68/68 Origins. The difficulty experiments enforce
-calendar availability. A post-result, outcome-free supply audit found a median
-of 11 completed other-repository training Origins from a median of two
-repositories; four target Origins have none and 35/68 have fewer than three
-training repositories. The self-digested audit is part of
+source-time Task cutoffs. They project public Agent labels to Task arrival and
+therefore remain counterfactual rather than strict historical replay. A
+post-result, outcome-free supply audit found a median of 11 completed
+other-repository training Origins from a median of two repositories; four
+target Origins have none and 35/68 have fewer than three training
+repositories. The self-digested audit is part of
 `adaptive-difficulty-results.json`. This is too thin for a credible learned
 adaptive gate.
+
+The fixed-budget concern was tested on one common 56-Origin cohort at budgets
+5, 10, and 15 and task-count horizons 3, 5, and 10. None of the nine cells
+passed the frozen effect, repository, deep, random, control, and Agent-transfer
+gate. The only negative wide cell was budget 5, horizon 10 at `-0.00379`; its
+deep effect was `+0.02550` and only 3/11 leave-one-Agent directions were
+favorable. The fixed ten-Task budget did not cause the route failure.
+
+Task-count horizons also encode different calendar periods. Median spans are
+25.7, 39.5, and 75.6 days for 3, 5, and 10 Tasks; the ten-Task maximum is 1,336
+days. The runtime already uses an explicit future `TimeRange`. Preserve it and
+report realized future Task count and calendar span. Do not add a separate
+count-or-duration policy hierarchy.
 
 The six-Agent holdout remains unread. It is reserved for a future mechanism
 specified independently of the opened results; it is not permission to keep
@@ -145,6 +169,8 @@ recorded in
 [`experiments/2026-07-28-multi-repository-public-study.md`](experiments/2026-07-28-multi-repository-public-study.md)
 and
 [`experiments/2026-07-28-theory-driven-selector-sprint.md`](experiments/2026-07-28-theory-driven-selector-sprint.md).
+The budget and horizon audit is recorded in
+[`experiments/2026-07-28-budget-horizon-sensitivity.md`](experiments/2026-07-28-budget-horizon-sensitivity.md).
 
 This sprint made zero paid API calls and zero coding-Agent calls. One pinned
 embedding model already present on disk ran on local CPU. The previous USD 300
@@ -321,7 +347,7 @@ Routes remain separate until evidence supports a combination.
 | Route | Thesis | Decisive test | State |
 | --- | --- | --- | --- |
 | MR-A: fixed outcome-free transfer | A simple semantic or structural rule transfers without fitting target outcomes. | Fixed recency, coverage, and ALG-007 all failed the current seven-repository screen. Reopen ALG-007 only with both a new Task source and new Agent panel; otherwise require a new prespecified mechanism. | `closed` on the current source and panel |
-| MR-B: offline multi-repository training | Repository-local Origins from several research repositories teach one policy that still consumes only one repository at deployment. | Joint response dynamics failed Agent transfer; cutoff-aware difficulty dynamics failed wide/deep and Agent-direction gates. Reopen only with more calendar-eligible Origins or a mechanism derived independently of the opened results. | `data-gated`; current-pool search closed |
+| MR-B: offline multi-repository training | Repository-local Origins from several research repositories teach one policy that still consumes only one repository at deployment. | Joint response dynamics failed Agent transfer; cutoff-aware difficulty dynamics failed wide/deep and Agent-direction gates; a frozen 3×3 budget–horizon grid found no stable region. Reopen only with more source-time-eligible Origins or a mechanism derived independently of the opened results. | `data-gated`; current-pool search closed |
 | MR-C: partial pooling | Repository-specific effects share useful structure without erasing heterogeneity. | ALG-006 improves held-out-repository loss and calibration over macro averaging and the safe-switch baseline after enough independent repositories exist. | `data-gated` |
 | MR-D: fixed-universe compression | A small subset reconstructs full historical Agent scores across unseen Agents. | ALG-008 beats equal-budget random and coverage on held-out Agents, reported separately from future-Task MAE. | `data-gated` |
 | MR-E: source and field validity | Generator-conditional gains persist in natural future work. | Frozen later source, then prospective field evidence with an independently defined target frame. | `authority-gated` |
@@ -385,11 +411,13 @@ History match improved full history by only `0.0064`; every trend fold chose
 zero adjustment, and mean cross-repository drift was harmful. Joint response
 Markov failed temporal-null and Agent-transfer audits. Cutoff-aware scalar
 difficulty Markov and prequential adaptation also failed the repository,
-deep-history, and Agent-direction gates. Add no core training seam until one
-concrete family first passes the opened-data nomination gate. Reopen with more
-calendar-eligible Origins or a mechanism derived independently of these
-results, not another threshold or gate search. Do not introduce a meta-pool,
-model registry, trainer service, or generic cross-validation framework.
+deep-history, and Agent-direction gates. A common-cohort audit over budgets 5,
+10, and 15 and task-count horizons 3, 5, and 10 found no passing cell or stable
+region. Add no core training seam until one concrete family first passes the
+opened-data nomination gate. Reopen with more source-time-eligible Origins or
+a mechanism derived independently of these results, not another scale,
+threshold, or gate search. Do not introduce a meta-pool, model registry,
+trainer service, or generic cross-validation framework.
 
 ### Phase 6 — Orthogonal Confirmation
 
@@ -434,9 +462,9 @@ useful infrastructure project hidden behind the data gate.
 | Repository-local Task Pools and Origins | `code-confirmed` | Preserve; never mix repositories in one pool. |
 | Fixed Selector inference on a local pool | `code-confirmed` | Run once per repository; aggregate outside core. |
 | Imported and lazy Result reuse | `code-confirmed` | Preserve exact identity, availability, and conflict rules. |
-| User-configured time/stratum scenarios | `code-confirmed` | Preserve explicit lineage and counterfactual labeling. |
+| User-configured time/stratum scenarios | `code-confirmed`; future windows are explicit `TimeRange` values | Preserve explicit lineage and counterfactual labeling. Report realized future Task count and span instead of adding a horizon-policy hierarchy. |
 | Multi-repository research report | `code-confirmed` in `examples/multi_repository_study` | Preserve the direct repository-first aggregator; it combines effects, not Tasks. |
-| Offline multi-repository fitting | Outer repository folds and strict target-Origin calendar cutoffs are `code-confirmed` in the experiment layer; core `train_selector` remains single-pool. | Add a narrow core seam only after a nominated concrete learned family needs it. |
+| Offline multi-repository fitting | Outer repository folds and target-Origin source-time cutoffs are `code-confirmed` in the experiment layer; projected labels mean the current evidence is counterfactual. Core `train_selector` remains single-pool. | Add a narrow core seam only after a nominated concrete learned family needs it. |
 | Repository/fork independence metadata | `code-confirmed` in the study manifest; no core registry | Repeat the source-specific audit for a new portfolio. |
 | Repository-cluster uncertainty | `code-confirmed` in the experiment layer | Preserve cluster bootstrap and leave-one-cluster-out summaries. |
 | Random calibration | `code-confirmed` at 20,000 deterministic draws | Reuse until a candidate changes the state space; exact enumeration is not needed at current precision. |
@@ -446,7 +474,7 @@ useful infrastructure project hidden behind the data gate.
 | Local semantic evidence | `code-confirmed` as ignored vectors plus committed identities | ALG-007 failed; add no core embedding service. |
 
 Infrastructure prerequisites for another paid selector study are ready. The
-remaining blockers are scientific nomination and calendar-eligible Origin
+remaining blockers are scientific nomination and source-time-eligible Origin
 supply. No multi-repository product execution path or generic training service
 is needed.
 
@@ -459,12 +487,13 @@ is needed.
 | MR-003 | P1 | `closed` | Fixed public plan, full-history contrast, random calibration, exclusions, and results committed. |
 | MR-004 | P1 | `data-gated` | After nomination, use route-specific blinded pilot variance and cost to fix the next study; do not pay before then. |
 | MR-005 / ALG-007 | P1 | `closed` | Retired on this source family and panel. Reopen only with both a new Task source and new Agent panel. |
-| MR-006 / ALG-006 | P2 | `data-gated` | Current-pool temporal search is closed. Reopen partial pooling only with more calendar-eligible repositories or an independently derived mechanism. |
+| MR-006 / ALG-006 | P2 | `data-gated` | Current-pool temporal search is closed. Reopen partial pooling only with more source-time-eligible repositories or an independently derived mechanism. |
 | MR-007 / RI-188 | P1 | `data-gated` | The 11-development/6-holdout Agent split is frozen. Preserve the six unread blobs until every gate passes. |
 | MR-008 | P1 | `data-gated` | A nominated route must exist before later-source or strict-prospective authority is requested. |
 | MR-009 / ALG-009 | P1 | `closed` | Joint response Markov failed temporal-null, leave-one-Agent, and sealed eight-Agent replication. |
 | MR-010 / ALG-010 | P1 | `closed` | Cutoff-aware difficulty Markov reached wide `-0.00888` but failed effect, repository, deep, and Agent-direction gates. |
 | MR-011 / ALG-011 | P1 | `closed` | Prequential adaptation reached wide `-0.00235` and null `0.194`; stop current-pool temporal candidate invention. |
+| MR-012 | P1 | `closed` | The frozen budget `5/10/15` by horizon `3/5/10` audit found no passing cell or stable region. Keep absolute budget and future `TimeRange` configurable; do not tune more scales on this opened panel. |
 | RI-129 / RI-160 | P2 | `trigger-gated` | Add a single-writer exact certification checkpoint before the next comparable pool; replay retained entries before reuse. |
 | RI-163 | P2 | `trigger-gated` | Before another Pylint campaign, replace whole-file behavior identity with an explicit version payload and direct-helper digests. |
 | RI-191 | P2 | `closed` | 20,000 draws give wide mean Monte Carlo SE `0.000112`; reopen only if the candidate state space changes materially. |

@@ -114,6 +114,13 @@ dependency-cluster overlap; it does not silently drop either side. Dependency
 clusters are protocol metadata, not Selector features. A separately named
 `sampling_stratum` may be exposed as `task_stratum`.
 
+The caller supplies the future `TimeRange`; core does not impose a task-count
+horizon. Offline studies may use the next `H` Tasks to control target sample
+size, but that is an experiment protocol and must report the realized calendar
+span. Imported historical availability may be used in
+`counterfactual_replay` with its lineage. `strict_prospective` is required only
+for the stronger real-time evidence claim.
+
 Result visibility follows the same mode. Strict-prospective inputs reject a
 Result observed after the Origin cutoff. Counterfactual inputs may use a
 persisted Result observed later only when its exact Task/Check ref is mature
