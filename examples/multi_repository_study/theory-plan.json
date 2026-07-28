@@ -1,0 +1,164 @@
+{
+  "schema_version": "barcarolle_theory_driven_selector_plan_v1",
+  "study_id": "theory-driven-selector-development-2026-07-28",
+  "epistemic_status": "opened_outcome_mechanism_development_only",
+  "frozen_at": "2026-07-28T03:07:55Z",
+  "theory_plan_digest": "2e11bbc4ed1802ff67fd98721999202f59b850a2d723da93df03be9f6d4125a8",
+  "authority": {
+    "paid_api_calls": 0,
+    "coding_agent_calls": 0,
+    "embedding_api_calls": 0,
+    "allowed_inputs": "Pinned local SWE-bench Verified parquet, the three already-opened official result blobs, and the existing pinned local embedding artifact.",
+    "implementation_scope": "One direct experiment-layer replay and focused tests; no core records, training service, registry, or Runner changes."
+  },
+  "source_results": {
+    "portfolio_digest": "da6372edeae90e1d4a857d61e885ec89632a244c295177752d4cde8e11fb68b1",
+    "public_panel_plan_digest": "0658aa938b34f0f80f6933b8a03f1517b323661eab55031925bd017163759c03",
+    "public_panel_results_digest": "3b1c324779572f8b3143bbe929d6bc398aaabb441c5132554e0c218ded010ba5",
+    "development_results_digest": "7ddfc016c46cfc8c3b8371883226d7072f1807b295017c0cffdc6059dfbc9b9a",
+    "semantic_plan_digest": "a8d7d2024945813cfdc7ae86a8d6baf26d35ae3a55c17dfb2c9231be8a9f0079",
+    "semantic_results_digest": "dc9917cc2a109ca93a412222f796ddb632b92dd2af09dc77123e5b68abd453e0",
+    "outcome_status": "All target outcomes were open before this plan. Results can screen mechanisms and nominate at most one independent test; they cannot confirm an algorithm."
+  },
+  "research_contract": {
+    "target": "Find a simple, outcome-safe mechanism that predicts a target repository's next five-Task Agent pass-rate vector well enough that a ten-Task local historical subset improves future-pass-rate MAE over all eligible local history.",
+    "primary_baseline": "All eligible historical Tasks from the target repository.",
+    "primary_estimand": "Repository-equal mean candidate-minus-full-history MAE over the seven-repository wide portfolio.",
+    "primary_loss": "Mean absolute selected-history versus next-five-Task pass-rate error over the frozen three-Agent panel.",
+    "deployment_boundary": "At a target Origin, every candidate selects only that repository's eligible historical Tasks. Cross-repository fitting may use complete non-target research repositories but never target future outcomes.",
+    "allowed_terminal_states": [
+      "freeze_one_theory_candidate_for_independent_validation",
+      "no_theory_candidate_warrants_independent_or_paid_validation",
+      "source_embedding_or_protocol_identity_blocker"
+    ],
+    "non_solutions": [
+      "changing a window, embedding model, shrinkage coefficient, or mixture weight after observing candidate results",
+      "relabeling a failed existing rule without a new predictive mechanism",
+      "using target future Task text or outcomes during forecasting or Selection",
+      "mixing Tasks from several repositories into one candidate pool",
+      "optimizing semantic distance and reporting it as Agent-outcome validity",
+      "promoting a Runner default or widening core train_selector from opened development outcomes"
+    ]
+  },
+  "rolling_origin": {
+    "minimum_initial_history_tasks": 15,
+    "future_block_tasks": 5,
+    "selection_budget_tasks": 10,
+    "ordering": "created_at_then_instance_id",
+    "complete_trailing_block_rule": "Partition backward from the latest history Task into non-overlapping five-Task blocks; ignore only the leading 0-4 Task remainder for block-state estimation."
+  },
+  "outer_evaluation": {
+    "repository_ids": [
+      "astropy/astropy",
+      "django/django",
+      "matplotlib/matplotlib",
+      "pydata/xarray",
+      "scikit-learn/scikit-learn",
+      "sphinx-doc/sphinx",
+      "sympy/sympy"
+    ],
+    "deep_repository_ids": [
+      "django/django",
+      "sphinx-doc/sphinx",
+      "sympy/sympy"
+    ],
+    "fold": "Hold out one complete target repository. Any cross-repository fit uses the other six repositories with equal total repository weight.",
+    "repository_weighting": "Origins equal within repository; repositories equal in the macro result."
+  },
+  "candidates": [
+    {
+      "selector_id": "block_median_match",
+      "mechanism_family": "robust_local_regime",
+      "thesis": "The coordinate-wise median of complete historical block pass rates estimates a typical current regime while resisting one stale or anomalous block.",
+      "forecast": "For each Agent, take the ordinary median of all complete trailing five-Task block pass rates.",
+      "selection": "Use the deterministic outcome-vector dynamic program to choose ten historical Tasks matching the forecast.",
+      "fitting": "None.",
+      "decisive_ablation": "history_match targets the full-history mean instead of the robust block median."
+    },
+    {
+      "selector_id": "joint_markov_match",
+      "mechanism_family": "joint_response_dynamics",
+      "thesis": "The next cohort depends on transitions among joint Agent-response states, which scalar mean drift discards.",
+      "forecast": "Encode every Task as one binary joint-Agent state. Average symmetric-Dirichlet-smoothed transition rows across the six training repositories, use that matrix as an eight-pseudotransition prior for target-local historical transitions, then average the one- through five-step predictive Agent rates from the latest local state.",
+      "selection": "Use the deterministic outcome-vector dynamic program to choose ten local historical Tasks matching the forecast.",
+      "fitting": "Outer-training repositories only; target-local transition counts stop at the Origin.",
+      "decisive_ablation": "joint_markov_global_match omits target-local transition counts while keeping the same training repositories and forecast."
+    },
+    {
+      "selector_id": "repository_analog_match",
+      "mechanism_family": "conditional_cross_repository_transfer",
+      "thesis": "Future drift transfers only between repositories in similar response regimes, so unconditional repository-mean drift averages away the signal.",
+      "forecast": "Describe each Origin by full-history, penultimate-block, and latest-block Agent pass rates. Choose the nearest Origin separately inside each training repository, take the coordinate-wise median of its future-minus-latest residuals, and add that residual to the target latest-block rates with [0,1] clipping.",
+      "selection": "Use the deterministic outcome-vector dynamic program to choose ten local historical Tasks matching the forecast.",
+      "fitting": "Outer-training repositories only; equal one-analog contribution per training repository; mean absolute state distance and origin_id tie break.",
+      "decisive_ablation": "cross_repository_drift_match is the already-recorded unconditional residual-transfer control."
+    },
+    {
+      "selector_id": "semantic_trend_match",
+      "mechanism_family": "outcome_free_covariate_shift",
+      "thesis": "A repository's problem-text distribution moves over time, and extrapolating that movement identifies historical Tasks resembling the next cohort better than targeting a static recent centroid.",
+      "forecast": "Compute one embedding centroid per complete trailing five-Task block. Fit an unregularized per-dimension line over all block indices and extrapolate the next block centroid.",
+      "selection": "Greedily minimize squared distance between the selected ten-Task embedding mean and the forecast centroid, then apply at most twenty deterministic improving one-for-one swaps.",
+      "fitting": "Target-local historical embeddings only; no Agent outcome enters Selection.",
+      "decisive_ablation": "centroid_recent_15 is the already-recorded static semantic-target control."
+    }
+  ],
+  "diagnostics": {
+    "fixed_comparators": [
+      "full_history",
+      "history_match",
+      "cross_repository_drift_match",
+      "centroid_recent_15"
+    ],
+    "markov_ablation": "joint_markov_global_match",
+    "forecast_decomposition": "For outcome-rate candidates, report forecast-versus-future MAE and selected-versus-forecast MAE separately from the primary selected-versus-future MAE.",
+    "semantic_alignment": "Report selected-versus-future embedding-centroid distance as a mechanism diagnostic only.",
+    "random_calibration": {
+      "draws": 20000,
+      "seed": 20260728
+    },
+    "aggregation": {
+      "bootstrap_resamples": 10000,
+      "bootstrap_seed": 20260728
+    }
+  },
+  "nomination_rule": {
+    "effect": "At most one primary candidate, ordered by wide macro loss then selector_id, may be frozen for an independent test. Production promotion is forbidden.",
+    "requirements": [
+      "wide macro-repository difference is at most -0.01",
+      "at least five of seven repositories have negative difference",
+      "every wide leave-one-repository-out summary is negative",
+      "deep macro-repository difference is negative",
+      "candidate is better than at least 75 percent of equal-budget random draws",
+      "an Agent-outcome forecast candidate improves the fixed history_match compression control"
+    ]
+  },
+  "failure_model": [
+    "a target future outcome or Task embedding enters forecasting before Selection freezes",
+    "Django's 43 Origins dominate a pooled objective",
+    "an outer target repository enters analog or Markov fitting",
+    "the response forecast improves but the ten-Task subset cannot represent it",
+    "subset matching improves on the reference panel but has inconsistent per-Agent direction",
+    "semantic extrapolation lowers embedding distance without lowering Agent-outcome MAE",
+    "a favorable macro result reverses when one repository cluster is removed",
+    "candidate choice is made from post-result parameter variants"
+  ],
+  "background_sources": [
+    {
+      "role": "standard analog-forecasting mechanism, not a Barcarolle result",
+      "url": "https://arxiv.org/abs/2007.14216"
+    },
+    {
+      "role": "standard Dirichlet treatment of categorical transition rows, not a Barcarolle result",
+      "url": "https://projecteuclid.org/journals/bayesian-analysis/volume-5/issue-2/Model-based-clustering-of-categorical-time-series/10.1214/10-BA606.full"
+    },
+    {
+      "role": "robust block aggregation background, not a Barcarolle result",
+      "url": "https://arxiv.org/abs/1711.10306"
+    },
+    {
+      "role": "greedy convex projection and kernel-herding background, not a Barcarolle result",
+      "url": "https://www.jmlr.org/papers/v18/16-147.html"
+    }
+  ]
+}
