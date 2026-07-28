@@ -3,6 +3,7 @@ from __future__ import annotations
 from datetime import UTC, datetime, timedelta
 import json
 from pathlib import Path
+import random
 import sys
 from typing import Any
 
@@ -50,6 +51,11 @@ from examples.multi_repository_study.theory import (  # noqa: E402
     forecast_semantic_trend,
     load_theory_plan,
     select_embedding_mean_match,
+)
+from examples.multi_repository_study.theory_audit import (  # noqa: E402
+    audit_decision,
+    load_audit_plan,
+    permute_joint_outcomes,
 )
 
 
@@ -183,6 +189,18 @@ def test_theory_plan_is_self_digested_zero_cost_and_mechanistically_diverse() ->
     )
 
 
+def test_theory_audit_plan_is_self_digested_and_cannot_change_candidate() -> None:
+    plan = load_audit_plan()
+    digest = plan["audit_plan_digest"]
+
+    assert canonical_digest(
+        {key: value for key, value in plan.items() if key != "audit_plan_digest"}
+    ) == digest
+    assert plan["authority"]["paid_api_calls"] == 0
+    assert plan["audit_contract"]["candidate_changes_allowed"] is False
+    assert plan["temporal_null"]["permutations"] == 500
+
+
 def test_committed_public_panel_result_is_self_digested_and_negative() -> None:
     results = json.loads(
         (
@@ -267,6 +285,32 @@ def test_committed_semantic_result_is_self_digested_and_retires_alg_007() -> Non
             / "examples/multi_repository_study/semantic-embedding-manifest.json"
         ).read_text()
     )
+
+
+def test_committed_theory_result_is_self_digested_and_nominates_markov() -> None:
+    results = json.loads(
+        (
+            REPOSITORY_ROOT
+            / "examples/multi_repository_study/theory-results.json"
+        ).read_text()
+    )
+    digest = results.pop("theory_results_digest")
+
+    assert canonical_digest(results) == digest
+    assert results["nomination"]["status"] == (
+        "freeze_one_theory_candidate_for_independent_validation"
+    )
+    assert results["nomination"]["nominated_selector_id"] == (
+        "joint_markov_match"
+    )
+    wide = results["summaries"]["wide"]["joint_markov_match"]
+    assert wide["macro_repository_difference"] == pytest.approx(
+        -0.019107886181284034
+    )
+    assert wide["favorable_repository_count"] == 5
+    assert results["summaries"]["deep"]["joint_markov_match"][
+        "macro_repository_difference"
+    ] == pytest.approx(-0.008957015236726942)
 
 
 def test_outcome_match_uses_exact_vector_and_stable_tie_break() -> None:
@@ -499,6 +543,71 @@ def test_semantic_trend_extrapolates_blocks_before_matching_history() -> None:
 
     assert target == pytest.approx((3.0, 0.0))
     assert selected == ("task-4", "task-5")
+
+
+def test_joint_permutation_preserves_repository_joint_outcome_multisets() -> None:
+    tasks = {
+        "org/a": tuple(
+            TaskMetadata(
+                f"task-{index}",
+                "org/a",
+                f"2020-01-{index + 1:02d}T00:00:00Z",
+                "x",
+                "x",
+            )
+            for index in range(4)
+        )
+    }
+    outcomes = {
+        "agent-a": {
+            "task-0": 0,
+            "task-1": 0,
+            "task-2": 1,
+            "task-3": 1,
+        },
+        "agent-b": {
+            "task-0": 0,
+            "task-1": 1,
+            "task-2": 0,
+            "task-3": 1,
+        },
+    }
+
+    permuted = permute_joint_outcomes(
+        tasks,
+        outcomes,
+        random.Random(7),
+    )
+
+    original_vectors = sorted(
+        (outcomes["agent-a"][f"task-{index}"], outcomes["agent-b"][f"task-{index}"])
+        for index in range(4)
+    )
+    permuted_vectors = sorted(
+        (
+            permuted["agent-a"][f"task-{index}"],
+            permuted["agent-b"][f"task-{index}"],
+        )
+        for index in range(4)
+    )
+    assert permuted_vectors == original_vectors
+
+
+@pytest.mark.parametrize(
+    ("null_rate", "held_out_macro", "favorable_count", "expected"),
+    [
+        (0.05, -0.01, 2, "retain_candidate_for_independent_agent_validation"),
+        (0.05, 0.01, 2, "retain_only_as_panel_conditional_candidate"),
+        (0.10, -0.01, 3, "retire_candidate_after_adversarial_audit"),
+    ],
+)
+def test_theory_audit_decision_obeys_frozen_priority_rule(
+    null_rate: float,
+    held_out_macro: float,
+    favorable_count: int,
+    expected: str,
+) -> None:
+    assert audit_decision(null_rate, held_out_macro, favorable_count) == expected
 
 
 def test_local_embedding_artifact_binds_plan_input_and_vectors() -> None:
