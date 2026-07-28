@@ -12,7 +12,8 @@ The three explicit phases are:
    image.
 2. `prepare_package.py` writes the strict candidate/material package, observed
    frame, source protocol, hidden check material, and reference-patch
-   path-overlap dependency evidence.
+   path-overlap dependency evidence. Its `oracle_source` label is derived from
+   the frozen source family rather than hard-coded to Verified.
 3. `certify_pool.py` verifies local repository and image bindings, requires a
    fresh base-fail/reference-pass pair for every candidate, and publishes the
    immutable Task Pool.

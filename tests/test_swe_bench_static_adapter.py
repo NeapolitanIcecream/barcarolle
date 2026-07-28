@@ -91,7 +91,7 @@ def test_prepare_package_emits_replayable_full_frame_and_dependency_clusters(
             "parquet_sha256": dataset_digest,
         },
         "repository_id": "owner/repo",
-        "source_family": "swe_bench_verified",
+        "source_family": "fixture",
         "harness": {
             "repository": "owner/harness",
             "revision": "b" * 40,
@@ -150,6 +150,9 @@ def test_prepare_package_emits_replayable_full_frame_and_dependency_clusters(
     assert summary["candidate_count"] == 2
     assert summary["dependency_cluster_count"] == 1
     assert len(package.batch.candidates) == 2
+    assert {
+        candidate.oracle_source for candidate in package.batch.candidates
+    } == {"fixture_hidden_tests"}
     assert (
         len({candidate.dependency_cluster_id for candidate in package.batch.candidates})
         == 1

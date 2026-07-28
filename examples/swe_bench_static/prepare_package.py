@@ -183,7 +183,7 @@ def prepare_package(
                 check_manifest_digest=check_manifest_digest,
                 hidden_check_bundle_digest=hidden_digest,
                 resource_limits={"timeout_seconds": check_timeout_seconds},
-                oracle_source="swe_bench_verified_hidden_tests",
+                oracle_source=f"{source_family}_hidden_tests",
                 check_type="swe_bench",
             )
         )
