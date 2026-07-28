@@ -313,6 +313,30 @@ def test_committed_theory_result_is_self_digested_and_nominates_markov() -> None
     ] == pytest.approx(-0.008957015236726942)
 
 
+def test_committed_theory_audit_result_is_self_digested_and_retires_markov() -> None:
+    results = json.loads(
+        (
+            REPOSITORY_ROOT
+            / "examples/multi_repository_study/theory-audit-results.json"
+        ).read_text()
+    )
+    digest = results.pop("audit_results_digest")
+
+    assert canonical_digest(results) == digest
+    assert results["decision"]["status"] == (
+        "retire_candidate_after_adversarial_audit"
+    )
+    assert results["temporal_null"]["as_good_or_better_rate"] == pytest.approx(
+        0.1
+    )
+    assert results["leave_one_agent_out"][
+        "wide_macro_over_held_out_agents"
+    ] == pytest.approx(-0.0004312527372087183)
+    assert results["leave_one_agent_out"][
+        "wide_favorable_held_out_agent_count"
+    ] == 1
+
+
 def test_outcome_match_uses_exact_vector_and_stable_tie_break() -> None:
     history = tuple(
         TaskMetadata(
