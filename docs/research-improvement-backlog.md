@@ -119,6 +119,8 @@ The theory-driven extension reached the following decisions:
 | Difficulty Markov budget–horizon audit | Best of nine cells `-0.00379` at budget 5, horizon 10; 2/5 favorable | 99.97th random percentile, but deep `+0.02550`; leave-one-Agent `+0.01553`, 3/11 favorable; no stable region | Scale tuning does not reopen the candidate. |
 | ALG-012 Multi-SWE minimax semantic herding | H5 `-0.00027`, `[-0.00415, +0.00334]`; 8/13 favorable | 81.59th random percentile, but deep `+0.00080`, H10 `+0.00241`, harness 1/3 and language 3/7 favorable; semantic MMD² worsens in 13/13 repositories | Retire; gate failed. |
 | Multi-SWE exact budget-ten hindsight support | H5 `-0.03264`; 13/13 favorable | 48.46% loss reduction; deep `-0.03423`; H10 `-0.02562`, 11/11 favorable; 328/328 MILPs certified optimal | Budget-ten capacity supported; pre-Origin identification remains the bottleneck. |
+| ALG-013 Multi-SWE Response-Contrast Projection | H5 future AUC `0.5530`, interval `[0.4579, 0.6572]`; 10/13 favorable | Complete-history AUC `0.5104`, interval `[0.4689, 0.5500]`; 8/13 favorable; corrected response-vector null `0.55` | Reject fixed-embedding response transfer; forecast and Selection not reached. |
+| ALG-014 Multi-SWE Response-Composition Shrinkage | H5 `+0.000992`, 2/13 favorable; H10 `+0.001855`, 5/11 favorable | Leave-one-configuration static AUC `0.9121`, 13/13 favorable; recent expert active at rate `0.3296` | Static cross-Agent response structure supported; pre-Origin next-cohort increment rejected. |
 
 The original Joint Markov was temporally retrospective: 9,467 of 19,985
 cross-repository training Task uses (`47.37%`) occurred after the target
@@ -146,6 +148,17 @@ favorable. All 328 Origin solves were certified optimal and every deep
 repository was favorable. This rules out budget-ten response-representation
 capacity as the current explanation on this opened estimand. It does not show
 that the optimal subsets can be identified before future outcomes.
+
+ALG-013 and ALG-014 then separated response representation from temporal
+identification. Fixed embeddings did not acquire stable cross-repository
+response contrast: future AUC was `0.5530` with a repository bootstrap lower
+bound below chance, while a complete-history diagnostic was `0.5104` with
+corrected negative-control rate `0.55`. In contrast, the leave-one-
+configuration response-composition coordinate had static AUC `0.9121`, but its
+prequential full/recent forecast plus one-Task cross-repository prior worsened
+H5 loss by `+0.000992` and H10 by `+0.001855`. Thus the current bottleneck is
+forecasting the target repository's next Task mix from observable pre-Origin
+evidence, not budget-ten capacity or absence of same-Task response structure.
 
 Task-count horizons also encode different calendar periods. Median spans are
 25.7, 39.5, and 75.6 days for 3, 5, and 10 Tasks; the ten-Task maximum is 1,336
@@ -208,6 +221,9 @@ and random-landscape interpretation are in
 [`experiments/2026-07-28-multi-swe-semantic-selector.md`](experiments/2026-07-28-multi-swe-semantic-selector.md).
 The separately frozen exact capacity diagnostic and its leakage boundary are in
 [`experiments/2026-07-28-multi-swe-budget-ten-capacity.md`](experiments/2026-07-28-multi-swe-budget-ten-capacity.md).
+The frozen ALG-013/ALG-014 plans, corrected response-vector negative control,
+independent audit limits, and current-source stop boundary are in
+[`experiments/2026-07-28-pre-origin-signal-audit.md`](experiments/2026-07-28-pre-origin-signal-audit.md).
 
 All studies recorded here made zero paid benchmark calls. The prior local
 embedding run did not make an API call. The previous USD 300 authority remains
@@ -382,9 +398,9 @@ Routes remain separate until evidence supports a combination.
 
 | Route | Thesis | Decisive test | State |
 | --- | --- | --- | --- |
-| MR-A: fixed outcome-free transfer | A simple semantic or structural rule transfers without fitting target outcomes. | Fixed recency, coverage, and ALG-007 failed on Verified. On Multi-SWE, ALG-012 reached H5 `-0.00027` and 81.59th random percentile but failed task-space, H10, deep, harness, and language gates; unchanged ALG-007 reached `-0.00225` and also failed. | `closed` for the tested semantic/recency mechanisms; reopen only for an independently motivated observable |
-| MR-B: offline multi-repository training | Repository-local Origins from several research repositories teach one policy that still consumes only one repository at deployment. | Exact hindsight shows budget-ten capacity, while ALG-012 shows semantic matching cannot identify it. A new mechanism must predict a response-relevant quantity from pre-Origin evidence and hold out the complete target repository. | `ready` for theory design; no candidate frozen |
-| MR-C: partial pooling | Repository-specific effects share useful structure without erasing heterogeneity. | A newly predeclared response-relevant mechanism improves held-out-repository loss and calibration over macro averaging and the safe-switch baseline. Repository identity alone is insufficient. | `ready` but not automatically next; keep implementation direct |
+| MR-A: fixed outcome-free transfer | A simple semantic or structural rule transfers without fitting target outcomes. | Fixed recency, coverage, and ALG-007 failed on Verified. On Multi-SWE, ALG-012 reached H5 `-0.00027` and 81.59th random percentile but failed task-space, H10, deep, harness, and language gates; unchanged ALG-007 reached `-0.00225` and also failed. | `closed` on current opened panels; an independently motivated observable may advance theory, not authorize replay |
+| MR-B: offline multi-repository training | Repository-local Origins from several research repositories teach one policy that still consumes only one repository at deployment. | ALG-013 rejected fixed-embedding response transfer; ALG-014 found strong static response structure but no target next-cohort increment. | `closed` for replay on current opened outcomes; an independent observable may advance theory only, while empirical nomination needs a new evidence boundary |
+| MR-C: partial pooling | Repository-specific effects share useful structure without erasing heterogeneity. | ALG-014's equal-repository, one-Task prior worsened the frozen candidate; the local no-prior ablation was only `1.28%` better at H5 and reversed at H10. | `closed` for this bounded response-composition mechanism; do not tune prior mass |
 | MR-D: fixed-universe compression | A small subset reconstructs full historical Agent scores across unseen Agents. | ALG-008 beats equal-budget random and coverage on held-out Agents, reported separately from future-Task MAE. | `ready` on the 36-vector Multi-SWE panel when prioritized |
 | MR-E: source and field validity | Generator-conditional gains persist in natural future work. | Frozen later source, then prospective field evidence with an independently defined target frame. | `authority-gated` |
 | MR-F: adaptive difficulty regime | Historical predictive score can choose between stationary and dynamic task-difficulty forecasts without future leakage. | Prequential adaptation produced wide `-0.00235`, deep `+0.00927`, and temporal-null rate `0.194`. | `closed` on the current pool |
@@ -427,17 +443,20 @@ Core Result, Task Pool, Selection, and Runner contracts did not change.
 
 ### Phase 3 — Multi-Repository Feasibility Pilot
 
-State: `closed` for ALG-012; ready only for an independently motivated new
-mechanism.
+State: `closed` for nomination-oriented search on current opened outcomes.
 
 The public panel establishes portfolio geometry and route-dependent
 between-repository variation. Naive normal approximations for a `0.02` effect
 range from roughly 3 to 28 repositories across failed routes, so they are not a
-confirmatory target. After a new route passes the development gate, its blinded
-pilot must measure repository dependence, missingness, cost, and wall time
-before the repository count is frozen. The old 44-Origin calculation is not
-carried forward. Eleven development Agents now have complete 500-Task public
-vectors, and six holdout Agents remain sealed. Multi-SWE now supplies 36
+confirmatory target. ALG-013 and ALG-014 completed the planned
+representation/forecast factorization without nominating a Selector. An
+independently specified observable may advance theory design but cannot reopen
+these panels. Empirical nomination requires a source with native availability
+time, an independent complete panel/source family, or a prospective campaign.
+That blinded pilot must measure repository dependence, missingness, cost, and
+wall time before the repository count is frozen. The old 44-Origin calculation
+is not carried forward. Eleven development Agents now have complete 500-Task
+public vectors, and six holdout Agents remain sealed. Multi-SWE supplies 36
 complete public vectors on a separate 1,632-Task denominator. Its outcomes are
 open; use it for development and reserve later-source or prospective evidence
 for confirmation. ALG-012 used this source and failed its frozen task-space and
@@ -542,6 +561,7 @@ useful infrastructure project hidden behind the data gate.
 | Official Result schema normalization | Current three-field schema plus one exact legacy schema amendment for three exact blobs | Do not add permissive field handling; bind any future schema exception to exact identities and unchanged endpoints. |
 | Agent-transfer audit | `code-confirmed` leave-one-Agent rematerialization; an evaluated Agent is never a Selector input | Preserve for response-derived Selectors. |
 | Local semantic evidence | `code-confirmed` as 1,632 ignored vectors, committed identities, fixed memberships, and deterministic MMD²/outcome replays | ALG-007 and ALG-012 failed; add no core embedding service or representation search. |
+| Pre-Origin response signal audit | `code-confirmed` complete-repository RCP holdout, leave-one-configuration response composition, prequential expert, equal-repository prior, cascade gates, byte reproductions, and compact evidence | Current opened-source search is closed. Preserve only for reproduction or a genuinely independent reopening trigger. |
 | External benchmark inventory | `code-confirmed` for Verified, Full, PolyBench, and Rebench with exact source bytes and Origin protocols | Preserve source-specific identities; do not introduce a registry. |
 | Multi-SWE public Result normalization | `code-confirmed`: fixed 39-file contract, verified 1.60 GB source projection, 36-vector allowlist, 1,632 projected times, 2,913 sparse positive cells, and offline evidence validation | Use only in outcome-open research; this is still not a runnable Task Pool and needs no generic source layer. |
 
@@ -560,7 +580,7 @@ training service is needed.
 | MR-003 | P1 | `closed` | Fixed public plan, full-history contrast, random calibration, exclusions, and results committed. |
 | MR-004 | P1 | `trigger-gated` | Multi-SWE supplies the data trigger, but paid sizing remains blocked until a mechanism passes its frozen outcome-open gate. |
 | MR-005 / ALG-007 | P1 | `closed` | Unchanged Multi-SWE transfer reached H5 `-0.00225` with 7/13 favorable repositories and H10 `+0.00216`; do not tune it. |
-| MR-006 | P2 | `ready` | ALG-006 remains retired. Consider one direct partial-pooling mechanism only if it predicts a response-relevant quantity under complete-repository holdout; repository identity alone is insufficient. |
+| MR-006 / ALG-014 | P2 | `closed` | The direct response-composition partial-pooling mechanism found strong static structure but worsened H5/H10 future loss. Do not tune its prior mass or expert threshold on opened outcomes. |
 | MR-007 / RI-188 | P1 | `data-gated` | The 11-development/6-holdout Agent split is frozen. Preserve the six unread blobs until every gate passes. |
 | MR-008 | P1 | `data-gated` | A nominated route must exist before later-source or strict-prospective authority is requested. |
 | MR-009 / ALG-009 | P1 | `closed` | Joint response Markov failed temporal-null, leave-one-Agent, and sealed eight-Agent replication. |
@@ -571,7 +591,7 @@ training service is needed.
 | MR-014 | P1 | `closed` | Direct Multi-SWE response/time research import committed with the 39-file contract, projected-time sidecar, 36-vector allowlist, strict denominator checks, and no generic source registry. |
 | MR-015 / ALG-012 | P1 | `closed` | Outcome-free minimax semantic herding beat most random subsets but failed full-history, H10, deep, harness, language, and ALG-007 control gates; no nomination. |
 | MR-016 | P1 | `closed` | Exact hindsight reached H5 `-0.03264` and H10 `-0.02562`, every repository favorable, and 328/328 certified optimal solves. Capacity is supported; no Selector was nominated. |
-| MR-017 | P1 | `research-gated` | Specify one pre-Origin, response-relevant, complete-repository-held-out mechanism independently of hindsight memberships. Freeze it before target-outcome replay or stop algorithm search. |
+| MR-017 / ALG-013 / ALG-014 | P1 | `closed` | Frozen RCP and PRCS separated representation from forecast: RCP transfer failed; PRCS static response relevance passed but target future increment failed. Stop current-source nomination search. |
 | RI-125 | P2 | `trigger-gated` | The exact 39 source objects and issue-text projection are full-byte verified. A runnable prepared Task Pool still needs solver/verifier material and source-specific certification when a concrete campaign requires it. |
 | RI-129 / RI-160 | P2 | `trigger-gated` | Add a single-writer exact certification checkpoint before the next comparable pool; replay retained entries before reuse. |
 | RI-163 | P2 | `trigger-gated` | Before another Pylint campaign, replace whole-file behavior identity with an explicit version payload and direct-helper digests. |

@@ -3,103 +3,95 @@
 Last updated: 2026-07-28.
 
 Current ledger: `docs/research-improvement-backlog.md`. Latest report:
-`docs/experiments/2026-07-28-multi-swe-budget-ten-capacity.md`.
+`docs/experiments/2026-07-28-pre-origin-signal-audit.md`.
 
 ## Preserve
 
 - Runtime is one user repository, one local Task Pool, and one local Selection.
   Multiple repositories are offline research/training evidence units only.
 - Generators end at a prepared package; user pools open read-only. Task Pools
-  and Agent Results remain independent and reuse only under exact identity.
+  and Agent Results remain independent and reusable only under exact identity.
 - A rolling-origin fit may consume only evidence available by the target
   Origin cutoff. Label projected or retrospective evidence explicitly.
-- Full history is the primary baseline. Equal-budget random Selection measures
-  location in the sampling landscape; it does not replace the baseline.
-- Aggregate repository first. Keep wide/deep, horizon, temporal-null, Agent,
-  model, provider, harness, and language audits appropriate to the candidate.
-- Product contracts use an absolute Selection budget and explicit future
-  `TimeRange`; Task-count horizons are research controls.
+- Full history is the primary baseline. Equal-budget random Selection locates a
+  candidate in the sampling landscape; it does not replace the baseline.
+- Aggregate repository first. Keep candidate-appropriate wide/deep, horizon,
+  temporal-null, Agent, harness, provider, model, and language audits.
+- Runtime uses an absolute Selection budget and explicit future `TimeRange`.
+  Task-count horizons are research controls.
 - Add no registry, embedding service, trainer service, scheduler, generic
   source adapter, or multi-repository Runner without a nominated caller.
 
-## Evidence
+## Current Evidence
 
-Negative candidate-minus-full-history values favor Selection. On SWE-bench
-Verified, 11 development Agents are open and six holdout Agents remain sealed.
+Negative candidate-minus-full-history values favor Selection. SWE-bench
+Verified has 11 opened development Agents and six unread holdout Agents.
+Multi-SWE has 1,632 Tasks, 36 complete public outcome vectors, 221 H5
+Origins/13 repositories, and 107 H10 Origins/11 repositories. Its Task times
+are projected PR times, so results are source-time-safe counterfactual
+development evidence.
 
-| Verified route | Wide difference | Decision |
-| --- | ---: | --- |
-| Joint response Markov | `-0.01911` | Retired: null `0.100`, leave-one-Agent 1/3 favorable, sealed replication `+0.00031`. |
-| Difficulty Markov | `-0.00888` | Retired: deep `+0.00920`, leave-one-Agent 6/11 favorable. |
-| Adaptive difficulty | `-0.00235` | Retired: null `0.194`, deep `+0.00927`. |
-| Budget–horizon audit | best `-0.00379` | No passing budget 5/10/15 × horizon 3/5/10 cell or stable region. |
-| Hindsight support | `-0.15890` | Budgeted subsets can represent future outcomes; safe identification is unsolved. |
+| Route | Result | Decision |
+| --- | --- | --- |
+| Verified adaptive routes | best nominated-scale wide `-0.01911`; all fail null, deep, Agent-transfer, or replication gates | Retired on this panel. |
+| Multi-SWE ALG-012 semantic herding | H5 `-0.00027`; H10 `+0.00241` | Retired; task-space, deep, horizon, harness, and language gates fail. |
+| Multi-SWE exact budget-ten hindsight | H5 `-0.03264`; H10 `-0.02562`; 328/328 optima certified | Budget-ten response capacity supported; leaked diagnostic only. |
+| ALG-013 Response-Contrast Projection | future AUC `0.5530`, interval `[0.4579, 0.6572]`; history AUC `0.5104`, interval `[0.4689, 0.5500]` | Static embedding response transfer rejected. |
+| ALG-014 Response-Composition Shrinkage | static AUC `0.9121`; H5 `+0.000992`; H10 `+0.001855` | Cross-Agent response structure exists; target next-cohort increment rejected. |
 
-Multi-SWE is the primary outcome-open development source: 1,632 Tasks, 36
-complete public outcome vectors, H5 221 Origins/13 repositories, and H10 107
-Origins/11 repositories. Times are projected GitHub PR creation times, so
-results are source-time-safe counterfactual evidence.
+The experiments factor the problem:
 
-| Multi-SWE route | H5 difference | H10 difference | Decision |
-| --- | ---: | ---: | --- |
-| ALG-012 minimax semantic herding | `-0.00027` | `+0.00241` | Retired: H5 interval crosses zero; deep, task-space, harness, and language gates fail. |
-| Unchanged ALG-007 control | `-0.00225` | `+0.00216` | Retired; do not tune. |
-| Exact budget-ten hindsight | `-0.03264` | `-0.02562` | Capacity support only: every repository favorable; 328/328 certified optima. |
+1. a ten-Task subset can represent future Agent responses;
+2. other Agent outcomes strongly describe same-Task difficulty;
+3. fixed embeddings do not transfer that response structure across
+   repositories under ALG-013; and
+4. full/recent target history plus one-Task cross-repository shrinkage does not
+   predict the next Task cohort under ALG-014.
 
-ALG-012 is at the 81.59th percentile of equal-budget random H5 outcome
-Selections, but its effect against full history is nearly zero. In semantic
-task space it is at the 99.14th random percentile while worsening MMD² by
-`+0.03563` in 13/13 repositories. The algorithm uses sampling structure but
-does not identify outcome-useful Tasks.
-
-Exact hindsight reduces outcome loss by 48.46% at H5 and 48.51% at H10, with
-all wide and deep repositories favorable. Budget ten therefore has adequate
-response-representation capacity on this opened estimand. The bottleneck is
-pre-Origin identification, not subset size.
-
-No Selector is a Runner default. No result authorizes the sealed holdout, paid
-validation, or a validity claim.
+The current bottleneck is observable pre-Origin prediction of the target
+repository's next Task mix. It is not subset size or static response capacity.
+No Selector was materialized or nominated. No result authorizes paid
+validation, the sealed holdout, a Runner default, or a validity claim.
 
 ## Current State
 
-The source-specific Multi-SWE layer now binds:
+The source-specific Multi-SWE research layer binds exact source, content, time,
+embedding, outcome, plan, raw-result, reproduction, and compact evidence
+digests. ALG-013 and ALG-014 stop at their first failed frozen gate. The
+independent audit corrected RCP's diagnostic null to preserve complete
+36-dimensional Task response vectors; its corrected rate remains `0.55` and
+the rejection is unchanged. Tests cover target-repository exclusion, cutoff
+safety, equal-repository pooling, bounded prior mass, and prequential inputs.
 
-- the exact 39-file, 1.60 GB dataset revision and 1,632 issue-text projection;
-- projected Task times and 36 public outcome vectors;
-- 384-dimensional local embeddings with no embedding API;
-- deterministic H5/H10 memberships, task-space results, outcome results, and
-  exact hindsight capacity results with compact self-digested summaries.
+This remains research infrastructure, not a runnable Multi-SWE Task Pool.
+Solver/verifier material and source-specific certification are
+campaign-triggered. Core Task Pool, Result, Selection, and Runner contracts did
+not change.
 
-This is research infrastructure, not a runnable Multi-SWE Task Pool. Solver and
-verifier material plus source-specific certification remain campaign-triggered.
-Core Task Pool, Result, Selection, and Runner contracts did not change.
+## Stop And Reopen
 
-There is no active candidate. The next research gate is a theory-level design
-for one pre-Origin, response-relevant mechanism. It must separate:
+Stop nomination-oriented candidate invention, parameter search, representation
+search, and replay on the opened Multi-SWE and Verified outcomes. Existing data
+may still support reproduction, audits, power planning, and separately labeled
+fixed-universe compression; those uses cannot reopen temporal nomination.
 
-1. learning a response-relevant Task representation from source-time-eligible
-   other-repository evidence; and
-2. forecasting the target repository's future distribution from its observable
-   local history.
+Reopen empirical nomination research only with at least one of:
 
-Evaluate by complete-repository holdout and never train on hindsight
-memberships. Use a direct regularized or partially pooled model only when this
-information path is explicit; add no trainer framework. If no falsifiable
-mechanism can be frozen independently of opened target outcomes, stop
-algorithm search until a later source or prospective campaign.
+- native Task time plus historical Result availability and denser local
+  Origins;
+- an independent complete Agent panel or source family; or
+- a strict prospective target-repository campaign.
 
-## Reopen Boundaries
+An independently specified observable may advance theory design, but it cannot
+authorize another nomination replay on the opened panels.
 
-- Do not tune another budget, horizon, threshold, embedding, or semantic target
-  from the opened ALG-012 or Verified results.
-- A new candidate must freeze its information set, code, parameters, source,
-  Origin schedule, controls, random calibration, transfer audits, and
-  source-relative gate before outcome replay.
-- Open the six SWE-bench holdout Agents only after every applicable development
-  gate passes. Multi-SWE and Full cannot provide independent confirmation
-  because their outcomes are open.
-- Paid evidence requires explicit authority and `OPENAI_BASE_URL` plus
-  `OPENAI_API_KEY`.
-- Reopen checkout caching only above 5% measured wall time; bounded Agent
-  parallelism only with exact attribution and one writer; RI-160 only before a
-  comparable prepared pool; RI-163 only before another Pylint campaign.
+Any reopened candidate must freeze its information set, code, parameters,
+source, Origin schedule, controls, and gates before outcome replay. Open the
+six SWE-bench holdout Agents only after every development gate passes. Paid
+evidence requires explicit authority and `OPENAI_BASE_URL` plus
+`OPENAI_API_KEY`.
+
+Engineering triggers remain unchanged: checkout caching above 5% measured wall
+time; bounded Agent parallelism only with exact attribution and one writer;
+RI-160 before a comparable prepared pool; RI-163 before another Pylint
+campaign.
