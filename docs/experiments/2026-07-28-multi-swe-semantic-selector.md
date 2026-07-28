@@ -93,20 +93,18 @@ ALG-012 is closed and no Selector is nominated. The result neither authorizes
 the six sealed SWE-bench Agent vectors nor paid validation nor Runner
 promotion.
 
-## Next decision
+## Follow-up decision
 
-Run one separately frozen, post-result hindsight support diagnostic at the same
-ten-Task budget and H5/H10 schedules. It may inspect future outcomes only to
-measure representational headroom:
+A separately frozen exact hindsight diagnostic subsequently reached H5
+`-0.03264` with 13/13 repositories favorable and H10 `-0.02562` with 11/11
+favorable. It certified all 328 Origin optima. Budget ten has adequate
+representational capacity for this opened estimand; pre-Origin identification
+is the current bottleneck.
 
-- a strong hindsight improvement would show that ten Tasks can represent the
-  future panel and that pre-Origin identification is the bottleneck;
-- no hindsight improvement would show that the fixed budget is structurally
-  inadequate for this estimand.
-
-This diagnostic is descriptive and cannot nominate an algorithm. Do not tune
-another semantic target, embedding, budget, or horizon from the opened
-ALG-012 result.
+The leaked diagnostic does not nominate an algorithm. Do not tune another
+semantic target, embedding, budget, or horizon from the opened ALG-012 result,
+and do not train on hindsight memberships. The full method and boundary are in
+[`2026-07-28-multi-swe-budget-ten-capacity.md`](2026-07-28-multi-swe-budget-ten-capacity.md).
 
 ## Evidence identity and resources
 

@@ -12,6 +12,11 @@ REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPOSITORY_ROOT))
 
 from barcarolle.records import canonical_digest  # noqa: E402
+from examples.multi_swe_research.hindsight_diagnostic import (  # noqa: E402
+    build_hindsight_evidence_summary,
+    load_hindsight_plan,
+    solve_exact_hindsight_subset,
+)
 from examples.multi_swe_research.prepare import (  # noqa: E402
     _graphql_query,
     _line_digest,
@@ -90,6 +95,18 @@ def test_committed_evidence_is_self_consistent() -> None:
         report["task_text_digest"]
         == "c40c8b3f6c200020a1e961a54fe7d70392c8e3a7933687a2b4714654601b21cb"
     )
+    assert (
+        report["embedding_manifest_digest"]
+        == "458a9375af9a079126b2a64b0ed115387d5602aad4b0c6439572d0b9a5a40f0d"
+    )
+    assert (
+        report["selector_study_summary_digest"]
+        == "c91459da16d42bb2c0a3ebb20a0c0df10fa441ae15037d736c9615c35cef6e61"
+    )
+    assert (
+        report["hindsight_summary_digest"]
+        == "cf6bee9578773068440c4ba73514488f7d8adccfb9157714a4077a2291f5d7d6"
+    )
     assert report["paid_api_calls"] == 0
     supply = {
         row["future_block_tasks"]: row for row in report["origin_supply"]
@@ -134,6 +151,153 @@ def test_selector_study_summary_binds_failed_gates_and_raw_results() -> None:
         pytest.approx(0.0024083334210041147)
     )
     assert summary["resource_use"]["paid_api_calls"] == 0
+
+
+def test_hindsight_plan_is_descriptive_and_self_digested() -> None:
+    plan = dict(load_hindsight_plan())
+    digest = plan.pop("hindsight_plan_digest")
+
+    assert canonical_digest(plan) == digest
+    assert plan["diagnostic"]["diagnostic_id"] == (
+        "exact_hindsight_response_milp"
+    )
+    assert plan["protocol"]["selection_budget_tasks"] == 10
+    assert plan["motivation"]["claim_boundary"].startswith(
+        "Future outcomes are deliberately exposed"
+    )
+    assert plan["authority"]["paid_api_calls"] == 0
+    assert plan["authority"]["sealed_swe_bench_holdout_agents_opened"] == 0
+
+
+def test_hindsight_summary_binds_exact_capacity_result() -> None:
+    path = (
+        REPOSITORY_ROOT
+        / "examples"
+        / "multi_swe_research"
+        / "evidence"
+        / "hindsight-summary.json"
+    )
+    summary = json.loads(path.read_text(encoding="utf-8"))
+    digest = summary.pop("hindsight_summary_digest")
+
+    assert canonical_digest(summary) == digest
+    assert summary["identities"]["hindsight_plan_digest"] == (
+        load_hindsight_plan()["hindsight_plan_digest"]
+    )
+    assert summary["solver_evidence"]["certified_optimum_count"] == 328
+    assert summary["results"]["h5"][
+        "exact_hindsight_minus_full_history"
+    ] == pytest.approx(-0.03263868522024368)
+    assert summary["results"]["h10"][
+        "exact_hindsight_minus_full_history"
+    ] == pytest.approx(-0.025616170421681548)
+    assert summary["decision"]["capacity_supported"] is True
+    assert summary["decision"]["predictive_selector_nominated"] is False
+    assert summary["resource_use"]["paid_api_calls"] == 0
+
+
+def test_hindsight_summary_rejects_resigned_source_dimension_drift() -> None:
+    plan = load_hindsight_plan()
+    source = plan["source"]
+    horizon = {
+        "membership_digest": "membership",
+        "solver_rows": {
+            "origin": {
+                "success": True,
+                "status": 0,
+                "mip_gap": 0.0,
+                "mip_node_count": 0,
+                "objective_error": 0.0,
+            }
+        },
+        "solver_summary": {
+            "response_pattern_count": {
+                "minimum": 2,
+                "median": 2.0,
+                "maximum": 2,
+            }
+        },
+        "exact_hindsight": {
+            view: {
+                "repository_count": 1,
+                "origin_count": 1,
+                "macro_repository_loss": 0.1,
+                "macro_repository_baseline_loss": 0.2,
+                "macro_repository_difference": -0.1,
+                "favorable_repository_count": 1,
+            }
+            for view in ("wide", "deep")
+        },
+    }
+    result = {
+        "schema_version": "barcarolle_multi_swe_hindsight_results_v1",
+        "study_id": plan["study_id"],
+        "epistemic_status": plan["epistemic_status"],
+        "hindsight_plan_digest": plan["hindsight_plan_digest"],
+        "selector_plan_digest": source["selector_plan_digest"],
+        "task_space_results_digest": source["task_space_results_digest"],
+        "outcome_results_digest": source["outcome_results_digest"],
+        "task_count": 2,
+        "configuration_count": 36,
+        "origin_count": 2,
+        "horizons": {"5": horizon, "10": horizon},
+        "capacity_decision": {
+            "all_requirements_met": True,
+            "decision": "capacity",
+            "interpretation": "fixture",
+        },
+        "nomination": {
+            "selector_nominated": False,
+            "independent_confirmation_authorized": False,
+            "production_promotion_allowed": False,
+        },
+        "resource_use": {
+            "paid_api_calls": 0,
+            "embedding_api_calls": 0,
+            "sealed_swe_bench_holdout_agents_opened": 0,
+        },
+        "claim_boundary": "fixture boundary",
+    }
+    result["hindsight_results_digest"] = canonical_digest(result)
+
+    with pytest.raises(ValueError, match="source dimensions"):
+        build_hindsight_evidence_summary(result, plan, dict(result))
+
+
+def test_exact_hindsight_milp_recovers_zero_loss_response_mix() -> None:
+    pytest.importorskip("scipy")
+    outcomes = {
+        "agent-a": {
+            "a": 1,
+            "b": 1,
+            "c": 0,
+            "d": 0,
+            "future-a": 1,
+            "future-b": 0,
+        },
+        "agent-b": {
+            "a": 0,
+            "b": 0,
+            "c": 1,
+            "d": 1,
+            "future-a": 0,
+            "future-b": 1,
+        },
+    }
+
+    selected, solver = solve_exact_hindsight_subset(
+        ("a", "b", "c", "d"),
+        ("future-a", "future-b"),
+        outcomes,
+        ("agent-a", "agent-b"),
+        budget=2,
+    )
+
+    assert len(selected) == len(set(selected)) == 2
+    assert sum(outcomes["agent-a"][task_id] for task_id in selected) == 1
+    assert sum(outcomes["agent-b"][task_id] for task_id in selected) == 1
+    assert solver["status"] == 0
+    assert solver["recomputed_objective"] == pytest.approx(0.0)
 
 
 def test_normalizer_rejects_overlapping_terminal_partitions(
@@ -506,6 +670,33 @@ def test_outcome_loss_uses_full_history_as_an_uncompressed_baseline() -> None:
     )
 
     assert loss == pytest.approx(0.75)
+
+
+def test_outcome_coverage_rejects_missing_id_even_with_extra_id() -> None:
+    outcomes = {
+        "agent": {
+            "history": 1,
+            "unrelated": 0,
+        }
+    }
+
+    with pytest.raises(ValueError, match="does not cover"):
+        outcome_pass_rate_mae(
+            ("history",),
+            ("missing-future",),
+            outcomes,
+            ("agent",),
+        )
+
+    pytest.importorskip("scipy")
+    with pytest.raises(ValueError, match="cover"):
+        solve_exact_hindsight_subset(
+            ("history",),
+            ("missing-future",),
+            outcomes,
+            ("agent",),
+            budget=1,
+        )
 
 
 def _fixture_contract() -> dict[str, object]:

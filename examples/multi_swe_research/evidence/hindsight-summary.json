@@ -1,0 +1,85 @@
+{
+  "schema_version": "barcarolle_multi_swe_hindsight_summary_v1",
+  "study_id": "multi-swe-budget-ten-hindsight-support-2026-07-28",
+  "epistemic_status": "post_result_descriptive_support_diagnostic",
+  "identities": {
+    "hindsight_plan_digest": "47f1c375f6d16c72c8c0b7f5f1f2dd3f5c6dc3b4e9392d99a52cfede63de4b13",
+    "selector_plan_digest": "6619ab258039d3f12cf865421faeba7c23248b302f72b06bb6f311b8f65bde05",
+    "task_space_results_digest": "d9916f4c9acdcf615262f92cb771ed0079a696b4605805ef0c82b17f4f4e401d",
+    "outcome_results_digest": "7b314e1239981c38574960e15f8117ba33c350dbb61fb1e9c0d52eb96e013e36",
+    "hindsight_results_digest": "7ccd3153720ce12c98c1781df2fbf654b65ceacad93eb8916c1843baf86cdb4f"
+  },
+  "protocol": {
+    "task_count": 1632,
+    "configuration_count": 36,
+    "origin_count": 328,
+    "selection_budget_tasks": 10,
+    "loss": "macro-repository mean of Origin-level 36-configuration pass-rate MAE",
+    "baseline": "full eligible history",
+    "solver": "scipy.optimize.milp 1.16.3 using HiGHS, presolve enabled, zero relative MIP gap",
+    "claim_boundary": "Future outcomes are deliberately exposed to measure representational headroom. This diagnostic cannot nominate, train, tune, or confirm a Selector."
+  },
+  "solver_evidence": {
+    "certified_optimum_count": 328,
+    "mip_gap_values": [
+      0.0
+    ],
+    "maximum_objective_recomputation_error": 3.920475055707584e-15,
+    "mip_node_count_range": [
+      0,
+      1
+    ],
+    "h5_response_pattern_count": {
+      "minimum": 3,
+      "median": 27.0,
+      "maximum": 81
+    },
+    "h10_response_pattern_count": {
+      "minimum": 3,
+      "median": 27.0,
+      "maximum": 80
+    },
+    "byte_identical_second_run": true
+  },
+  "results": {
+    "h5": {
+      "origin_count": 221,
+      "repository_count": 13,
+      "full_history_macro_mae": 0.0673476429292014,
+      "exact_hindsight_macro_mae": 0.03470895770895771,
+      "exact_hindsight_minus_full_history": -0.03263868522024368,
+      "relative_loss_reduction": 0.48462995586281776,
+      "favorable_repositories": "13/13",
+      "deep_exact_hindsight_minus_full_history": -0.03423286180265659,
+      "deep_favorable_repositories": "8/8",
+      "membership_digest": "dd6140866b7d7662c098b48fef97aafe0c05cb501e0fc70a0e7243e2a7a63acf"
+    },
+    "h10": {
+      "origin_count": 107,
+      "repository_count": 11,
+      "full_history_macro_mae": 0.05280696865793433,
+      "exact_hindsight_macro_mae": 0.02719079823625278,
+      "exact_hindsight_minus_full_history": -0.025616170421681548,
+      "relative_loss_reduction": 0.48509071951496463,
+      "favorable_repositories": "11/11",
+      "deep_exact_hindsight_minus_full_history": -0.024594568167297787,
+      "deep_favorable_repositories": "5/5",
+      "membership_digest": "74590bef6f5e6e95dff3a75f5703af859a5965140ed25f526d472ecf5f9579e4"
+    }
+  },
+  "decision": {
+    "capacity_supported": true,
+    "decision": "budget_ten_representational_capacity_supported",
+    "interpretation": "On this opened panel and estimand, ten historical Tasks can represent future Agent pass rates. Pre-Origin identification, not subset capacity, is the current bottleneck.",
+    "predictive_selector_nominated": false,
+    "independent_confirmation_authorized": false,
+    "production_promotion_allowed": false,
+    "next_research_constraint": "Develop only a pre-Origin information mechanism with repository-held-out evaluation; do not tune the budget from this hindsight result and do not train on hindsight memberships."
+  },
+  "resource_use": {
+    "paid_api_calls": 0,
+    "embedding_api_calls": 0,
+    "sealed_swe_bench_holdout_agents_opened": 0
+  },
+  "hindsight_summary_digest": "cf6bee9578773068440c4ba73514488f7d8adccfb9157714a4077a2291f5d7d6"
+}

@@ -707,7 +707,7 @@ def outcome_pass_rate_mae(
     required = set((*selected, *future))
     for configuration_id in configurations:
         outcomes = outcomes_by_configuration.get(configuration_id)
-        if outcomes is None or set(outcomes) < required:
+        if outcomes is None or not required.issubset(outcomes):
             raise ValueError("outcome panel does not cover loss inputs")
         selected_rate = fsum(outcomes[task_id] for task_id in selected) / len(
             selected

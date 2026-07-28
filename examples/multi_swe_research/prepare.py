@@ -29,6 +29,9 @@ PANEL_SCHEMA = "barcarolle_multi_swe_public_panel_v1"
 TIME_SCHEMA = "barcarolle_multi_swe_task_time_projection_v1"
 CONTENT_SCHEMA = "barcarolle_multi_swe_task_content_projection_v1"
 CONTENT_MANIFEST_SCHEMA = "barcarolle_multi_swe_task_content_manifest_v1"
+EMBEDDING_MANIFEST_SCHEMA = "barcarolle_multi_swe_embedding_manifest_v1"
+SELECTOR_SUMMARY_SCHEMA = "barcarolle_multi_swe_selector_study_summary_v1"
+HINDSIGHT_SUMMARY_SCHEMA = "barcarolle_multi_swe_hindsight_summary_v1"
 _TASK_ID = re.compile(
     r"(?P<owner>[A-Za-z0-9_.-]+)__(?P<repo>[A-Za-z0-9_.-]+)-(?P<number>[1-9][0-9]*)\Z"
 )
@@ -583,6 +586,41 @@ def validate_evidence(
     ):
         raise ValueError("committed content manifest source identity changed")
 
+    embedding = _validated_self_digested_summary(
+        evidence_root / "embedding-manifest.json",
+        schema=EMBEDDING_MANIFEST_SCHEMA,
+        digest_key="embedding_manifest_digest",
+    )
+    if embedding.get("content_manifest_digest") != content.get(
+        "content_manifest_digest"
+    ):
+        raise ValueError("committed embedding manifest content identity changed")
+
+    selector_summary = _validated_self_digested_summary(
+        evidence_root / "selector-study-summary.json",
+        schema=SELECTOR_SUMMARY_SCHEMA,
+        digest_key="selector_study_summary_digest",
+    )
+    selector_identities = _mapping(selector_summary, "identities")
+    if (
+        selector_identities.get("content_manifest_digest")
+        != content.get("content_manifest_digest")
+        or selector_identities.get("embedding_manifest_digest")
+        != embedding.get("embedding_manifest_digest")
+    ):
+        raise ValueError("committed Selector summary identity changed")
+
+    hindsight_summary = _validated_self_digested_summary(
+        evidence_root / "hindsight-summary.json",
+        schema=HINDSIGHT_SUMMARY_SCHEMA,
+        digest_key="hindsight_summary_digest",
+    )
+    hindsight_identities = _mapping(hindsight_summary, "identities")
+    if hindsight_identities.get("outcome_results_digest") != (
+        selector_identities.get("outcome_results_digest")
+    ):
+        raise ValueError("committed hindsight summary identity changed")
+
     return {
         "schema_version": "barcarolle_multi_swe_evidence_validation_v1",
         "contract_digest": contract.get("contract_digest"),
@@ -590,12 +628,38 @@ def validate_evidence(
         "time_projection_digest": time_summary.get("projection_digest"),
         "content_manifest_digest": content.get("content_manifest_digest"),
         "task_text_digest": content.get("task_text_digest"),
+        "embedding_manifest_digest": embedding.get(
+            "embedding_manifest_digest"
+        ),
+        "selector_study_summary_digest": selector_summary.get(
+            "selector_study_summary_digest"
+        ),
+        "hindsight_summary_digest": hindsight_summary.get(
+            "hindsight_summary_digest"
+        ),
         "task_count": len(tasks),
         "configuration_count": len(configurations),
         "resolved_cell_count": len(resolved),
         "origin_supply": origin_supply,
         "paid_api_calls": 0,
     }
+
+
+def _validated_self_digested_summary(
+    path: Path,
+    *,
+    schema: str,
+    digest_key: str,
+) -> Mapping[str, Any]:
+    payload = _load_mapping(path)
+    if payload.get("schema_version") != schema:
+        raise ValueError(f"committed summary schema is unsupported: {path.name}")
+    expected = canonical_digest(
+        {key: value for key, value in payload.items() if key != digest_key}
+    )
+    if payload.get(digest_key) != expected:
+        raise ValueError(f"committed summary digest does not match: {path.name}")
+    return payload
 
 
 def _origin_supply(

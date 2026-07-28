@@ -109,6 +109,36 @@ The raw memberships and replay rows remain ignored. The committed
 failed task-space and outcome gates. It is development evidence, not
 independent confirmation.
 
+After ALG-012 was closed, a separate plan froze an exact budget-ten hindsight
+support diagnostic. Reproduce it with:
+
+```sh
+uv run --with 'scipy==1.16.3' \
+  python examples/multi_swe_research/hindsight_diagnostic.py run \
+  --task-content outputs/research/2026-07-28-multi-swe-task-content/task-content.jsonl \
+  --task-times examples/multi_swe_research/evidence/task-times.jsonl \
+  --task-space-results outputs/research/2026-07-28-multi-swe-task-space-results.json \
+  --outcome-results outputs/research/2026-07-28-multi-swe-semantic-outcome-results.json \
+  --panel-summary examples/multi_swe_research/evidence/panel-summary.json \
+  --resolved-outcomes examples/multi_swe_research/evidence/resolved-outcomes.jsonl \
+  --output outputs/research/2026-07-28-multi-swe-hindsight-results.json
+```
+
+The command solves one exact response-pattern MILP per Origin and verifies the
+result against the selected Task identities. The raw solutions stay ignored;
+`evidence/hindsight-summary.json` binds their digest. This is leaked hindsight
+support for capacity diagnosis, never a runnable Selector or training target.
+After producing a second raw result at a different ignored path, mechanically
+rebuild and verify the committed summary:
+
+```sh
+uv run python examples/multi_swe_research/hindsight_diagnostic.py \
+  verify-summary \
+  --results outputs/research/2026-07-28-multi-swe-hindsight-results.json \
+  --reproduction-results outputs/research/2026-07-28-multi-swe-hindsight-reproduction.json \
+  --summary examples/multi_swe_research/evidence/hindsight-summary.json
+```
+
 Validate all committed evidence without network access:
 
 ```sh

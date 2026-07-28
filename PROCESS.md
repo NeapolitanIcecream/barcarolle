@@ -3,7 +3,7 @@
 Last updated: 2026-07-28.
 
 Current ledger: `docs/research-improvement-backlog.md`. Latest report:
-`docs/experiments/2026-07-28-multi-swe-semantic-selector.md`.
+`docs/experiments/2026-07-28-multi-swe-budget-ten-capacity.md`.
 
 ## Preserve
 
@@ -44,12 +44,18 @@ results are source-time-safe counterfactual evidence.
 | --- | ---: | ---: | --- |
 | ALG-012 minimax semantic herding | `-0.00027` | `+0.00241` | Retired: H5 interval crosses zero; deep, task-space, harness, and language gates fail. |
 | Unchanged ALG-007 control | `-0.00225` | `+0.00216` | Retired; do not tune. |
+| Exact budget-ten hindsight | `-0.03264` | `-0.02562` | Capacity support only: every repository favorable; 328/328 certified optima. |
 
 ALG-012 is at the 81.59th percentile of equal-budget random H5 outcome
 Selections, but its effect against full history is nearly zero. In semantic
 task space it is at the 99.14th random percentile while worsening MMD² by
-`+0.03563` in 13/13 repositories. The algorithm uses sampling structure, but
-ten-Task compression plus its prediction error erase any useful advantage.
+`+0.03563` in 13/13 repositories. The algorithm uses sampling structure but
+does not identify outcome-useful Tasks.
+
+Exact hindsight reduces outcome loss by 48.46% at H5 and 48.51% at H10, with
+all wide and deep repositories favorable. Budget ten therefore has adequate
+response-representation capacity on this opened estimand. The bottleneck is
+pre-Origin identification, not subset size.
 
 No Selector is a Runner default. No result authorizes the sealed holdout, paid
 validation, or a validity claim.
@@ -62,24 +68,25 @@ The source-specific Multi-SWE layer now binds:
 - projected Task times and 36 public outcome vectors;
 - 384-dimensional local embeddings with no embedding API;
 - deterministic H5/H10 memberships, task-space results, outcome results, and
-  compact self-digested summaries.
+  exact hindsight capacity results with compact self-digested summaries.
 
 This is research infrastructure, not a runnable Multi-SWE Task Pool. Solver and
 verifier material plus source-specific certification remain campaign-triggered.
 Core Task Pool, Result, Selection, and Runner contracts did not change.
 
-Next: freeze and run one post-result hindsight support search at budget ten on
-the existing H5/H10 data. It may use future outcomes only to distinguish
-representational capacity from pre-Origin identification. It is descriptive,
-cannot nominate a Selector, opens no sealed data, and makes no paid call.
+There is no active candidate. The next research gate is a theory-level design
+for one pre-Origin, response-relevant mechanism. It must separate:
 
-After that diagnostic, choose between:
+1. learning a response-relevant Task representation from source-time-eligible
+   other-repository evidence; and
+2. forecasting the target repository's future distribution from its observable
+   local history.
 
-1. a new theory-driven, repository-held-out predictive mechanism;
-2. one direct partial-pooling experiment; or
-3. stopping algorithm work until a later source or prospective campaign.
-
-Do not select among these from the hindsight memberships themselves.
+Evaluate by complete-repository holdout and never train on hindsight
+memberships. Use a direct regularized or partially pooled model only when this
+information path is explicit; add no trainer framework. If no falsifiable
+mechanism can be frozen independently of opened target outcomes, stop
+algorithm search until a later source or prospective campaign.
 
 ## Reopen Boundaries
 

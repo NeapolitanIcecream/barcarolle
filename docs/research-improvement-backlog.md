@@ -118,6 +118,7 @@ The theory-driven extension reached the following decisions:
 | Adaptive prequential difficulty | `-0.00235`, `[-0.02208, +0.01680]`; 3/7 favorable | Better than 90.28% of random; null `0.194`; deep `+0.00927`; leave-one-Agent 6/11 favorable | Retire and close current-pool temporal search. |
 | Difficulty Markov budget–horizon audit | Best of nine cells `-0.00379` at budget 5, horizon 10; 2/5 favorable | 99.97th random percentile, but deep `+0.02550`; leave-one-Agent `+0.01553`, 3/11 favorable; no stable region | Scale tuning does not reopen the candidate. |
 | ALG-012 Multi-SWE minimax semantic herding | H5 `-0.00027`, `[-0.00415, +0.00334]`; 8/13 favorable | 81.59th random percentile, but deep `+0.00080`, H10 `+0.00241`, harness 1/3 and language 3/7 favorable; semantic MMD² worsens in 13/13 repositories | Retire; gate failed. |
+| Multi-SWE exact budget-ten hindsight support | H5 `-0.03264`; 13/13 favorable | 48.46% loss reduction; deep `-0.03423`; H10 `-0.02562`, 11/11 favorable; 328/328 MILPs certified optimal | Budget-ten capacity supported; pre-Origin identification remains the bottleneck. |
 
 The original Joint Markov was temporally retrospective: 9,467 of 19,985
 cross-repository training Task uses (`47.37%`) occurred after the target
@@ -137,6 +138,14 @@ passed the frozen effect, repository, deep, random, control, and Agent-transfer
 gate. The only negative wide cell was budget 5, horizon 10 at `-0.00379`; its
 deep effect was `+0.02550` and only 3/11 leave-one-Agent directions were
 favorable. The fixed ten-Task budget did not cause the route failure.
+
+Multi-SWE provides a stronger capacity check. A separately frozen exact
+response-pattern MILP reduced H5 loss by `48.46%` (`-0.03264`) with 13/13
+repositories favorable and H10 loss by `48.51%` (`-0.02562`) with 11/11
+favorable. All 328 Origin solves were certified optimal and every deep
+repository was favorable. This rules out budget-ten response-representation
+capacity as the current explanation on this opened estimand. It does not show
+that the optimal subsets can be identified before future outcomes.
 
 Task-count horizons also encode different calendar periods. Median spans are
 25.7, 39.5, and 75.6 days for 3, 5, and 10 Tasks; the ten-Task maximum is 1,336
@@ -197,6 +206,8 @@ licenses, timestamp limits, and result coverage are in
 The first frozen Multi-SWE mechanism, exact evidence identities, failed gates,
 and random-landscape interpretation are in
 [`experiments/2026-07-28-multi-swe-semantic-selector.md`](experiments/2026-07-28-multi-swe-semantic-selector.md).
+The separately frozen exact capacity diagnostic and its leakage boundary are in
+[`experiments/2026-07-28-multi-swe-budget-ten-capacity.md`](experiments/2026-07-28-multi-swe-budget-ten-capacity.md).
 
 All studies recorded here made zero paid benchmark calls. The prior local
 embedding run did not make an API call. The previous USD 300 authority remains
@@ -372,8 +383,8 @@ Routes remain separate until evidence supports a combination.
 | Route | Thesis | Decisive test | State |
 | --- | --- | --- | --- |
 | MR-A: fixed outcome-free transfer | A simple semantic or structural rule transfers without fitting target outcomes. | Fixed recency, coverage, and ALG-007 failed on Verified. On Multi-SWE, ALG-012 reached H5 `-0.00027` and 81.59th random percentile but failed task-space, H10, deep, harness, and language gates; unchanged ALG-007 reached `-0.00225` and also failed. | `closed` for the tested semantic/recency mechanisms; reopen only for an independently motivated observable |
-| MR-B: offline multi-repository training | Repository-local Origins from several research repositories teach one policy that still consumes only one repository at deployment. | Existing response and difficulty mechanisms failed. Multi-SWE supplies H5 221 Origins/13 repositories and 36 vectors; nominate a mechanism under repository, language, model, harness, and time audits. | `ready` for outcome-open development |
-| MR-C: partial pooling | Repository-specific effects share useful structure without erasing heterogeneity. | A newly predeclared mechanism improves held-out-repository loss and calibration over macro averaging and the safe-switch baseline on the new source. | `ready`; keep the implementation direct until a candidate passes |
+| MR-B: offline multi-repository training | Repository-local Origins from several research repositories teach one policy that still consumes only one repository at deployment. | Exact hindsight shows budget-ten capacity, while ALG-012 shows semantic matching cannot identify it. A new mechanism must predict a response-relevant quantity from pre-Origin evidence and hold out the complete target repository. | `ready` for theory design; no candidate frozen |
+| MR-C: partial pooling | Repository-specific effects share useful structure without erasing heterogeneity. | A newly predeclared response-relevant mechanism improves held-out-repository loss and calibration over macro averaging and the safe-switch baseline. Repository identity alone is insufficient. | `ready` but not automatically next; keep implementation direct |
 | MR-D: fixed-universe compression | A small subset reconstructs full historical Agent scores across unseen Agents. | ALG-008 beats equal-budget random and coverage on held-out Agents, reported separately from future-Task MAE. | `ready` on the 36-vector Multi-SWE panel when prioritized |
 | MR-E: source and field validity | Generator-conditional gains persist in natural future work. | Frozen later source, then prospective field evidence with an independently defined target frame. | `authority-gated` |
 | MR-F: adaptive difficulty regime | Historical predictive score can choose between stationary and dynamic task-difficulty forecasts without future leakage. | Prequential adaptation produced wide `-0.00235`, deep `+0.00927`, and temporal-null rate `0.194`. | `closed` on the current pool |
@@ -441,8 +452,8 @@ rules were compared across wide and deep views. None earned nomination.
 
 ### Phase 5 — Offline Multi-Repository Training
 
-State: `closed` for ALG-012 and current Verified-pool search; one descriptive
-Multi-SWE capacity diagnostic remains.
+State: `closed` for ALG-012 and current Verified-pool search; budget-ten
+capacity is established, but no predictive mechanism is nominated.
 
 Outer repository folds were exercised directly in the experiment layer.
 History match improved full history by only `0.0064`; every trend fold chose
@@ -462,9 +473,11 @@ model registry, trainer service, or generic cross-validation framework. The
 `-0.00027`, H10 was `+0.00241`, and the deep, harness, language, and semantic
 task-space gates failed. The unchanged ALG-007 transfer control reached H5
 `-0.00225` with 7/13 favorable repositories but reversed at H10. Do not tune
-either route. Freeze one hindsight budget-ten support diagnostic before
-running it; its result may locate the capacity bottleneck but cannot nominate
-a Selector.
+either route. The separately frozen exact hindsight diagnostic then reached
+H5 `-0.03264` with 13/13 repositories favorable and H10 `-0.02562` with 11/11
+favorable. All 328 solves were certified optimal. Budget ten is not the current
+representational bottleneck; pre-Origin identification is. Do not train on the
+hindsight memberships or use them to select the next mechanism.
 
 ### Phase 6 — Orthogonal Confirmation
 
@@ -547,7 +560,7 @@ training service is needed.
 | MR-003 | P1 | `closed` | Fixed public plan, full-history contrast, random calibration, exclusions, and results committed. |
 | MR-004 | P1 | `trigger-gated` | Multi-SWE supplies the data trigger, but paid sizing remains blocked until a mechanism passes its frozen outcome-open gate. |
 | MR-005 / ALG-007 | P1 | `closed` | Unchanged Multi-SWE transfer reached H5 `-0.00225` with 7/13 favorable repositories and H10 `+0.00216`; do not tune it. |
-| MR-006 | P2 | `ready` | ALG-006 remains retired. Reconsider one direct partial-pooling mechanism only after the budget-ten capacity diagnostic; preserve repository-local deployment and source-time cutoffs. |
+| MR-006 | P2 | `ready` | ALG-006 remains retired. Consider one direct partial-pooling mechanism only if it predicts a response-relevant quantity under complete-repository holdout; repository identity alone is insufficient. |
 | MR-007 / RI-188 | P1 | `data-gated` | The 11-development/6-holdout Agent split is frozen. Preserve the six unread blobs until every gate passes. |
 | MR-008 | P1 | `data-gated` | A nominated route must exist before later-source or strict-prospective authority is requested. |
 | MR-009 / ALG-009 | P1 | `closed` | Joint response Markov failed temporal-null, leave-one-Agent, and sealed eight-Agent replication. |
@@ -557,7 +570,8 @@ training service is needed.
 | MR-013 | P1 | `closed` | External-source audit selected Multi-SWE for outcome-open development, Full for depth, Rebench for supply, and deferred response-derived PolyBench work. |
 | MR-014 | P1 | `closed` | Direct Multi-SWE response/time research import committed with the 39-file contract, projected-time sidecar, 36-vector allowlist, strict denominator checks, and no generic source registry. |
 | MR-015 / ALG-012 | P1 | `closed` | Outcome-free minimax semantic herding beat most random subsets but failed full-history, H10, deep, harness, language, and ALG-007 control gates; no nomination. |
-| MR-016 | P1 | `ready` | Freeze and run one post-result, budget-ten hindsight support search on H5/H10. It is descriptive only and cannot become a candidate. |
+| MR-016 | P1 | `closed` | Exact hindsight reached H5 `-0.03264` and H10 `-0.02562`, every repository favorable, and 328/328 certified optimal solves. Capacity is supported; no Selector was nominated. |
+| MR-017 | P1 | `research-gated` | Specify one pre-Origin, response-relevant, complete-repository-held-out mechanism independently of hindsight memberships. Freeze it before target-outcome replay or stop algorithm search. |
 | RI-125 | P2 | `trigger-gated` | The exact 39 source objects and issue-text projection are full-byte verified. A runnable prepared Task Pool still needs solver/verifier material and source-specific certification when a concrete campaign requires it. |
 | RI-129 / RI-160 | P2 | `trigger-gated` | Add a single-writer exact certification checkpoint before the next comparable pool; replay retained entries before reuse. |
 | RI-163 | P2 | `trigger-gated` | Before another Pylint campaign, replace whole-file behavior identity with an explicit version payload and direct-helper digests. |
