@@ -13,6 +13,14 @@ REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPOSITORY_ROOT))
 
 from barcarolle.records import canonical_digest  # noqa: E402
+from examples.multi_repository_study.agent_invariant import (  # noqa: E402
+    fit_cutoff_repository_equal_markov,
+    forecast_difficulty_markov,
+    load_agent_invariant_plan,
+    materialize_selections,
+    select_state_histogram_match,
+    task_difficulty_state,
+)
 from examples.multi_repository_study.aggregate import (  # noqa: E402
     ContrastRow,
     summarize_contrasts,
@@ -28,6 +36,9 @@ from examples.multi_repository_study.embed_local import (  # noqa: E402
 from examples.multi_repository_study.portfolio import (  # noqa: E402
     build_portfolio,
     load_portfolio_plan,
+)
+from examples.multi_repository_study.panel_extension import (  # noqa: E402
+    retrospective_availability_audit,
 )
 from examples.multi_repository_study.public_replay import (  # noqa: E402
     RepositoryOrigin,
@@ -248,6 +259,239 @@ def test_agent_invariant_plan_is_self_digested_and_cutoff_aware() -> None:
     assert plan["diagnostics"]["temporal_null"]["permutations"] == 500
     assert plan["holdout_open_gate"]["production_promotion_allowed"] is False
     assert plan["authority"]["paid_api_calls"] == 0
+
+
+def test_agent_invariant_difficulty_states_follow_solve_fraction() -> None:
+    outcomes = {
+        f"agent-{agent}": {
+            f"task-{solved}": int(agent < solved)
+            for solved in range(5)
+        }
+        for agent in range(4)
+    }
+
+    assert tuple(
+        task_difficulty_state(
+            f"task-{solved}",
+            outcomes,
+            state_count=5,
+        )
+        for solved in range(5)
+    ) == (0, 1, 2, 3, 4)
+
+
+def test_cutoff_markov_excludes_later_cross_repository_tasks() -> None:
+    tasks_by_repository = {
+        "org/a": tuple(
+            TaskMetadata(
+                f"a-{day}",
+                "org/a",
+                f"2020-01-0{day}T00:00:00Z",
+                "fixture",
+                "fixture",
+            )
+            for day in range(1, 4)
+        ),
+        "org/b": tuple(
+            TaskMetadata(
+                f"b-{day}",
+                "org/b",
+                f"2020-01-0{day}T00:00:00Z",
+                "fixture",
+                "fixture",
+            )
+            for day in range(3, 5)
+        ),
+    }
+    outcomes = {
+        "agent": {
+            task.instance_id: int(index % 2 == 0)
+            for index, task in enumerate(
+                (*tasks_by_repository["org/a"], *tasks_by_repository["org/b"])
+            )
+        }
+    }
+
+    transition, diagnostic = fit_cutoff_repository_equal_markov(
+        ("org/a", "org/b"),
+        tasks_by_repository,
+        outcomes,
+        cutoff="2020-01-02T00:00:00Z",
+        state_count=5,
+        cell_prior_mass=0.2,
+    )
+
+    assert diagnostic["included_repository_ids"] == ("org/a",)
+    assert diagnostic["included_task_count"] == 2
+    assert diagnostic["excluded_later_task_count"] == 3
+    assert all(sum(row) == pytest.approx(1.0) for row in transition)
+
+
+def test_state_histogram_match_uses_recent_tasks_inside_each_state() -> None:
+    history = tuple(
+        TaskMetadata(
+            f"task-{index}",
+            "org/repo",
+            f"2020-01-{index + 1:02d}T00:00:00Z",
+            "fixture",
+            "fixture",
+        )
+        for index in range(10)
+    )
+    outcomes = {
+        f"agent-{agent}": {
+            task.instance_id: int(index >= 6)
+            for index, task in enumerate(history)
+        }
+        for agent in range(5)
+    }
+
+    selected = select_state_histogram_match(
+        history,
+        outcomes,
+        (0.5, 0.0, 0.0, 0.0, 0.5),
+        state_count=5,
+        budget=4,
+    )
+
+    assert selected == ("task-4", "task-5", "task-8", "task-9")
+
+
+def test_difficulty_markov_forecast_is_a_probability_distribution() -> None:
+    history = tuple(
+        TaskMetadata(
+            f"task-{index}",
+            "org/repo",
+            f"2020-01-{index + 1:02d}T00:00:00Z",
+            "fixture",
+            "fixture",
+        )
+        for index in range(6)
+    )
+    outcomes = {
+        "agent-a": {
+            task.instance_id: int(index % 2 == 0)
+            for index, task in enumerate(history)
+        },
+        "agent-b": {
+            task.instance_id: int(index % 3 == 0)
+            for index, task in enumerate(history)
+        },
+    }
+    uniform = tuple(tuple(0.2 for _ in range(5)) for _ in range(5))
+
+    forecast = forecast_difficulty_markov(
+        history,
+        outcomes,
+        uniform,
+        state_count=5,
+        horizon=5,
+        local_prior_strength=5.0,
+    )
+
+    assert sum(forecast) == pytest.approx(1.0)
+    assert all(0.0 <= value <= 1.0 for value in forecast)
+
+
+def test_agent_invariant_materialization_keeps_selections_repository_local() -> None:
+    repository_ids = ("org/a", "org/b", "org/c")
+    tasks = tuple(
+        TaskMetadata(
+            row["instance_id"],
+            row["repo"],
+            row["created_at"],
+            row["difficulty"],
+            "fixture",
+        )
+        for repository_id in repository_ids
+        for row in _task_rows(repository_id, 20)
+    )
+    outcomes = {
+        f"agent-{agent}": {
+            task.instance_id: int((index + agent) % 4 < 2)
+            for index, task in enumerate(tasks)
+        }
+        for agent in range(3)
+    }
+
+    origins, memberships, forecasts, diagnostics = materialize_selections(
+        tasks,
+        outcomes,
+        load_agent_invariant_plan(),
+        {"portfolio": {"wide_repository_ids": repository_ids}},
+    )
+
+    assert {key: len(value) for key, value in origins.items()} == {
+        "org/a": 1,
+        "org/b": 1,
+        "org/c": 1,
+    }
+    task_repository = {task.instance_id: task.repository_id for task in tasks}
+    for selector_memberships in memberships.values():
+        for origin_id, selected in selector_memberships.items():
+            repository_id = origin_id.split(":origin-", maxsplit=1)[0]
+            assert len(selected) == 10
+            assert {task_repository[task_id] for task_id in selected} == {
+                repository_id
+            }
+    assert set(forecasts) == {
+        "difficulty_persistence_match",
+        "difficulty_markov_match",
+    }
+    assert diagnostics["symmetric_fallback_origin_count"] == 0
+
+
+def test_retrospective_availability_audit_flags_later_training_tasks() -> None:
+    target_history = tuple(
+        TaskMetadata(
+            f"target-{index}",
+            "org/target",
+            f"2020-01-0{index + 1}T00:00:00Z",
+            "fixture",
+            "fixture",
+        )
+        for index in range(2)
+    )
+    origin = RepositoryOrigin(
+        "org/target",
+        "org/target:origin-001",
+        target_history,
+        (
+            TaskMetadata(
+                "target-future",
+                "org/target",
+                "2020-01-03T00:00:00Z",
+                "fixture",
+                "fixture",
+            ),
+        ),
+    )
+    training_tasks = (
+        TaskMetadata(
+            "train-past",
+            "org/train",
+            "2020-01-01T00:00:00Z",
+            "fixture",
+            "fixture",
+        ),
+        TaskMetadata(
+            "train-later",
+            "org/train",
+            "2020-01-04T00:00:00Z",
+            "fixture",
+            "fixture",
+        ),
+    )
+
+    audit = retrospective_availability_audit(
+        (*target_history, *origin.future, *training_tasks),
+        {"org/target": (origin,), "org/train": ()},
+        ("org/target", "org/train"),
+    )
+
+    assert audit["training_task_uses"] == 2
+    assert audit["later_created_training_task_uses"] == 1
+    assert audit["origins_with_later_created_training_tasks"] == 1
 
 
 def test_committed_public_panel_result_is_self_digested_and_negative() -> None:
