@@ -683,6 +683,36 @@ def test_committed_theory_audit_result_is_self_digested_and_retires_markov() -> 
     ] == 1
 
 
+def test_committed_agent_panel_replication_is_self_digested_and_neutral() -> None:
+    results = json.loads(
+        (
+            REPOSITORY_ROOT
+            / (
+                "examples/multi_repository_study/"
+                "agent-panel-replication-results.json"
+            )
+        ).read_text()
+    )
+    digest = results.pop("agent_panel_replication_results_digest")
+
+    assert canonical_digest(results) == digest
+    assert results["original_agent_count"] == 3
+    assert results["replication_agent_count"] == 8
+    assert results["summaries"]["wide"][
+        "macro_repository_difference"
+    ] == pytest.approx(0.0003089043428531318)
+    assert results["summaries"]["deep"][
+        "macro_repository_difference"
+    ] == pytest.approx(0.006264004464502509)
+    assert results["retrospective_fit_availability"][
+        "later_created_rate"
+    ] == pytest.approx(0.47370527895921943)
+    assert results["retrospective_fit_availability"][
+        "origins_with_later_created_training_tasks"
+    ] == 68
+    assert results["decision"]["reactivation_allowed"] is False
+
+
 def test_outcome_match_uses_exact_vector_and_stable_tie_break() -> None:
     history = tuple(
         TaskMetadata(
