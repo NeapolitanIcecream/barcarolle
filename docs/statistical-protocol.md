@@ -502,15 +502,36 @@ view remains fully censored. A separate `label_at_task_arrival`
 counterfactual replay is valid for development and reuses exact Results, but it
 is not source-attested or strict-prospective.
 
-On that opened development scenario, coverage MAE is `0.1833` versus `0.1933`
-for full history. The `0.0100` point gain and paired interval
-`[-0.0363, +0.0152]` miss the promotion gate. Exact random and support
-diagnostics show headroom, while null controls, decision metrics, fixed
-candidate screens, and the two-Agent panel do not establish learnability or
-transfer.
+On that opened SymPy scenario, coverage MAE is `0.1833` versus `0.1933` for
+full history. The `0.0100` point gain and paired interval
+`[-0.0363, +0.0152]` miss the promotion gate. It is a precursor, not an
+independent confirmation.
 
-Normal planning from the panel-conditional primary contrast requires about 44
-independent Origins for 80% power at a true `0.02` effect. The earlier
-25-Origin calculation applies only to coverage versus a five-seed random-bank
-mean. Both counts omit some dependency and Agent-generalization variance, are
-planning inputs rather than guarantees, and authorize no campaign.
+The 2026-07-28 public multi-repository study adds 500 Tasks, three frozen public
+Agent result vectors, seven wide repositories, three deep repositories, and 68
+repository-local Origins. It averages Origins within repository before
+repositories receive equal weight. Candidate-minus-full-history wide
+differences are `+0.0189` for recency, `+0.0398` for difficulty coverage,
+`-0.0064` for history match, `+0.0016` for cross-repository mean drift,
+`+0.0015` for semantic centroid, and `+0.0377` for semantic facility location.
+No candidate passes the opened-data nomination gate.
+
+The history-match control is better than 93.75% of 20,000 equal-budget random
+draws, while its interval `[-0.0178, +0.0041]` crosses zero and its deep effect
+is `-0.0014`. Hindsight support reaches `-0.1589`, with all seven repository
+directions favorable. The pool therefore contains representable subsets, but
+the tested outcome-safe features and cross-repository corrections do not
+identify them before the future Origin.
+
+Repository-level uncertainty replaces nominal Origin power for the transfer
+claim. Candidate-specific repository SDs from this screen imply naive sample
+counts ranging from roughly 3 to 28 repositories for a `0.02` effect; because
+the routes failed and only seven repositories were observed, none is a frozen
+confirmatory target. Fix the next sample size only after a nominated route has
+a blinded pilot measuring repository dependence, missingness, and cost.
+
+These studies remain counterfactual and panel-conditional. The source Tasks
+have historical arrival times, but Check maturity was projected to Task
+arrival. They do not establish strict-prospective validity, held-out-Agent
+transfer, source-family portability, or a Runner default, and authorize no
+campaign.

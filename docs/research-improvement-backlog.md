@@ -78,30 +78,47 @@ forward.
 
 ## Current Evidence And Claim Boundary
 
-The current counterfactual study contains one 75-Task SymPy pool, twelve
-Origins, and two Agents.
+The completed public multi-repository development study contains 500
+SWE-bench Verified Tasks, three frozen public Agent result vectors, seven
+wide-portfolio repositories, three deep-portfolio repositories, and 68
+repository-local Origins. It uses full eligible local history as the primary
+baseline. Candidate-minus-full-history differences are negative when Selection
+helps.
 
-| Axis | Recorded evidence | Decision |
+| Route | Wide macro difference and interval | Decision |
 | --- | --- | --- |
-| Primary baseline | Full-history MAE is `0.1933`; coverage MAE is `0.1833`. | The `0.0100` gain is below the `0.02` practical gate. |
-| Uncertainty | Coverage-minus-full paired interval is `[-0.0363, +0.0152]`. | The interval crosses zero; no promotion. |
-| Random landscape | Exact random expectation is `0.2150`, SD is `0.0262`, coverage midrank is `0.8868`, and random as-good-or-better mass is `0.1291`. | Coverage uses meaningful pool signal, but random position does not establish superiority to full history. |
-| Support | Continuous support MAE is `0.0250`; discrete hindsight oracle MAE is `0.0375`. | The pool can represent much better subsets; pre-Origin identification remains unsolved. |
-| Robustness | Horizon direction changes. Dependency deduplication yields a `0.0167` gain. Repeat views average `0.0071`; none reaches `0.02`. | Recurrence does not explain the whole direction, but no robust effect clears the gate. |
-| Semantic route | `centroid_recent_15` and `facility_recent_15` score `0.1917`, versus `0.1933` full history and `0.1833` coverage. | ALG-007 is a frozen cross-source candidate, not positive evidence. |
-| Agent axis | Both Agents favor coverage by less than `0.02`; no Agent was held out from nomination. | Evidence is panel-conditional. |
-| Fixed-universe route | The current two-Agent matrix has only three empirical difficulty levels. | ALG-008 IRT remains data-gated and cannot substitute for temporal evidence. |
+| Recency | `+0.0189`, `[-0.0040, +0.0400]`; 2/7 repositories favorable | Retire on this panel. |
+| Difficulty coverage | `+0.0398`, `[+0.0289, +0.0519]`; 0/7 favorable | Retire on this panel. |
+| History match | `-0.0064`, `[-0.0178, +0.0041]`; 5/7 favorable; better than 93.75% of random draws | Keep only as a response-matrix compression control; it misses the `-0.01` development nomination gate. |
+| Cross-repository drift match | `+0.0016`, `[-0.0060, +0.0093]`; 4/7 favorable | Reject the mean-drift mechanism. |
+| Local trend match | Equal to history match; every outer fold chose alpha zero | Reject the added trend term. |
+| ALG-007 centroid | `+0.0015`, `[-0.0215, +0.0253]`; 4/7 favorable | Retire the fixed semantic route on this source family. |
+| ALG-007 facility control | `+0.0377`, `[+0.0118, +0.0618]`; 2/7 favorable | Retire. |
+| Hindsight support | `-0.1589`, `[-0.1992, -0.1114]`; 7/7 favorable | Strong representability; pre-Origin identification remains the bottleneck. |
 
-No Selector is a Runner default. These results are counterfactual, not
-strict-prospective. The earlier estimate of 44 independent Origins is only an
-i.i.d. lower-bound calculation for the present panel; it is not a valid
-multi-repository power target because Origins within a repository are
-correlated.
+Equal-budget random Selection has mean wide difference `+0.0175`, population
+SD `0.0159`, and mean Monte Carlo standard error `0.000112` from 20,000 draws.
+The deep portfolio does not rescue a candidate: history match is `-0.0014`,
+semantic centroid is `+0.0168`, and the fixed recency and coverage rules are
+also harmful. Full history is semantically closer to future Tasks than either
+ALG-007 subset.
 
-The previous USD 300 authority is closed. The last follow-up made zero
-coding-Agent calls and one required-endpoint embedding call over 75 Tasks and
-22,935 input tokens; the endpoint exposed no cost. No current work item
-authorizes paid evidence calls.
+The earlier 75-Task, two-Agent SymPy replay remains a precursor, not a second
+independent confirmation. Its coverage gain was `0.0100` with interval
+`[-0.0363, +0.0152]`. The new portfolio shows why its direction must not be
+generalized from one repository.
+
+No Selector is a Runner default. All current results are counterfactual and
+panel-conditional; Check maturity is projected to Task arrival, outer Agent
+treatments were not held out, and the Python-heavy source cannot establish
+language or source-family portability. The completed study and exact identities
+are recorded in
+[`experiments/2026-07-28-multi-repository-public-study.md`](experiments/2026-07-28-multi-repository-public-study.md).
+
+This sprint made zero paid API calls and zero coding-Agent calls. One pinned
+embedding model already present on disk ran on local CPU. The previous USD 300
+authority remains closed, and no current candidate warrants or authorizes paid
+validation.
 
 ## Multi-Repository Research Contract
 
@@ -272,8 +289,8 @@ Routes remain separate until evidence supports a combination.
 
 | Route | Thesis | Decisive test | State |
 | --- | --- | --- | --- |
-| MR-A: fixed outcome-free transfer | A simple semantic or structural rule transfers without fitting target outcomes. | Freeze ALG-007, apply it repository-locally, and pass the full-history, cluster-interval, random-landscape, and robustness gates. | `data-gated` |
-| MR-B: offline multi-repository training | Repository-local Origins from several research repositories teach one policy that still consumes only one repository at deployment. | Nested leave-one-repository-out evaluation against full history and fixed rules; target future Results never enter fitting. | `data-gated` |
+| MR-A: fixed outcome-free transfer | A simple semantic or structural rule transfers without fitting target outcomes. | Fixed recency, coverage, and ALG-007 all failed the current seven-repository screen. Reopen ALG-007 only with both a new Task source and new Agent panel; otherwise require a new prespecified mechanism. | `closed` on the current source and panel |
+| MR-B: offline multi-repository training | Repository-local Origins from several research repositories teach one policy that still consumes only one repository at deployment. | History match has a small signal, but local trend and mean cross-repository drift add none. Reopen for one theory-grounded family that can be specified without another outcome-driven parameter sweep. | `data-gated` |
 | MR-C: partial pooling | Repository-specific effects share useful structure without erasing heterogeneity. | ALG-006 improves held-out-repository loss and calibration over macro averaging and the safe-switch baseline after enough independent repositories exist. | `data-gated` |
 | MR-D: fixed-universe compression | A small subset reconstructs full historical Agent scores across unseen Agents. | ALG-008 beats equal-budget random and coverage on held-out Agents, reported separately from future-Task MAE. | `data-gated` |
 | MR-E: source and field validity | Generator-conditional gains persist in natural future work. | Frozen later source, then prospective field evidence with an independently defined target frame. | `authority-gated` |
@@ -287,83 +304,88 @@ ALG-005 reopens only with a concrete cost or resource estimand.
 
 ### Phase 1 — Blinded Portfolio And Lineage Audit
 
-State: `ready`; no paid calls.
+State: `closed`; completed with zero paid calls.
 
-1. Inventory candidate repositories without opening new Agent outcomes.
-2. Prefer one static source/import paradigm and one certification policy.
-3. Record repository ID, upstream/fork family, source revision, time coverage,
-   eligible Task count, mature Origin count, dependency evidence, verifier
-   availability, architecture constraints, and known missingness.
-4. Form separate wide and deep candidate portfolios.
-5. Verify that every algorithm-relevant time or stratum attribute is imported
-   with explicit source or user lineage. Keep strict and counterfactual
-   scenarios distinct.
-
-Output: one sanitized portfolio manifest, exclusion log, and feasibility
-report. A finding that no defensible portfolio exists is a valid terminal
-result.
+The pinned 500-Task source yielded 12 repository rows, seven wide repositories,
+three deep repositories, and 68 potential Origins. The manifest records exact
+source identity, chronological span, current fork metadata, exclusions, and the
+counterfactual time contract. Django supplies 63.2% of Origins, so the study
+uses repository-first aggregation.
 
 ### Phase 2 — Offline Protocol And Tooling
 
-State: `ready`; no paid calls.
+State: `closed`; completed with zero paid calls.
 
-1. Add an experiment-layer aggregator over repository-local reports. Start with
-   a per-repository table, macro mean, repository-cluster resampling, and
-   leave-one-cluster-out sensitivity.
-2. Exercise it with fixtures, null simulations, and the existing SymPy report.
-3. Specify sparse exact versus precision-bounded Monte Carlo random calibration
-   after the Agent-panel state space is known.
-4. Freeze a self-digested preregistration manifest before any new outer
-   outcomes.
-
-Do not change core Result, Task Pool, or Selection records for aggregation.
+The direct experiment layer now provides source/plan binding, repository-local
+Origin construction, repository-first contrasts, cluster bootstrap intervals,
+leave-one-cluster-out sensitivity, wide/deep views, 20,000-draw random
+calibration, and compact self-digested outputs. Tests cover the evidence
+boundary. Core Result, Task Pool, Selection, and Runner contracts did not
+change.
 
 ### Phase 3 — Multi-Repository Feasibility Pilot
 
-State: `authority-gated` for missing Agent cells.
+State: `data-gated`; the public zero-cost feasibility portion is complete, but
+no candidate warrants missing Agent cells.
 
-1. Certify repository-local pools under the fixed source and policy.
-2. Reuse exact cached cells; lazily execute only missing Agent × Task cells
-   after Selection when the protocol permits.
-3. Estimate feasible Origin counts, between-repository variance,
-   within-repository correlation, missingness, cost, and wall time.
-4. Fix confirmatory repository and Origin counts from the pilot without using
-   it as confirmatory evidence.
-
-The old 44-Origin calculation is not carried forward as the target.
+The public panel establishes portfolio geometry and route-dependent
+between-repository variation. Naive normal approximations for a `0.02` effect
+range from roughly 3 to 28 repositories across failed routes, so they are not a
+confirmatory target. After a new route passes the development gate, its blinded
+pilot must measure repository dependence, missingness, cost, and wall time
+before the repository count is frozen. The old 44-Origin calculation is not
+carried forward.
 
 ### Phase 4 — Frozen Fixed-Selector Comparison
 
-State: `data-gated`.
+State: `closed` on the current source and Agent panel.
 
-Compare full history, coverage, recency, equal-budget random, and the frozen
-ALG-007 primary/control across the wide and deep portfolios. This phase can
-support a fixed-policy portability result without a cross-repository trainer.
+Full history, coverage, recency, equal-budget random, and both frozen ALG-007
+rules were compared across wide and deep views. None earned nomination.
 
 ### Phase 5 — Offline Multi-Repository Training
 
 State: `data-gated`.
 
-Only after the portfolio supports nested outer folds and one concrete learned
-family exists, widen Selection's training input from one frozen Task Pool to a
-sequence of independently validated repository-local evidence groups. Reuse
-the existing `SelectorRecord`; bind every training pool, Origin, Agent
-treatment, Result, and fitting protocol in `training_source_digests`.
-This is an offline research/training entry point. Normal Runner input and
-inference remain the existing single-pool, repository-local
-`select_with_selector` path.
-
-Do not introduce a meta-pool, model registry, trainer service, or generic
-cross-validation framework.
+Outer repository folds were exercised directly in the experiment layer.
+History match improved full history by only `0.0064`; every trend fold chose
+zero adjustment, and mean cross-repository drift was harmful. Add no core
+training seam until one concrete family first passes the opened-data
+nomination gate. If that happens, bind its repository-local training evidence
+with existing digests and keep normal inference on the existing
+single-repository path. Do not introduce a meta-pool, model registry, trainer
+service, or generic cross-validation framework.
 
 ### Phase 6 — Orthogonal Confirmation
 
-State: `authority-gated`.
+State: `data-gated`, then `authority-gated`.
 
-Cross the successful repository protocol with disjoint reference/training and
-held-out Agent panels. Then run a later frozen source or strict-prospective
-campaign. A route that passes repository transfer but fails Agent transfer is
-reported as repository-portable and panel-conditional.
+There is no successful route to confirm. After nomination, freeze disjoint
+reference/training and held-out Agent panels, then a later source or
+strict-prospective campaign. Request paid authority only for the resulting
+fixed cells. A route that passes repository transfer but fails Agent transfer
+is repository-portable and panel-conditional, not generally valid.
+
+## Entry Gate For The Next Paid Study
+
+There is no active paid plan. Before requesting one, a new mechanism must be
+specified without another search over the opened target outcomes and pass the
+development gate:
+
+1. wide macro-repository difference at most `-0.01`;
+2. at least five of seven repository directions negative;
+3. every leave-one-repository-out difference negative;
+4. deep macro-repository direction negative;
+5. better than at least 75% of equal-budget random draws;
+6. if it forecasts Agent outcomes, improvement over history match.
+
+After that gate, freeze candidate code and parameters, source and revision,
+reference and held-out Agent panels, Origin schedule, budget, missing-cell
+policy, endpoint identity, and exclusions before opening independent outcomes.
+Use the candidate-specific blinded pilot to choose the repository count. Add
+RI-160's certification checkpoint only when the new pool is actually built,
+and RI-163 only for another Pylint campaign. This ordering leaves no currently
+useful infrastructure project hidden behind the data gate.
 
 ## Current Infrastructure Assessment
 
@@ -373,31 +395,32 @@ reported as repository-portable and panel-conditional.
 | Fixed Selector inference on a local pool | `code-confirmed` | Run once per repository; aggregate outside core. |
 | Imported and lazy Result reuse | `code-confirmed` | Preserve exact identity, availability, and conflict rules. |
 | User-configured time/stratum scenarios | `code-confirmed` | Preserve explicit lineage and counterfactual labeling. |
-| Multi-repository research report | Missing | Add one experiment-layer aggregator in Phase 2; it aggregates effects, not Tasks. |
-| Offline multi-repository fitting | Current `train_selector` requires one deployment Task Pool for every training Origin. | Widen the training evidence input only in Phase 5; keep product inference single-repository. |
-| Repository/fork independence metadata | No core registry | Put declared clusters and evidence in the study manifest. |
-| Repository-cluster uncertainty | Missing | Implement offline after the portfolio shape is known. |
+| Multi-repository research report | `code-confirmed` in `examples/multi_repository_study` | Preserve the direct repository-first aggregator; it combines effects, not Tasks. |
+| Offline multi-repository fitting | Outer repository folds are `code-confirmed` in one experiment script; core `train_selector` remains single-pool. | Add a narrow core seam only after a nominated concrete learned family needs it. |
+| Repository/fork independence metadata | `code-confirmed` in the study manifest; no core registry | Repeat the source-specific audit for a new portfolio. |
+| Repository-cluster uncertainty | `code-confirmed` in the experiment layer | Preserve cluster bootstrap and leave-one-cluster-out summaries. |
+| Random calibration | `code-confirmed` at 20,000 deterministic draws | Reuse until a candidate changes the state space; exact enumeration is not needed at current precision. |
+| Local semantic evidence | `code-confirmed` as ignored vectors plus committed identities | ALG-007 failed; add no core embedding service. |
 
-This is enough infrastructure to begin Phases 1–2 and test fixed policies
-across repositories one local run at a time. It is not enough to fit a policy
-offline from several repositories. No multi-repository product execution path
-is needed.
+The infrastructure needed before another paid selector study is ready. The
+remaining blocker is scientific nomination, not a missing platform. No
+multi-repository product execution path or generic training service is needed.
 
 ## Active Work Ledger
 
 | ID | Priority | State | Next decision or action |
 | --- | --- | --- | --- |
-| MR-001 | P1 | `ready` | Complete the blinded repository portfolio and lineage audit. |
-| MR-002 | P1 | `ready` | Implement and test the offline macro-repository/cluster aggregator. |
-| MR-003 | P1 | `ready` | Freeze the study manifest, full-history contrast, random calibration, horizons, and exclusions. |
-| MR-004 | P1 | `authority-gated` | Run the feasibility pilot and replace nominal Origin power with measured repository-cluster planning. |
-| MR-005 / ALG-007 | P1 | `data-gated` | Transfer-test `centroid_recent_15`; keep `facility_recent_15` as the mechanism control. |
-| MR-006 / ALG-006 | P2 | `data-gated` | Add the narrow multi-repository fitting seam only after a concrete learned family and enough outer folds exist. |
-| MR-007 / RI-188 | P1 | `data-gated` | Split reference/training and held-out Agent panels before unseen-Agent claims. |
-| MR-008 | P1 | `authority-gated` | Confirm a successful route on a later frozen source or strict-prospective campaign. |
+| MR-001 | P1 | `closed` | Portfolio and lineage audit committed; repeat only for a new source revision. |
+| MR-002 | P1 | `closed` | Repository-first aggregator, cluster interval, and leave-one-cluster-out tests committed. |
+| MR-003 | P1 | `closed` | Fixed public plan, full-history contrast, random calibration, exclusions, and results committed. |
+| MR-004 | P1 | `data-gated` | After nomination, use route-specific blinded pilot variance and cost to fix the next study; do not pay before then. |
+| MR-005 / ALG-007 | P1 | `closed` | Retired on this source family and panel. Reopen only with both a new Task source and new Agent panel. |
+| MR-006 / ALG-006 | P2 | `data-gated` | Require a theory-grounded family to pass the development gate before changing core training input. |
+| MR-007 / RI-188 | P1 | `data-gated` | Split reference/training and held-out Agent panels only after a route is nominated. |
+| MR-008 | P1 | `data-gated` | A nominated route must exist before later-source or strict-prospective authority is requested. |
 | RI-129 / RI-160 | P2 | `trigger-gated` | Add a single-writer exact certification checkpoint before the next comparable pool; replay retained entries before reuse. |
 | RI-163 | P2 | `trigger-gated` | Before another Pylint campaign, replace whole-file behavior identity with an explicit version payload and direct-helper digests. |
-| RI-191 | P2 | `data-gated` | Choose sparse exact or precision-bounded Monte Carlo random calibration after the expanded Agent panel is concrete. |
+| RI-191 | P2 | `closed` | 20,000 draws give wide mean Monte Carlo SE `0.000112`; reopen only if the candidate state space changes materially. |
 
 ## Migrated Reopening Triggers
 

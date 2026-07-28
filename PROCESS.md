@@ -2,83 +2,83 @@
 
 Last updated: 2026-07-28.
 
-Current ledger: `docs/research-improvement-backlog.md`. Frozen prior audit:
-`docs/research-improvement-backlog-2026-07-27.md`.
+Current ledger: `docs/research-improvement-backlog.md`. Completed study:
+`docs/experiments/2026-07-28-multi-repository-public-study.md`. Frozen prior
+ledger: `docs/research-improvement-backlog-2026-07-27.md`.
 
 ## Preserve
 
-- Keep the eight direct modules. One Task Pool belongs to one repository;
-  aggregate multi-repository evidence outside core.
+- Keep Records, Task Pool, Verification, Workspace, Result Store, Selection,
+  Reporting, and Runner direct.
+- Runtime is one user repository, one local Task Pool, and one local Selection.
+  Multiple repositories are offline research/training evidence units only.
+- A policy fitted elsewhere may select only eligible history from the target
+  repository. Never construct a mixed meta-pool.
 - Generators end at a prepared package; user pools open read-only. Keep Task
   Pools and Results independent with exact reuse identity.
-- User-configured time, dependency cluster, and stratum require explicit
-  lineage. Historical projection remains counterfactual.
-- Target Selection sees only eligible local history. Other repositories may
-  fit a policy but never supply target candidates.
-- Preserve freeze order, Selector provenance, lazy Result fill, and replay.
-  Add no generic services or schedulers without a measured caller.
+- User-supplied time, dependency cluster, and stratum require lineage.
+  Historical projection remains counterfactual.
+- Keep full history as the primary baseline and equal-budget random Selection
+  as sampling-landscape calibration.
+- Add no registry, embedding service, trainer service, scheduler, or core
+  multi-repository path without a measured caller and a nominated algorithm.
 
-## Evidence
+## Current Evidence
 
-The counterfactual SymPy study has 75 Tasks, twelve Origins, and two Agents.
-Full-history MAE is `0.1933`; coverage is `0.1833`, but its `0.0100` gain and
-interval `[-0.0363, +0.0152]` fail promotion. Random/support diagnostics show
-attainable signal, while horizon, dependency, and repeat views do not establish
-a robust `0.02` effect. ALG-007's semantic candidates score `0.1917`.
+The no-paid-call public study uses 500 SWE-bench Verified Tasks, three frozen
+public Agent result vectors, seven wide repositories, three deep repositories,
+and 68 repository-local Origins. Differences below are candidate MAE minus
+full-history MAE; negative is favorable.
 
-No Selector is a Runner default. Repository, Agent, and strict-prospective
-transfer remain untested.
+| Route | Wide macro difference | Decision |
+| --- | ---: | --- |
+| Recency | `+0.0189` | Retire |
+| Difficulty coverage | `+0.0398` | Retire |
+| History match | `-0.0064` | Compression control only |
+| Cross-repository drift | `+0.0016` | Reject |
+| Local trend | `-0.0064` | Chose zero trend in every fold |
+| ALG-007 centroid | `+0.0015` | Retire on this source and panel |
+| ALG-007 facility | `+0.0377` | Retire |
+| Hindsight support | `-0.1589` | Representable, not identifiable yet |
 
-## Direction
+History match is better than 93.75% of 20,000 equal-budget random draws, but it
+misses the `-0.01` development gate, its interval crosses zero, and its deep
+effect is only `-0.0014`. No route warrants independent or paid validation.
+All evidence is counterfactual and panel-conditional; no Selector is a Runner
+default.
 
-Normal product execution remains one user repository, one local Task Pool, and
-one local Selection. Multiple repositories are only an offline source of
-Origins for algorithm research and training.
+## Current State
 
-Use held-out-repository validation:
+The experiment layer now has exact source and outcome identity, separate
+wide/deep portfolios, repository-first aggregation, repository-cluster
+bootstrap intervals, leave-one-cluster-out sensitivity, random calibration,
+outer repository folds, local semantic replay, compact digests, and tests.
+Core runtime did not change.
 
-1. fit on other repositories and their mature past Origins;
-2. freeze before target outer outcomes;
-3. select only target-local eligible history;
-4. predict later Tasks from that target repository.
+Infrastructure needed before another paid selector study is ready. The blocker
+is a scientifically credible candidate, not a platform gap. This sprint made
+zero paid API calls and zero coding-Agent calls.
 
-Keep within-repository time, held-out repository, and held-out Agent as separate
-axes. Average Origin contrasts within repository, then use a macro-repository
-effect, repository/fork-family cluster uncertainty, and leave-one-cluster-out
-sensitivity. Task weighting is secondary; 44 i.i.d. Origins is not the new
-sample target.
+## Reopen
 
-Holding out a whole repository tests whether the offline policy overfit its
-research repositories; it is not a multi-repository Runner mode. Use separate
-wide and deep portfolios. Fix importer/Generator paradigm, certification,
-Agent panel, budget, and metric in the first study.
+A new mechanism may enter opened-data development only when it is motivated
+without another parameter search over the observed outcomes. Before paid work
+it must achieve:
 
-## Next
+1. wide difference at most `-0.01`;
+2. negative direction in at least five of seven repositories;
+3. every leave-one-repository-out difference negative;
+4. negative deep direction;
+5. better than at least 75% of random draws;
+6. improvement over history match when forecasting Agent outcomes.
 
-No paid call is needed to:
+Then freeze independent source/panel identity, candidate code and parameters,
+Origin schedule, budget, missing-cell policy, exclusions, and endpoint before
+opening outcomes. Estimate repository count from that route's blinded pilot;
+do not reuse nominal Origin counts or the failed-route range.
 
-1. inventory repository revision, fork cluster, time coverage, eligible Tasks,
-   mature Origins, dependency evidence, verifier availability, and exclusions;
-2. form wide/deep portfolios and audit time/stratum lineage;
-3. add and fixture-test an experiment-layer per-repository/macro-repository
-   aggregator with cluster and leave-one-cluster-out summaries;
-4. preregister full history, random calibration, ALG-007, horizons, dependency
-   views, Agent panel, budget, and exclusions.
-
-After new authority, pilot variance, within-repository correlation, missingness,
-cost, and confirmatory sample size. Fixed Selectors can run locally now.
-`train_selector` still requires one Task Pool; widen it only after a concrete
-learned family and viable outer folds exist. That is an offline training entry
-point; product inference stays single-repository.
-
-## Gates
-
-- The old USD 300 authority is closed. New evidence calls require explicit
-  authority and `OPENAI_BASE_URL` plus `OPENAI_API_KEY`.
-- Do not retune the same 75 outcomes.
-- Before comparable certification, add RI-160's checkpoint. Before another
-  Pylint campaign, narrow RI-163's behavior digest.
-- Reopen checkout caching above 5% wall time and Agent parallelism only with
-  exact attribution, one writer, and campaign authority.
-- Run relevant tests, Ruff, Pyright, and `git diff --check` before commits.
-  Keep secrets and raw artifacts ignored.
+Paid evidence requires new authority and `OPENAI_BASE_URL` plus
+`OPENAI_API_KEY`. Add RI-160's certification checkpoint only before the next
+comparable pool, and RI-163 only before another Pylint campaign. Reopen checkout
+caching above 5% measured wall time and bounded Agent parallelism only with
+exact attribution, one writer, and campaign authority.
