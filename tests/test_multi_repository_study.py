@@ -38,6 +38,8 @@ from examples.multi_repository_study.portfolio import (  # noqa: E402
     load_portfolio_plan,
 )
 from examples.multi_repository_study.panel_extension import (  # noqa: E402
+    legacy_official_binary_outcomes,
+    load_agent_panel_schema_amendment,
     retrospective_availability_audit,
 )
 from examples.multi_repository_study.public_replay import (  # noqa: E402
@@ -259,6 +261,57 @@ def test_agent_invariant_plan_is_self_digested_and_cutoff_aware() -> None:
     assert plan["diagnostics"]["temporal_null"]["permutations"] == 500
     assert plan["holdout_open_gate"]["production_promotion_allowed"] is False
     assert plan["authority"]["paid_api_calls"] == 0
+
+
+def test_agent_panel_schema_amendment_is_narrow_and_self_digested() -> None:
+    amendment = load_agent_panel_schema_amendment()
+    digest = amendment["agent_panel_schema_amendment_digest"]
+
+    assert canonical_digest(
+        {
+            key: value
+            for key, value in amendment.items()
+            if key != "agent_panel_schema_amendment_digest"
+        }
+    ) == digest
+    assert len(amendment["affected_result_blobs"]) == 3
+    assert amendment["authority"]["new_result_blob_reads"] == 0
+    assert amendment["authority"]["holdout_result_blob_reads"] == 0
+
+
+def test_legacy_official_result_keeps_resolved_only_binary_endpoint() -> None:
+    amendment = load_agent_panel_schema_amendment()
+    fields = tuple(amendment["legacy_schema_fields"])
+    payload = {field: [] for field in fields}
+    payload["generated"] = ["task-1"]
+    payload["with_logs"] = ["task-1"]
+    payload["applied"] = ["task-1"]
+    payload["resolved"] = ["task-1"]
+    payload["no_generation"] = ["task-2"]
+
+    outcomes, diagnostics = legacy_official_binary_outcomes(
+        ("task-1", "task-2", "task-3"),
+        payload,
+        legacy_fields=fields,
+    )
+
+    assert outcomes == {"task-1": 1, "task-2": 0, "task-3": 0}
+    assert diagnostics["resolved_count"] == 1
+    assert diagnostics["ordinary_unlisted_count"] == 1
+
+
+def test_legacy_official_result_rejects_schema_drift() -> None:
+    amendment = load_agent_panel_schema_amendment()
+    fields = tuple(amendment["legacy_schema_fields"])
+    payload = {field: [] for field in fields}
+    payload["unexpected"] = []
+
+    with pytest.raises(ValueError, match="fields"):
+        legacy_official_binary_outcomes(
+            ("task-1",),
+            payload,
+            legacy_fields=fields,
+        )
 
 
 def test_agent_invariant_difficulty_states_follow_solve_fraction() -> None:

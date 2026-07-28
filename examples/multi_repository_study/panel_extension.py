@@ -50,6 +50,7 @@ from examples.multi_repository_study.theory import (  # noqa: E402
 
 HERE = Path(__file__).resolve().parent
 DEFAULT_EXTENSION_PLAN = HERE / "agent-panel-extension-plan.json"
+DEFAULT_SCHEMA_AMENDMENT = HERE / "agent-panel-schema-amendment.json"
 DEFAULT_PUBLIC_PLAN = HERE / "public-panel-plan.json"
 DEFAULT_THEORY_PLAN = HERE / "theory-plan.json"
 DEFAULT_THEORY_RESULTS = HERE / "theory-results.json"
@@ -78,15 +79,54 @@ def load_agent_panel_extension_plan(
     return payload
 
 
+def load_agent_panel_schema_amendment(
+    path: Path = DEFAULT_SCHEMA_AMENDMENT,
+) -> Mapping[str, Any]:
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(payload, Mapping):
+        raise ValueError("Agent panel schema amendment must be an object")
+    if payload.get("schema_version") != "barcarolle_agent_panel_schema_amendment_v1":
+        raise ValueError("Agent panel schema amendment is unsupported")
+    digest = payload.get("agent_panel_schema_amendment_digest")
+    expected = canonical_digest(
+        {
+            key: value
+            for key, value in payload.items()
+            if key != "agent_panel_schema_amendment_digest"
+        }
+    )
+    if digest != expected:
+        raise ValueError("Agent panel schema amendment digest does not match")
+    return payload
+
+
 def load_allocated_outcomes(
     result_dir: Path,
     plan: Mapping[str, object],
     task_ids: Sequence[str],
     *,
     allocation_key: str,
+    schema_amendment: Mapping[str, object] | None = None,
 ) -> tuple[Mapping[str, Mapping[str, int]], Mapping[str, Mapping[str, int]]]:
     if allocation_key not in {"development_allocation", "holdout_allocation"}:
         raise ValueError("unsupported Agent allocation")
+    amendment = (
+        load_agent_panel_schema_amendment()
+        if schema_amendment is None
+        else schema_amendment
+    )
+    if amendment.get("agent_panel_extension_plan_digest") != plan.get(
+        "agent_panel_extension_plan_digest"
+    ):
+        raise ValueError("schema amendment does not bind the extension plan")
+    legacy_fields = _string_tuple(
+        amendment.get("legacy_schema_fields"),
+        "legacy schema fields",
+    )
+    legacy_blob_shas = {
+        _required_string(row, "result_blob_sha")
+        for row in _mapping_sequence(amendment, "affected_result_blobs")
+    }
     outcomes = {}
     diagnostics = {}
     for agent in _mapping_sequence(plan, allocation_key):
@@ -99,13 +139,53 @@ def load_allocated_outcomes(
         payload = json.loads(raw)
         if not isinstance(payload, Mapping):
             raise ValueError("Agent result must be a JSON object")
-        agent_outcomes, agent_diagnostics = official_binary_outcomes(
-            task_ids,
-            payload,
-        )
+        result_blob_sha = _required_string(agent, "result_blob_sha")
+        if result_blob_sha in legacy_blob_shas:
+            agent_outcomes, agent_diagnostics = legacy_official_binary_outcomes(
+                task_ids,
+                payload,
+                legacy_fields=legacy_fields,
+            )
+        else:
+            agent_outcomes, agent_diagnostics = official_binary_outcomes(
+                task_ids,
+                payload,
+            )
         outcomes[agent_id] = agent_outcomes
         diagnostics[agent_id] = agent_diagnostics
     return dict(sorted(outcomes.items())), dict(sorted(diagnostics.items()))
+
+
+def legacy_official_binary_outcomes(
+    task_denominator: Sequence[str],
+    result_payload: Mapping[str, object],
+    *,
+    legacy_fields: Sequence[str],
+) -> tuple[Mapping[str, int], Mapping[str, int]]:
+    expected_fields = set(
+        _string_tuple(legacy_fields, "legacy result fields")
+    )
+    if set(result_payload) != expected_fields:
+        raise ValueError("legacy official result fields are unsupported")
+    denominator = _string_tuple(task_denominator, "Task denominator")
+    denominator_set = set(denominator)
+    values = {
+        field: _task_id_set(result_payload.get(field), field)
+        for field in sorted(expected_fields)
+    }
+    if any(task_ids - denominator_set for task_ids in values.values()):
+        raise ValueError("legacy official result refers outside the Task denominator")
+    outcomes = {
+        task_id: int(task_id in values["resolved"]) for task_id in denominator
+    }
+    diagnostics = {
+        f"{field}_count": len(task_ids)
+        for field, task_ids in sorted(values.items())
+    }
+    diagnostics["ordinary_unlisted_count"] = len(
+        denominator_set - set().union(*values.values())
+    )
+    return outcomes, diagnostics
 
 
 def materialize_frozen_joint_markov(
@@ -469,6 +549,19 @@ def _load_theory_results(path: Path) -> Mapping[str, Any]:
 def _git_blob_sha(content: bytes) -> str:
     header = f"blob {len(content)}\0".encode()
     return hashlib.sha1(header + content, usedforsecurity=False).hexdigest()
+
+
+def _task_id_set(value: object, field: str) -> set[str]:
+    if (
+        not isinstance(value, Sequence)
+        or isinstance(value, str)
+        or any(not isinstance(item, str) or not item for item in value)
+    ):
+        raise ValueError(f"{field} must contain nonempty Task IDs")
+    items = tuple(value)
+    if len(items) != len(set(items)):
+        raise ValueError(f"{field} must not contain duplicate Task IDs")
+    return set(items)
 
 
 def _file_sha256(path: Path) -> str:

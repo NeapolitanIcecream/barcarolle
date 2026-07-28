@@ -1,0 +1,61 @@
+{
+  "schema_version": "barcarolle_agent_panel_schema_amendment_v1",
+  "study_id": "public-agent-panel-extension-2026-07-28",
+  "recorded_at": "2026-07-28T03:56:24Z",
+  "epistemic_status": "post_open_schema_only_amendment",
+  "agent_panel_extension_plan_digest": "52f1f3c1dc6159f2c6f17c7b530fe4aab962728c43049d80284690608aad98f6",
+  "blocker": {
+    "observed": "Three frozen development blobs use the official legacy result schema, while the existing normalizer accepts only the current three-field schema.",
+    "resolution": "Accept one exact legacy field set for the three exact affected blobs. Keep the frozen outcome definition unchanged: resolved is pass and every other Task in the exact 500-Task denominator is fail.",
+    "forbidden_changes": [
+      "changing Agent allocation",
+      "using any non-resolved field as an algorithm feature or endpoint",
+      "changing a Selector or algorithm constant",
+      "opening a holdout result blob"
+    ]
+  },
+  "current_schema_fields": [
+    "no_generation",
+    "no_logs",
+    "resolved"
+  ],
+  "legacy_schema_fields": [
+    "applied",
+    "generated",
+    "install_fail",
+    "no_apply",
+    "no_generation",
+    "reset_failed",
+    "resolved",
+    "test_errored",
+    "test_timeout",
+    "with_logs"
+  ],
+  "legacy_validation": {
+    "field_set": "must exactly equal legacy_schema_fields",
+    "field_values": "every field must be a duplicate-free array of nonempty Task IDs contained in the 500-Task denominator",
+    "overlap": "allowed because legacy fields record overlapping pipeline stages rather than mutually exclusive terminal categories",
+    "binary_outcome": "Task ID in resolved maps to 1; every other denominator Task maps to 0"
+  },
+  "affected_result_blobs": [
+    {
+      "submission": "20231010_rag_claude2",
+      "result_blob_sha": "61ca95b7b890fe42c562bcdcfa8f9fbc9b18e6aa"
+    },
+    {
+      "submission": "20231010_rag_swellama13b",
+      "result_blob_sha": "fbbc9cc1103f57f45a8bedef2701f4084070ee15"
+    },
+    {
+      "submission": "20240402_sweagent_claude3opus",
+      "result_blob_sha": "2e76b7330b09b1ff0574d2bc324bb678b79c7056"
+    }
+  ],
+  "authority": {
+    "paid_api_calls": 0,
+    "coding_agent_calls": 0,
+    "new_result_blob_reads": 0,
+    "holdout_result_blob_reads": 0
+  },
+  "agent_panel_schema_amendment_digest": "7a53f1a46c271a1c86bf0ef01f8f313ad305fdf72d5a1f3149bb797ae82afe4b"
+}
