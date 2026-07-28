@@ -68,7 +68,10 @@ forward.
    scenario; it never relabels strict-prospective evidence.
 6. Selection uses only the target repository's eligible local history at the
    deployment Origin. A learned policy may be fitted on other repositories,
-   but their Tasks are not candidates in the target benchmark.
+   but their Tasks are not candidates in the target benchmark. A rolling-origin
+   fit may use only records available by the target Origin's calendar cutoff;
+   using complete other-repository histories must be labeled retrospective
+   transfer.
 7. Full eligible local history is the primary no-Selection baseline.
    Equal-budget random Selection is a dense calibration of where an algorithm
    lies in the attainable sampling landscape, not a replacement baseline.
@@ -78,12 +81,13 @@ forward.
 
 ## Current Evidence And Claim Boundary
 
-The completed public multi-repository development study contains 500
-SWE-bench Verified Tasks, three frozen public Agent result vectors, seven
-wide-portfolio repositories, three deep-portfolio repositories, and 68
-repository-local Origins. It uses full eligible local history as the primary
-baseline. Candidate-minus-full-history differences are negative when Selection
-helps.
+The completed public multi-repository development program contains 500
+SWE-bench Verified Tasks, seven wide-portfolio repositories, three
+deep-portfolio repositories, and 68 repository-local Origins. The initial
+screen used three frozen public Agent result vectors. An outcome-independent
+metadata rule later added eight development Agents and preserved six sealed
+holdout Agents. Full eligible local history is the primary baseline.
+Candidate-minus-full-history differences are negative when Selection helps.
 
 | Route | Wide macro difference and interval | Decision |
 | --- | --- | --- |
@@ -96,12 +100,35 @@ helps.
 | ALG-007 facility control | `+0.0377`, `[+0.0118, +0.0618]`; 2/7 favorable | Retire. |
 | Hindsight support | `-0.1589`, `[-0.1992, -0.1114]`; 7/7 favorable | Strong representability; pre-Origin identification remains the bottleneck. |
 
-Equal-budget random Selection has mean wide difference `+0.0175`, population
-SD `0.0159`, and mean Monte Carlo standard error `0.000112` from 20,000 draws.
-The deep portfolio does not rescue a candidate: history match is `-0.0014`,
-semantic centroid is `+0.0168`, and the fixed recency and coverage rules are
-also harmful. Full history is semantically closer to future Tasks than either
-ALG-007 subset.
+The theory-driven extension reached the following decisions:
+
+| Route | Wide macro difference and interval | Decisive evidence | Decision |
+| --- | --- | --- | --- |
+| Joint response Markov, original 3 Agents | `-0.01911`, `[-0.04715, +0.00442]`; 5/7 favorable | Temporal-null rate `0.100`; leave-one-Agent macro `-0.00043`, only 1/3 favorable | Retire after adversarial audit. |
+| Joint response Markov, sealed 8-Agent replication | `+0.00031`, `[-0.01037, +0.01225]`; 4/7 favorable | Deep `+0.00626`; exact original memberships | Retire confirmed; no Agent-panel transfer. |
+| Cutoff-aware Agent-invariant difficulty Markov | `-0.00888`, `[-0.03215, +0.01432]`; 3/7 favorable | Better than 97.78% of random; null `0.066`; deep `+0.00920`; leave-one-Agent 6/11 favorable | Retire; gate failed. |
+| Adaptive prequential difficulty | `-0.00235`, `[-0.02208, +0.01680]`; 3/7 favorable | Better than 90.28% of random; null `0.194`; deep `+0.00927`; leave-one-Agent 6/11 favorable | Retire and close current-pool temporal search. |
+
+The original Joint Markov was also temporally retrospective: 9,467 of 19,985
+cross-repository training Task uses (`47.37%`) occurred after the target
+Origin cutoff, affecting 68/68 Origins. The difficulty experiments enforce
+calendar availability. A post-result, outcome-free supply audit found a median
+of 11 completed other-repository training Origins from a median of two
+repositories; four target Origins have none and 35/68 have fewer than three
+training repositories. The self-digested audit is part of
+`adaptive-difficulty-results.json`. This is too thin for a credible learned
+adaptive gate.
+
+The six-Agent holdout remains unread. It is reserved for a future mechanism
+specified independently of the opened results; it is not permission to keep
+searching the current development panel.
+
+In the initial three-Agent screen, equal-budget random Selection has mean wide
+difference `+0.0175`, population SD `0.0159`, and mean Monte Carlo standard
+error `0.000112` from 20,000 draws. The deep portfolio does not rescue a
+candidate: history match is `-0.0014`, semantic centroid is `+0.0168`, and the
+fixed recency and coverage rules are also harmful. Full history is
+semantically closer to future Tasks than either ALG-007 subset.
 
 The earlier 75-Task, two-Agent SymPy replay remains a precursor, not a second
 independent confirmation. Its coverage gain was `0.0100` with interval
@@ -109,11 +136,15 @@ independent confirmation. Its coverage gain was `0.0100` with interval
 generalized from one repository.
 
 No Selector is a Runner default. All current results are counterfactual and
-panel-conditional; Check maturity is projected to Task arrival, outer Agent
-treatments were not held out, and the Python-heavy source cannot establish
-language or source-family portability. The completed study and exact identities
-are recorded in
-[`experiments/2026-07-28-multi-repository-public-study.md`](experiments/2026-07-28-multi-repository-public-study.md).
+panel-conditional; Check maturity is projected to Task arrival and the
+Python-heavy source cannot establish language or source-family portability.
+The Joint Markov received an outcome-independently allocated eight-Agent
+replication and failed. Later mechanisms use all eleven opened development
+Agents; six remain sealed. The completed studies and exact identities are
+recorded in
+[`experiments/2026-07-28-multi-repository-public-study.md`](experiments/2026-07-28-multi-repository-public-study.md)
+and
+[`experiments/2026-07-28-theory-driven-selector-sprint.md`](experiments/2026-07-28-theory-driven-selector-sprint.md).
 
 This sprint made zero paid API calls and zero coding-Agent calls. One pinned
 embedding model already present on disk ran on local CPU. The previous USD 300
@@ -290,10 +321,11 @@ Routes remain separate until evidence supports a combination.
 | Route | Thesis | Decisive test | State |
 | --- | --- | --- | --- |
 | MR-A: fixed outcome-free transfer | A simple semantic or structural rule transfers without fitting target outcomes. | Fixed recency, coverage, and ALG-007 all failed the current seven-repository screen. Reopen ALG-007 only with both a new Task source and new Agent panel; otherwise require a new prespecified mechanism. | `closed` on the current source and panel |
-| MR-B: offline multi-repository training | Repository-local Origins from several research repositories teach one policy that still consumes only one repository at deployment. | History match has a small signal, but local trend and mean cross-repository drift add none. Reopen for one theory-grounded family that can be specified without another outcome-driven parameter sweep. | `data-gated` |
+| MR-B: offline multi-repository training | Repository-local Origins from several research repositories teach one policy that still consumes only one repository at deployment. | Joint response dynamics failed Agent transfer; cutoff-aware difficulty dynamics failed wide/deep and Agent-direction gates. Reopen only with more calendar-eligible Origins or a mechanism derived independently of the opened results. | `data-gated`; current-pool search closed |
 | MR-C: partial pooling | Repository-specific effects share useful structure without erasing heterogeneity. | ALG-006 improves held-out-repository loss and calibration over macro averaging and the safe-switch baseline after enough independent repositories exist. | `data-gated` |
 | MR-D: fixed-universe compression | A small subset reconstructs full historical Agent scores across unseen Agents. | ALG-008 beats equal-budget random and coverage on held-out Agents, reported separately from future-Task MAE. | `data-gated` |
 | MR-E: source and field validity | Generator-conditional gains persist in natural future work. | Frozen later source, then prospective field evidence with an independently defined target frame. | `authority-gated` |
+| MR-F: adaptive difficulty regime | Historical predictive score can choose between stationary and dynamic task-difficulty forecasts without future leakage. | Prequential adaptation produced wide `-0.00235`, deep `+0.00927`, and temporal-null rate `0.194`. | `closed` on the current pool |
 
 ALG-001's shrinkage switch and ALG-004's EWMA guard remain offline safeguards,
 not positive algorithms. ALG-002 is closed for the current duration-stratum
@@ -325,8 +357,7 @@ change.
 
 ### Phase 3 — Multi-Repository Feasibility Pilot
 
-State: `data-gated`; the public zero-cost feasibility portion is complete, but
-no candidate warrants missing Agent cells.
+State: `data-gated`; the public zero-cost feasibility portion is complete.
 
 The public panel establishes portfolio geometry and route-dependent
 between-repository variation. Naive normal approximations for a `0.02` effect
@@ -334,7 +365,9 @@ range from roughly 3 to 28 repositories across failed routes, so they are not a
 confirmatory target. After a new route passes the development gate, its blinded
 pilot must measure repository dependence, missingness, cost, and wall time
 before the repository count is frozen. The old 44-Origin calculation is not
-carried forward.
+carried forward. Eleven development Agents now have complete 500-Task public
+vectors, and six holdout Agents remain sealed; Agent cells are not the current
+blocker.
 
 ### Phase 4 — Frozen Fixed-Selector Comparison
 
@@ -345,26 +378,30 @@ rules were compared across wide and deep views. None earned nomination.
 
 ### Phase 5 — Offline Multi-Repository Training
 
-State: `data-gated`.
+State: `data-gated`; current-pool candidate search is closed.
 
 Outer repository folds were exercised directly in the experiment layer.
 History match improved full history by only `0.0064`; every trend fold chose
-zero adjustment, and mean cross-repository drift was harmful. Add no core
-training seam until one concrete family first passes the opened-data
-nomination gate. If that happens, bind its repository-local training evidence
-with existing digests and keep normal inference on the existing
-single-repository path. Do not introduce a meta-pool, model registry, trainer
-service, or generic cross-validation framework.
+zero adjustment, and mean cross-repository drift was harmful. Joint response
+Markov failed temporal-null and Agent-transfer audits. Cutoff-aware scalar
+difficulty Markov and prequential adaptation also failed the repository,
+deep-history, and Agent-direction gates. Add no core training seam until one
+concrete family first passes the opened-data nomination gate. Reopen with more
+calendar-eligible Origins or a mechanism derived independently of these
+results, not another threshold or gate search. Do not introduce a meta-pool,
+model registry, trainer service, or generic cross-validation framework.
 
 ### Phase 6 — Orthogonal Confirmation
 
 State: `data-gated`, then `authority-gated`.
 
-There is no successful route to confirm. After nomination, freeze disjoint
-reference/training and held-out Agent panels, then a later source or
-strict-prospective campaign. Request paid authority only for the resulting
-fixed cells. A route that passes repository transfer but fails Agent transfer
-is repository-portable and panel-conditional, not generally valid.
+There is no successful route to confirm. The disjoint Agent split is already
+frozen: eleven opened development Agents and six sealed holdout Agents. Open
+the holdout once only after a candidate passes every development gate, then
+require a later source or strict-prospective campaign. Request paid authority
+only for the resulting fixed cells. A route that passes repository transfer
+but fails Agent transfer is repository-portable and panel-conditional, not
+generally valid.
 
 ## Entry Gate For The Next Paid Study
 
@@ -377,11 +414,14 @@ development gate:
 3. every leave-one-repository-out difference negative;
 4. deep macro-repository direction negative;
 5. better than at least 75% of equal-budget random draws;
-6. if it forecasts Agent outcomes, improvement over history match.
+6. improvement over relevant frozen controls;
+7. temporal-null as-good-or-better rate below `0.10`;
+8. leave-one-Agent macro negative and at least 8/11 Agents favorable.
 
 After that gate, freeze candidate code and parameters, source and revision,
-reference and held-out Agent panels, Origin schedule, budget, missing-cell
-policy, endpoint identity, and exclusions before opening independent outcomes.
+Origin schedule, budget, missing-cell policy, endpoint identity, and exclusions
+before opening the six-Agent holdout. The current Agent split is already
+frozen; do not reallocate it from observed results.
 Use the candidate-specific blinded pilot to choose the repository count. Add
 RI-160's certification checkpoint only when the new pool is actually built,
 and RI-163 only for another Pylint campaign. This ordering leaves no currently
@@ -396,15 +436,19 @@ useful infrastructure project hidden behind the data gate.
 | Imported and lazy Result reuse | `code-confirmed` | Preserve exact identity, availability, and conflict rules. |
 | User-configured time/stratum scenarios | `code-confirmed` | Preserve explicit lineage and counterfactual labeling. |
 | Multi-repository research report | `code-confirmed` in `examples/multi_repository_study` | Preserve the direct repository-first aggregator; it combines effects, not Tasks. |
-| Offline multi-repository fitting | Outer repository folds are `code-confirmed` in one experiment script; core `train_selector` remains single-pool. | Add a narrow core seam only after a nominated concrete learned family needs it. |
+| Offline multi-repository fitting | Outer repository folds and strict target-Origin calendar cutoffs are `code-confirmed` in the experiment layer; core `train_selector` remains single-pool. | Add a narrow core seam only after a nominated concrete learned family needs it. |
 | Repository/fork independence metadata | `code-confirmed` in the study manifest; no core registry | Repeat the source-specific audit for a new portfolio. |
 | Repository-cluster uncertainty | `code-confirmed` in the experiment layer | Preserve cluster bootstrap and leave-one-cluster-out summaries. |
 | Random calibration | `code-confirmed` at 20,000 deterministic draws | Reuse until a candidate changes the state space; exact enumeration is not needed at current precision. |
+| Agent development/holdout allocation | `code-confirmed`: 11 opened development Agents and six project-sealed holdout Agents, allocated from metadata before outcomes | Preserve the six blobs; open once only after every candidate gate passes. |
+| Official Result schema normalization | Current three-field schema plus one exact legacy schema amendment for three exact blobs | Do not add permissive field handling; bind any future schema exception to exact identities and unchanged endpoints. |
+| Agent-transfer audit | `code-confirmed` leave-one-Agent rematerialization; an evaluated Agent is never a Selector input | Preserve for response-derived Selectors. |
 | Local semantic evidence | `code-confirmed` as ignored vectors plus committed identities | ALG-007 failed; add no core embedding service. |
 
-The infrastructure needed before another paid selector study is ready. The
-remaining blocker is scientific nomination, not a missing platform. No
-multi-repository product execution path or generic training service is needed.
+Infrastructure prerequisites for another paid selector study are ready. The
+remaining blockers are scientific nomination and calendar-eligible Origin
+supply. No multi-repository product execution path or generic training service
+is needed.
 
 ## Active Work Ledger
 
@@ -415,9 +459,12 @@ multi-repository product execution path or generic training service is needed.
 | MR-003 | P1 | `closed` | Fixed public plan, full-history contrast, random calibration, exclusions, and results committed. |
 | MR-004 | P1 | `data-gated` | After nomination, use route-specific blinded pilot variance and cost to fix the next study; do not pay before then. |
 | MR-005 / ALG-007 | P1 | `closed` | Retired on this source family and panel. Reopen only with both a new Task source and new Agent panel. |
-| MR-006 / ALG-006 | P2 | `data-gated` | Require a theory-grounded family to pass the development gate before changing core training input. |
-| MR-007 / RI-188 | P1 | `data-gated` | Split reference/training and held-out Agent panels only after a route is nominated. |
+| MR-006 / ALG-006 | P2 | `data-gated` | Current-pool temporal search is closed. Reopen partial pooling only with more calendar-eligible repositories or an independently derived mechanism. |
+| MR-007 / RI-188 | P1 | `data-gated` | The 11-development/6-holdout Agent split is frozen. Preserve the six unread blobs until every gate passes. |
 | MR-008 | P1 | `data-gated` | A nominated route must exist before later-source or strict-prospective authority is requested. |
+| MR-009 / ALG-009 | P1 | `closed` | Joint response Markov failed temporal-null, leave-one-Agent, and sealed eight-Agent replication. |
+| MR-010 / ALG-010 | P1 | `closed` | Cutoff-aware difficulty Markov reached wide `-0.00888` but failed effect, repository, deep, and Agent-direction gates. |
+| MR-011 / ALG-011 | P1 | `closed` | Prequential adaptation reached wide `-0.00235` and null `0.194`; stop current-pool temporal candidate invention. |
 | RI-129 / RI-160 | P2 | `trigger-gated` | Add a single-writer exact certification checkpoint before the next comparable pool; replay retained entries before reuse. |
 | RI-163 | P2 | `trigger-gated` | Before another Pylint campaign, replace whole-file behavior identity with an explicit version payload and direct-helper digests. |
 | RI-191 | P2 | `closed` | 20,000 draws give wide mean Monte Carlo SE `0.000112`; reopen only if the candidate state space changes materially. |
@@ -437,7 +484,7 @@ multi-repository product execution path or generic training service is needed.
 | RI-130 / RI-139 / RI-140 | Compare Generators only on a common frame and crossed design. Report strata separately; add mixture weights or field claims only with an outer calibration protocol. |
 | RI-187 | Preserve the `0.02` full-history margin, paired uncertainty, robustness, random diagnostics, and later-source confirmation as separate gates. |
 | RI-189 | Admit immutable embedding projections to core FeatureSnapshot only if ALG-007 first passes transfer gates; add no embedding service. |
-| RI-190 / ALG-008 | Reopen IRT only after the Agent panel expands; keep fixed-universe reconstruction separate from temporal validity. |
+| RI-190 / ALG-008 | The development panel now has 11 Agents, so fixed-universe IRT may be planned when that separate estimand becomes a priority. Develop on the 11 opened vectors and do not consume the six-Agent temporal holdout merely to improve reconstruction. |
 
 Items not listed above are closed or superseded for current planning. Their
 evidence and identifiers remain recoverable in the archived ledger.

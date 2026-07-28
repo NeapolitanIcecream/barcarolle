@@ -2,8 +2,10 @@
 
 Date: 2026-07-28.
 
-Status: completed no-paid-call development study. No Selector was nominated for
-independent or paid validation.
+Status: completed initial no-paid-call development study. No Selector was
+nominated for independent or paid validation. The later theory-driven,
+sealed-Agent, cutoff-aware, and adaptive experiments are recorded in
+[`2026-07-28-theory-driven-selector-sprint.md`](2026-07-28-theory-driven-selector-sprint.md).
 
 ## Question And Boundary
 

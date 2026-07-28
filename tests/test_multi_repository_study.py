@@ -15,6 +15,7 @@ sys.path.insert(0, str(REPOSITORY_ROOT))
 from barcarolle.records import canonical_digest  # noqa: E402
 from examples.multi_repository_study.adaptive_difficulty import (  # noqa: E402
     choose_prequential_difficulty_model,
+    completed_training_origin_supply,
     forecast_stationary_difficulty,
     load_adaptive_difficulty_plan,
     materialize_adaptive_selections,
@@ -677,6 +678,65 @@ def test_adaptive_materialization_uses_only_local_history_tasks() -> None:
     } <= {"markov", "stationary"}
 
 
+def test_completed_training_origin_supply_uses_final_future_task_cutoff() -> None:
+    def task(instance_id: str, repository_id: str, day: int) -> TaskMetadata:
+        return TaskMetadata(
+            instance_id,
+            repository_id,
+            f"2020-01-{day:02d}T00:00:00Z",
+            "fixture",
+            "fixture",
+        )
+
+    origins = {
+        "org/a": (
+            RepositoryOrigin(
+                "org/a",
+                "org/a:origin-001",
+                (task("a-history", "org/a", 10),),
+                (task("a-future", "org/a", 11),),
+            ),
+        ),
+        "org/b": (
+            RepositoryOrigin(
+                "org/b",
+                "org/b:origin-001",
+                (task("b-history", "org/b", 5),),
+                (task("b-future", "org/b", 6),),
+            ),
+        ),
+        "org/c": (
+            RepositoryOrigin(
+                "org/c",
+                "org/c:origin-001",
+                (task("c-history", "org/c", 15),),
+                (task("c-future", "org/c", 16),),
+            ),
+        ),
+    }
+
+    supply = completed_training_origin_supply(
+        origins,
+        ("org/a", "org/b", "org/c"),
+    )
+
+    assert supply["completed_training_origin_count"] == {
+        "minimum": 0,
+        "median": 1,
+        "maximum": 2,
+    }
+    assert supply["contributing_training_repository_count"] == {
+        "minimum": 0,
+        "median": 1,
+        "maximum": 2,
+    }
+    assert supply["target_origins_with_zero_completed_training_origins"] == 1
+    assert (
+        supply["target_origins_with_fewer_than_three_training_repositories"]
+        == 3
+    )
+
+
 def test_retrospective_availability_audit_flags_later_training_tasks() -> None:
     target_history = tuple(
         TaskMetadata(
@@ -955,6 +1015,20 @@ def test_committed_adaptive_result_is_self_digested_and_closes_pool_search() -> 
     assert results["model_choice_diagnostics"]["overall"] == {
         "markov": 49,
         "stationary": 19,
+    }
+    assert results["calendar_training_origin_supply"][
+        "completed_training_origin_count"
+    ] == {
+        "minimum": 0,
+        "median": 11,
+        "maximum": 61,
+    }
+    assert results["calendar_training_origin_supply"][
+        "contributing_training_repository_count"
+    ] == {
+        "minimum": 0,
+        "median": 2,
+        "maximum": 5,
     }
     assert results["temporal_null"]["as_good_or_better_rate"] == pytest.approx(
         0.194

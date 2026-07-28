@@ -2,83 +2,78 @@
 
 Last updated: 2026-07-28.
 
-Current ledger: `docs/research-improvement-backlog.md`. Completed study:
-`docs/experiments/2026-07-28-multi-repository-public-study.md`. Frozen prior
-ledger: `docs/research-improvement-backlog-2026-07-27.md`.
+Current ledger: `docs/research-improvement-backlog.md`. Current reports:
+`docs/experiments/2026-07-28-multi-repository-public-study.md` and
+`docs/experiments/2026-07-28-theory-driven-selector-sprint.md`.
 
 ## Preserve
 
-- Keep Records, Task Pool, Verification, Workspace, Result Store, Selection,
-  Reporting, and Runner direct.
 - Runtime is one user repository, one local Task Pool, and one local Selection.
   Multiple repositories are offline research/training evidence units only.
-- A policy fitted elsewhere may select only eligible history from the target
-  repository. Never construct a mixed meta-pool.
-- Generators end at a prepared package; user pools open read-only. Keep Task
-  Pools and Results independent with exact reuse identity.
-- User-supplied time, dependency cluster, and stratum require lineage.
-  Historical projection remains counterfactual.
+- Generators end at a prepared package; user pools open read-only. Task Pools
+  and Agent Results remain independent and reuse only under exact identity.
+- A rolling-origin fit may consume only evidence available by the target
+  Origin cutoff. Label complete other-repository histories retrospective.
 - Keep full history as the primary baseline and equal-budget random Selection
   as sampling-landscape calibration.
-- Add no registry, embedding service, trainer service, scheduler, or core
-  multi-repository path without a measured caller and a nominated algorithm.
+- Keep repository-first aggregation, wide/deep views, temporal-null controls,
+  and leave-one-Agent rematerialization.
+- Add no registry, embedding service, trainer service, scheduler, or
+  multi-repository Runner without a nominated concrete caller.
 
 ## Current Evidence
 
-The no-paid-call public study uses 500 SWE-bench Verified Tasks, three frozen
-public Agent result vectors, seven wide repositories, three deep repositories,
-and 68 repository-local Origins. Differences below are candidate MAE minus
-full-history MAE; negative is favorable.
+The zero-paid-call program uses 500 SWE-bench Verified Tasks, seven wide
+repositories, three deep repositories, 68 local Origins, 11 opened development
+Agents, and six project-sealed holdout Agents. Negative values favor Selection.
 
-| Route | Wide macro difference | Decision |
+| Route | Wide difference | Decisive result |
 | --- | ---: | --- |
-| Recency | `+0.0189` | Retire |
-| Difficulty coverage | `+0.0398` | Retire |
-| History match | `-0.0064` | Compression control only |
-| Cross-repository drift | `+0.0016` | Reject |
-| Local trend | `-0.0064` | Chose zero trend in every fold |
-| ALG-007 centroid | `+0.0015` | Retire on this source and panel |
-| ALG-007 facility | `+0.0377` | Retire |
-| Hindsight support | `-0.1589` | Representable, not identifiable yet |
+| History match, original 3 Agents | `-0.00637` | Compression control only; becomes `+0.00349` on the 11-Agent panel. |
+| Joint response Markov | `-0.01911` | Retired: null `0.100`, leave-one-Agent 1/3 favorable, sealed replication `+0.00031`. |
+| Cutoff-aware difficulty Markov | `-0.00888` | 97.78th random percentile, but 3/7 repositories favorable, deep `+0.00920`, leave-one-Agent 6/11 favorable. |
+| Adaptive prequential difficulty | `-0.00235` | Null `0.194`, 3/7 favorable, deep `+0.00927`; current-pool temporal search closed. |
+| Hindsight support | `-0.15890` | Subsets can represent future outcomes; safe identification remains unsolved. |
 
-History match is better than 93.75% of 20,000 equal-budget random draws, but it
-misses the `-0.01` development gate, its interval crosses zero, and its deep
-effect is only `-0.0014`. No route warrants independent or paid validation.
-All evidence is counterfactual and panel-conditional; no Selector is a Runner
-default.
+The original cross-repository Markov used 47.37% later-created training Tasks
+and is retrospective only. A post-result, outcome-free supply audit found a
+median of 11 completed training Origins from a median of two other
+repositories; four target Origins have none and 35/68 have fewer than three
+training repositories.
+
+No Selector is a Runner default. No candidate permits opening the six-Agent
+holdout or making paid calls.
 
 ## Current State
 
-The experiment layer now has exact source and outcome identity, separate
-wide/deep portfolios, repository-first aggregation, repository-cluster
-bootstrap intervals, leave-one-cluster-out sensitivity, random calibration,
-outer repository folds, local semantic replay, compact digests, and tests.
-Core runtime did not change.
+The direct experiment layer now covers exact current and legacy official-result
+schemas, metadata-only Agent allocation, calendar cutoffs, repository
+uncertainty, random calibration, temporal nulls, sealed-panel replication, and
+leave-one-Agent transfer. Core runtime did not change.
 
-Infrastructure needed before another paid selector study is ready. The blocker
-is a scientifically credible candidate, not a platform gap. This sprint made
-zero paid API calls and zero coding-Agent calls.
+Infrastructure is ready for the next fixed study. The blockers are a
+scientifically credible mechanism and more calendar-eligible Origin supply,
+not API availability or platform work.
 
 ## Reopen
 
-A new mechanism may enter opened-data development only when it is motivated
-without another parameter search over the observed outcomes. Before paid work
-it must achieve:
+A temporal candidate must be derived independently of the opened results or
+use a larger calendar-valid Origin portfolio. Before opening the six-Agent
+holdout it must achieve:
 
 1. wide difference at most `-0.01`;
-2. negative direction in at least five of seven repositories;
-3. every leave-one-repository-out difference negative;
+2. at least five of seven repositories favorable;
+3. every wide leave-one-repository-out result negative;
 4. negative deep direction;
-5. better than at least 75% of random draws;
-6. improvement over history match when forecasting Agent outcomes.
+5. at least 75th random percentile and improvement over frozen controls;
+6. temporal-null rate below `0.10`;
+7. leave-one-Agent macro negative with at least 8/11 Agents favorable.
 
-Then freeze independent source/panel identity, candidate code and parameters,
-Origin schedule, budget, missing-cell policy, exclusions, and endpoint before
-opening outcomes. Estimate repository count from that route's blinded pilot;
-do not reuse nominal Origin counts or the failed-route range.
+Paid evidence then requires explicit authority and `OPENAI_BASE_URL` plus
+`OPENAI_API_KEY`. Fixed-universe reconstruction is a separate estimand: it may
+use the 11 opened Agents when prioritized, but must not consume the six-Agent
+temporal holdout or support a future-Task claim.
 
-Paid evidence requires new authority and `OPENAI_BASE_URL` plus
-`OPENAI_API_KEY`. Add RI-160's certification checkpoint only before the next
-comparable pool, and RI-163 only before another Pylint campaign. Reopen checkout
-caching above 5% measured wall time and bounded Agent parallelism only with
-exact attribution, one writer, and campaign authority.
+Reopen checkout caching only above 5% measured wall time, bounded Agent
+parallelism only with exact attribution and one writer, RI-160 only before a
+new comparable pool, and RI-163 only before another Pylint campaign.

@@ -13,6 +13,7 @@ import json
 from math import fsum, isfinite, log, sqrt
 from pathlib import Path
 import random
+from statistics import median
 import sys
 from typing import Any, Mapping, Sequence
 
@@ -341,6 +342,72 @@ def materialize_adaptive_selections(
     )
 
 
+def completed_training_origin_supply(
+    origins_by_repository: Mapping[str, Sequence[RepositoryOrigin]],
+    repository_ids: Sequence[str],
+) -> Mapping[str, Any]:
+    """Summarize completed non-target Origins available at each target cutoff."""
+    rows = []
+    for target_repository_id in repository_ids:
+        if target_repository_id not in origins_by_repository:
+            raise ValueError(
+                f"target repository is missing: {target_repository_id}"
+            )
+        for target_origin in origins_by_repository[target_repository_id]:
+            cutoff = parse_utc_timestamp(target_origin.history[-1].created_at)
+            contributing_repository_count = 0
+            completed_origin_count = 0
+            for training_repository_id in repository_ids:
+                if training_repository_id == target_repository_id:
+                    continue
+                count = sum(
+                    parse_utc_timestamp(training_origin.future[-1].created_at)
+                    <= cutoff
+                    for training_origin in origins_by_repository.get(
+                        training_repository_id,
+                        (),
+                    )
+                )
+                if count:
+                    contributing_repository_count += 1
+                    completed_origin_count += count
+            rows.append(
+                (
+                    target_origin.origin_id,
+                    completed_origin_count,
+                    contributing_repository_count,
+                )
+            )
+    if not rows:
+        raise ValueError("training Origin supply needs at least one target Origin")
+    origin_counts = tuple(row[1] for row in rows)
+    repository_counts = tuple(row[2] for row in rows)
+    return {
+        "definition": (
+            "Non-target repository Origins whose final future Task created_at "
+            "is no later than the final target-history Task."
+        ),
+        "target_origin_count": len(rows),
+        "completed_training_origin_count": {
+            "minimum": min(origin_counts),
+            "median": median(origin_counts),
+            "maximum": max(origin_counts),
+        },
+        "contributing_training_repository_count": {
+            "minimum": min(repository_counts),
+            "median": median(repository_counts),
+            "maximum": max(repository_counts),
+        },
+        "target_origins_with_zero_completed_training_origins": sum(
+            count == 0 for count in origin_counts
+        ),
+        "target_origins_with_fewer_than_three_training_repositories": sum(
+            count < 3 for count in repository_counts
+        ),
+        "per_origin_counts_digest": canonical_digest(tuple(rows)),
+    }
+
+
 def run_adaptive_replay(
     tasks: Sequence[TaskMetadata],
     outcomes_by_agent: Mapping[str, Mapping[str, int]],
@@ -546,6 +613,10 @@ def run_adaptive_replay(
         "agent_outcome_diagnostics": dict(sorted(outcome_diagnostics.items())),
         "selection_membership_digests": membership_digests,
         "model_choice_diagnostics": _choice_diagnostics(choices),
+        "calendar_training_origin_supply": completed_training_origin_supply(
+            origins,
+            repository_ids,
+        ),
         "summaries": summaries,
         "random_calibration": random_reports,
         "leave_one_agent_out": leave_one_agent,
