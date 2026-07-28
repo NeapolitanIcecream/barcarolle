@@ -1,0 +1,44 @@
+{
+  "schema_version": "barcarolle_multi_swe_response_signal_diagnostic_plan_v1",
+  "study_id": "multi-swe-response-contrast-signal-2026-07-28",
+  "diagnostic_id": "post-rejection-history-auc",
+  "frozen_at": "2026-07-28T13:13:28Z",
+  "response_signal_plan_digest": "6e3374c6a2d1ce866ad614198ae1911fdec2fc13a58d5cf32cd94ee66e1b249c",
+  "amendment_digest": "4ad6eab1f0ffe75405debf63e8e07a8ce43230d3249f21f0c65afa6b81ec0d76",
+  "rejected_results_digest": "85661cfd5fa8a38dc8b2facc5527cd05f72c5e10d164e1412c1f4cee0636200c",
+  "rejected_raw_sha256": "1cadce24535af40d25cb040732eb2c60a09d4b775401e0921cc456f046543812",
+  "status": "post_decision_diagnostic_cannot_rescue_alg_013",
+  "question": "Did Stage A fail because the outer-repository response projection lacks transferable response signal, or because ROC AUC inside a five-Task future block leaves too few valid observations for repository-level precision?",
+  "fixed_method": {
+    "representation": "Reuse the exact observed RCP fitted for every H5 target Origin; do not refit or change any direction.",
+    "evaluation_rows": "For each target Origin and active configuration with both terminal classes in the complete eligible target history, compute ROC AUC of z[t,a] for y[t,a].",
+    "aggregation": "Average valid configurations within Origin, Origins within repository, then repositories equally.",
+    "uncertainty": "Ten thousand repository bootstrap resamples with seed 20260728.",
+    "negative_control": "Repeat the complete fitting and history-AUC audit for the same nineteen deterministic within-fitting-repository outcome permutations already frozen for Stage A.",
+    "null_rate": "Use the corrected upper-tail rate (one plus null values at least as high as observed) divided by twenty.",
+    "information_boundary": "Target outcomes are read only to score the already fitted representation. They never enter fitting, forecast, or Selection."
+  },
+  "interpretation": {
+    "transferable_signal_supported_if": [
+      "repository-macro history AUC is greater than 0.5",
+      "repository bootstrap 95 percent lower bound is greater than 0.5",
+      "at least 9 of 13 repositories have mean history AUC greater than 0.5",
+      "every leave-one-repository-out macro history AUC is greater than 0.5",
+      "the corrected permutation as-good-or-better rate is below 0.10"
+    ],
+    "if_supported": "Record that RCP has static response relevance but ALG-013 remains rejected and Stage B remains unopened. A later candidate must independently specify a better-powered pre-Origin future-increment test before any Selection.",
+    "if_rejected": "Close the RCP representation family on the current source and proceed to the distinct response-composition partial-pooling family or stop current-source algorithm research.",
+    "forbidden": [
+      "changing the ALG-013 decision",
+      "running ALG-013 Stage B or Stage C",
+      "altering the projection, embedding, horizon, repository weights, or threshold",
+      "using this diagnostic as confirmation"
+    ]
+  },
+  "resource_boundary": {
+    "paid_api_calls": 0,
+    "embedding_api_calls": 0,
+    "sealed_holdout_reads": 0
+  },
+  "diagnostic_plan_digest": "c39e1bbf896e57f140916eeedde271c09a34f50a9b30f39dff0f325e80cd71eb"
+}
