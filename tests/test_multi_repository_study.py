@@ -284,6 +284,27 @@ def test_agent_invariant_execution_amendment_preserves_candidate_and_holdout() -
     )
 
 
+def test_adaptive_difficulty_plan_is_self_digested_and_stops_search() -> None:
+    plan = json.loads(
+        (
+            REPOSITORY_ROOT
+            / "examples/multi_repository_study/adaptive-difficulty-plan.json"
+        ).read_text()
+    )
+    digest = plan.pop("adaptive_difficulty_plan_digest")
+
+    assert canonical_digest(plan) == digest
+    assert plan["fixed_algorithms"][1]["selector_id"] == (
+        "adaptive_prequential_difficulty_match"
+    )
+    assert plan["diagnostics"]["temporal_null"]["permutations"] == 500
+    assert plan["authority"]["paid_api_calls"] == 0
+    assert plan["authority"]["holdout_result_blob_reads"] == 0
+    assert plan["current_pool_stop_rule"].startswith(
+        "If the adaptive candidate fails"
+    )
+
+
 def test_agent_panel_schema_amendment_is_narrow_and_self_digested() -> None:
     amendment = load_agent_panel_schema_amendment()
     digest = amendment["agent_panel_schema_amendment_digest"]
