@@ -16,6 +16,7 @@ from barcarolle.records import canonical_digest  # noqa: E402
 from examples.multi_repository_study.agent_invariant import (  # noqa: E402
     fit_cutoff_repository_equal_markov,
     forecast_difficulty_markov,
+    load_agent_invariant_execution_amendment,
     load_agent_invariant_plan,
     materialize_selections,
     select_state_histogram_match,
@@ -263,6 +264,26 @@ def test_agent_invariant_plan_is_self_digested_and_cutoff_aware() -> None:
     assert plan["authority"]["paid_api_calls"] == 0
 
 
+def test_agent_invariant_execution_amendment_preserves_candidate_and_holdout() -> None:
+    amendment = load_agent_invariant_execution_amendment()
+    digest = amendment["agent_invariant_execution_amendment_digest"]
+
+    assert canonical_digest(
+        {
+            key: value
+            for key, value in amendment.items()
+            if key != "agent_invariant_execution_amendment_digest"
+        }
+    ) == digest
+    assert amendment["resolution"]["candidate_changes"] == "none"
+    assert amendment["resolution"]["gate_changes"] == "none"
+    assert amendment["authority"]["holdout_result_blob_reads"] == 0
+    assert (
+        amendment["authority"]["candidate_result_metrics_observed_before_amendment"]
+        == 0
+    )
+
+
 def test_agent_panel_schema_amendment_is_narrow_and_self_digested() -> None:
     amendment = load_agent_panel_schema_amendment()
     digest = amendment["agent_panel_schema_amendment_digest"]
@@ -464,7 +485,12 @@ def test_agent_invariant_materialization_keeps_selections_repository_local() -> 
             task.instance_id: int((index + agent) % 4 < 2)
             for index, task in enumerate(tasks)
         }
-        for agent in range(3)
+        for agent in range(5)
+    }
+    history_match_outcomes = {
+        agent_id: agent_outcomes
+        for agent_id, agent_outcomes in outcomes.items()
+        if agent_id in {"agent-0", "agent-1"}
     }
 
     origins, memberships, forecasts, diagnostics = materialize_selections(
@@ -472,6 +498,7 @@ def test_agent_invariant_materialization_keeps_selections_repository_local() -> 
         outcomes,
         load_agent_invariant_plan(),
         {"portfolio": {"wide_repository_ids": repository_ids}},
+        history_match_outcomes=history_match_outcomes,
     )
 
     assert {key: len(value) for key, value in origins.items()} == {

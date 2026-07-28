@@ -55,6 +55,7 @@ from examples.multi_repository_study.theory_audit import (  # noqa: E402
 
 HERE = Path(__file__).resolve().parent
 DEFAULT_PLAN = HERE / "agent-invariant-plan.json"
+DEFAULT_EXECUTION_AMENDMENT = HERE / "agent-invariant-execution-amendment.json"
 DEFAULT_EXTENSION_PLAN = HERE / "agent-panel-extension-plan.json"
 DEFAULT_PUBLIC_PLAN = HERE / "public-panel-plan.json"
 DEFAULT_PORTFOLIO = HERE / "portfolio.json"
@@ -87,6 +88,30 @@ def load_agent_invariant_plan(path: Path = DEFAULT_PLAN) -> Mapping[str, Any]:
     )
     if digest != expected:
         raise ValueError("Agent-invariant plan digest does not match")
+    return payload
+
+
+def load_agent_invariant_execution_amendment(
+    path: Path = DEFAULT_EXECUTION_AMENDMENT,
+) -> Mapping[str, Any]:
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(payload, Mapping):
+        raise ValueError("Agent-invariant execution amendment must be an object")
+    if (
+        payload.get("schema_version")
+        != "barcarolle_agent_invariant_execution_amendment_v1"
+    ):
+        raise ValueError("Agent-invariant execution amendment is unsupported")
+    digest = payload.get("agent_invariant_execution_amendment_digest")
+    expected = canonical_digest(
+        {
+            key: value
+            for key, value in payload.items()
+            if key != "agent_invariant_execution_amendment_digest"
+        }
+    )
+    if digest != expected:
+        raise ValueError("Agent-invariant execution amendment digest does not match")
     return payload
 
 
@@ -320,12 +345,25 @@ def materialize_selections(
     outcomes_by_agent: Mapping[str, Mapping[str, int]],
     plan: Mapping[str, object],
     public_plan: Mapping[str, object],
+    *,
+    history_match_outcomes: Mapping[str, Mapping[str, int]] | None = None,
+    selector_ids: Sequence[str] = SELECTOR_IDS,
 ) -> tuple[
     Mapping[str, tuple[RepositoryOrigin, ...]],
     Mapping[str, Mapping[str, tuple[str, ...]]],
     Mapping[str, Mapping[str, tuple[float, ...]]],
     Mapping[str, Any],
 ]:
+    selected_selector_ids = _string_tuple(selector_ids, "Selector IDs")
+    if not set(selected_selector_ids) <= set(SELECTOR_IDS):
+        raise ValueError("unsupported materialized Selector")
+    history_outcomes = (
+        outcomes_by_agent
+        if history_match_outcomes is None
+        else history_match_outcomes
+    )
+    if "history_match" in selected_selector_ids and not history_outcomes:
+        raise ValueError("history_match requires reference Agent outcomes")
     rolling = _mapping(plan, "rolling_origin")
     minimum_history = _positive_integer(rolling, "minimum_initial_history_tasks")
     block_size = _positive_integer(rolling, "future_block_tasks")
@@ -368,10 +406,12 @@ def materialize_selections(
     )
 
     memberships: dict[str, dict[str, tuple[str, ...]]] = {
-        selector_id: {} for selector_id in SELECTOR_IDS
+        selector_id: {} for selector_id in selected_selector_ids
     }
     forecasts: dict[str, dict[str, tuple[float, ...]]] = {
-        selector_id: {} for selector_id in DIFFICULTY_SELECTOR_IDS
+        selector_id: {}
+        for selector_id in selected_selector_ids
+        if selector_id in DIFFICULTY_SELECTOR_IDS
     }
     transition_digests = {}
     fit_rows = []
@@ -392,30 +432,29 @@ def materialize_selections(
             )
             transition_digests[origin.origin_id] = canonical_digest(transition)
             fit_rows.append(fit_diagnostic)
-            persistence_forecast = forecast_difficulty_persistence(
-                origin.history,
-                outcomes_by_agent,
-                state_count=state_count,
-                block_size=block_size,
-            )
-            markov_forecast = forecast_difficulty_markov(
-                origin.history,
-                outcomes_by_agent,
-                transition,
-                state_count=state_count,
-                horizon=block_size,
-                local_prior_strength=local_prior_strength,
-            )
-            forecasts["difficulty_persistence_match"][
-                origin.origin_id
-            ] = persistence_forecast
-            forecasts["difficulty_markov_match"][
-                origin.origin_id
-            ] = markov_forecast
-            for selector_id, forecast in (
-                ("difficulty_persistence_match", persistence_forecast),
-                ("difficulty_markov_match", markov_forecast),
-            ):
+            difficulty_forecasts = {}
+            if "difficulty_persistence_match" in selected_selector_ids:
+                difficulty_forecasts["difficulty_persistence_match"] = (
+                    forecast_difficulty_persistence(
+                        origin.history,
+                        outcomes_by_agent,
+                        state_count=state_count,
+                        block_size=block_size,
+                    )
+                )
+            if "difficulty_markov_match" in selected_selector_ids:
+                difficulty_forecasts["difficulty_markov_match"] = (
+                    forecast_difficulty_markov(
+                        origin.history,
+                        outcomes_by_agent,
+                        transition,
+                        state_count=state_count,
+                        horizon=block_size,
+                        local_prior_strength=local_prior_strength,
+                    )
+                )
+            for selector_id, forecast in difficulty_forecasts.items():
+                forecasts[selector_id][origin.origin_id] = forecast
                 memberships[selector_id][origin.origin_id] = (
                     select_state_histogram_match(
                         origin.history,
@@ -425,14 +464,17 @@ def materialize_selections(
                         budget=budget,
                     )
                 )
-            history_ids = tuple(task.instance_id for task in origin.history)
-            history_rates = _agent_rates(history_ids, outcomes_by_agent)
-            memberships["history_match"][origin.origin_id] = select_outcome_match(
-                origin.history,
-                outcomes_by_agent,
-                history_rates,
-                budget=budget,
-            )
+            if "history_match" in selected_selector_ids:
+                history_ids = tuple(task.instance_id for task in origin.history)
+                history_rates = _agent_rates(history_ids, history_outcomes)
+                memberships["history_match"][
+                    origin.origin_id
+                ] = select_outcome_match(
+                    origin.history,
+                    history_outcomes,
+                    history_rates,
+                    budget=budget,
+                )
     fit_repository_counts = tuple(
         int(row["included_repository_count"]) for row in fit_rows
     )
@@ -478,6 +520,7 @@ def run_agent_invariant_replay(
     outcomes_by_agent: Mapping[str, Mapping[str, int]],
     outcome_diagnostics: Mapping[str, Mapping[str, int]],
     plan: Mapping[str, object],
+    execution_amendment: Mapping[str, object],
     extension_plan: Mapping[str, object],
     public_plan: Mapping[str, object],
     portfolio: Mapping[str, object],
@@ -491,6 +534,10 @@ def run_agent_invariant_replay(
         "public_panel_plan_digest"
     ):
         raise ValueError("Agent-invariant plan does not bind the public plan")
+    if execution_amendment.get("agent_invariant_plan_digest") != plan.get(
+        "agent_invariant_plan_digest"
+    ):
+        raise ValueError("execution amendment does not bind the plan")
     task_ids = tuple(task.instance_id for task in tasks)
     if (
         not task_ids
@@ -504,6 +551,19 @@ def run_agent_invariant_replay(
     )
     if len(outcomes_by_agent) != expected_agent_count:
         raise ValueError("development Agent count does not match the plan")
+    history_match_agent_ids = tuple(
+        _required_string(row, "agent_id")
+        for row in _mapping_sequence(
+            extension_plan,
+            "existing_opened_development_panel",
+        )
+    )
+    if not set(history_match_agent_ids) <= set(outcomes_by_agent):
+        raise ValueError("history_match reference Agents are unavailable")
+    history_match_outcomes = {
+        agent_id: outcomes_by_agent[agent_id]
+        for agent_id in history_match_agent_ids
+    }
 
     public_portfolio = _mapping(public_plan, "portfolio")
     repository_ids = _string_tuple(
@@ -529,7 +589,13 @@ def run_agent_invariant_replay(
         "bootstrap_resamples",
     )
     origins_by_repository, memberships, forecasts, fit_diagnostics = (
-        materialize_selections(tasks, outcomes_by_agent, plan, public_plan)
+        materialize_selections(
+            tasks,
+            outcomes_by_agent,
+            plan,
+            public_plan,
+            history_match_outcomes=history_match_outcomes,
+        )
     )
     rows = evaluate_memberships(
         origins_by_repository,
@@ -604,6 +670,7 @@ def run_agent_invariant_replay(
         cluster_by_repository,
         bootstrap_seed,
         bootstrap_resamples,
+        history_match_agent_ids,
     )
     null_config = _mapping(diagnostics, "temporal_null")
     temporal_null = run_temporal_null(
@@ -634,6 +701,9 @@ def run_agent_invariant_replay(
         "study_id": plan.get("study_id"),
         "epistemic_status": "opened_development_panel_with_sealed_agent_holdout",
         "agent_invariant_plan_digest": plan.get("agent_invariant_plan_digest"),
+        "agent_invariant_execution_amendment_digest": execution_amendment.get(
+            "agent_invariant_execution_amendment_digest"
+        ),
         "agent_panel_extension_plan_digest": extension_plan.get(
             "agent_panel_extension_plan_digest"
         ),
@@ -662,7 +732,8 @@ def run_agent_invariant_replay(
             "The eleven-Agent outcomes are opened development evidence. "
             "Calendar cutoffs and Agent cross-validation remove two known "
             "leakage routes, but only the still-sealed six-Agent panel can "
-            "provide a one-shot unseen-Agent check."
+            "provide a one-shot unseen-Agent check. history_match retains its "
+            "previously frozen three-Agent reference panel."
         ),
     }
     result["agent_invariant_results_digest"] = canonical_digest(result)
@@ -772,6 +843,7 @@ def run_leave_one_agent_out(
     cluster_by_repository: Mapping[str, str],
     bootstrap_seed: int,
     bootstrap_resamples: int,
+    history_match_agent_ids: Sequence[str],
 ) -> Mapping[str, Any]:
     by_agent = {}
     membership_digests = {}
@@ -781,11 +853,17 @@ def run_leave_one_agent_out(
             for agent_id, outcomes in outcomes_by_agent.items()
             if agent_id != held_out_agent_id
         }
+        history_match_outcomes = {
+            agent_id: outcomes_by_agent[agent_id]
+            for agent_id in history_match_agent_ids
+            if agent_id != held_out_agent_id
+        }
         origins, memberships, _, _ = materialize_selections(
             tasks,
             reference_outcomes,
             plan,
             public_plan,
+            history_match_outcomes=history_match_outcomes,
         )
         rows = evaluate_memberships(
             origins,
@@ -872,6 +950,7 @@ def run_temporal_null(
             permuted,
             plan,
             public_plan,
+            selector_ids=("difficulty_markov_match",),
         )
         rows = evaluate_memberships(
             origins_by_repository,
@@ -1244,6 +1323,11 @@ def _parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--dataset", type=Path, required=True)
     parser.add_argument("--result-dir", type=Path, required=True)
     parser.add_argument("--plan", type=Path, default=DEFAULT_PLAN)
+    parser.add_argument(
+        "--execution-amendment",
+        type=Path,
+        default=DEFAULT_EXECUTION_AMENDMENT,
+    )
     parser.add_argument("--extension-plan", type=Path, default=DEFAULT_EXTENSION_PLAN)
     parser.add_argument("--public-plan", type=Path, default=DEFAULT_PUBLIC_PLAN)
     parser.add_argument("--portfolio", type=Path, default=DEFAULT_PORTFOLIO)
@@ -1254,6 +1338,9 @@ def _parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
 def main(argv: Sequence[str] | None = None) -> int:
     args = _parse_args(argv)
     plan = load_agent_invariant_plan(args.plan)
+    execution_amendment = load_agent_invariant_execution_amendment(
+        args.execution_amendment
+    )
     extension_plan = load_agent_panel_extension_plan(args.extension_plan)
     public_plan = load_public_panel_plan(args.public_plan)
     portfolio = load_portfolio(args.portfolio)
@@ -1287,6 +1374,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         outcomes,
         outcome_diagnostics,
         plan,
+        execution_amendment,
         extension_plan,
         public_plan,
         portfolio,
