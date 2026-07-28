@@ -740,6 +740,42 @@ def test_committed_agent_panel_replication_is_self_digested_and_neutral() -> Non
     assert results["decision"]["reactivation_allowed"] is False
 
 
+def test_committed_agent_invariant_result_is_self_digested_and_stops() -> None:
+    results = json.loads(
+        (
+            REPOSITORY_ROOT
+            / "examples/multi_repository_study/agent-invariant-results.json"
+        ).read_text()
+    )
+    digest = results.pop("agent_invariant_results_digest")
+
+    assert canonical_digest(results) == digest
+    markov = results["summaries"]["wide"]["difficulty_markov_match"]
+    assert markov["macro_repository_difference"] == pytest.approx(
+        -0.008875640661665908
+    )
+    assert markov["favorable_repository_count"] == 3
+    assert results["summaries"]["deep"]["difficulty_markov_match"][
+        "macro_repository_difference"
+    ] == pytest.approx(0.009199967848780785)
+    assert results["random_calibration"]["wide"]["candidate_positions"][
+        "difficulty_markov_match"
+    ]["candidate_better_than_random_midrank"] == pytest.approx(0.9778)
+    assert results["temporal_null"]["as_good_or_better_rate"] == pytest.approx(
+        0.066
+    )
+    assert results["leave_one_agent_out"]["aggregate_by_selector"][
+        "difficulty_markov_match"
+    ]["wide_favorable_held_out_agent_count"] == 6
+    assert results["selection_membership_digests"]["history_match"] == (
+        "79e96af6f5d254f45dcce55654336e59fa0e46ff882e4d1ae3f177a799b781c3"
+    )
+    assert results["decision"]["status"] == (
+        "retire_agent_invariant_markov_on_development_panel"
+    )
+    assert results["decision"]["sealed_holdout_open_allowed"] is False
+
+
 def test_outcome_match_uses_exact_vector_and_stable_tie_break() -> None:
     history = tuple(
         TaskMetadata(
