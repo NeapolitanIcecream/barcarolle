@@ -612,18 +612,20 @@ def run_agent_invariant_replay(
         bootstrap_resamples,
     )
     per_agent_summaries = {
-        agent_id: _summaries(
-            evaluate_memberships(
-                origins_by_repository,
-                memberships,
-                {agent_id: outcomes},
+        agent_id: _compact_agent_summaries(
+            _summaries(
+                evaluate_memberships(
+                    origins_by_repository,
+                    memberships,
+                    {agent_id: outcomes},
+                    repository_ids,
+                    cluster_by_repository,
+                ),
                 repository_ids,
-                cluster_by_repository,
-            ),
-            repository_ids,
-            deep_repository_ids,
-            bootstrap_seed,
-            bootstrap_resamples,
+                deep_repository_ids,
+                bootstrap_seed,
+                bootstrap_resamples,
+            )
         )
         for agent_id, outcomes in sorted(outcomes_by_agent.items())
     }
@@ -872,12 +874,14 @@ def run_leave_one_agent_out(
             repository_ids,
             cluster_by_repository,
         )
-        by_agent[held_out_agent_id] = _summaries(
-            rows,
-            repository_ids,
-            deep_repository_ids,
-            bootstrap_seed,
-            bootstrap_resamples,
+        by_agent[held_out_agent_id] = _compact_agent_summaries(
+            _summaries(
+                rows,
+                repository_ids,
+                deep_repository_ids,
+                bootstrap_seed,
+                bootstrap_resamples,
+            )
         )
         membership_digests[held_out_agent_id] = {
             selector_id: canonical_digest(tuple(sorted(items.items())))
@@ -1099,6 +1103,27 @@ def _summaries(
             ("wide", set(repository_ids)),
             ("deep", set(deep_repository_ids)),
         )
+    }
+
+
+def _compact_agent_summaries(
+    summaries: Mapping[str, Mapping[str, Mapping[str, Any]]],
+) -> Mapping[str, Mapping[str, Mapping[str, float | int]]]:
+    return {
+        portfolio_name: {
+            selector_id: {
+                "macro_repository_difference": _number(
+                    summary.get("macro_repository_difference"),
+                    "macro repository difference",
+                ),
+                "favorable_repository_count": _integer(
+                    summary,
+                    "favorable_repository_count",
+                ),
+            }
+            for selector_id, summary in selector_summaries.items()
+        }
+        for portfolio_name, selector_summaries in summaries.items()
     }
 
 
