@@ -324,7 +324,7 @@ def run_public_replay(
 
     random_config = _mapping(plan, "random_calibration")
     random_reports = {
-        portfolio_name: _random_calibration(
+        portfolio_name: random_calibration(
             repository_ids,
             origins_by_repository,
             outcomes_by_agent,
@@ -435,7 +435,7 @@ def _contrast_rows(
     return tuple(rows)
 
 
-def _random_calibration(
+def random_calibration(
     repository_ids: Sequence[str],
     origins_by_repository: Mapping[str, Sequence[RepositoryOrigin]],
     outcomes_by_agent: Mapping[str, Mapping[str, int]],
@@ -632,7 +632,7 @@ def _nomination_decision(
     }
 
 
-def _load_dataset_tasks(path: Path) -> tuple[TaskMetadata, ...]:
+def load_dataset_tasks(path: Path) -> tuple[TaskMetadata, ...]:
     # The extraction environment owns this optional dependency.
     import pyarrow.parquet as parquet
 
@@ -657,7 +657,7 @@ def _load_dataset_tasks(path: Path) -> tuple[TaskMetadata, ...]:
     )
 
 
-def _load_public_outcomes(
+def load_public_outcomes(
     result_dir: Path,
     plan: Mapping[str, object],
     task_ids: Sequence[str],
@@ -791,8 +791,8 @@ def main(argv: Sequence[str] | None = None) -> int:
     source = _mapping(plan, "task_source")
     if _file_sha256(args.dataset) != _required_string(source, "dataset_sha256"):
         raise RuntimeError("dataset digest does not match public panel plan")
-    tasks = _load_dataset_tasks(args.dataset)
-    outcomes, diagnostics = _load_public_outcomes(
+    tasks = load_dataset_tasks(args.dataset)
+    outcomes, diagnostics = load_public_outcomes(
         args.result_dir,
         plan,
         tuple(task.instance_id for task in tasks),

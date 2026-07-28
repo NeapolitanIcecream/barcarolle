@@ -16,11 +16,17 @@ from examples.multi_repository_study.aggregate import (  # noqa: E402
     ContrastRow,
     summarize_contrasts,
 )
+from examples.multi_repository_study.development import (  # noqa: E402
+    estimate_repository_equal_drift,
+    run_development_replay,
+    select_outcome_match,
+)
 from examples.multi_repository_study.portfolio import (  # noqa: E402
     build_portfolio,
     load_portfolio_plan,
 )
 from examples.multi_repository_study.public_replay import (  # noqa: E402
+    RepositoryOrigin,
     TaskMetadata,
     build_repository_origins,
     load_portfolio,
@@ -151,6 +157,127 @@ def test_committed_public_panel_result_is_self_digested_and_negative() -> None:
     assert results["random_calibration"]["wide"]["candidate_positions"][
         "recency"
     ]["candidate_better_than_random_midrank"] == pytest.approx(0.458325)
+
+
+def test_committed_development_result_is_self_digested_and_stops() -> None:
+    results = json.loads(
+        (
+            REPOSITORY_ROOT
+            / "examples/multi_repository_study/development-results.json"
+        ).read_text()
+    )
+    digest = results.pop("development_results_digest")
+
+    assert canonical_digest(results) == digest
+    assert results["nomination"]["status"] == (
+        "no_simple_cross_repository_route_warrants_paid_validation"
+    )
+    wide = results["summaries"]["wide"]
+    assert wide["history_match"]["macro_repository_difference"] == pytest.approx(
+        -0.006365176694388499
+    )
+    assert wide["cross_repository_drift_match"][
+        "macro_repository_difference"
+    ] == pytest.approx(0.0015713312421194367)
+    assert results["hindsight_support"]["wide"][
+        "macro_repository_difference"
+    ] == pytest.approx(-0.15890485923407102)
+    assert all(
+        fold["local_trend_match"]["chosen_alpha"] == 0.0
+        for fold in results["outer_fold_parameters"].values()
+    )
+
+
+def test_outcome_match_uses_exact_vector_and_stable_tie_break() -> None:
+    history = tuple(
+        TaskMetadata(
+            f"task-{index}",
+            "org/repo",
+            f"2020-01-{index + 1:02d}T00:00:00Z",
+            "fixture",
+            "fixture",
+        )
+        for index in range(4)
+    )
+    outcomes = {
+        "agent-a": {
+            "task-0": 0,
+            "task-1": 1,
+            "task-2": 0,
+            "task-3": 1,
+        },
+        "agent-b": {
+            "task-0": 0,
+            "task-1": 0,
+            "task-2": 1,
+            "task-3": 1,
+        },
+    }
+
+    selected = select_outcome_match(
+        history,
+        outcomes,
+        {"agent-a": 0.5, "agent-b": 0.5},
+        budget=2,
+    )
+
+    assert selected == ("task-0", "task-3")
+
+
+def test_repository_drift_weights_repositories_before_origins() -> None:
+    tasks = tuple(
+        TaskMetadata(
+            f"{repository}-{index}",
+            repository,
+            f"2020-01-{index + 1:02d}T00:00:00Z",
+            "fixture",
+            "fixture",
+        )
+        for repository in ("org/large", "org/small")
+        for index in range(15 if repository == "org/large" else 10)
+    )
+    large_tasks = tuple(task for task in tasks if task.repository_id == "org/large")
+    small_tasks = tuple(task for task in tasks if task.repository_id == "org/small")
+    origins = {
+        "org/large": (
+            RepositoryOrigin(
+                "org/large",
+                "large-1",
+                large_tasks[:5],
+                large_tasks[5:10],
+            ),
+            RepositoryOrigin(
+                "org/large",
+                "large-2",
+                large_tasks[:5],
+                large_tasks[10:15],
+            ),
+        ),
+        "org/small": (
+            RepositoryOrigin(
+                "org/small",
+                "small-1",
+                small_tasks[:5],
+                small_tasks[5:10],
+            ),
+        ),
+    }
+    outcomes = {
+        "agent": {
+            **{task.instance_id: 0 for task in large_tasks[:5]},
+            **{task.instance_id: 1 for task in large_tasks[5:]},
+            **{task.instance_id: 1 for task in small_tasks[:5]},
+            **{task.instance_id: 0 for task in small_tasks[5:]},
+        }
+    }
+
+    drift = estimate_repository_equal_drift(
+        ("org/large", "org/small"),
+        origins,
+        outcomes,
+    )
+
+    assert drift == {"agent": pytest.approx(0.0)}
 
 
 def test_summarize_contrasts_weights_repositories_before_origins() -> None:
@@ -396,6 +523,106 @@ def test_public_replay_runs_repository_local_random_and_null_controls() -> None:
         report["permutation_control"]["wide"]["recency"]["permutation_count"]
         == 10
     )
+
+
+def test_development_replay_keeps_outer_repository_as_the_evidence_unit() -> None:
+    repository_ids = ("org/a", "org/b", "org/c")
+    task_rows = tuple(
+        row
+        for repository_id in repository_ids
+        for row in _task_rows(repository_id, 20)
+    )
+    tasks = tuple(
+        TaskMetadata(
+            row["instance_id"],
+            row["repo"],
+            row["created_at"],
+            row["difficulty"],
+            f"Task {index}",
+        )
+        for index, row in enumerate(task_rows)
+    )
+    outcomes = {
+        "agent-a": {
+            task.instance_id: int(index % 3 == 0)
+            for index, task in enumerate(tasks)
+        },
+        "agent-b": {
+            task.instance_id: int(index % 4 < 2)
+            for index, task in enumerate(tasks)
+        },
+    }
+    portfolio_without_digest: dict[str, Any] = {
+        "schema_version": "barcarolle_repository_portfolio_v1",
+        "repositories": tuple(
+            {
+                "repository_id": repository_id,
+                "repository_cluster_id": repository_id,
+            }
+            for repository_id in repository_ids
+        ),
+    }
+    portfolio = {
+        **portfolio_without_digest,
+        "portfolio_digest": canonical_digest(portfolio_without_digest),
+    }
+    public_plan: dict[str, Any] = {
+        "public_panel_plan_digest": "public-plan",
+        "rolling_origin": {
+            "minimum_initial_history_tasks": 15,
+            "future_block_tasks": 5,
+            "selection_budget_task_checks": 10,
+        },
+        "aggregation": {
+            "bootstrap_seed": 3,
+            "bootstrap_resamples": 20,
+        },
+        "random_calibration": {"draws": 20, "seed": 4},
+    }
+    development_plan: dict[str, Any] = {
+        "study_id": "fixture",
+        "epistemic_status": "opened_outcome_development_only",
+        "development_plan_digest": "fixture-plan",
+        "source_results": {
+            "public_panel_plan_digest": "public-plan",
+            "public_panel_results_digest": "public-results",
+            "portfolio_digest": portfolio["portfolio_digest"],
+        },
+        "outer_evaluation": {
+            "repository_ids": repository_ids,
+            "deep_repository_ids": repository_ids,
+        },
+        "candidates": (
+            {"selector_id": "history_match"},
+            {
+                "selector_id": "cross_repository_drift_match",
+                "shrinkage_grid": (0.0, 1.0),
+            },
+            {
+                "selector_id": "local_trend_match",
+                "alpha_grid": (0.0, 1.0),
+            },
+        ),
+    }
+
+    report = run_development_replay(
+        tasks,
+        outcomes,
+        development_plan,
+        public_plan,
+        portfolio,
+    )
+
+    assert report["origin_counts"] == {
+        "org/a": 1,
+        "org/b": 1,
+        "org/c": 1,
+    }
+    assert report["summaries"]["wide"]["history_match"]["repository_count"] == 3
+    assert set(report["outer_fold_parameters"]["org/a"][
+        "training_repository_ids"
+    ]) == {"org/b", "org/c"}
+    assert report["nomination"]["production_promotion_allowed"] is False
 
 
 @pytest.mark.parametrize(
