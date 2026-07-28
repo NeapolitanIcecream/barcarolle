@@ -172,10 +172,31 @@ and
 The budget and horizon audit is recorded in
 [`experiments/2026-07-28-budget-horizon-sensitivity.md`](experiments/2026-07-28-budget-horizon-sensitivity.md).
 
-This sprint made zero paid API calls and zero coding-Agent calls. One pinned
-embedding model already present on disk ran on local CPU. The previous USD 300
-authority remains closed, and no current candidate warrants or authorizes paid
-validation.
+The external-source audit then measured exact public Task supply and official
+Agent-result coverage:
+
+| Source | Repository-local supply | Result decision |
+| --- | --- | --- |
+| Multi-SWE-bench | 1,632 Tasks; H5 221 Origins/13 repositories; H10 107/11 | Adopt as the primary outcome-open development source; 36 complete public vectors. |
+| SWE-bench Full | 2,294 Tasks; legacy H5 419 Origins/11 repositories | Adopt as a secondary depth source; 22 clean vectors, but no independent repository or source-family confirmation. |
+| SWE-rebench V2 | 32,079 Tasks; research H5 1,534 Origins/235 raw repositories | Adopt for Task supply and outcome-free research; no complete public result matrix. |
+| SWE-PolyBench Full | 2,110 Tasks; research H5 355 Origins/11 repositories | Defer response-derived work; published Full vectors are language-partial. |
+
+The committed inventory digest is
+`f4436fd642f6a229cfbf5dfd0a20e4d5175def8dfaa9a46cd830a41d0e335df8`.
+Multi-SWE Task time is a GitHub PR-time projection, not native source evidence.
+Its import contract digest is
+`1e104613012a95fc534dba23d4adac1b7d6a6c10e70537c732f16da3e6f83307`;
+the normalized panel digest is
+`f2658d12451bdab4108a71cfae5cd5044a5bd312633239c09425378b4b682deb`.
+Multi-SWE and Full outcomes were inspected during source choice and are
+development data, not sealed confirmation. Detailed identities, overlap,
+licenses, timestamp limits, and result coverage are in
+[`experiments/2026-07-28-external-benchmark-source-audit.md`](experiments/2026-07-28-external-benchmark-source-audit.md).
+
+All studies recorded here made zero paid benchmark calls. The prior local
+embedding run did not make an API call. The previous USD 300 authority remains
+closed; the next development study needs no paid authority.
 
 ## Multi-Repository Research Contract
 
@@ -346,10 +367,10 @@ Routes remain separate until evidence supports a combination.
 
 | Route | Thesis | Decisive test | State |
 | --- | --- | --- | --- |
-| MR-A: fixed outcome-free transfer | A simple semantic or structural rule transfers without fitting target outcomes. | Fixed recency, coverage, and ALG-007 all failed the current seven-repository screen. Reopen ALG-007 only with both a new Task source and new Agent panel; otherwise require a new prespecified mechanism. | `closed` on the current source and panel |
-| MR-B: offline multi-repository training | Repository-local Origins from several research repositories teach one policy that still consumes only one repository at deployment. | Joint response dynamics failed Agent transfer; cutoff-aware difficulty dynamics failed wide/deep and Agent-direction gates; a frozen 3×3 budget–horizon grid found no stable region. Reopen only with more source-time-eligible Origins or a mechanism derived independently of the opened results. | `data-gated`; current-pool search closed |
-| MR-C: partial pooling | Repository-specific effects share useful structure without erasing heterogeneity. | ALG-006 improves held-out-repository loss and calibration over macro averaging and the safe-switch baseline after enough independent repositories exist. | `data-gated` |
-| MR-D: fixed-universe compression | A small subset reconstructs full historical Agent scores across unseen Agents. | ALG-008 beats equal-budget random and coverage on held-out Agents, reported separately from future-Task MAE. | `data-gated` |
+| MR-A: fixed outcome-free transfer | A simple semantic or structural rule transfers without fitting target outcomes. | Fixed recency, coverage, and ALG-007 failed the Verified screen. Multi-SWE satisfies the recorded new-source/new-panel trigger; include at most one unchanged ALG-007 transfer replay as a control, not a new parameter search. | `ready` on Multi-SWE; Verified route closed |
+| MR-B: offline multi-repository training | Repository-local Origins from several research repositories teach one policy that still consumes only one repository at deployment. | Existing response and difficulty mechanisms failed. Multi-SWE supplies H5 221 Origins/13 repositories and 36 vectors; nominate a mechanism under repository, language, model, harness, and time audits. | `ready` for outcome-open development |
+| MR-C: partial pooling | Repository-specific effects share useful structure without erasing heterogeneity. | A newly predeclared mechanism improves held-out-repository loss and calibration over macro averaging and the safe-switch baseline on the new source. | `ready`; keep the implementation direct until a candidate passes |
+| MR-D: fixed-universe compression | A small subset reconstructs full historical Agent scores across unseen Agents. | ALG-008 beats equal-budget random and coverage on held-out Agents, reported separately from future-Task MAE. | `ready` on the 36-vector Multi-SWE panel when prioritized |
 | MR-E: source and field validity | Generator-conditional gains persist in natural future work. | Frozen later source, then prospective field evidence with an independently defined target frame. | `authority-gated` |
 | MR-F: adaptive difficulty regime | Historical predictive score can choose between stationary and dynamic task-difficulty forecasts without future leakage. | Prequential adaptation produced wide `-0.00235`, deep `+0.00927`, and temporal-null rate `0.194`. | `closed` on the current pool |
 
@@ -368,7 +389,10 @@ The pinned 500-Task source yielded 12 repository rows, seven wide repositories,
 three deep repositories, and 68 potential Origins. The manifest records exact
 source identity, chronological span, current fork metadata, exclusions, and the
 counterfactual time contract. Django supplies 63.2% of Origins, so the study
-uses repository-first aggregation.
+uses repository-first aggregation. The later external audit pinned Full,
+PolyBench, Multi-SWE, and SWE-rebench identities and measured their Task,
+Origin, timestamp, overlap, license, and outcome limits. Multi-SWE is the next
+development source; SWE-rebench is supply-only until an outcome matrix exists.
 
 ### Phase 2 — Offline Protocol And Tooling
 
@@ -378,12 +402,16 @@ The direct experiment layer now provides source/plan binding, repository-local
 Origin construction, repository-first contrasts, cluster bootstrap intervals,
 leave-one-cluster-out sensitivity, wide/deep views, 20,000-draw random
 calibration, and compact self-digested outputs. Tests cover the evidence
-boundary. Core Result, Task Pool, Selection, and Runner contracts did not
+boundary. The external inventory adds full-byte source verification, resumable
+ignored projections, four Origin protocols, and cross-source overlap checks.
+The direct Multi-SWE import fixes 39 source paths, 1,632 Task/time rows, 36
+configurations, and 2,913 sparse positive outcomes; its evidence validates
+offline. Core Result, Task Pool, Selection, and Runner contracts did not
 change.
 
 ### Phase 3 — Multi-Repository Feasibility Pilot
 
-State: `data-gated`; the public zero-cost feasibility portion is complete.
+State: `ready` on an outcome-open external development source.
 
 The public panel establishes portfolio geometry and route-dependent
 between-repository variation. Naive normal approximations for a `0.02` effect
@@ -392,8 +420,10 @@ confirmatory target. After a new route passes the development gate, its blinded
 pilot must measure repository dependence, missingness, cost, and wall time
 before the repository count is frozen. The old 44-Origin calculation is not
 carried forward. Eleven development Agents now have complete 500-Task public
-vectors, and six holdout Agents remain sealed; Agent cells are not the current
-blocker.
+vectors, and six holdout Agents remain sealed. Multi-SWE now supplies 36
+complete public vectors on a separate 1,632-Task denominator. Its outcomes are
+open; use it for development and reserve later-source or prospective evidence
+for confirmation.
 
 ### Phase 4 — Frozen Fixed-Selector Comparison
 
@@ -404,7 +434,7 @@ rules were compared across wide and deep views. None earned nomination.
 
 ### Phase 5 — Offline Multi-Repository Training
 
-State: `data-gated`; current-pool candidate search is closed.
+State: `ready` on Multi-SWE; current Verified-pool search remains closed.
 
 Outer repository folds were exercised directly in the experiment layer.
 History match improved full history by only `0.0064`; every trend fold chose
@@ -414,14 +444,18 @@ difficulty Markov and prequential adaptation also failed the repository,
 deep-history, and Agent-direction gates. A common-cohort audit over budgets 5,
 10, and 15 and task-count horizons 3, 5, and 10 found no passing cell or stable
 region. Add no core training seam until one concrete family first passes the
-opened-data nomination gate. Reopen with more source-time-eligible Origins or
-a mechanism derived independently of these results, not another scale,
-threshold, or gate search. Do not introduce a meta-pool, model registry,
-trainer service, or generic cross-validation framework.
+opened-data nomination gate. Multi-SWE now satisfies the recorded
+source-and-panel trigger. Use unchanged ALG-007 once as a transfer control, not
+as another parameter search; the primary candidate must be a mechanism derived
+independently of the opened Verified results. Do not introduce a meta-pool,
+model registry, trainer service, or generic cross-validation framework. The
+39-file Multi-SWE Task universe, projected-time sidecar, H5/H10 schedules, and
+36-vector allowlist are now frozen. Freeze the source-relative nomination gate
+and language/model/harness audit definitions before the next outcome replay.
 
 ### Phase 6 — Orthogonal Confirmation
 
-State: `data-gated`, then `authority-gated`.
+State: `trigger-gated`, then `authority-gated`.
 
 There is no successful route to confirm. The disjoint Agent split is already
 frozen: eleven opened development Agents and six sealed holdout Agents. Open
@@ -435,7 +469,8 @@ generally valid.
 
 There is no active paid plan. Before requesting one, a new mechanism must be
 specified without another search over the opened target outcomes and pass the
-development gate:
+development gate. The exact counts below apply to the frozen SWE-bench
+Verified development panel:
 
 1. wide macro-repository difference at most `-0.01`;
 2. at least five of seven repository directions negative;
@@ -446,10 +481,18 @@ development gate:
 7. temporal-null as-good-or-better rate below `0.10`;
 8. leave-one-Agent macro negative and at least 8/11 Agents favorable.
 
-After that gate, freeze candidate code and parameters, source and revision,
-Origin schedule, budget, missing-cell policy, endpoint identity, and exclusions
-before opening the six-Agent holdout. The current Agent split is already
-frozen; do not reallocate it from observed results.
+Do not copy the Verified-specific `5/7` repository or `8/11` Agent counts to
+Multi-SWE. Before its first outcome replay, freeze source-relative gates that
+retain the same principles: effect at most `-0.01`, favorable direction in at
+least 70% of eligible repositories and Agents, negative leave-one-repository
+macro effects, negative deep direction, better than 75% of equal-budget random
+draws, temporal-null rate below `0.10`, and explicit leave-one-language,
+leave-one-model-family, and leave-one-harness-family audits.
+
+After the applicable gate, freeze candidate code and parameters, source and
+revision, Origin schedule, budget, missing-cell policy, endpoint identity, and
+exclusions before opening an independent holdout. The current six-Agent
+SWE-bench split is already frozen; do not reallocate it from observed results.
 Use the candidate-specific blinded pilot to choose the repository count. Add
 RI-160's certification checkpoint only when the new pool is actually built,
 and RI-163 only for another Pylint campaign. This ordering leaves no currently
@@ -472,11 +515,14 @@ useful infrastructure project hidden behind the data gate.
 | Official Result schema normalization | Current three-field schema plus one exact legacy schema amendment for three exact blobs | Do not add permissive field handling; bind any future schema exception to exact identities and unchanged endpoints. |
 | Agent-transfer audit | `code-confirmed` leave-one-Agent rematerialization; an evaluated Agent is never a Selector input | Preserve for response-derived Selectors. |
 | Local semantic evidence | `code-confirmed` as ignored vectors plus committed identities | ALG-007 failed; add no core embedding service. |
+| External benchmark inventory | `code-confirmed` for Verified, Full, PolyBench, and Rebench with exact source bytes and Origin protocols | Preserve source-specific identities; do not introduce a registry. |
+| Multi-SWE public Result normalization | `code-confirmed`: fixed 39-file contract, 36-vector allowlist, 1,632 projected times, 2,913 sparse positive cells, and offline evidence validation | Use only in outcome-open research; add no generic source layer. |
 
 Infrastructure prerequisites for another paid selector study are ready. The
-remaining blockers are scientific nomination and source-time-eligible Origin
-supply. No multi-repository product execution path or generic training service
-is needed.
+external-source audit removes the immediate Origin and Agent-cell supply
+blocker for zero-paid development. The remaining blocker is a scientifically
+nominated mechanism. No multi-repository product execution path or generic
+training service is needed.
 
 ## Active Work Ledger
 
@@ -485,15 +531,18 @@ is needed.
 | MR-001 | P1 | `closed` | Portfolio and lineage audit committed; repeat only for a new source revision. |
 | MR-002 | P1 | `closed` | Repository-first aggregator, cluster interval, and leave-one-cluster-out tests committed. |
 | MR-003 | P1 | `closed` | Fixed public plan, full-history contrast, random calibration, exclusions, and results committed. |
-| MR-004 | P1 | `data-gated` | After nomination, use route-specific blinded pilot variance and cost to fix the next study; do not pay before then. |
-| MR-005 / ALG-007 | P1 | `closed` | Retired on this source family and panel. Reopen only with both a new Task source and new Agent panel. |
-| MR-006 / ALG-006 | P2 | `data-gated` | Current-pool temporal search is closed. Reopen partial pooling only with more source-time-eligible repositories or an independently derived mechanism. |
+| MR-004 | P1 | `trigger-gated` | Multi-SWE supplies the data trigger, but paid sizing remains blocked until a mechanism passes its frozen outcome-open gate. |
+| MR-005 / ALG-007 | P1 | `ready` | Run the unchanged rule once on Multi-SWE as a transfer control. Do not tune it or treat it as the primary candidate. |
+| MR-006 | P2 | `ready` | ALG-006 remains retired. Give a new ID to one independently motivated partial-pooling mechanism on Multi-SWE; preserve repository-local deployment and source-time cutoffs. |
 | MR-007 / RI-188 | P1 | `data-gated` | The 11-development/6-holdout Agent split is frozen. Preserve the six unread blobs until every gate passes. |
 | MR-008 | P1 | `data-gated` | A nominated route must exist before later-source or strict-prospective authority is requested. |
 | MR-009 / ALG-009 | P1 | `closed` | Joint response Markov failed temporal-null, leave-one-Agent, and sealed eight-Agent replication. |
 | MR-010 / ALG-010 | P1 | `closed` | Cutoff-aware difficulty Markov reached wide `-0.00888` but failed effect, repository, deep, and Agent-direction gates. |
 | MR-011 / ALG-011 | P1 | `closed` | Prequential adaptation reached wide `-0.00235` and null `0.194`; stop current-pool temporal candidate invention. |
 | MR-012 | P1 | `closed` | The frozen budget `5/10/15` by horizon `3/5/10` audit found no passing cell or stable region. Keep absolute budget and future `TimeRange` configurable; do not tune more scales on this opened panel. |
+| MR-013 | P1 | `closed` | External-source audit selected Multi-SWE for outcome-open development, Full for depth, Rebench for supply, and deferred response-derived PolyBench work. |
+| MR-014 | P1 | `closed` | Direct Multi-SWE response/time research import committed with the 39-file contract, projected-time sidecar, 36-vector allowlist, strict denominator checks, and no generic source registry. |
+| RI-125 | P2 | `trigger-gated` | The research import is not a prepared Task Pool. Download, full-byte verify, and certify the 39 source files only when a concrete mechanism needs Task content or a runnable Multi-SWE pool. |
 | RI-129 / RI-160 | P2 | `trigger-gated` | Add a single-writer exact certification checkpoint before the next comparable pool; replay retained entries before reuse. |
 | RI-163 | P2 | `trigger-gated` | Before another Pylint campaign, replace whole-file behavior identity with an explicit version payload and direct-helper digests. |
 | RI-191 | P2 | `closed` | 20,000 draws give wide mean Monte Carlo SE `0.000112`; reopen only if the candidate state space changes materially. |
@@ -506,7 +555,7 @@ is needed.
 | RI-031 | Measure certification acceptance, flake, and exclusion rates on a larger real pool; keep them observational until the denominator is defensible. |
 | RI-033 | Reopen bounded Agent parallelism only for a measured campaign need, with exact cost attribution, one Result writer, and default concurrency one. |
 | RI-034 / RI-119 | Use structural audit signals only after reproducing a boundary or maintenance problem; do not create broad refactor gates or split modules from a score alone. |
-| RI-125 | The first additional static source gets one explicit adapter/import path, pinned revision, fidelity name, fixtures, and prepared package. Partition a multi-repository corpus into repository-local pools. |
+| RI-125 | Multi-SWE triggered the response/time import only. A runnable source still needs one explicit prepared-package path and repository-local pools; do not generalize an adapter framework. |
 | RI-126 | A synthetic overlay materializes the final solver state as a full commit plus lineage sidecar; add no core overlay abstraction without a concrete adapter. |
 | RI-127 | Interactive episodes reopen only with a concrete source and treatment-conditional contract; require a held-out human branch-policy pilot before human-interaction claims. |
 | RI-128 | A model-backed Generator owns its endpoint, authority, and provenance inside its adapter; add no generic model service. |

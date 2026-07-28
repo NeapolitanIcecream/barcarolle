@@ -1,0 +1,181 @@
+{
+  "schema_version": "barcarolle_multi_swe_research_contract_v1",
+  "study_id": "multi-swe-zero-paid-development-2026-07-28",
+  "dataset": {
+    "repository": "ByteDance-Seed/Multi-SWE-bench",
+    "revision": "56ff018c04a38e27ada1e9d0a6d5839a51f88f0d",
+    "split": "original_seven_language_verified",
+    "tree_listing_sha256": "0848e15563325fa3f0735258e71e31076ca223f4a2d1679fbbee9bd08bb03345",
+    "declared_path_bytes": 1603542672,
+    "source_byte_status": "revision_and_tree_pinned_not_locally_verified",
+    "task_count": 1632,
+    "task_id_line_digest": "cfbe75888d4eb3ff1062debcbc85c1b9f4ac5dcfe1a2fce48f34d116e2a45a21",
+    "path_list_sha256": "30d540e497fc82b60da1a8358361be670a7e82a90defd64174ca965803b7e399",
+    "paths": [
+      "c/facebook__zstd_dataset.jsonl",
+      "c/jqlang__jq_dataset.jsonl",
+      "c/ponylang__ponyc_dataset.jsonl",
+      "cpp/catchorg__Catch2_dataset.jsonl",
+      "cpp/fmtlib__fmt_dataset.jsonl",
+      "cpp/nlohmann__json_dataset.jsonl",
+      "cpp/simdjson__simdjson_dataset.jsonl",
+      "cpp/yhirose__cpp-httplib_dataset.jsonl",
+      "go/cli__cli_dataset.jsonl",
+      "go/grpc__grpc-go_dataset.jsonl",
+      "go/zeromicro__go-zero_dataset.jsonl",
+      "java/alibaba__fastjson2_dataset.jsonl",
+      "java/apache__dubbo_dataset.jsonl",
+      "java/elastic__logstash_dataset.jsonl",
+      "java/fasterxml__jackson-core_dataset.jsonl",
+      "java/fasterxml__jackson-databind_dataset.jsonl",
+      "java/fasterxml__jackson-dataformat-xml_dataset.jsonl",
+      "java/google__gson_dataset.jsonl",
+      "java/googlecontainertools__jib_dataset.jsonl",
+      "java/mockito__mockito_dataset.jsonl",
+      "js/Kong__insomnia_dataset.jsonl",
+      "js/anuraghazra__github-readme-stats_dataset.jsonl",
+      "js/axios__axios_dataset.jsonl",
+      "js/expressjs__express_dataset.jsonl",
+      "js/iamkun__dayjs_dataset.jsonl",
+      "js/sveltejs__svelte_dataset.jsonl",
+      "rust/BurntSushi__ripgrep_dataset.jsonl",
+      "rust/clap-rs__clap_dataset.jsonl",
+      "rust/nushell__nushell_dataset.jsonl",
+      "rust/rayon-rs__rayon_dataset.jsonl",
+      "rust/serde-rs__serde_dataset.jsonl",
+      "rust/sharkdp__bat_dataset.jsonl",
+      "rust/sharkdp__fd_dataset.jsonl",
+      "rust/tokio-rs__bytes_dataset.jsonl",
+      "rust/tokio-rs__tokio_dataset.jsonl",
+      "rust/tokio-rs__tracing_dataset.jsonl",
+      "ts/darkreader__darkreader_dataset.jsonl",
+      "ts/mui__material-ui_dataset.jsonl",
+      "ts/vuejs__core_dataset.jsonl"
+    ],
+    "evaluator_repository": "multi-swe-bench/multi-swe-bench",
+    "evaluator_revision": "24f493f8a103e72312ded4f6b9c89f081d69cb09",
+    "image_manifest_path": "scripts/images_verified.txt",
+    "image_manifest_sha256": "4fb39524cbeaadb103ed459c234c47f1ea3d85d5361bd958293a7357fa9c1d69"
+  },
+  "results": {
+    "repository": "multi-swe-bench/experiments",
+    "revision": "6a7d5566f62fa76f4192302cf763051b98e4facc",
+    "split": "verified",
+    "configuration_list_sha256": "2784ad720d88e76d137d01d8f7f51ec281d076477cc6551f91a1737bdd0d313e",
+    "configurations": [
+      "20250329_MSWE-agent_Claude-3.5-Sonnet(Oct)",
+      "20250329_MSWE-agent_Claude-3.7-Sonnet",
+      "20250329_MSWE-agent_DeepSeek-R1",
+      "20250329_MSWE-agent_DeepSeek-V3",
+      "20250329_MSWE-agent_Doubao-1.5-pro",
+      "20250329_MSWE-agent_GPT-4o-1120",
+      "20250329_MSWE-agent_OpenAI-o1",
+      "20250329_MSWE-agent_OpenAI-o3-mini-high",
+      "20250329_MSWE-agent_Qwen2.5-72B-Instruct",
+      "20250329_MagentLess_Claude-3.5-Sonnet(Oct)",
+      "20250329_MagentLess_Claude-3.7-Sonnet",
+      "20250329_MagentLess_DeepSeek-R1",
+      "20250329_MagentLess_DeepSeek-V3",
+      "20250329_MagentLess_Doubao-1.5-pro",
+      "20250329_MagentLess_GPT-4o-1120",
+      "20250329_MagentLess_OpenAI-o1",
+      "20250329_MagentLess_OpenAI-o3-mini-high",
+      "20250329_MagentLess_Qwen2.5-72B-Instruct",
+      "20250329_MopenHands_Claude-3.5-Sonnet(Oct)",
+      "20250329_MopenHands_Claude-3.7-Sonnet",
+      "20250329_MopenHands_DeepSeek-R1",
+      "20250329_MopenHands_DeepSeek-V3",
+      "20250329_MopenHands_Doubao-1.5-pro",
+      "20250329_MopenHands_GPT-4o-1120",
+      "20250329_MopenHands_OpenAI-o1",
+      "20250329_MopenHands_OpenAI-o3-mini-high",
+      "20250329_MopenHands_Qwen2.5-72B-Instruct",
+      "20250426_MSWE-agent_Doubao-1.5-thinking",
+      "20250426_MSWE-agent_Gemini-2.5-Pro",
+      "20250426_MSWE-agent_Llama-4-Maverick",
+      "20250426_MagentLess_Doubao-1.5-thinking",
+      "20250426_MagentLess_Gemini-2.5-Pro",
+      "20250426_MagentLess_Llama-4-Maverick",
+      "20250426_MopenHands_Doubao-1.5-thinking",
+      "20250426_MopenHands_Gemini-2.5-Pro",
+      "20250426_MopenHands_Llama-4-Maverick"
+    ],
+    "languages": [
+      {
+        "dataset_directory": "c",
+        "result_directory": "c",
+        "task_count": 128,
+        "task_id_line_digest": "e5520efdf43e09b858e75e8949828630c92222bbcee0e8f7760292cef61ec1d6"
+      },
+      {
+        "dataset_directory": "cpp",
+        "result_directory": "c++",
+        "task_count": 129,
+        "task_id_line_digest": "d7165ecdfddfe38181d4ae1d2c64807fecf731b33e409bd698302eda04714ad8"
+      },
+      {
+        "dataset_directory": "go",
+        "result_directory": "go",
+        "task_count": 428,
+        "task_id_line_digest": "87d5b26406f17495272f071a12b9e321b3afc8ca9d06a72fab3719943af83417"
+      },
+      {
+        "dataset_directory": "java",
+        "result_directory": "java",
+        "task_count": 128,
+        "task_id_line_digest": "896a41ce89b6979e10e03acc57f79621e68799cd242f197e4cf005971939fbde"
+      },
+      {
+        "dataset_directory": "js",
+        "result_directory": "javascript",
+        "task_count": 356,
+        "task_id_line_digest": "d77d2eb67c6aad9376556a9dd908de061f642bebd0a494e6b8a1e7c1b1ed0db8"
+      },
+      {
+        "dataset_directory": "rust",
+        "result_directory": "rust",
+        "task_count": 239,
+        "task_id_line_digest": "bc0a6b0994d437af5f00323fbe87846e0f424c6a88b484f3f4c5592f1f1dc645"
+      },
+      {
+        "dataset_directory": "ts",
+        "result_directory": "typescript",
+        "task_count": 224,
+        "task_id_line_digest": "d597d14c0f505a3323768bb587f9b18d632e8166a1004d38fecdd7c17a5299de"
+      }
+    ]
+  },
+  "time_projection": {
+    "field": "github_pull_request_created_at",
+    "evidence": "github_graphql_pull_request_created_at",
+    "native_dataset_time": false,
+    "claim": "counterfactual_source_time_only"
+  },
+  "research_protocol": {
+    "runtime_task_pool_scope": "one_repository",
+    "origin_schedules": [
+      {
+        "minimum_initial_history_tasks": 20,
+        "future_block_tasks": 5
+      },
+      {
+        "minimum_initial_history_tasks": 20,
+        "future_block_tasks": 10
+      }
+    ],
+    "baselines": [
+      "full_history",
+      "equal_budget_random"
+    ],
+    "required_transfer_audits": [
+      "leave_one_repository_out",
+      "leave_one_language_out",
+      "leave_one_model_family_out",
+      "leave_one_harness_family_out",
+      "temporal_null"
+    ],
+    "outcome_status": "opened_during_source_selection",
+    "paid_calls_allowed": false
+  },
+  "contract_digest": "1e104613012a95fc534dba23d4adac1b7d6a6c10e70537c732f16da3e6f83307"
+}

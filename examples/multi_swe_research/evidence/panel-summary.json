@@ -1,0 +1,579 @@
+{
+  "claim_boundary": "Official terminal partitions are normalized counterfactual development evidence, not independently replayed Barcarolle Results.",
+  "configuration_count": 36,
+  "configurations": [
+    {
+      "configuration_id": "20250329_MSWE-agent_Claude-3.5-Sonnet(Oct)",
+      "harness_family": "MSWE-agent",
+      "model_family": "Claude-3.5-Sonnet(Oct)",
+      "pass_rate": 0.0704656862745098,
+      "resolved_count": 115,
+      "resolved_id_line_digest": "e7994de32355f18efe46cf24cfc2c4a205fcdbfd15eaf0dd8bd81ca68513faa2",
+      "terminal_state_counts": {
+        "completed": 1385,
+        "empty_error_patch": 247,
+        "incomplete": 0
+      }
+    },
+    {
+      "configuration_id": "20250329_MSWE-agent_Claude-3.7-Sonnet",
+      "harness_family": "MSWE-agent",
+      "model_family": "Claude-3.7-Sonnet",
+      "pass_rate": 0.08394607843137254,
+      "resolved_count": 137,
+      "resolved_id_line_digest": "379272a335aede0eae121bf5b4d85e608836502cd7a197ff8b67a227f56727cd",
+      "terminal_state_counts": {
+        "completed": 1420,
+        "empty_error_patch": 212,
+        "incomplete": 0
+      }
+    },
+    {
+      "configuration_id": "20250329_MSWE-agent_DeepSeek-R1",
+      "harness_family": "MSWE-agent",
+      "model_family": "DeepSeek-R1",
+      "pass_rate": 0.032475490196078434,
+      "resolved_count": 53,
+      "resolved_id_line_digest": "49a6558ff92aabb9ed2bf206a5be57397a2e542b07df4c52462beac918c9187f",
+      "terminal_state_counts": {
+        "completed": 1442,
+        "empty_error_patch": 190,
+        "incomplete": 0
+      }
+    },
+    {
+      "configuration_id": "20250329_MSWE-agent_DeepSeek-V3",
+      "harness_family": "MSWE-agent",
+      "model_family": "DeepSeek-V3",
+      "pass_rate": 0.04656862745098039,
+      "resolved_count": 76,
+      "resolved_id_line_digest": "333951f9d670516c1a5ef6fb66c911ef02df8b5beaabe9bca87447cfee1dacf8",
+      "terminal_state_counts": {
+        "completed": 1293,
+        "empty_error_patch": 339,
+        "incomplete": 0
+      }
+    },
+    {
+      "configuration_id": "20250329_MSWE-agent_Doubao-1.5-pro",
+      "harness_family": "MSWE-agent",
+      "model_family": "Doubao-1.5-pro",
+      "pass_rate": 0.025735294117647058,
+      "resolved_count": 42,
+      "resolved_id_line_digest": "e35d7bee62c2d9a6751ac57371a9d5f0c221828ff042ff1735785dbc6e1ea3ff",
+      "terminal_state_counts": {
+        "completed": 1145,
+        "empty_error_patch": 487,
+        "incomplete": 0
+      }
+    },
+    {
+      "configuration_id": "20250329_MSWE-agent_GPT-4o-1120",
+      "harness_family": "MSWE-agent",
+      "model_family": "GPT-4o-1120",
+      "pass_rate": 0.024509803921568627,
+      "resolved_count": 40,
+      "resolved_id_line_digest": "16cbee9e9ddcd3d61bcdec08ffefd1cd50e3ad86b8b96e6dfdce1918d02d7a43",
+      "terminal_state_counts": {
+        "completed": 1120,
+        "empty_error_patch": 512,
+        "incomplete": 0
+      }
+    },
+    {
+      "configuration_id": "20250329_MSWE-agent_OpenAI-o1",
+      "harness_family": "MSWE-agent",
+      "model_family": "OpenAI-o1",
+      "pass_rate": 0.056372549019607844,
+      "resolved_count": 92,
+      "resolved_id_line_digest": "79ad0d95cb1f6ea3effcc782125245c51cd6b6919bd61c719cb09b080a6e3523",
+      "terminal_state_counts": {
+        "completed": 1172,
+        "empty_error_patch": 460,
+        "incomplete": 0
+      }
+    },
+    {
+      "configuration_id": "20250329_MSWE-agent_OpenAI-o3-mini-high",
+      "harness_family": "MSWE-agent",
+      "model_family": "OpenAI-o3-mini-high",
+      "pass_rate": 0.05269607843137255,
+      "resolved_count": 86,
+      "resolved_id_line_digest": "5cfede4f141d59ecd084da8bc23243883a11d4f67598f144a1b303ac0c0af869",
+      "terminal_state_counts": {
+        "completed": 1446,
+        "empty_error_patch": 186,
+        "incomplete": 0
+      }
+    },
+    {
+      "configuration_id": "20250329_MSWE-agent_Qwen2.5-72B-Instruct",
+      "harness_family": "MSWE-agent",
+      "model_family": "Qwen2.5-72B-Instruct",
+      "pass_rate": 0.006127450980392157,
+      "resolved_count": 10,
+      "resolved_id_line_digest": "29459ca6a68d191a48d4dfaf9abc9fab77839deef8cf7f5de7220a900412e738",
+      "terminal_state_counts": {
+        "completed": 1019,
+        "empty_error_patch": 613,
+        "incomplete": 0
+      }
+    },
+    {
+      "configuration_id": "20250329_MagentLess_Claude-3.5-Sonnet(Oct)",
+      "harness_family": "MagentLess",
+      "model_family": "Claude-3.5-Sonnet(Oct)",
+      "pass_rate": 0.04718137254901961,
+      "resolved_count": 77,
+      "resolved_id_line_digest": "e79a93f5002c3a3c4eb5639e12063e0a09bc34e95ffcf02f0e36b78ca128c859",
+      "terminal_state_counts": {
+        "completed": 1234,
+        "empty_error_patch": 398,
+        "incomplete": 0
+      }
+    },
+    {
+      "configuration_id": "20250329_MagentLess_Claude-3.7-Sonnet",
+      "harness_family": "MagentLess",
+      "model_family": "Claude-3.7-Sonnet",
+      "pass_rate": 0.0508578431372549,
+      "resolved_count": 83,
+      "resolved_id_line_digest": "dab697feead14bc2aecc350b22c73e1b7606edd2cb79061977e32931a5f14f9e",
+      "terminal_state_counts": {
+        "completed": 1188,
+        "empty_error_patch": 444,
+        "incomplete": 0
+      }
+    },
+    {
+      "configuration_id": "20250329_MagentLess_DeepSeek-R1",
+      "harness_family": "MagentLess",
+      "model_family": "DeepSeek-R1",
+      "pass_rate": 0.058823529411764705,
+      "resolved_count": 96,
+      "resolved_id_line_digest": "47c5cc3323cc6a6c3a7241d8debf8667f526ead794933022b69b6eda0b35124f",
+      "terminal_state_counts": {
+        "completed": 1265,
+        "empty_error_patch": 367,
+        "incomplete": 0
+      }
+    },
+    {
+      "configuration_id": "20250329_MagentLess_DeepSeek-V3",
+      "harness_family": "MagentLess",
+      "model_family": "DeepSeek-V3",
+      "pass_rate": 0.04718137254901961,
+      "resolved_count": 77,
+      "resolved_id_line_digest": "da6938ec57a8475143272626ecd6cfada54af5b7b163ca74e44d47ddb45b81ca",
+      "terminal_state_counts": {
+        "completed": 1260,
+        "empty_error_patch": 372,
+        "incomplete": 0
+      }
+    },
+    {
+      "configuration_id": "20250329_MagentLess_Doubao-1.5-pro",
+      "harness_family": "MagentLess",
+      "model_family": "Doubao-1.5-pro",
+      "pass_rate": 0.022058823529411766,
+      "resolved_count": 36,
+      "resolved_id_line_digest": "bb07fffe0ff7941329598add33e331f44991fcee4fb24485d471da8e740e5284",
+      "terminal_state_counts": {
+        "completed": 636,
+        "empty_error_patch": 996,
+        "incomplete": 0
+      }
+    },
+    {
+      "configuration_id": "20250329_MagentLess_GPT-4o-1120",
+      "harness_family": "MagentLess",
+      "model_family": "GPT-4o-1120",
+      "pass_rate": 0.03799019607843137,
+      "resolved_count": 62,
+      "resolved_id_line_digest": "a25d5ac08ba17e373953eb7d827c86204648f4750f81ffa5cbe23ac4a5ecbba6",
+      "terminal_state_counts": {
+        "completed": 1343,
+        "empty_error_patch": 289,
+        "incomplete": 0
+      }
+    },
+    {
+      "configuration_id": "20250329_MagentLess_OpenAI-o1",
+      "harness_family": "MagentLess",
+      "model_family": "OpenAI-o1",
+      "pass_rate": 0.06433823529411764,
+      "resolved_count": 105,
+      "resolved_id_line_digest": "15fc7d661bf80fc33a1e9e1415b2411d9f8f7edbe9587f8a8c9a1fe3519af91c",
+      "terminal_state_counts": {
+        "completed": 1286,
+        "empty_error_patch": 346,
+        "incomplete": 0
+      }
+    },
+    {
+      "configuration_id": "20250329_MagentLess_OpenAI-o3-mini-high",
+      "harness_family": "MagentLess",
+      "model_family": "OpenAI-o3-mini-high",
+      "pass_rate": 0.03615196078431373,
+      "resolved_count": 59,
+      "resolved_id_line_digest": "43c9f700a007cdba79930f4de2f0805be2b318af63b22b3f9c71b04be4b014af",
+      "terminal_state_counts": {
+        "completed": 897,
+        "empty_error_patch": 735,
+        "incomplete": 0
+      }
+    },
+    {
+      "configuration_id": "20250329_MagentLess_Qwen2.5-72B-Instruct",
+      "harness_family": "MagentLess",
+      "model_family": "Qwen2.5-72B-Instruct",
+      "pass_rate": 0.025735294117647058,
+      "resolved_count": 42,
+      "resolved_id_line_digest": "6d5c2f6a47d0d4976ccf237e50116cc26ac4bfa161093b943740197507850d71",
+      "terminal_state_counts": {
+        "completed": 966,
+        "empty_error_patch": 666,
+        "incomplete": 0
+      }
+    },
+    {
+      "configuration_id": "20250329_MopenHands_Claude-3.5-Sonnet(Oct)",
+      "harness_family": "MopenHands",
+      "model_family": "Claude-3.5-Sonnet(Oct)",
+      "pass_rate": 0.07965686274509803,
+      "resolved_count": 130,
+      "resolved_id_line_digest": "179c67f0c3a43ebb2de282f703f8bcd062949d9ca8eac7c7a4d8bbedc59b88b3",
+      "terminal_state_counts": {
+        "completed": 1029,
+        "empty_error_patch": 603,
+        "incomplete": 0
+      }
+    },
+    {
+      "configuration_id": "20250329_MopenHands_Claude-3.7-Sonnet",
+      "harness_family": "MopenHands",
+      "model_family": "Claude-3.7-Sonnet",
+      "pass_rate": 0.09252450980392157,
+      "resolved_count": 151,
+      "resolved_id_line_digest": "37aac3aaa847a502177a546656e500ccd468bf84ad2dfff059f1c34899d133aa",
+      "terminal_state_counts": {
+        "completed": 1099,
+        "empty_error_patch": 533,
+        "incomplete": 0
+      }
+    },
+    {
+      "configuration_id": "20250329_MopenHands_DeepSeek-R1",
+      "harness_family": "MopenHands",
+      "model_family": "DeepSeek-R1",
+      "pass_rate": 0.025122549019607844,
+      "resolved_count": 41,
+      "resolved_id_line_digest": "d4d3ce3526e8442708b03aef5cd7abbefa54c6b166fd6ff1a965fbc488a72102",
+      "terminal_state_counts": {
+        "completed": 674,
+        "empty_error_patch": 958,
+        "incomplete": 0
+      }
+    },
+    {
+      "configuration_id": "20250329_MopenHands_DeepSeek-V3",
+      "harness_family": "MopenHands",
+      "model_family": "DeepSeek-V3",
+      "pass_rate": 0.028799019607843136,
+      "resolved_count": 47,
+      "resolved_id_line_digest": "474e0eb89414b6721c8bffe2b348cd45a235bdb2d8741c4b8e1af5c54e0951cf",
+      "terminal_state_counts": {
+        "completed": 792,
+        "empty_error_patch": 840,
+        "incomplete": 0
+      }
+    },
+    {
+      "configuration_id": "20250329_MopenHands_Doubao-1.5-pro",
+      "harness_family": "MopenHands",
+      "model_family": "Doubao-1.5-pro",
+      "pass_rate": 0.011029411764705883,
+      "resolved_count": 18,
+      "resolved_id_line_digest": "d63ee2318919d0446d270cbbdf39402a8637837c26a54ef9d183ceb081591d02",
+      "terminal_state_counts": {
+        "completed": 808,
+        "empty_error_patch": 824,
+        "incomplete": 0
+      }
+    },
+    {
+      "configuration_id": "20250329_MopenHands_GPT-4o-1120",
+      "harness_family": "MopenHands",
+      "model_family": "GPT-4o-1120",
+      "pass_rate": 0.028799019607843136,
+      "resolved_count": 47,
+      "resolved_id_line_digest": "468426f847e0fe9729222d39db48eb407a065468549c4fb737a0dcb4e68a3ae0",
+      "terminal_state_counts": {
+        "completed": 972,
+        "empty_error_patch": 660,
+        "incomplete": 0
+      }
+    },
+    {
+      "configuration_id": "20250329_MopenHands_OpenAI-o1",
+      "harness_family": "MopenHands",
+      "model_family": "OpenAI-o1",
+      "pass_rate": 0.030637254901960783,
+      "resolved_count": 50,
+      "resolved_id_line_digest": "e3c453d4ebb41d62e175c4027a66024055d695686b0071e93637db168bf48989",
+      "terminal_state_counts": {
+        "completed": 1054,
+        "empty_error_patch": 578,
+        "incomplete": 0
+      }
+    },
+    {
+      "configuration_id": "20250329_MopenHands_OpenAI-o3-mini-high",
+      "harness_family": "MopenHands",
+      "model_family": "OpenAI-o3-mini-high",
+      "pass_rate": 0.03615196078431373,
+      "resolved_count": 59,
+      "resolved_id_line_digest": "a673df06d7af99aaaa89f7513ecee2edc4c536353e6a0d61ed9e67bc144571a3",
+      "terminal_state_counts": {
+        "completed": 685,
+        "empty_error_patch": 947,
+        "incomplete": 0
+      }
+    },
+    {
+      "configuration_id": "20250329_MopenHands_Qwen2.5-72B-Instruct",
+      "harness_family": "MopenHands",
+      "model_family": "Qwen2.5-72B-Instruct",
+      "pass_rate": 0.012867647058823529,
+      "resolved_count": 21,
+      "resolved_id_line_digest": "894c2afaa36f6e7383571ec5787eaff6ff217f0cba29e5cbd0495d8d7f2db6d7",
+      "terminal_state_counts": {
+        "completed": 1032,
+        "empty_error_patch": 600,
+        "incomplete": 0
+      }
+    },
+    {
+      "configuration_id": "20250426_MSWE-agent_Doubao-1.5-thinking",
+      "harness_family": "MSWE-agent",
+      "model_family": "Doubao-1.5-thinking",
+      "pass_rate": 0.0428921568627451,
+      "resolved_count": 70,
+      "resolved_id_line_digest": "b5f7f71f237c44bb432d43a1873f985d876cfa92dd583d74b0232a8b90d58c3b",
+      "terminal_state_counts": {
+        "completed": 1434,
+        "empty_error_patch": 198,
+        "incomplete": 0
+      }
+    },
+    {
+      "configuration_id": "20250426_MSWE-agent_Gemini-2.5-Pro",
+      "harness_family": "MSWE-agent",
+      "model_family": "Gemini-2.5-Pro",
+      "pass_rate": 0.10600490196078431,
+      "resolved_count": 173,
+      "resolved_id_line_digest": "d83058e1f9eb76090b285e46cd8f89662690e1fd24e14be303067975aae85555",
+      "terminal_state_counts": {
+        "completed": 1457,
+        "empty_error_patch": 175,
+        "incomplete": 0
+      }
+    },
+    {
+      "configuration_id": "20250426_MSWE-agent_Llama-4-Maverick",
+      "harness_family": "MSWE-agent",
+      "model_family": "Llama-4-Maverick",
+      "pass_rate": 0.032475490196078434,
+      "resolved_count": 53,
+      "resolved_id_line_digest": "d2a6ce74af483b05853249669daf1cd7fc1b7b7f4468d8a7ed4e6fa923a0adc9",
+      "terminal_state_counts": {
+        "completed": 1381,
+        "empty_error_patch": 251,
+        "incomplete": 0
+      }
+    },
+    {
+      "configuration_id": "20250426_MagentLess_Doubao-1.5-thinking",
+      "harness_family": "MagentLess",
+      "model_family": "Doubao-1.5-thinking",
+      "pass_rate": 0.061887254901960786,
+      "resolved_count": 101,
+      "resolved_id_line_digest": "02f657d1c2669428d375fcf6a0dae0e2d2e7f05f1847c15b37fd22de96f030b6",
+      "terminal_state_counts": {
+        "completed": 1211,
+        "empty_error_patch": 421,
+        "incomplete": 0
+      }
+    },
+    {
+      "configuration_id": "20250426_MagentLess_Gemini-2.5-Pro",
+      "harness_family": "MagentLess",
+      "model_family": "Gemini-2.5-Pro",
+      "pass_rate": 0.08517156862745098,
+      "resolved_count": 139,
+      "resolved_id_line_digest": "078f09402ae8dc4e604b29f4328ed349cb7ffe1bb34bcaab1b0ab53cbbd6f57b",
+      "terminal_state_counts": {
+        "completed": 1205,
+        "empty_error_patch": 427,
+        "incomplete": 0
+      }
+    },
+    {
+      "configuration_id": "20250426_MagentLess_Llama-4-Maverick",
+      "harness_family": "MagentLess",
+      "model_family": "Llama-4-Maverick",
+      "pass_rate": 0.061274509803921566,
+      "resolved_count": 100,
+      "resolved_id_line_digest": "aed4ec70c2474c4cbc8efb6812b0e015bcad916398d71fb3e1e237761368c4fe",
+      "terminal_state_counts": {
+        "completed": 1503,
+        "empty_error_patch": 129,
+        "incomplete": 0
+      }
+    },
+    {
+      "configuration_id": "20250426_MopenHands_Doubao-1.5-thinking",
+      "harness_family": "MopenHands",
+      "model_family": "Doubao-1.5-thinking",
+      "pass_rate": 0.06495098039215687,
+      "resolved_count": 106,
+      "resolved_id_line_digest": "755c5ee15344c2cbf955a7cb644bd3abbf78c3bdc6f3f3690aa13f5b583c3bec",
+      "terminal_state_counts": {
+        "completed": 1506,
+        "empty_error_patch": 126,
+        "incomplete": 0
+      }
+    },
+    {
+      "configuration_id": "20250426_MopenHands_Gemini-2.5-Pro",
+      "harness_family": "MopenHands",
+      "model_family": "Gemini-2.5-Pro",
+      "pass_rate": 0.14215686274509803,
+      "resolved_count": 232,
+      "resolved_id_line_digest": "7a49a7b4c9d44bb19c7a2a3b2711d92b4815d311574d858ef17d56cf90af6f0f",
+      "terminal_state_counts": {
+        "completed": 1503,
+        "empty_error_patch": 129,
+        "incomplete": 0
+      }
+    },
+    {
+      "configuration_id": "20250426_MopenHands_Llama-4-Maverick",
+      "harness_family": "MopenHands",
+      "model_family": "Llama-4-Maverick",
+      "pass_rate": 0.05330882352941176,
+      "resolved_count": 87,
+      "resolved_id_line_digest": "baa068f88a1eb7e6c8e931de02698e203c209e38bf1b676121e5c9e0276779c7",
+      "terminal_state_counts": {
+        "completed": 1509,
+        "empty_error_patch": 123,
+        "incomplete": 0
+      }
+    }
+  ],
+  "contract_digest": "1e104613012a95fc534dba23d4adac1b7d6a6c10e70537c732f16da3e6f83307",
+  "pairwise_disagreement": {
+    "maximum": 0.14460784313725492,
+    "median": 0.0661764705882353,
+    "minimum": 0.014093137254901961
+  },
+  "panel_digest": "f2658d12451bdab4108a71cfae5cd5044a5bd312633239c09425378b4b682deb",
+  "resolved_cell_count": 2913,
+  "resolved_outcome_digest": "b9a6d0d8e44d747d23789ec23eb4205178f2ae2d4f737c2446a5fcdf5abc116c",
+  "resource_use": {
+    "paid_api_calls": 0
+  },
+  "result_file_count": 252,
+  "result_file_manifest_digest": "768d3281d0ccb6e358234ec7360e6198a03d2c77a7a5e0eefc91a521ca537d74",
+  "schema_version": "barcarolle_multi_swe_public_panel_v1",
+  "source_warnings": [
+    {
+      "configuration_id": "20250329_MopenHands_Claude-3.5-Sonnet(Oct)",
+      "language": "go",
+      "reported": 427,
+      "terminal_partition_count": 428,
+      "warning": "scalar_total_instances_mismatch"
+    },
+    {
+      "configuration_id": "20250329_MopenHands_Claude-3.7-Sonnet",
+      "language": "rust",
+      "reported": 236,
+      "terminal_partition_count": 239,
+      "warning": "scalar_total_instances_mismatch"
+    },
+    {
+      "configuration_id": "20250329_MopenHands_DeepSeek-R1",
+      "language": "c",
+      "reported": 126,
+      "terminal_partition_count": 128,
+      "warning": "scalar_total_instances_mismatch"
+    },
+    {
+      "configuration_id": "20250329_MopenHands_DeepSeek-R1",
+      "language": "go",
+      "reported": 427,
+      "terminal_partition_count": 428,
+      "warning": "scalar_total_instances_mismatch"
+    },
+    {
+      "configuration_id": "20250329_MopenHands_DeepSeek-V3",
+      "language": "c",
+      "reported": 126,
+      "terminal_partition_count": 128,
+      "warning": "scalar_total_instances_mismatch"
+    },
+    {
+      "configuration_id": "20250329_MopenHands_Doubao-1.5-pro",
+      "language": "go",
+      "reported": 427,
+      "terminal_partition_count": 428,
+      "warning": "scalar_total_instances_mismatch"
+    },
+    {
+      "configuration_id": "20250329_MopenHands_GPT-4o-1120",
+      "language": "go",
+      "reported": 427,
+      "terminal_partition_count": 428,
+      "warning": "scalar_total_instances_mismatch"
+    },
+    {
+      "configuration_id": "20250329_MopenHands_OpenAI-o1",
+      "language": "c",
+      "reported": 126,
+      "terminal_partition_count": 128,
+      "warning": "scalar_total_instances_mismatch"
+    },
+    {
+      "configuration_id": "20250329_MopenHands_OpenAI-o1",
+      "language": "go",
+      "reported": 427,
+      "terminal_partition_count": 428,
+      "warning": "scalar_total_instances_mismatch"
+    },
+    {
+      "configuration_id": "20250329_MopenHands_OpenAI-o3-mini-high",
+      "language": "c",
+      "reported": 126,
+      "terminal_partition_count": 128,
+      "warning": "scalar_total_instances_mismatch"
+    },
+    {
+      "configuration_id": "20250329_MopenHands_OpenAI-o3-mini-high",
+      "language": "go",
+      "reported": 427,
+      "terminal_partition_count": 428,
+      "warning": "scalar_total_instances_mismatch"
+    },
+    {
+      "configuration_id": "20250329_MopenHands_Qwen2.5-72B-Instruct",
+      "language": "go",
+      "reported": 427,
+      "terminal_partition_count": 428,
+      "warning": "scalar_total_instances_mismatch"
+    }
+  ],
+  "study_id": "multi-swe-zero-paid-development-2026-07-28",
+  "task_count": 1632,
+  "task_id_line_digest": "cfbe75888d4eb3ff1062debcbc85c1b9f4ac5dcfe1a2fce48f34d116e2a45a21",
+  "task_universe_digest": "a56cc6cb3acb80f0ee58539a650d71f2b9bb2d227fdfa2c91e70406acac611ca"
+}
