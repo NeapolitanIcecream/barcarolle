@@ -12,10 +12,11 @@ panel to the offline multi-repository experiment layer.
 - per-language and global Task-ID digests;
 - H5/H10 research schedules, baselines, and transfer audits.
 
-The contract pins the dataset tree and its declared 1.60 GB path set; this
-sprint did not download or certify those JSONL bytes. The committed import is
-for response-and-time algorithm research. A runnable Task Pool must still
-full-byte verify the 39 files and pass source-specific certification.
+The contract pins the dataset tree and its declared 1.60 GB path set. The
+ALG-012 study downloaded the exact revision and verified all 39 Git or Git LFS
+objects before projecting issue text. This source verification supports the
+research projection only; a runnable Task Pool must still prepare solver and
+verifier material and pass source-specific certification.
 
 Normalize the public panel from a checkout of the pinned experiments revision:
 
@@ -77,6 +78,36 @@ uv run --with 'sentence-transformers==5.1.2' \
 The committed `evidence/embedding-manifest.json` binds the complete ignored
 artifact and vector values. It reuses the frozen local ALG-007 model rather
 than adding a representation search.
+
+Materialize the outcome-free memberships and task-space audit:
+
+```sh
+uv run --with 'numpy==2.5.1' \
+  python examples/multi_swe_research/semantic_selector.py task-space \
+  --task-content outputs/research/2026-07-28-multi-swe-task-content/task-content.jsonl \
+  --task-times examples/multi_swe_research/evidence/task-times.jsonl \
+  --embeddings outputs/research/2026-07-28-multi-swe-task-embeddings.json \
+  --output outputs/research/2026-07-28-multi-swe-task-space-results.json
+```
+
+Only after the plan and memberships are frozen, join the opened public outcome
+panel:
+
+```sh
+uv run --with 'numpy==2.5.1' \
+  python examples/multi_swe_research/semantic_selector.py outcome \
+  --task-content outputs/research/2026-07-28-multi-swe-task-content/task-content.jsonl \
+  --task-times examples/multi_swe_research/evidence/task-times.jsonl \
+  --task-space-results outputs/research/2026-07-28-multi-swe-task-space-results.json \
+  --panel-summary examples/multi_swe_research/evidence/panel-summary.json \
+  --resolved-outcomes examples/multi_swe_research/evidence/resolved-outcomes.jsonl \
+  --output outputs/research/2026-07-28-multi-swe-semantic-outcome-results.json
+```
+
+The raw memberships and replay rows remain ignored. The committed
+`evidence/selector-study-summary.json` binds both raw artifacts and records the
+failed task-space and outcome gates. It is development evidence, not
+independent confirmation.
 
 Validate all committed evidence without network access:
 

@@ -1,0 +1,115 @@
+{
+  "schema_version": "barcarolle_multi_swe_selector_study_summary_v1",
+  "study_id": "multi-swe-minimax-semantic-herding-2026-07-28",
+  "algorithm_id": "ALG-012",
+  "selector_id": "minimax_temporal_semantic_herding",
+  "identities": {
+    "selector_plan_digest": "6619ab258039d3f12cf865421faeba7c23248b302f72b06bb6f311b8f65bde05",
+    "content_manifest_digest": "9b47e946daf2e982e49e552f9a6976315787ae45b3923edda4a5aff9b53e78cb",
+    "embedding_manifest_digest": "458a9375af9a079126b2a64b0ed115387d5602aad4b0c6439572d0b9a5a40f0d",
+    "embedding_artifact_digest": "cc6f791d2770f1e265240e73e47ccd517ed6bae26b1ed3abc78d17cad14e8a23",
+    "task_space_results_digest": "d9916f4c9acdcf615262f92cb771ed0079a696b4605805ef0c82b17f4f4e401d",
+    "outcome_results_digest": "7b314e1239981c38574960e15f8117ba33c350dbb61fb1e9c0d52eb96e013e36"
+  },
+  "protocol": {
+    "task_count": 1632,
+    "configuration_count": 36,
+    "minimum_initial_history_tasks": 20,
+    "selection_budget_tasks": 10,
+    "primary_future_tasks": 5,
+    "sensitivity_future_tasks": 10,
+    "primary_origin_count": 221,
+    "primary_repository_count": 13,
+    "primary_deep_repository_count": 8,
+    "sensitivity_origin_count": 107,
+    "sensitivity_repository_count": 11,
+    "sensitivity_deep_repository_count": 5,
+    "baseline": "full_history",
+    "random_calibration": "20000 NumPy PCG64 random-key uniform subsets",
+    "time_status": "GitHub pull-request createdAt projection; source-time-safe counterfactual only",
+    "outcome_status": "opened development data; not independent confirmation"
+  },
+  "task_space": {
+    "gate_met": false,
+    "decision": "semantic_mechanism_fails_task_space_gate",
+    "h5": {
+      "full_history_macro_mmd_squared": 0.16634253791521994,
+      "candidate_macro_mmd_squared": 0.20197202445050616,
+      "candidate_minus_full_history": 0.035629486535286234,
+      "favorable_repositories": 0,
+      "deep_candidate_minus_full_history": 0.03920298954621048,
+      "random_mean_difference": 0.044005162605626015,
+      "candidate_better_than_random_midrank": 0.9914,
+      "random_as_good_or_better_rate": 0.0086,
+      "unchanged_alg_007_difference": 0.029484928660213485
+    },
+    "h10": {
+      "full_history_macro_mmd_squared": 0.10602910613996303,
+      "candidate_macro_mmd_squared": 0.13210215026062766,
+      "candidate_minus_full_history": 0.02607304412066463,
+      "favorable_repositories": 0,
+      "deep_candidate_minus_full_history": 0.02869156935019823,
+      "random_mean_difference": 0.045529270248588875,
+      "candidate_better_than_random_midrank": 1.0,
+      "random_as_good_or_better_rate": 0.0,
+      "unchanged_alg_007_difference": 0.029956645206758295
+    }
+  },
+  "agent_outcomes": {
+    "gate_met": false,
+    "decision": "semantic_mechanism_fails_outcome_gate",
+    "h5": {
+      "full_history_macro_mae": 0.0673476429292014,
+      "candidate_macro_mae": 0.06707403707403709,
+      "candidate_minus_full_history": -0.00027360585516431177,
+      "repository_bootstrap_interval_95": [
+        -0.004154226100827795,
+        0.00334401138905324
+      ],
+      "favorable_repositories": 8,
+      "deep_candidate_minus_full_history": 0.0007967347581899742,
+      "random_mean_difference": 0.0018151655544445986,
+      "candidate_better_than_random_midrank": 0.81585,
+      "random_as_good_or_better_rate": 0.18415,
+      "unchanged_alg_007_difference": -0.0022539773355357935,
+      "negative_directions": {
+        "configurations": "20/36",
+        "models": "10/12",
+        "providers": "6/7",
+        "harnesses": "1/3",
+        "languages": "3/7"
+      },
+      "language_first_macro_difference": -0.0005540778109426045
+    },
+    "h10": {
+      "full_history_macro_mae": 0.05280696865793433,
+      "candidate_macro_mae": 0.05521530207893844,
+      "candidate_minus_full_history": 0.0024083334210041147,
+      "repository_bootstrap_interval_95": [
+        -0.0012867762881684558,
+        0.006384842211387992
+      ],
+      "favorable_repositories": 3,
+      "deep_candidate_minus_full_history": 0.0022445254717958518,
+      "random_mean_difference": 0.005061928689413022,
+      "candidate_better_than_random_midrank": 0.84365,
+      "random_as_good_or_better_rate": 0.15635,
+      "unchanged_alg_007_difference": 0.0021567802149054546
+    }
+  },
+  "decision": {
+    "nominated": false,
+    "independent_confirmation_authorized": false,
+    "production_promotion_allowed": false,
+    "temporal_nulls_run": false,
+    "temporal_null_reason": "The frozen task-space and outcome decision order failed before the null gates.",
+    "interpretation": "ALG-012 beats most equal-budget random subsets but does not beat uncompressed history robustly. Budgeted sampling structure exists; the semantic rule does not support the future-Task validity claim.",
+    "next_diagnostic": "Run one separately frozen, post-result hindsight support search at budget ten to distinguish representational capacity from pre-Origin identification."
+  },
+  "resource_use": {
+    "paid_api_calls": 0,
+    "embedding_api_calls": 0,
+    "sealed_swe_bench_holdout_agents_opened": 0
+  },
+  "selector_study_summary_digest": "c91459da16d42bb2c0a3ebb20a0c0df10fa441ae15037d736c9615c35cef6e61"
+}

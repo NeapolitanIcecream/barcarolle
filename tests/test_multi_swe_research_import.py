@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import inspect
 from pathlib import Path
 import subprocess
 import sys
@@ -25,9 +26,18 @@ from examples.multi_swe_research.prepare import (  # noqa: E402
 )
 from examples.multi_swe_research.semantic_selector import (  # noqa: E402
     build_embedding_artifact,
+    kernel_mmd_squared,
     load_embedding_artifact,
     load_embedding_manifest,
+    load_public_outcomes,
     load_selector_plan,
+    outcome_pass_rate_mae,
+    select_kernel_mean_herding,
+    select_minimax_temporal_semantic_herding,
+)
+from examples.multi_repository_study.semantic import (  # noqa: E402
+    SimilarityIndex,
+    select_centroid_recent,
 )
 
 
@@ -96,6 +106,34 @@ def test_committed_evidence_is_self_consistent() -> None:
     )
     assert supply[10]["origin_count"] == 107
     assert supply[10]["wide_repository_count"] == 11
+
+
+def test_selector_study_summary_binds_failed_gates_and_raw_results() -> None:
+    path = (
+        REPOSITORY_ROOT
+        / "examples"
+        / "multi_swe_research"
+        / "evidence"
+        / "selector-study-summary.json"
+    )
+    summary = json.loads(path.read_text(encoding="utf-8"))
+    digest = summary.pop("selector_study_summary_digest")
+
+    assert canonical_digest(summary) == digest
+    assert summary["algorithm_id"] == "ALG-012"
+    assert summary["identities"]["selector_plan_digest"] == (
+        load_selector_plan()["selector_plan_digest"]
+    )
+    assert summary["task_space"]["gate_met"] is False
+    assert summary["agent_outcomes"]["gate_met"] is False
+    assert summary["decision"]["nominated"] is False
+    assert summary["agent_outcomes"]["h5"]["candidate_minus_full_history"] == (
+        pytest.approx(-0.00027360585516431177)
+    )
+    assert summary["agent_outcomes"]["h10"]["candidate_minus_full_history"] == (
+        pytest.approx(0.0024083334210041147)
+    )
+    assert summary["resource_use"]["paid_api_calls"] == 0
 
 
 def test_normalizer_rejects_overlapping_terminal_partitions(
@@ -370,6 +408,104 @@ def test_embedding_artifact_binds_plan_content_and_vectors(
         committed["embedding_artifact_digest"]
         == "cc6f791d2770f1e265240e73e47ccd517ed6bae26b1ed3abc78d17cad14e8a23"
     )
+
+
+def test_alg_007_control_matches_the_previously_frozen_implementation() -> None:
+    task_ids = ("a", "b", "c", "d", "e", "f")
+    vectors = {
+        "a": (1.0, 0.0),
+        "b": (0.8, 0.6),
+        "c": (0.6, 0.8),
+        "d": (0.0, 1.0),
+        "e": (-0.6, 0.8),
+        "f": (-0.8, 0.6),
+    }
+
+    selected = select_kernel_mean_herding(
+        task_ids,
+        task_ids[-min(15, len(task_ids)) :],
+        SimilarityIndex(vectors),
+        budget=3,
+        swap_pass_limit=20,
+    )
+
+    assert selected == select_centroid_recent(
+        task_ids,
+        vectors,
+        recent_window=15,
+        budget=3,
+    )
+
+
+def test_alg_012_is_deterministic_and_accepts_no_agent_outcomes() -> None:
+    task_ids = ("a", "b", "c", "d")
+    vectors = {
+        "a": (1.0, 0.0),
+        "b": (0.0, 1.0),
+        "c": (-1.0, 0.0),
+        "d": (0.0, -1.0),
+    }
+    index = SimilarityIndex(vectors)
+
+    first = select_minimax_temporal_semantic_herding(
+        task_ids,
+        index,
+        horizon=2,
+        budget=2,
+    )
+    second = select_minimax_temporal_semantic_herding(
+        task_ids,
+        SimilarityIndex(vectors),
+        horizon=2,
+        budget=2,
+    )
+
+    assert first == second
+    assert len(first) == len(set(first)) == 2
+    assert "outcomes" not in inspect.signature(
+        select_minimax_temporal_semantic_herding
+    ).parameters
+    assert kernel_mmd_squared(first, first, index) == pytest.approx(0.0)
+
+
+def test_sparse_public_outcomes_expand_to_the_exact_binary_panel() -> None:
+    evidence = (
+        REPOSITORY_ROOT / "examples" / "multi_swe_research" / "evidence"
+    )
+    task_ids = tuple(
+        json.loads(line)["instance_id"]
+        for line in (evidence / "task-universe.jsonl")
+        .read_text(encoding="utf-8")
+        .splitlines()
+    )
+
+    outcomes, metadata, diagnostics = load_public_outcomes(
+        evidence / "panel-summary.json",
+        evidence / "resolved-outcomes.jsonl",
+        task_ids,
+        load_selector_plan(),
+    )
+
+    assert len(metadata) == 36
+    assert diagnostics["resolved_cell_count"] == 2913
+    assert all(set(values) == set(task_ids) for values in outcomes.values())
+    assert sum(sum(values.values()) for values in outcomes.values()) == 2913
+
+
+def test_outcome_loss_uses_full_history_as_an_uncompressed_baseline() -> None:
+    outcomes = {
+        "agent-a": {"a": 1, "b": 0, "c": 1},
+        "agent-b": {"a": 0, "b": 0, "c": 1},
+    }
+
+    loss = outcome_pass_rate_mae(
+        ("a", "b"),
+        ("c",),
+        outcomes,
+        ("agent-a", "agent-b"),
+    )
+
+    assert loss == pytest.approx(0.75)
 
 
 def _fixture_contract() -> dict[str, object]:
