@@ -41,6 +41,16 @@ from examples.multi_repository_study.semantic import (  # noqa: E402
     select_centroid_recent,
     select_facility_recent,
 )
+from examples.multi_repository_study.theory import (  # noqa: E402
+    complete_trailing_blocks,
+    fit_repository_equal_markov,
+    forecast_block_median,
+    forecast_joint_markov,
+    forecast_repository_analog,
+    forecast_semantic_trend,
+    load_theory_plan,
+    select_embedding_mean_match,
+)
 
 
 def _task_rows(repository_id: str, count: int) -> tuple[dict[str, str], ...]:
@@ -153,6 +163,24 @@ def test_fixed_semantic_plan_is_self_digested_and_local_only() -> None:
     assert tuple(
         candidate["selector_id"] for candidate in plan["selection"]["candidates"]
     ) == ("centroid_recent_15", "facility_recent_15")
+
+
+def test_theory_plan_is_self_digested_zero_cost_and_mechanistically_diverse() -> None:
+    plan = load_theory_plan()
+    digest = plan["theory_plan_digest"]
+
+    assert canonical_digest(
+        {key: value for key, value in plan.items() if key != "theory_plan_digest"}
+    ) == digest
+    assert plan["authority"]["paid_api_calls"] == 0
+    assert tuple(
+        candidate["mechanism_family"] for candidate in plan["candidates"]
+    ) == (
+        "robust_local_regime",
+        "joint_response_dynamics",
+        "conditional_cross_repository_transfer",
+        "outcome_free_covariate_shift",
+    )
 
 
 def test_committed_public_panel_result_is_self_digested_and_negative() -> None:
@@ -301,6 +329,176 @@ def test_fixed_semantic_rules_use_only_local_history_and_stable_ties() -> None:
 
     assert centroid == ("task-a", "task-b")
     assert facility == ("task-a", "task-b")
+
+
+def test_complete_trailing_blocks_drop_only_the_leading_remainder() -> None:
+    assert complete_trailing_blocks(tuple(range(7)), 2) == (
+        (1, 2),
+        (3, 4),
+        (5, 6),
+    )
+
+
+def test_block_median_forecast_uses_complete_local_regimes() -> None:
+    history = tuple(
+        TaskMetadata(
+            f"task-{index}",
+            "org/target",
+            f"2020-01-{index + 1:02d}T00:00:00Z",
+            "fixture",
+            "fixture",
+        )
+        for index in range(15)
+    )
+    outcomes = {
+        "agent": {
+            task.instance_id: int(index in {5, 6, 7, 8, 9, 14})
+            for index, task in enumerate(history)
+        }
+    }
+
+    forecast = forecast_block_median(history, outcomes, block_size=5)
+
+    assert forecast == {"agent": pytest.approx(0.2)}
+
+
+def test_repository_equal_markov_and_forecast_have_stable_state_semantics() -> None:
+    repository_tasks = {
+        "org/a": (
+            TaskMetadata("a-0", "org/a", "2020-01-01T00:00:00Z", "x", "x"),
+            TaskMetadata("a-1", "org/a", "2020-01-02T00:00:00Z", "x", "x"),
+        ),
+        "org/b": (
+            TaskMetadata("b-0", "org/b", "2020-01-01T00:00:00Z", "x", "x"),
+            TaskMetadata("b-1", "org/b", "2020-01-02T00:00:00Z", "x", "x"),
+        ),
+    }
+    outcomes = {
+        "agent": {
+            "a-0": 0,
+            "a-1": 0,
+            "b-0": 0,
+            "b-1": 1,
+            "target-0": 0,
+            "target-1": 1,
+        }
+    }
+    matrix = fit_repository_equal_markov(
+        ("org/a", "org/b"),
+        repository_tasks,
+        outcomes,
+        cell_prior_mass=0.5,
+    )
+    target_history = (
+        TaskMetadata(
+            "target-0",
+            "org/target",
+            "2020-01-01T00:00:00Z",
+            "x",
+            "x",
+        ),
+        TaskMetadata(
+            "target-1",
+            "org/target",
+            "2020-01-02T00:00:00Z",
+            "x",
+            "x",
+        ),
+    )
+
+    assert matrix[0] == pytest.approx((0.5, 0.5))
+    forecast = forecast_joint_markov(
+        target_history,
+        outcomes,
+        ((1.0, 0.0), (0.0, 1.0)),
+        horizon=5,
+        local_prior_strength=8.0,
+        include_local_transitions=False,
+    )
+    assert forecast == {"agent": pytest.approx(1.0)}
+
+
+def test_repository_analog_does_not_read_target_future_outcomes() -> None:
+    def tasks(prefix: str, repository_id: str, count: int) -> tuple[TaskMetadata, ...]:
+        return tuple(
+            TaskMetadata(
+                f"{prefix}-{index}",
+                repository_id,
+                (datetime(2020, 1, 1, tzinfo=UTC) + timedelta(days=index)).isoformat(),
+                "x",
+                "x",
+            )
+            for index in range(count)
+        )
+
+    target_history = tasks("target-history", "org/target", 10)
+    target_future = tasks("target-future", "org/target", 5)
+    target = RepositoryOrigin(
+        "org/target",
+        "org/target:origin",
+        target_history,
+        target_future,
+    )
+    training_origins = {}
+    outcomes = {"agent": {}}
+    for repository_id in ("org/a", "org/b"):
+        history = tasks(f"{repository_id}-history", repository_id, 10)
+        future = tasks(f"{repository_id}-future", repository_id, 5)
+        training_origins[repository_id] = (
+            RepositoryOrigin(
+                repository_id,
+                f"{repository_id}:origin",
+                history,
+                future,
+            ),
+        )
+        outcomes["agent"].update(
+            {task.instance_id: 0 for task in history}
+        )
+        outcomes["agent"].update(
+            {task.instance_id: 1 for task in future}
+        )
+    outcomes["agent"].update(
+        {task.instance_id: 0 for task in target_history}
+    )
+
+    forecast, analogs = forecast_repository_analog(
+        target,
+        ("org/a", "org/b"),
+        training_origins,
+        outcomes,
+        block_size=5,
+    )
+
+    assert forecast == {"agent": pytest.approx(1.0)}
+    assert set(analogs) == {"org/a", "org/b"}
+    assert not any(
+        task.instance_id in outcomes["agent"] for task in target_future
+    )
+
+
+def test_semantic_trend_extrapolates_blocks_before_matching_history() -> None:
+    history_ids = tuple(f"task-{index}" for index in range(6))
+    vectors = {
+        "task-0": (0.0, 0.0),
+        "task-1": (0.0, 0.0),
+        "task-2": (1.0, 0.0),
+        "task-3": (1.0, 0.0),
+        "task-4": (2.0, 0.0),
+        "task-5": (2.0, 0.0),
+    }
+
+    target = forecast_semantic_trend(history_ids, vectors, block_size=2)
+    selected = select_embedding_mean_match(
+        history_ids,
+        vectors,
+        target,
+        budget=2,
+        swap_pass_limit=20,
+    )
+
+    assert target == pytest.approx((3.0, 0.0))
+    assert selected == ("task-4", "task-5")
 
 
 def test_local_embedding_artifact_binds_plan_input_and_vectors() -> None:
