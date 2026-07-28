@@ -3,7 +3,7 @@
 Last updated: 2026-07-28.
 
 Current ledger: `docs/research-improvement-backlog.md`. Latest report:
-`docs/experiments/2026-07-28-pre-origin-signal-audit.md`.
+`docs/experiments/2026-07-28-pre-origin-observable-theory.md`.
 
 ## Preserve
 
@@ -53,6 +53,14 @@ repository's next Task mix. It is not subset size or static response capacity.
 No Selector was materialized or nominated. No result authorizes paid
 validation, the sealed holdout, a Runner default, or a validity claim.
 
+An independent observable sprint froze `THY-001 Fixed-Half-Life Module Change
+Pressure`: a one-year, Git-only module-pressure forecast with exact smoothing,
+source-visibility rules, and a four-block organic-process falsification. It is
+`data-gated`, not measured. Organic commit prediction cannot establish Task-mix
+or Agent-score prediction. Parent-level work intent remains the strongest
+challenger but is not test-ready; differential upstream nightly CI is
+source-specific.
+
 ## Current State
 
 The source-specific Multi-SWE research layer binds exact source, content, time,
@@ -66,7 +74,7 @@ safety, equal-repository pooling, bounded prior mass, and prequential inputs.
 This remains research infrastructure, not a runnable Multi-SWE Task Pool.
 Solver/verifier material and source-specific certification are
 campaign-triggered. Core Task Pool, Result, Selection, and Runner contracts did
-not change.
+not change. No code or core schema was added for `THY-001`.
 
 ## Stop And Reopen
 
@@ -84,6 +92,15 @@ Reopen empirical nomination research only with at least one of:
 
 An independently specified observable may advance theory design, but it cannot
 authorize another nomination replay on the opened panels.
+
+The next authorized step is outcome-free source admission for `THY-001` Stage
+A and identification of an independent source whose Task module label is
+visible at Task arrival. Barcarolle's 2026-04-17 through 2026-07-28 Git history
+is too short for the frozen four non-overlapping 90-day blocks; do not shorten
+the schedule. A Stage A pass predicts organic module change only. Stage B still
+requires source-attested, versioned Task material, native arrival time, and
+pre-solution module labels; Selection evidence requires an independent
+complete Agent panel or strict prospective campaign.
 
 Any reopened candidate must freeze its information set, code, parameters,
 source, Origin schedule, controls, and gates before outcome replay. Open the

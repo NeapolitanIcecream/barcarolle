@@ -224,6 +224,20 @@ The separately frozen exact capacity diagnostic and its leakage boundary are in
 The frozen ALG-013/ALG-014 plans, corrected response-vector negative control,
 independent audit limits, and current-source stop boundary are in
 [`experiments/2026-07-28-pre-origin-signal-audit.md`](experiments/2026-07-28-pre-origin-signal-audit.md).
+The independently specified `THY-001` information set, external evidence,
+candidate comparison, source-alignment gate, and falsification plan are in
+[`experiments/2026-07-28-pre-origin-observable-theory.md`](experiments/2026-07-28-pre-origin-observable-theory.md).
+
+`THY-001 Fixed-Half-Life Module Change Pressure` is `planned` and
+`data-gated`. It defines a future-module forecast from reachable non-merge Git
+history using a fixed one-year half-life and no Task or Agent outcome. It has
+not been tested. Organic commit prediction is only a required proxy screen; an
+empirical Task claim requires source-attested versioned material, native Task
+arrival, a module label available at that arrival, and an independent Result
+boundary. Barcarolle's current Git span is too short for its frozen four-block
+test. Parent-level work intent is the strongest challenger, while differential
+upstream nightly CI is retained only for sources that test unreleased
+dependencies.
 
 All studies recorded here made zero paid benchmark calls. The prior local
 embedding run did not make an API call. The previous USD 300 authority remains
@@ -404,6 +418,8 @@ Routes remain separate until evidence supports a combination.
 | MR-D: fixed-universe compression | A small subset reconstructs full historical Agent scores across unseen Agents. | ALG-008 beats equal-budget random and coverage on held-out Agents, reported separately from future-Task MAE. | `ready` on the 36-vector Multi-SWE panel when prioritized |
 | MR-E: source and field validity | Generator-conditional gains persist in natural future work. | Frozen later source, then prospective field evidence with an independently defined target frame. | `authority-gated` |
 | MR-F: adaptive difficulty regime | Historical predictive score can choose between stationary and dynamic task-difficulty forecasts without future leakage. | Prequential adaptation produced wide `-0.00235`, deep `+0.00927`, and temporal-null rate `0.194`. | `closed` on the current pool |
+| MR-G / THY-001: module change pressure | Reachable Git change pressure predicts the module composition of the target repository's next work cohort. | First require lower organic future-commit log loss than uniform, LOC, all-history touch, trailing-90-day touch, and no-decay log-churn in every one of four fixed blocks; then require native Task-mix prediction at a new evidence boundary. | `data-gated`; exact v1 theory frozen, no Selector or opened-outcome replay |
+| MR-H: parent work intent | Timestamped structural parent state predicts later Task-component mass before source-attested Task material becomes available. | Admit only a complete event archive with source-native parent/component mapping, versioned material, and native Task arrival; issue creation, linking, resolution, and merge times are not substitutes. | `data-gated` challenger; archive schema, event completeness, transform, and Task alignment unresolved |
 
 ALG-001's shrinkage switch and ALG-004's EWMA guard remain offline safeguards,
 not positive algorithms. ALG-002 is closed for the current duration-stratum
@@ -562,6 +578,7 @@ useful infrastructure project hidden behind the data gate.
 | Agent-transfer audit | `code-confirmed` leave-one-Agent rematerialization; an evaluated Agent is never a Selector input | Preserve for response-derived Selectors. |
 | Local semantic evidence | `code-confirmed` as 1,632 ignored vectors, committed identities, fixed memberships, and deterministic MMD²/outcome replays | ALG-007 and ALG-012 failed; add no core embedding service or representation search. |
 | Pre-Origin response signal audit | `code-confirmed` complete-repository RCP holdout, leave-one-configuration response composition, prequential expert, equal-repository prior, cascade gates, byte reproductions, and compact evidence | Current opened-source search is closed. Preserve only for reproduction or a genuinely independent reopening trigger. |
+| Pre-Origin repository-process theory | `planned` `THY-001` contract with exact Git information set, one-year decay, smoothing, source gates, and staged falsification | Run no core implementation or opened-outcome replay. First admit an independent repository history with four fixed 90-day blocks, then require versioned Task material, source-attested arrival, and a Task-at-arrival module mapping before any Selection study. |
 | External benchmark inventory | `code-confirmed` for Verified, Full, PolyBench, and Rebench with exact source bytes and Origin protocols | Preserve source-specific identities; do not introduce a registry. |
 | Multi-SWE public Result normalization | `code-confirmed`: fixed 39-file contract, verified 1.60 GB source projection, 36-vector allowlist, 1,632 projected times, 2,913 sparse positive cells, and offline evidence validation | Use only in outcome-open research; this is still not a runnable Task Pool and needs no generic source layer. |
 
@@ -592,6 +609,8 @@ training service is needed.
 | MR-015 / ALG-012 | P1 | `closed` | Outcome-free minimax semantic herding beat most random subsets but failed full-history, H10, deep, harness, language, and ALG-007 control gates; no nomination. |
 | MR-016 | P1 | `closed` | Exact hindsight reached H5 `-0.03264` and H10 `-0.02562`, every repository favorable, and 328/328 certified optimal solves. Capacity is supported; no Selector was nominated. |
 | MR-017 / ALG-013 / ALG-014 | P1 | `closed` | Frozen RCP and PRCS separated representation from forecast: RCP transfer failed; PRCS static response relevance passed but target future increment failed. Stop current-source nomination search. |
+| MR-018 / THY-001 | P1 | `data-gated` | Exact Git-only module-pressure theory is frozen. Admit an independent source with four non-overlapping 90-day blocks; retire v1 if it does not beat every frozen organic-change baseline in every block. A pass does not authorize a Task or Selection claim. |
+| MR-019 | P2 | `data-gated` | Parent-level work intent is the strongest challenger. Require complete timestamped planning-node history, versioned Task material, and a module/component label available before source-attested Task arrival; do not substitute issue creation, linking, resolution, merge, open leaf issues, or PRs. |
 | RI-125 | P2 | `trigger-gated` | The exact 39 source objects and issue-text projection are full-byte verified. A runnable prepared Task Pool still needs solver/verifier material and source-specific certification when a concrete campaign requires it. |
 | RI-129 / RI-160 | P2 | `trigger-gated` | Add a single-writer exact certification checkpoint before the next comparable pool; replay retained entries before reuse. |
 | RI-163 | P2 | `trigger-gated` | Before another Pylint campaign, replace whole-file behavior identity with an explicit version payload and direct-helper digests. |
