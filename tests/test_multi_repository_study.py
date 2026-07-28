@@ -21,6 +21,9 @@ from examples.multi_repository_study.development import (  # noqa: E402
     run_development_replay,
     select_outcome_match,
 )
+from examples.multi_repository_study.embed_local import (  # noqa: E402
+    build_embedding_artifact,
+)
 from examples.multi_repository_study.portfolio import (  # noqa: E402
     build_portfolio,
     load_portfolio_plan,
@@ -33,6 +36,10 @@ from examples.multi_repository_study.public_replay import (  # noqa: E402
     load_public_panel_plan,
     official_binary_outcomes,
     run_public_replay,
+)
+from examples.multi_repository_study.semantic import (  # noqa: E402
+    select_centroid_recent,
+    select_facility_recent,
 )
 
 
@@ -206,6 +213,34 @@ def test_committed_development_result_is_self_digested_and_stops() -> None:
     )
 
 
+def test_committed_semantic_result_is_self_digested_and_retires_alg_007() -> None:
+    results = json.loads(
+        (
+            REPOSITORY_ROOT
+            / "examples/multi_repository_study/semantic-results.json"
+        ).read_text()
+    )
+    digest = results.pop("semantic_results_digest")
+
+    assert canonical_digest(results) == digest
+    assert results["nomination"]["status"] == (
+        "retire_fixed_alg_007_on_current_source_family"
+    )
+    wide = results["summaries"]["wide"]
+    assert wide["centroid_recent_15"][
+        "macro_repository_difference"
+    ] == pytest.approx(0.001473509167553189)
+    assert wide["facility_recent_15"][
+        "macro_repository_difference"
+    ] == pytest.approx(0.03765844825946901)
+    assert results["embedding_manifest"] == json.loads(
+        (
+            REPOSITORY_ROOT
+            / "examples/multi_repository_study/semantic-embedding-manifest.json"
+        ).read_text()
+    )
+
+
 def test_outcome_match_uses_exact_vector_and_stable_tie_break() -> None:
     history = tuple(
         TaskMetadata(
@@ -240,6 +275,65 @@ def test_outcome_match_uses_exact_vector_and_stable_tie_break() -> None:
     )
 
     assert selected == ("task-0", "task-3")
+
+
+def test_fixed_semantic_rules_use_only_local_history_and_stable_ties() -> None:
+    history_ids = ("task-a", "task-b", "task-c", "task-d")
+    vectors = {
+        "task-a": (1.0, 0.0),
+        "task-b": (0.0, 1.0),
+        "task-c": (1.0, 0.0),
+        "task-d": (0.0, 1.0),
+    }
+
+    centroid = select_centroid_recent(
+        history_ids,
+        vectors,
+        recent_window=2,
+        budget=2,
+    )
+    facility = select_facility_recent(
+        history_ids,
+        vectors,
+        recent_window=2,
+        budget=2,
+    )
+
+    assert centroid == ("task-a", "task-b")
+    assert facility == ("task-a", "task-b")
+
+
+def test_local_embedding_artifact_binds_plan_input_and_vectors() -> None:
+    plan = {
+        "semantic_plan_digest": "plan",
+        "embedding": {
+            "model_id": "fixture/model",
+            "model_revision": "revision",
+            "sentence_transformers_version": "5.1.2",
+            "device": "cpu",
+            "input_field": "problem_statement",
+        },
+    }
+
+    artifact = build_embedding_artifact(
+        ("task-a", "task-b"),
+        ("first", "second"),
+        ((1.0, 0.0), (0.0, 1.0)),
+        plan=plan,
+        dataset_sha256="dataset",
+        package_version="5.1.2",
+    )
+
+    digest = artifact["embedding_artifact_digest"]
+    assert canonical_digest(
+        {
+            key: value
+            for key, value in artifact.items()
+            if key != "embedding_artifact_digest"
+        }
+    ) == digest
+    assert artifact["input"]["task_count"] == 2
+    assert artifact["dimensions"] == 2
 
 
 def test_repository_drift_weights_repositories_before_origins() -> None:
