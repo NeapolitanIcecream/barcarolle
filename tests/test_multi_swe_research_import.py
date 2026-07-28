@@ -29,6 +29,31 @@ def test_committed_contract_is_digest_bound() -> None:
     assert len(contract["results"]["configurations"]) == 36
 
 
+def test_selector_plan_freezes_one_outcome_free_candidate() -> None:
+    path = (
+        REPOSITORY_ROOT
+        / "examples"
+        / "multi_swe_research"
+        / "selector-plan.json"
+    )
+    plan = json.loads(path.read_text(encoding="utf-8"))
+    digest = plan.pop("selector_plan_digest")
+
+    assert canonical_digest(plan) == digest
+    assert plan["source"]["contract_digest"] == load_contract()["contract_digest"]
+    assert plan["candidate"]["algorithm_id"] == "ALG-012"
+    assert plan["candidate"]["fitting"] == "none"
+    assert plan["rolling_origin"]["selection_budget_tasks"] == 10
+    assert plan["rolling_origin"]["primary_future_tasks"] == 5
+    assert plan["rolling_origin"]["sensitivity_future_tasks"] == 10
+    assert len(plan["rolling_origin"]["primary_repository_ids"]) == 13
+    assert len(plan["rolling_origin"]["sensitivity_common_repository_ids"]) == 11
+    assert plan["authority"]["paid_api_calls"] == 0
+    assert plan["agent_groups"]["transfer_semantics"].startswith(
+        "Selection is outcome-free"
+    )
+
+
 def test_committed_evidence_is_self_consistent() -> None:
     report = validate_evidence(
         load_contract(),
