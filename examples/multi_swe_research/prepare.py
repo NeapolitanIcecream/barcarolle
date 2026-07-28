@@ -32,6 +32,9 @@ CONTENT_MANIFEST_SCHEMA = "barcarolle_multi_swe_task_content_manifest_v1"
 EMBEDDING_MANIFEST_SCHEMA = "barcarolle_multi_swe_embedding_manifest_v1"
 SELECTOR_SUMMARY_SCHEMA = "barcarolle_multi_swe_selector_study_summary_v1"
 HINDSIGHT_SUMMARY_SCHEMA = "barcarolle_multi_swe_hindsight_summary_v1"
+PRE_ORIGIN_SIGNAL_SUMMARY_SCHEMA = (
+    "barcarolle_multi_swe_pre_origin_signal_summary_v1"
+)
 _TASK_ID = re.compile(
     r"(?P<owner>[A-Za-z0-9_.-]+)__(?P<repo>[A-Za-z0-9_.-]+)-(?P<number>[1-9][0-9]*)\Z"
 )
@@ -621,6 +624,63 @@ def validate_evidence(
     ):
         raise ValueError("committed hindsight summary identity changed")
 
+    pre_origin_summary = _validated_self_digested_summary(
+        evidence_root / "pre-origin-signal-summary.json",
+        schema=PRE_ORIGIN_SIGNAL_SUMMARY_SCHEMA,
+        digest_key="pre_origin_signal_summary_digest",
+    )
+    pre_origin_source = _mapping(pre_origin_summary, "source")
+    if pre_origin_source.get("selector_plan_digest") != (
+        selector_identities.get("selector_plan_digest")
+    ):
+        raise ValueError("committed pre-Origin summary identity changed")
+    pre_origin_decision = _mapping(pre_origin_summary, "decision")
+    if (
+        pre_origin_decision.get(
+            "static_raw_embedding_response_transfer_supported"
+        )
+        is not False
+        or pre_origin_decision.get(
+            "static_cross_agent_response_structure_supported"
+        )
+        is not True
+        or pre_origin_decision.get(
+            "pre_origin_target_future_increment_supported"
+        )
+        is not False
+        or pre_origin_decision.get("selector_nominated") is not False
+        or pre_origin_decision.get("current_opened_source_candidate_search")
+        != "closed"
+        or pre_origin_decision.get("theory_design_may_resume_with")
+        != (
+            "a new observable mechanism proposed independently of the "
+            "opened outcomes, without replay on the opened panels"
+        )
+        or pre_origin_decision.get("empirical_nomination_replay_requires")
+        != [
+            "a source with native Task time and historical Result availability plus denser repository-local Origins",
+            "an independent complete Agent panel or source family",
+            "a strict prospective target-repository campaign",
+        ]
+    ):
+        raise ValueError("committed pre-Origin summary decision changed")
+    if any(
+        value != 0
+        for value in _mapping(pre_origin_summary, "resource_use").values()
+    ):
+        raise ValueError("committed pre-Origin summary resource use changed")
+    response_history = _mapping(
+        _mapping(pre_origin_summary, "alg_013_rcp"),
+        "history_precision_diagnostic",
+    )
+    if (
+        response_history.get("preserves_complete_task_response_vectors")
+        is not True
+        or response_history.get("negative_control_construction")
+        != "deterministic within-repository circular row shift"
+    ):
+        raise ValueError("committed pre-Origin negative control changed")
+
     return {
         "schema_version": "barcarolle_multi_swe_evidence_validation_v1",
         "contract_digest": contract.get("contract_digest"),
@@ -636,6 +696,9 @@ def validate_evidence(
         ),
         "hindsight_summary_digest": hindsight_summary.get(
             "hindsight_summary_digest"
+        ),
+        "pre_origin_signal_summary_digest": pre_origin_summary.get(
+            "pre_origin_signal_summary_digest"
         ),
         "task_count": len(tasks),
         "configuration_count": len(configurations),

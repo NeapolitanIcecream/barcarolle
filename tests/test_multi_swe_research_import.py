@@ -107,6 +107,10 @@ def test_committed_evidence_is_self_consistent() -> None:
         report["hindsight_summary_digest"]
         == "cf6bee9578773068440c4ba73514488f7d8adccfb9157714a4077a2291f5d7d6"
     )
+    assert (
+        report["pre_origin_signal_summary_digest"]
+        == "3f4a370084167b37bb20e0e5ab7a5989fdc71e85b500c3fdcc9c8c1c3b0f045e"
+    )
     assert report["paid_api_calls"] == 0
     supply = {
         row["future_block_tasks"]: row for row in report["origin_supply"]

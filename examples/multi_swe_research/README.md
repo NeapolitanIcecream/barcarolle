@@ -139,6 +139,66 @@ uv run python examples/multi_swe_research/hindsight_diagnostic.py \
   --summary examples/multi_swe_research/evidence/hindsight-summary.json
 ```
 
+ALG-013 tests whether other repositories can make the frozen sentence
+embedding response-relevant. Its main gate stops before forecasting when the
+repository-held-out response AUC is not stable:
+
+```sh
+uv run --with 'numpy==2.5.1' \
+  python examples/multi_swe_research/response_signal.py \
+  --task-content outputs/research/2026-07-28-multi-swe-task-content/task-content.jsonl \
+  --task-times examples/multi_swe_research/evidence/task-times.jsonl \
+  --embeddings outputs/research/2026-07-28-multi-swe-task-embeddings.json \
+  --panel-summary examples/multi_swe_research/evidence/panel-summary.json \
+  --resolved-outcomes examples/multi_swe_research/evidence/resolved-outcomes.jsonl \
+  --output outputs/research/2026-07-28-multi-swe-response-signal-results.json
+```
+
+The separately frozen history diagnostic cannot reopen ALG-013. Its corrected
+negative control circularly shifts each complete 36-dimensional Task response
+vector inside its repository:
+
+```sh
+uv run --with 'numpy==2.5.1' \
+  python examples/multi_swe_research/response_signal.py \
+  --mode diagnose-history \
+  --task-content outputs/research/2026-07-28-multi-swe-task-content/task-content.jsonl \
+  --task-times examples/multi_swe_research/evidence/task-times.jsonl \
+  --embeddings outputs/research/2026-07-28-multi-swe-task-embeddings.json \
+  --panel-summary examples/multi_swe_research/evidence/panel-summary.json \
+  --resolved-outcomes examples/multi_swe_research/evidence/resolved-outcomes.jsonl \
+  --rejected-results outputs/research/2026-07-28-multi-swe-response-signal-results.json \
+  --output outputs/research/2026-07-28-multi-swe-response-history-diagnostic-corrected.json
+```
+
+ALG-014 then removes Task text and tests whether leave-one-configuration
+response difficulty plus a prequential full/recent expert predicts the next
+cohort:
+
+```sh
+uv run --with 'numpy==2.5.1' \
+  python examples/multi_swe_research/response_composition.py \
+  --task-content outputs/research/2026-07-28-multi-swe-task-content/task-content.jsonl \
+  --task-times examples/multi_swe_research/evidence/task-times.jsonl \
+  --panel-summary examples/multi_swe_research/evidence/panel-summary.json \
+  --resolved-outcomes examples/multi_swe_research/evidence/resolved-outcomes.jsonl \
+  --output outputs/research/2026-07-28-multi-swe-response-composition-results.json
+```
+
+Run each command twice at distinct ignored paths, then rebuild and verify the
+compact evidence summary:
+
+```sh
+uv run python examples/multi_swe_research/pre_origin_evidence.py verify \
+  --response-results outputs/research/2026-07-28-multi-swe-response-signal-results.json \
+  --response-reproduction outputs/research/2026-07-28-multi-swe-response-signal-reproduction.json \
+  --history-diagnostic outputs/research/2026-07-28-multi-swe-response-history-diagnostic-corrected.json \
+  --history-reproduction outputs/research/2026-07-28-multi-swe-response-history-diagnostic-corrected-reproduction.json \
+  --composition-results outputs/research/2026-07-28-multi-swe-response-composition-results.json \
+  --composition-reproduction outputs/research/2026-07-28-multi-swe-response-composition-reproduction.json \
+  --summary examples/multi_swe_research/evidence/pre-origin-signal-summary.json
+```
+
 Validate all committed evidence without network access:
 
 ```sh
