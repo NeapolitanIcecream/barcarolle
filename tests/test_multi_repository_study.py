@@ -201,6 +201,55 @@ def test_theory_audit_plan_is_self_digested_and_cannot_change_candidate() -> Non
     assert plan["temporal_null"]["permutations"] == 500
 
 
+def test_agent_panel_extension_is_self_digested_and_preserves_holdout() -> None:
+    plan = json.loads(
+        (
+            REPOSITORY_ROOT
+            / "examples/multi_repository_study/agent-panel-extension-plan.json"
+        ).read_text()
+    )
+    digest = plan.pop("agent_panel_extension_plan_digest")
+
+    assert canonical_digest(plan) == digest
+    assert len(plan["existing_opened_development_panel"]) == 3
+    assert len(plan["preallocation_exclusions"]) == 1
+    assert len(plan["development_allocation"]) == 8
+    assert len(plan["holdout_allocation"]) == 6
+    assert {
+        item["result_blob_sha"] for item in plan["development_allocation"]
+    }.isdisjoint(
+        item["result_blob_sha"] for item in plan["holdout_allocation"]
+    )
+    assert plan["authority"]["paid_api_calls"] == 0
+    assert "until the frozen holdout gate is met" in plan["authority"][
+        "forbidden_network_reads"
+    ]
+
+
+def test_agent_invariant_plan_is_self_digested_and_cutoff_aware() -> None:
+    plan = json.loads(
+        (
+            REPOSITORY_ROOT
+            / "examples/multi_repository_study/agent-invariant-plan.json"
+        ).read_text()
+    )
+    digest = plan.pop("agent_invariant_plan_digest")
+
+    assert canonical_digest(plan) == digest
+    assert plan["difficulty_representation"]["state_count"] == 5
+    assert plan["rolling_origin"]["cross_repository_cutoff"] == (
+        "created_at no later than the final target-history Task"
+    )
+    markov = plan["fixed_algorithms"][1]
+    assert markov["selector_id"] == "difficulty_markov_match"
+    assert markov["training_symmetric_dirichlet_cell_mass"] == pytest.approx(
+        0.2
+    )
+    assert plan["diagnostics"]["temporal_null"]["permutations"] == 500
+    assert plan["holdout_open_gate"]["production_promotion_allowed"] is False
+    assert plan["authority"]["paid_api_calls"] == 0
+
+
 def test_committed_public_panel_result_is_self_digested_and_negative() -> None:
     results = json.loads(
         (

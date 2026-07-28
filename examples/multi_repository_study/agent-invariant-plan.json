@@ -1,0 +1,138 @@
+{
+  "schema_version": "barcarolle_agent_invariant_selector_plan_v1",
+  "study_id": "agent-invariant-difficulty-selector-2026-07-28",
+  "frozen_at": "2026-07-28T03:42:00Z",
+  "epistemic_status": "outcome_blind_fixed_mechanism",
+  "source": {
+    "agent_panel_extension_plan_digest": "52f1f3c1dc6159f2c6f17c7b530fe4aab962728c43049d80284690608aad98f6",
+    "public_panel_plan_digest": "0658aa938b34f0f80f6933b8a03f1517b323661eab55031925bd017163759c03",
+    "theory_plan_digest": "ae58832e7bcd335e3c246ae9da351fecf181044757589dabc60b4f30c11fb83b",
+    "theory_audit_results_digest": "98e7ab86b0255c0d2ee959aa99c83dce6a94f2c70c34649bd763af5e301c7a13",
+    "opened_development_agent_count_after_extension": 11,
+    "sealed_holdout_agent_count": 6
+  },
+  "research_contract": {
+    "question": "Can an Agent-invariant forecast of future task difficulty select a local historical benchmark that predicts unseen future Agent pass rates better than full history?",
+    "mechanism": "Compress each Task's reference-Agent response vector to an ordinal solve-rate state, forecast the next local state distribution without later-created cross-repository Tasks, and select a local state-matched subset.",
+    "reason": "The first-wave joint response state encoded panel identities and failed leave-one-Agent transfer. A scalar difficulty state keeps only response structure that can plausibly transfer to a new Agent.",
+    "non_solutions": [
+      "searching the state count, cut points, Markov prior, local strength, horizon, or budget after outcomes open",
+      "using any held-out Agent outcome to fit, forecast, or select",
+      "using other-repository Tasks created after the target Origin cutoff",
+      "promoting a candidate from the opened development panel",
+      "adding a generalized trainer or runtime service for one experiment caller"
+    ],
+    "allowed_terminal_states": [
+      "open_sealed_agent_holdout_for_one_frozen_candidate",
+      "retire_agent_invariant_markov_on_development_panel",
+      "official_result_identity_or_schema_blocker"
+    ]
+  },
+  "rolling_origin": {
+    "repository_scope": "one repository per Origin and Selection",
+    "minimum_initial_history_tasks": 15,
+    "future_block_tasks": 5,
+    "selection_budget_tasks": 10,
+    "ordering": "created_at_then_instance_id",
+    "cross_repository_cutoff": "created_at no later than the final target-history Task"
+  },
+  "difficulty_representation": {
+    "reference_agents": "all eleven opened development Agents for the primary fit; all except the evaluated Agent for leave-one-Agent-out",
+    "task_score": "number of reference Agents resolving the Task divided by the number of reference Agents",
+    "state_count": 5,
+    "state_rule": "min(4, floor(5 * task_score))",
+    "state_intervals": [
+      "[0.0, 0.2)",
+      "[0.2, 0.4)",
+      "[0.4, 0.6)",
+      "[0.6, 0.8)",
+      "[0.8, 1.0]"
+    ],
+    "missing_result_policy": "not allowed; every official result is normalized over the exact 500-Task denominator before state construction"
+  },
+  "fixed_algorithms": [
+    {
+      "selector_id": "difficulty_persistence_match",
+      "role": "mechanism ablation",
+      "forecast": "empirical difficulty-state distribution in the final complete five-Task history block",
+      "holdout_nomination_allowed": false
+    },
+    {
+      "selector_id": "difficulty_markov_match",
+      "role": "holdout-eligible candidate",
+      "forecast": "mean of the next five state distributions from a first-order transition model initialized at the latest local state",
+      "training_prior": "average repository-level transition matrices over cutoff-eligible non-target repositories",
+      "training_symmetric_dirichlet_total_mass_per_row": 1.0,
+      "training_symmetric_dirichlet_cell_mass": 0.2,
+      "target_local_transition_prior_total_mass_per_row": 5.0,
+      "empty_training_prior": "symmetric five-state transition matrix",
+      "holdout_nomination_allowed": true
+    }
+  ],
+  "selection_rule": {
+    "budget": 10,
+    "allocation": "Enumerate every feasible five-state integer count vector that sums to ten and does not exceed local-history availability; minimize L1 distance between its normalized histogram and the forecast distribution, then break exact ties by the count vector.",
+    "within_state": "take the most recent Tasks, breaking time ties by instance_id",
+    "future_outcome_access": "Selection membership is materialized before future outcomes are read"
+  },
+  "diagnostics": {
+    "primary_loss": "mean across evaluated Agents of absolute selected-history versus future-block pass-rate error",
+    "primary_contrast": "candidate loss minus full-history loss; negative favors Selection",
+    "aggregation": {
+      "origins": "equal within repository",
+      "repositories": "equal in the wide and deep views",
+      "bootstrap_resamples": 10000,
+      "bootstrap_seed": 20260728
+    },
+    "random_calibration": {
+      "draws": 20000,
+      "seed": 20260803,
+      "sampling": "independent uniform ten-Task subset at every repository-local Origin"
+    },
+    "temporal_null": {
+      "permutations": 500,
+      "seed": 20260802,
+      "rule": "shuffle complete eleven-Agent response vectors within repository, refit every cutoff-aware transition model, and rematerialize every Selection"
+    },
+    "agent_transfer": {
+      "rule": "For each development Agent, construct states, fit, forecast, and select using only the other ten Agents, then evaluate only the omitted Agent.",
+      "required_favorable_agent_count": 8
+    },
+    "required_outputs": [
+      "wide and deep repository-first contrasts",
+      "per-repository directions and leave-one-repository-out summaries",
+      "per-Agent contrasts",
+      "forecast error and selected-to-forecast representation error",
+      "random percentile",
+      "temporal-null rate",
+      "leave-one-Agent aggregate and direction count",
+      "selection, transition, source, plan, and result digests"
+    ]
+  },
+  "holdout_open_gate": {
+    "candidate": "difficulty_markov_match",
+    "requirements": {
+      "wide_macro_repository_difference_at_most": -0.01,
+      "minimum_wide_favorable_repositories": 5,
+      "every_wide_leave_one_repository_out_negative": true,
+      "deep_macro_repository_difference_negative": true,
+      "minimum_random_percentile": 0.75,
+      "wide_difference_below_history_match": true,
+      "wide_difference_below_difficulty_persistence_match": true,
+      "temporal_null_as_good_or_better_rate_below": 0.1,
+      "leave_one_agent_wide_macro_difference_negative": true,
+      "minimum_favorable_leave_one_agent_count": 8
+    },
+    "priority": "All requirements must hold. A boundary value fails a strict below requirement.",
+    "production_promotion_allowed": false
+  },
+  "authority": {
+    "paid_api_calls": 0,
+    "coding_agent_calls": 0,
+    "embedding_calls": 0,
+    "development_result_blobs": "the eight entries frozen in agent-panel-extension-plan.json",
+    "holdout_result_blobs": "forbidden until this plan's complete gate passes",
+    "raw_result_policy": "ignored local paths only; commit compact normalized evidence and digests"
+  },
+  "agent_invariant_plan_digest": "fccca3c600c56b4a504eb70eacce23dfa9180e1fa427a1d20b1b98046d80f76a"
+}

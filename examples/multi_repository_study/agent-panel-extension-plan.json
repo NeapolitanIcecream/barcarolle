@@ -1,0 +1,222 @@
+{
+  "schema_version": "barcarolle_agent_panel_extension_plan_v1",
+  "study_id": "public-agent-panel-extension-2026-07-28",
+  "frozen_at": "2026-07-28T03:42:00Z",
+  "epistemic_status": "project_sealed_public_outcome_extension",
+  "research_contract": {
+    "target": "Use outcome-independent metadata to widen the opened development Agent panel while preserving a project-sealed Agent holdout panel.",
+    "primary_reason": "The three-Agent joint response candidate passed nominal development gates but failed temporal-null and leave-one-Agent audits; more Agent mechanisms are needed to separate task-level signal from panel-specific coincidences.",
+    "non_solutions": [
+      "selecting submissions from leaderboard scores or result contents",
+      "opening every eligible result before a candidate exists",
+      "reactivating the retired joint_markov_match candidate from a favorable replication",
+      "using held-out Agent outcomes as Selector features",
+      "changing runtime to aggregate Tasks across repositories"
+    ],
+    "allowed_terminal_states": [
+      "expanded_development_panel_ready_with_sealed_holdout",
+      "official_result_identity_or_schema_blocker"
+    ]
+  },
+  "source": {
+    "repository": "SWE-bench/experiments",
+    "revision": "2f15350cd32becc4569e0d826361048555b605c0",
+    "tree_sha": "41bb4d56cd7dba1b62a04947728d2f451172af30",
+    "dataset": "SWE-bench Verified",
+    "result_normalization": "resolved is pass; every other Task in the exact 500-Task denominator is fail"
+  },
+  "inventory_rule": {
+    "metadata_only_fields": {
+      "tags.checked": true,
+      "tags.os_system": true,
+      "tags.system.attempts": "1"
+    },
+    "model_openness": "not an inclusion criterion; Agent-mechanism diversity is the research variable and official per-Task outcomes are the evidence input",
+    "eligible_submission_count": 18,
+    "existing_opened_count": 3,
+    "preallocation_exclusion_count": 1,
+    "project_sealed_count": 14,
+    "allocation": "Group the 14 project-sealed submissions by mechanism family, sort each family by submission path, and alternate development then holdout. Put a singleton family in development.",
+    "allocation_counts": {
+      "development": 8,
+      "holdout": 6
+    }
+  },
+  "existing_opened_development_panel": [
+    {
+      "agent_id": "swe-fixer-qwen-20250306",
+      "submission": "20250306_SWE-Fixer_Qwen2.5-7b-retriever_Qwen2.5-72b-editor",
+      "mechanism_family": "SWE-Fixer",
+      "metadata_blob_sha": "e1f64d146e8ae109f5c31cad440912f107b34106",
+      "result_blob_sha": "ed32450aa3ae55d094158a88490ebf2541013579"
+    },
+    {
+      "agent_id": "sweagent-lm-32b-20250511",
+      "submission": "20250511_sweagent_lm_32b",
+      "mechanism_family": "SWE-agent",
+      "metadata_blob_sha": "47e8f4ccc41a87701a29f6960a0325e50e99d5bc",
+      "result_blob_sha": "2ca4f9a8d3c7a6f9ec52e23ade846db9e1ca3abe"
+    },
+    {
+      "agent_id": "skywork-swe-32b-20250616",
+      "submission": "20250616_Skywork-SWE-32B",
+      "mechanism_family": "Skywork-SWE",
+      "metadata_blob_sha": "740af7e63e8a22306a1a42a6f54bae121a28e276",
+      "result_blob_sha": "04b53ca1b196b810c741d04d6e3f750d7b2f7a3e"
+    }
+  ],
+  "preallocation_exclusions": [
+    {
+      "submission": "20250520_openhands_devstral_small",
+      "mechanism_family": "OpenHands",
+      "metadata_blob_sha": "55b5c8c7b16315724763880ff45874b0d0eef39a",
+      "result_blob_sha": "d05f8beda70c879fc08e4996c0121c4da861c9af",
+      "reason": "Result content was inspected during earlier route feasibility, so it is not project-sealed evidence."
+    }
+  ],
+  "development_allocation": [
+    {
+      "agent_id": "rag-claude2-20231010",
+      "submission": "20231010_rag_claude2",
+      "mechanism_family": "RAG",
+      "model_label": "claude-2",
+      "metadata_blob_sha": "1d86a69556202298615f5cd58cf3b907c520432e",
+      "result_blob_sha": "61ca95b7b890fe42c562bcdcfa8f9fbc9b18e6aa"
+    },
+    {
+      "agent_id": "rag-swellama13b-20231010",
+      "submission": "20231010_rag_swellama13b",
+      "mechanism_family": "RAG",
+      "model_label": "SWE-Llama 13B",
+      "metadata_blob_sha": "f547745d8ec420fdb44459445bd74fcc4cc14543",
+      "result_blob_sha": "fbbc9cc1103f57f45a8bedef2701f4084070ee15"
+    },
+    {
+      "agent_id": "sweagent-claude3opus-20240402",
+      "submission": "20240402_sweagent_claude3opus",
+      "mechanism_family": "SWE-agent",
+      "model_label": "claude-3-opus-20240229",
+      "metadata_blob_sha": "17c8f8fe6fde0998d9272345b5614ad500bb2bf9",
+      "result_blob_sha": "2e76b7330b09b1ff0574d2bc324bb678b79c7056"
+    },
+    {
+      "agent_id": "sweagent-claude35sonnet-20240620",
+      "submission": "20240620_sweagent_claude3.5sonnet",
+      "mechanism_family": "SWE-agent",
+      "model_label": "claude-3-5-sonnet-20241022",
+      "metadata_blob_sha": "2d73341b73244c36353173c4cc097716551e7187",
+      "result_blob_sha": "c6317e942210be3936fa57db7b4d15de8fbdf438"
+    },
+    {
+      "agent_id": "sweagent-claude4sonnet-20250522",
+      "submission": "20250522_sweagent_claude-4-sonnet-20250514",
+      "mechanism_family": "SWE-agent",
+      "model_label": "claude-4-sonnet-20250514",
+      "metadata_blob_sha": "de0a50cda7a5f200bd329532eda56cb6fec9aad7",
+      "result_blob_sha": "be9eeca19bd7b07d4c3a58b719f1f6fc8954b391"
+    },
+    {
+      "agent_id": "openhands-claude4sonnet-20250524",
+      "submission": "20250524_openhands_claude_4_sonnet",
+      "mechanism_family": "OpenHands",
+      "model_label": "claude-4-sonnet-20250514",
+      "metadata_blob_sha": "6085031e19229ff47bb26a7938cc40b2b9bef88e",
+      "result_blob_sha": "bf564e202c4d987933029d7189fb34abe66e6426"
+    },
+    {
+      "agent_id": "openhands-gpt5-20250807",
+      "submission": "20250807_openhands_gpt5",
+      "mechanism_family": "OpenHands",
+      "model_label": "openai/gpt-5-2025-08-07",
+      "metadata_blob_sha": "9e128c6fbbd27938247f2d444cef143f636028a1",
+      "result_blob_sha": "5e731e64d584acda176bd9b82bf41cdb62d364a5"
+    },
+    {
+      "agent_id": "moatless-claude4sonnet-20250611",
+      "submission": "20250611_moatless_claude-4-sonnet-20250514",
+      "mechanism_family": "Moatless",
+      "model_label": "claude-4-sonnet-20250514",
+      "metadata_blob_sha": "a86a2d8c18a440c03987cae2d1d65fe13a09665b",
+      "result_blob_sha": "39ee507df7f3985f41f407ae48ae6046cf599202"
+    }
+  ],
+  "holdout_allocation": [
+    {
+      "agent_id": "rag-gpt35-20231010",
+      "submission": "20231010_rag_gpt35",
+      "mechanism_family": "RAG",
+      "model_label": "ChatGPT 3.5",
+      "metadata_blob_sha": "a56248d9b2d51510e753369bd525bfec992cf151",
+      "result_blob_sha": "4dacc602de835f6a72132c70cb10d495c16b6743"
+    },
+    {
+      "agent_id": "rag-swellama7b-20231010",
+      "submission": "20231010_rag_swellama7b",
+      "mechanism_family": "RAG",
+      "model_label": "SWE-Llama 7B",
+      "metadata_blob_sha": "adad183d1b8f783184ce2b7e48b0e17a807864e8",
+      "result_blob_sha": "08107accb8e1f89a598c350a30211188026c1338"
+    },
+    {
+      "agent_id": "sweagent-gpt4-20240402",
+      "submission": "20240402_sweagent_gpt4",
+      "mechanism_family": "SWE-agent",
+      "model_label": "gpt-4-1106-preview",
+      "metadata_blob_sha": "2aa43ef38a8c032c248d546f657ad5b92c55e656",
+      "result_blob_sha": "eb4fca14e56194937c64b1117129a407a0a10241"
+    },
+    {
+      "agent_id": "sweagent-gpt4o-20240728",
+      "submission": "20240728_sweagent_gpt4o",
+      "mechanism_family": "SWE-agent",
+      "model_label": "gpt-4o-2024-05-13",
+      "metadata_blob_sha": "62c93705dfa21d3ef7e53dcb8a15f45f92d6f4fd",
+      "result_blob_sha": "4f76fa60571f92930c3d8cf452137ab85b5d36b3"
+    },
+    {
+      "agent_id": "sweagent-devstral-20250725",
+      "submission": "20250725_sweagent_devstral_small_2507",
+      "mechanism_family": "SWE-agent",
+      "model_label": "devstral-small-2507",
+      "metadata_blob_sha": "026f08e7a3359c45826e1db7f3307947113a7ca7",
+      "result_blob_sha": "414e2a957454717531b41d699ace70166633d080"
+    },
+    {
+      "agent_id": "openhands-kimi-k2-20250716",
+      "submission": "20250716_openhands_kimi_k2",
+      "mechanism_family": "OpenHands",
+      "model_label": "moonshot/kimi-k2-0711-preview",
+      "metadata_blob_sha": "614e8a2a68b1d6f413c1671989ec67881e00b82a",
+      "result_blob_sha": "6879b23d24546f80c9cef3cc8f0dff7fac5f5ec7"
+    }
+  ],
+  "phase_contract": {
+    "first_open": "Open only the eight development result blobs. Before using them to design another Selector, evaluate the frozen joint_markov_match memberships learned from the original three-Agent panel against these eight Agents and record the one-shot result.",
+    "replication_interpretation": "The retired candidate cannot be promoted or reactivated. The result only measures whether the mechanism's selected Tasks transfer to an outcome-independent Agent panel.",
+    "development_after_replication": "After the one-shot result is committed, the eight outcomes join the three existing outcomes as an eleven-Agent opened development panel.",
+    "holdout_open_gate": [
+      "a new mechanism and all of its constants are frozen before holdout outcomes are opened",
+      "the candidate passes the existing wide, repository-direction, leave-one-repository, deep, random-calibration, and history-match development gates",
+      "the candidate passes a temporal-null audit below 0.10",
+      "leave-one-Agent evaluation over the eleven-Agent development panel has a negative wide macro difference and is favorable for at least eight of eleven Agents"
+    ],
+    "holdout_use": "The six held-out Agents may evaluate a frozen candidate once. They never become Selector inputs for that evaluation."
+  },
+  "temporal_availability": {
+    "one_shot_replication": "Reuse the already-frozen first-wave memberships and label their cross-repository fits as retrospective because those fits could consume later-created Tasks from other repositories.",
+    "new_candidate_rule": "At each target Origin, a cross-repository fit may consume only Tasks whose created_at is no later than the final Task in the target history. A source Origin is eligible as an analog only when its full future block is also available by that cutoff.",
+    "empty_prior_rule": "If no other repository supplies two available Tasks, use only the algorithm's frozen symmetric prior; do not borrow later Tasks.",
+    "reason": "Repository holdout prevents target-repository leakage but is not a substitute for rolling calendar-time availability."
+  },
+  "claim_boundary": "All result files are already public, so project-sealed means their per-Task contents have not been inspected in this research process. This is stronger than opened-data development but weaker than a private prospective benchmark.",
+  "authority": {
+    "paid_api_calls": 0,
+    "coding_agent_calls": 0,
+    "embedding_calls": 0,
+    "allowed_network_reads_before_plan_commit": "metadata files and Git object identities only",
+    "allowed_network_reads_after_plan_commit": "the eight development result blobs only",
+    "forbidden_network_reads": "the six holdout result blobs until the frozen holdout gate is met",
+    "raw_result_policy": "Keep result files under ignored output paths; commit only plans, compact normalized summaries, and digests."
+  },
+  "agent_panel_extension_plan_digest": "52f1f3c1dc6159f2c6f17c7b530fe4aab962728c43049d80284690608aad98f6"
+}
