@@ -11,13 +11,30 @@ public Agent outcomes. No paid call or sealed holdout access is authorized.
 
 The machine contract is
 [`plan.json`](../../examples/generator_calibrated_selection/plan.json), digest
-`c6edade7…d1b05`. It binds code, source bytes, Git heads, 1,337 Tasks, 107
+`cb83d866…b1b9a`. It binds code, source bytes, Git heads, 1,337 Tasks, 107
 nested Origins in 11 repositories, the upstream `THY-002` result, budget,
 mapping, controls, random sampler, gates, and the downstream outcome contract.
 
 This sequencing applies YAGNI at an expensive boundary: the outcome executor
 has one known future caller and its complete contract is frozen, but it is not
 implemented unless the outcome-free mapping proves useful.
+
+### Verifier-only amendment A1
+
+The parent freeze was committed as `9a5e0c43`, plan digest
+`c6edade7…d1b05`. Its two raw replays were byte-identical at
+`81752a8c…9fc5` and returned `retire_mapping`, with result digest
+`8b494ae4…db367`, Origin-row digest `8467942c…8d9d7`, and membership
+digest `e1cdae62…82fe6`.
+
+Compact verification then exposed a generic parser defect: the valid empty
+`admission_failures` sequence was rejected because mapping sequences default
+to nonempty. Amendment `THY-002S-A1` permits emptiness only at the two
+admission-failure verifier call sites and adds a regression test. It changes
+no source, forecast, Selection, membership, metric, random draw, aggregation,
+gate, decision, resource counter, or outcome-access path. No outcome was
+opened. The amended plan was frozen before an accepted replay and requires the
+same scientific contrasts and decision.
 
 ## Estimand And Mapping
 

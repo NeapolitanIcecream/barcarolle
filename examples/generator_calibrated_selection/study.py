@@ -1465,7 +1465,11 @@ def verify_result(
             "repository_id": _required_string(item, "repository_id"),
             "reason": _required_string(item, "reason"),
         }
-        for item in _mapping_sequence(result, "admission_failures")
+        for item in _mapping_sequence(
+            result,
+            "admission_failures",
+            allow_empty=True,
+        )
     )
     failed_repository_ids = {item["repository_id"] for item in failures}
     if len(failed_repository_ids) != len(failures):
@@ -1597,7 +1601,11 @@ def _verify_source_manifests(
         result,
         "repository_manifests",
     )
-    failure_rows = _mapping_sequence(result, "admission_failures")
+    failure_rows = _mapping_sequence(
+        result,
+        "admission_failures",
+        allow_empty=True,
+    )
     repository_manifests = {
         _required_string(item, "repository_id"): item
         for item in repository_manifest_rows
@@ -1896,8 +1904,10 @@ def _mapping(payload: Mapping[str, object], key: str) -> Mapping[str, Any]:
 def _mapping_sequence(
     payload: Mapping[str, object],
     key: str,
+    *,
+    allow_empty: bool = False,
 ) -> tuple[Mapping[str, Any], ...]:
-    values = _sequence(payload.get(key), key)
+    values = _sequence(payload.get(key), key, allow_empty=allow_empty)
     if any(not isinstance(item, Mapping) for item in values):
         raise ValueError(f"{key} must contain objects")
     return tuple(item for item in values if isinstance(item, Mapping))

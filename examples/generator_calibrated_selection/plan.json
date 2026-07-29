@@ -2,11 +2,11 @@
   "schema_version": "barcarolle_generator_calibrated_selection_plan_v1",
   "study_id": "generator-calibrated-selection-front-gate-2026-07-29",
   "stage": "THY-002S-A_outcome_free_task_space_front_gate",
-  "plan_digest": "c6edade7b016225d794d3b05acb6897eb04ff67f3db8ddab3b122254000d1b05",
+  "plan_digest": "cb83d8665f6b8124be926a85c3097fc3e0caa16caffd62929d0b075fb5cb1b9a",
   "implementation": [
     {
       "path": "examples/generator_calibrated_selection/study.py",
-      "sha256": "98c23dbc4b8dad26571d882c06e918ccd57cdf781df08a71457b2b3c2d7655a4"
+      "sha256": "eab7fa711557721bcafb73e5c9778882c8d83aa4ce6da5006925ee10fa2c6156"
     },
     {
       "path": "examples/generator_calibrated_exposure/study.py",
@@ -15,6 +15,29 @@
     {
       "path": "examples/pre_origin_task_mix/study.py",
       "sha256": "0cc2c5a99c455655ba57ca0068213497a0bea7789f8ab57497b7277deb7cf927"
+    }
+  ],
+  "amendments": [
+    {
+      "amendment_id": "THY-002S-A1",
+      "kind": "verifier_only_before_accepted_replay",
+      "parent_plan_digest": "c6edade7b016225d794d3b05acb6897eb04ff67f3db8ddab3b122254000d1b05",
+      "parent_commit": "9a5e0c43",
+      "parent_implementation_sha256": "98c23dbc4b8dad26571d882c06e918ccd57cdf781df08a71457b2b3c2d7655a4",
+      "parent_raw_file_sha256": "81752a8c2f984004c4bd7517a15855abe0574944fcfa7420cfa3039ed2f79fc5",
+      "parent_result_digest": "8b494ae4e2dc7a7d6db258c425c7216500e2d9c5c66f70821b7a31c9207db367",
+      "parent_origin_rows_digest": "8467942c309c4d9e5c67903b9a225d696316e9ce5a527a5cbcc2a9b84828d9d7",
+      "parent_memberships_digest": "e1cdae6262504e73159e758d3c4ef092446454a40bf9ef8c6c6ec57b33a82fe6",
+      "parent_reproduction": "two raw runs were byte-identical and both returned retire_mapping before compact verification",
+      "trigger": "compact verification rejected the valid empty admission_failures sequence because the generic mapping-sequence helper required nonempty input",
+      "code_scope": "allow an empty mapping sequence only at the two admission_failures verifier call sites; add one regression test",
+      "forbidden_scope": "No source, forecast, Selection, membership, loss, aggregation, random, gate, decision, resource, or outcome-access code changed.",
+      "evidence_access": {
+        "agent_outcomes_opened": 0,
+        "paid_api_calls": 0,
+        "sealed_holdout_opened": 0
+      },
+      "acceptance_rule": "Re-freeze this plan before rerunning; require two byte-identical raw runs, compact verification, and unchanged scientific contrasts and decision."
     }
   ],
   "upstream_thy_002": {

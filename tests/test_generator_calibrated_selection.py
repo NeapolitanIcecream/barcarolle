@@ -15,6 +15,7 @@ sys.path.insert(0, str(REPOSITORY_ROOT))
 from examples.generator_calibrated_selection import study as selection_study  # noqa: E402
 from examples.generator_calibrated_selection.study import (  # noqa: E402
     PREDICTOR_IDS,
+    _mapping_sequence,
     _verify_membership_rows,
     bind_candidate_random_position,
     decide_task_space,
@@ -257,6 +258,20 @@ def test_source_admission_failure_blocks_outcome_amendment() -> None:
         "outcome_executor_amendment_authorized": False,
         "gates": {"complete_source_admission": False},
     }
+
+
+def test_empty_success_admission_list_is_valid_only_when_declared() -> None:
+    with pytest.raises(ValueError, match="must not be empty"):
+        _mapping_sequence({"failures": ()}, "failures")
+
+    assert (
+        _mapping_sequence(
+            {"failures": ()},
+            "failures",
+            allow_empty=True,
+        )
+        == ()
+    )
 
 
 def test_admission_failure_skips_random_calibration(

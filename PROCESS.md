@@ -94,7 +94,7 @@ horizon.
 
 THY-002 supplies the previously missing independent source-family Task-mix
 signal. The separately frozen `THY-002S-A` plan has digest
-`c6edade7…d1b05`. The next authorized step is its zero-paid Task-space replay.
+`cb83d866…b1b9a`. The next authorized step is its zero-paid Task-space replay.
 Only a front-gate pass permits one focused executor amendment that binds the
 frozen memberships to already-open public Agent results. The amendment may
 add the join and predeclared aggregation only; it cannot change the algorithm,

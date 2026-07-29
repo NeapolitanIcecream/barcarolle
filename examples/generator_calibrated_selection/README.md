@@ -6,7 +6,7 @@ whether that Selection is structurally closer to the next Task cohort than
 full history, a stationary coreset, and equal-budget random sampling.
 
 The frozen contract is [`plan.json`](plan.json), digest
-`c6edade7…d1b05`. Stage A may read Task metadata, projected Task times,
+`cb83d866…b1b9a`. Stage A may read Task metadata, projected Task times,
 reference patches, and cutoff-safe Git history. It must not read Agent
 outcomes, embeddings, the sealed holdout, or a paid endpoint.
 
