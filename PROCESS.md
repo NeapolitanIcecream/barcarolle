@@ -3,7 +3,7 @@
 Last updated: 2026-07-29.
 
 Current ledger: `docs/research-improvement-backlog.md`. Latest report:
-`docs/experiments/2026-07-29-surrogate-gate-pass-rate-mae.md`.
+`docs/experiments/2026-07-29-controlled-cold-start-pre-origin-theory.md`.
 
 ## Preserve
 
@@ -41,6 +41,7 @@ development evidence.
 | THY-001R Git pressure | Multi H5/H10 vs full Task history `+0.17572`/`+0.21704`; Full-minus-Verified `+0.08751`/`+0.08807` | Retired; source, Origin, reproduction, and independent audits passed. |
 | THY-002 Generator-calibrated exposure | H5/H10 vs full history `-0.006562`/`-0.006107`; intervals exclude zero; 27/40 and 28/40 favorable | Task-mix mechanism retained; its THY-002S mapping fails the Agent-outcome gate. |
 | THY-002S Brier projection | pass-rate MAE H5 `-0.002594`, upper `+0.004724`; H10 `+0.002943`; random `0.93485`/`0.78260` | Frozen outcome gate also fails; original mapping retirement stands. |
+| THY-003 registry-dated dependency lag | 9 npm repositories, 1,420 Tasks, 119 Origins; 20/20 bounded registry requests succeeded and 9/20 sampled lag classes changed | Frozen for outcome-free falsification only; plan `0126c44a…3d5d`. No Agent replay is authorized. |
 
 The experiments factor the problem:
 
@@ -51,9 +52,13 @@ The experiments factor the problem:
 4. full/recent target history plus one-Task cross-repository shrinkage does not
    predict the next Task cohort under ALG-014;
 5. THY-002S preserves some H5 Task-mix signal in Agent MAE, but below its
-   effect and uncertainty requirements and not at H10; and
+   effect and uncertainty requirements and not at H10;
 6. historical Generator yield per Git exposure combined with current exposure
-   predicts the next Task-module mix slightly better than full Task history.
+   predicts the next Task-module mix slightly better than full Task history;
+   and
+7. registry publication time is a distinct pre-Origin clock with enough npm
+   source support and variation for an outcome-free falsification, but no
+   forecast result yet.
 
 When complete Agent outcomes already exist, use pass-rate MAE as the outcome
 gate. AUC, Brier, embedding, and response-coordinate losses are diagnostics.
@@ -89,6 +94,13 @@ campaign-triggered. Core Task Pool, Result, Selection, and Runner contracts did
 not change. THY-001R and THY-002 remain direct example-layer studies; no core
 schema or runtime service was added.
 
+The controlled cold-start sprint froze `THY-003 Registry-Dated Dependency-Lag
+Nearest Regime` at plan digest `0126c44a…3d5d`. The design fixes a
+nine-repository wide frame, five-repository deep frame, 119 Origins, budget ten,
+H5/H10, raw npm response retention, lock-only and temporal-null ablations, and
+repository-first gates. No runner, Selection membership, Agent outcome, sealed
+holdout, or paid call was created or opened.
+
 ## Stop And Reopen
 
 Stop nomination-oriented parameter search, representation search, and
@@ -101,10 +113,17 @@ preserves part of it in H5 Agent MAE, but fails its frozen effect, uncertainty,
 and H10 gates. Do not lower the gate, tune the mapper, change the source frame,
 or open the six holdout Agents.
 
-There is no active outcome replay or paid plan. A next route needs a new
-pre-outcome theory or an independently frozen wider source frame with its
-repository count justified before replay. No additional core infrastructure
-is currently warranted.
+There is no active outcome replay or paid plan. No additional core
+infrastructure is currently warranted.
+
+`THY-003` supplies the new pre-outcome theory. The only ready action is its
+frozen Stage-A example-layer implementation and zero-outcome execution. Any
+Stage-A source, forecast, materialization, H10, deep, leave-one-repository-out,
+null, or reproduction failure retires the route without revision. Stage B
+requires every Stage-A gate plus a separate plan and the exact npm outcome
+frame; no current opened panel is asserted to qualify. The six Python-heavy
+SWE-bench holdout Agents cannot confirm this npm-specific route and remain
+sealed.
 
 Any reopened candidate must freeze its information set, code, parameters,
 source, Origin schedule, controls, and gates before outcome replay. Open the

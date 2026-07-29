@@ -132,6 +132,7 @@ The theory-driven extension reached the following decisions:
 | ALG-013 Multi-SWE Response-Contrast Projection | Pass-rate MAE H5 `+0.001729`, 6/13 favorable; H10 `+0.005890`, 3/11 favorable | The earlier AUC and z-loss gates failed; direct outcome replay now shows the candidate also loses to full history. | Reject on primary MAE; no proxy false kill. |
 | ALG-014 Multi-SWE Response-Composition Shrinkage | Pass-rate MAE H5 `+0.001992`, 4/13 favorable; H10 `+0.008170`, 1/11 favorable | Static AUC `0.9121`; proxy forecast differences `+0.000992`/`+0.001855`; direct MAE has the same harmful direction. | Reject on primary MAE; no proxy false kill. |
 | THY-002S Brier Projection Coreset | Pass-rate MAE H5 `-0.002594`, 7/11 favorable; H10 `+0.002943`, 7/11 favorable | H5 misses the frozen `-0.005` effect and has bootstrap upper `+0.004724`; H10 reverses. | Fails the frozen outcome gate; no proxy false kill. |
+| THY-003 Registry-Dated Dependency-Lag Nearest Regime | Not run; no Agent outcomes opened | Nine npm repositories, 1,420 Tasks, 119 Origins; bounded registry check succeeded for 20/20 packages and 9/20 lag classes changed | `planned`; implement only frozen outcome-free Stage A, plan `0126c44a…3d5d` |
 
 The original Joint Markov was temporally retrospective: 9,467 of 19,985
 cross-repository training Task uses (`47.37%`) occurred after the target
@@ -287,9 +288,22 @@ therefore also fails. Retire this mapping without tuning the gate, source,
 budget, horizon, or algorithm. Details are in
 [`experiments/2026-07-29-generator-calibrated-selection.md`](experiments/2026-07-29-generator-calibrated-selection.md).
 
+`THY-003 Registry-Dated Dependency-Lag Nearest Regime` is `planned` for
+outcome-free falsification. The cold-start inventory was frozen before the
+collision audit. Release phase, ownership, work queue, and broad CI state were
+removed because they collide with closed routes or unresolved source/arrival
+boundaries. The surviving npm-specific mechanism uses only the Origin
+manifest, committed direct lock state, and package versions published by the
+cutoff. Its fixed 9-repository/119-Origin source frame has measurable scoring
+labels and bounded registry variation, but no forecast or Agent-outcome result.
+Plan digest is `0126c44a…3d5d`. Implement Stage A unchanged; no opened outcome,
+sealed holdout, or paid replay is authorized. Details are in
+[`experiments/2026-07-29-controlled-cold-start-pre-origin-theory.md`](experiments/2026-07-29-controlled-cold-start-pre-origin-theory.md).
+
 All studies recorded here made zero paid benchmark calls. The prior local
 embedding run did not make an API call. The previous USD 300 authority remains
-closed. There is no active development or paid study.
+closed. `THY-003` Stage A is ready; there is no active Agent-outcome or paid
+study.
 
 ## Multi-Repository Research Contract
 
@@ -470,6 +484,7 @@ Routes remain separate until evidence supports a combination.
 | MR-H: parent work intent | Timestamped structural parent state predicts later Task-component mass before source-attested Task material becomes available. | Admit only a complete event archive with source-native parent/component mapping, versioned material, and native Task arrival; issue creation, linking, resolution, and merge times are not substitutes. | `data-gated` challenger; archive schema, event completeness, transform, and Task alignment unresolved |
 | MR-I / THY-002: generator-calibrated exposure | Future generated Task mass follows current Git exposure multiplied by a module's historical Task-per-exposure propensity. | H5/H10 improve over full history by `0.006562`/`0.006107`; all full/Git/yield gates pass on 40 Rebench repositories. | `task-mix-pass`; retain as an observable, not a production Selector |
 | MR-J / THY-002S: Brier projection coreset | A deterministic budget-ten subset that projects local historical Tasks onto the frozen THY-002 forecast preserves its future Task-mix advantage and then predicts future Agent response. | Outcome-free H5 mapping improved Brier by `0.019114`; direct pass-rate MAE improves only `0.002594`, its interval crosses zero, and H10 worsens `0.002943`. | `closed` on this frame; both the original front gate and the post-decision frozen outcome gate fail |
+| MR-K / THY-003: registry-dated dependency lag | The direct npm dependency-lag regime at an Origin persists into the next Task cohort and identifies comparable historical Task regimes. | First run the frozen outcome-free source, forecast, materialization, H5/H10, deep, null, and reproduction gates on 9 repositories/119 Origins. | `planned`; Stage A only, plan `0126c44a…3d5d`; Agent replay prohibited |
 
 ALG-001's shrinkage switch and ALG-004's EWMA guard remain offline safeguards,
 not positive algorithms. ALG-002 is closed for the current duration-stratum
@@ -628,15 +643,15 @@ useful infrastructure project hidden behind the data gate.
 | Agent-transfer audit | `code-confirmed` leave-one-Agent rematerialization; an evaluated Agent is never a Selector input | Preserve for response-derived Selectors. |
 | Local semantic evidence | `code-confirmed` as 1,632 ignored vectors, committed identities, fixed memberships, and deterministic MMD²/outcome replays | ALG-007 and ALG-012 failed; add no core embedding service or representation search. |
 | Pre-Origin response signal audit | `code-confirmed` complete-repository RCP holdout, leave-one-configuration response composition, prequential expert, equal-repository prior, direct pass-rate MAE audit, amendment-bound logical identities, byte reproductions, controls, and compact evidence | Current opened-source search is closed. Surrogates remain diagnostics; preserve the direct outcome gate for a genuinely independent reopening trigger. |
-| Pre-Origin repository-process theory | `THY-001R` and its audit revision are reproducibly retired; direct Task-mix evidence and source manifests are bound | Preserve the negative result. Freeze `THY-002` on Rebench before future-label replay; add no core service or opened-outcome replay. |
+| Pre-Origin repository-process theory | `THY-001R` is reproducibly retired; `THY-002` passed Task mix but its `THY-002S` outcome mapping failed; `THY-003` plan `0126c44a…3d5d` is frozen without outcome execution | Implement only the direct example-layer `THY-003` Stage A. Preserve prior negative results; add no core service or opened-outcome replay. |
 | External benchmark inventory | `code-confirmed` for Verified, Full, PolyBench, and Rebench with exact source bytes and Origin protocols | Preserve source-specific identities; do not introduce a registry. |
 | Multi-SWE public Result normalization | `code-confirmed`: fixed 39-file contract, verified 1.60 GB source projection, 36-vector allowlist, 1,632 projected times, 2,913 sparse positive cells, and offline evidence validation | Use only in outcome-open research; this is still not a runnable Task Pool and needs no generic source layer. |
 
 Infrastructure prerequisites for another paid selector study are ready. The
 external-source audit removes the immediate Origin and Agent-cell supply
-blocker for zero-paid development. The remaining blocker is a scientifically
-nominated mechanism. No multi-repository product execution path or generic
-training service is needed.
+blocker for zero-paid development. `THY-003` must pass its frozen outcome-free
+and later Agent-outcome gates before it becomes a nominated mechanism. No
+multi-repository product execution path or generic training service is needed.
 
 ## Active Work Ledger
 
@@ -660,9 +675,10 @@ training service is needed.
 | MR-016 | P1 | `closed` | Exact hindsight reached H5 `-0.03264` and H10 `-0.02562`, every repository favorable, and 328/328 certified optimal solves. Capacity is supported; no Selector was nominated. |
 | MR-017 / ALG-013 / ALG-014 | P1 | `closed` | Post-decision direct MAE replay gives ALG-013 H5/H10 `+0.001729`/`+0.005890` and ALG-014 `+0.001992`/`+0.008170`. Preserve the proxy diagnostics, but use primary MAE for future decisions. |
 | MR-018 / THY-001R | P1 | `closed` | Original plan `10b4fcb2…8459` and two byte-identical runs retire the candidate: Multi H5/H10 vs full Task history `+0.17572`/`+0.21704`; Full-minus-Verified `+0.08751`/`+0.08807`. Audit revision `dd3e420d…2d44` removes the shared-vocabulary ambiguity and preserves failure. |
-| MR-019 | P2 | `data-gated` | Parent-level work intent is the strongest challenger. Require complete timestamped planning-node history, versioned Task material, and a module/component label available before source-attested Task arrival; do not substitute issue creation, linking, resolution, merge, open leaf issues, or PRs. |
+| MR-019 | P2 | `data-gated` | Parent-level work intent remains a planning-source challenger. Require complete timestamped planning-node history, versioned Task material, and a module/component label available before source-attested Task arrival; do not substitute issue creation, linking, resolution, merge, open leaf issues, or PRs. |
 | MR-020 / THY-002 | P1 | `task-mix-pass` | Plan `0fe42fc1…1c69`; raw/reproduction `449e10c1…6ac8`; H5/H10 full-history contrasts `-0.006562`/`-0.006107`. Retain the mechanism under its projected-time claim boundary. |
 | MR-021 / THY-002S | P1 | `closed` | Exact outcome audit: H5 `-0.002594`, bootstrap upper `+0.004724`; H10 `+0.002943`. Frozen outcome gate fails. Keep original `retire_mapping`; do not rescue-tune this frame. |
+| MR-022 / THY-003 | P1 | `ready` | Implement and run only frozen outcome-free Stage A, plan `0126c44a…3d5d`, on the exact 9-repository/119-Origin frame. Any gate failure closes the route; no Agent replay, holdout access, or paid call. |
 | RI-125 | P2 | `trigger-gated` | The exact 39 source objects and issue-text projection are full-byte verified. A runnable prepared Task Pool still needs solver/verifier material and source-specific certification when a concrete campaign requires it. |
 | RI-129 / RI-160 | P2 | `trigger-gated` | Add a single-writer exact certification checkpoint before the next comparable pool; replay retained entries before reuse. |
 | RI-163 | P2 | `trigger-gated` | Before another Pylint campaign, replace whole-file behavior identity with an explicit version payload and direct-helper digests. |
