@@ -195,7 +195,7 @@
         "zero_success_selection_cells": 2594,
         "cell_count": 3852
       },
-      "claim_limit": "cached exact-Agent quantized-full compression only; task identity and recency tie do not affect target-Agent pass-rate MAE"
+      "claim_limit": "retrospective same-configuration cached-result quantized-full compression only; task identity and recency tie do not affect target-configuration pass-rate MAE"
     },
     "unseen_target_stationary_exact": {
       "H5_difference": -0.0017845023660608245,
@@ -229,10 +229,12 @@
     "claim_limits": [
       "ALG-016U superiority to ALG-007 is an aggregate H5 point estimate, not a repository-robust comparison",
       "cached-target stationary exact is a frozen control and post-hoc promotion candidate, not a preregistered portfolio winner",
-      "cached-target gain is success-count quantization, not Task-content or recency prediction"
+      "cached-target gain is success-count quantization, not Task-content or recency prediction",
+      "the public source has no native Result availability time or complete production Agent fingerprint; cached-target evidence assumes same-configuration history was available"
     ]
   },
-  "claim_boundary": "Outcome-open, time-projected Multi-SWE development evidence only. Cached-target and unseen-target lanes are separate. No result establishes prospective validity, certifies a Task Pool, authorizes sealed-holdout access, or creates a production Selector default.",
+  "provenance_limitation": "The public outcome source has no native Result availability timestamp and does not prove the complete production Agent fingerprint. Cached-target rows are retrospective same-configuration cache counterfactuals.",
+  "claim_boundary": "Outcome-open, time-projected Multi-SWE development evidence only. Cached-target and unseen-target lanes are separate. No result establishes Result-time availability, full Agent identity, prospective validity, Task Pool certification, sealed-holdout authority, or a production Selector default.",
   "resource_use": {
     "paid_api_calls": 0,
     "new_agent_outcome_calls": 0,
@@ -240,5 +242,5 @@
     "sealed_holdout_reads": 0,
     "core_schema_or_service_changes": 0
   },
-  "summary_digest": "baecf0c1c61657cabc5645c75f5143301a66fc328da57c2103ae7601000cae02"
+  "summary_digest": "e6c766fe431d693668d76888daead625b3d62aeb5f6b62a17efc1285db44d2e9"
 }

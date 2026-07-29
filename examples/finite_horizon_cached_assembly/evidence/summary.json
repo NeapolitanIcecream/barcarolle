@@ -1,0 +1,199 @@
+{
+  "schema_version": "barcarolle_finite_horizon_cached_assembly_evidence_v1",
+  "study_id": "finite-horizon-cached-assembly-2026-07-29",
+  "epistemic_status": "post_result_theory_driven_exploration_on_opened_development_outcomes",
+  "plan_digest": "6602a349d5c108fef96fb9e15d405bf268619b0fdd2721500f6a5c62ad9264b7",
+  "execution_lock_digest": "10e2832290b92f40c120b8a6e3a7e9a946ec778ee71bb4bf08f6fa697858be4b",
+  "reproduction": {
+    "membership_digest": "dc76659a301a87e15d0e9004936cc7b5383621d5291f35f7e15a0f4de8219319",
+    "membership_run_1_sha256": "961b99d53435e0acbf54b7fe5bd6934301914a357ef1d7d3a2c4c44c930b5162",
+    "membership_run_2_sha256": "961b99d53435e0acbf54b7fe5bd6934301914a357ef1d7d3a2c4c44c930b5162",
+    "membership_runs_byte_identical": true,
+    "membership_bytes": 24737911,
+    "result_digest": "77c6ae2c893197ecf3c1361433994a41538558142e069d64483ef5e49052afb2",
+    "result_run_1_sha256": "63662482080394eb94c6ce2ec416cbaa88172b037b466abfccaea29fcf9ae045",
+    "result_run_2_sha256": "63662482080394eb94c6ce2ec416cbaa88172b037b466abfccaea29fcf9ae045",
+    "result_runs_byte_identical": true,
+    "result_bytes": 58701,
+    "H5_row_count": 7956,
+    "H10_row_count": 3852,
+    "membership_digests": {
+      "ALG-018C_H5": "9aee54867850e4d74318d6e5123c45131bfe2db832419ac696dbc6ad6dc838b3",
+      "ALG-018C_H10": "ed2b4430c6b99b782d2bdb001787e3ff283d98d52e28e2aafc3824c2412209c4",
+      "ALG-018C-P_H5": "eeb9073245f3cce176717f51f06d9577454b7074b887af7584ec59dd399946cd",
+      "ALG-018C-P_H10": "f40e56cd349ed86f6e66a9082080b62b6d869f9dd56f5b1224ecf09e945a7eb8"
+    }
+  },
+  "metric": {
+    "name": "repository-first future pass-rate MAE",
+    "primary_baseline": "all eligible target-repository history",
+    "primary_control": "cached-target H-blind quantized-full q/10 assembly",
+    "contrast": "candidate minus baseline or control; negative favors candidate",
+    "selection_budget_tasks": 10,
+    "future_horizons_tasks": [
+      5,
+      10
+    ]
+  },
+  "algorithms": {
+    "ALG-018C": {
+      "name": "Jeffreys Finite-Horizon Median Assembly",
+      "role": "frozen_candidate",
+      "information_contract": "exact cached target Agent",
+      "H5": {
+        "candidate_mae": 0.05325178525178525,
+        "full_history_mae": 0.0673476429292014,
+        "candidate_minus_full": -0.014095857677416139,
+        "relative_mae_reduction_vs_full": 0.20929994078982514,
+        "candidate_minus_primary_control": -0.009730981980981983,
+        "relative_mae_reduction_vs_primary_control": 0.1545022933815993,
+        "primary_control_paired_bootstrap_95": [
+          -0.013080809930809933,
+          -0.006441524447774451
+        ],
+        "full_history_bootstrap_95": [
+          -0.0180141339116629,
+          -0.009953877571528883
+        ],
+        "favorable_repositories_vs_full": 12,
+        "favorable_repositories_vs_primary_control": 12,
+        "repository_count": 13,
+        "every_leave_one_repository_out_vs_primary_control_favorable": true,
+        "deep_difference_vs_primary_control": -0.010864929052429055,
+        "favorable_configurations_vs_full": 34,
+        "configuration_count": 36,
+        "favorable_models_vs_full": 12,
+        "model_count": 12,
+        "favorable_harnesses_vs_full": 3,
+        "harness_count": 3,
+        "favorable_languages_vs_full": 7,
+        "language_count": 7,
+        "random_midrank": 1.0,
+        "q_changed_from_primary_control_count": 2444,
+        "cell_count": 7956,
+        "q_changed_fraction": 0.30718954248366015,
+        "q_increased_count": 181,
+        "q_decreased_count": 2263,
+        "q_distribution": {
+          "0": 7546,
+          "2": 380,
+          "4": 30
+        },
+        "inventory_changed_action_count": 0
+      },
+      "H10": {
+        "candidate_mae": 0.048712505894324076,
+        "full_history_mae": 0.05280696865793433,
+        "candidate_minus_full": -0.0040944627636102515,
+        "relative_mae_reduction_vs_full": 0.0775364098275134,
+        "candidate_minus_primary_control": -0.0003203865022046843,
+        "relative_mae_reduction_vs_primary_control": 0.006534113868170783,
+        "primary_control_paired_bootstrap_95": [
+          -0.002109276218367128,
+          0.0015648951637587997
+        ],
+        "full_history_bootstrap_95": [
+          -0.006800401645920763,
+          -0.0015617051631471373
+        ],
+        "favorable_repositories_vs_full": 9,
+        "favorable_repositories_vs_primary_control": 5,
+        "repository_count": 11,
+        "every_leave_one_repository_out_vs_primary_control_favorable": false,
+        "deep_difference_vs_primary_control": -0.0024641095641095645,
+        "favorable_configurations_vs_full": 30,
+        "configuration_count": 36,
+        "favorable_models_vs_full": 12,
+        "model_count": 12,
+        "favorable_harnesses_vs_full": 3,
+        "harness_count": 3,
+        "favorable_languages_vs_full": 6,
+        "language_count": 7,
+        "random_midrank": 0.99995,
+        "q_changed_from_primary_control_count": 460,
+        "cell_count": 3852,
+        "q_changed_fraction": 0.11941848390446522,
+        "q_increased_count": 0,
+        "q_decreased_count": 460,
+        "q_distribution": {
+          "0": 3027,
+          "1": 735,
+          "2": 56,
+          "3": 26,
+          "4": 7,
+          "5": 1
+        },
+        "inventory_changed_action_count": 0
+      }
+    },
+    "ALG-018C-P": {
+      "name": "Plug-In Binomial Finite-Horizon Median Assembly",
+      "role": "frozen_mechanism_ablation",
+      "information_contract": "exact cached target Agent",
+      "H5": {
+        "candidate_mae": 0.053134661634661635,
+        "candidate_minus_full": -0.014212981294539755,
+        "candidate_minus_primary_control": -0.009848105598105599,
+        "primary_control_paired_bootstrap_95": [
+          -0.013166668054168053,
+          -0.006540333971583973
+        ],
+        "favorable_repositories_vs_primary_control": 12,
+        "repository_count": 13,
+        "random_midrank": 1.0,
+        "q_changed_from_primary_control_count": 2444,
+        "inventory_changed_action_count": 0
+      },
+      "H10": {
+        "candidate_mae": 0.04872756640938459,
+        "candidate_minus_full": -0.0040794022485497365,
+        "candidate_minus_primary_control": -0.00030532598714416926,
+        "primary_control_paired_bootstrap_95": [
+          -0.0025864707682889503,
+          0.0021923783287419642
+        ],
+        "favorable_repositories_vs_primary_control": 6,
+        "repository_count": 11,
+        "random_midrank": 0.99995,
+        "q_changed_from_primary_control_count": 496,
+        "inventory_changed_action_count": 0
+      }
+    }
+  },
+  "decision": {
+    "ALG-018C_beats_primary_control_both_horizons": true,
+    "terminal_state": "finite_horizon_correction_retained",
+    "plugin_replaces_frozen_candidate": false,
+    "mechanism_conclusion": "Finite-horizon absolute-loss action, not Jeffreys shrinkage alone, explains the main gain.",
+    "H5_conclusion": "The large repository-robust improvement is consistent with finite-H absolute-loss/grid alignment interacting with this opened panel's zero-heavy outcomes; observed q is always 0, 2, or 4, but this is not a general action theorem.",
+    "H10_conclusion": "Point estimate improves the H-blind control, but the paired repository interval crosses zero and only 5/11 repositories favor Jeffreys versus that control.",
+    "recommended_status": "Retain ALG-018C as the frozen cached-target development candidate and both methods as loss-aware baselines; require cross-budget and cross-horizon validation before broader claims.",
+    "unseen_target_claim": false,
+    "task_content_prediction_claim": false,
+    "temporal_regime_claim": false,
+    "sealed_holdout_authorized": false,
+    "production_selector_authorized": false
+  },
+  "independent_audit": {
+    "status": "pass",
+    "evaluated_cells": 11808,
+    "exact_action_or_risk_mismatches": 0,
+    "membership_mismatches": 0,
+    "score_or_diagnostic_mismatches": 0,
+    "H5_future_zero_success_cells": 6652,
+    "H5_changed_action_cells": 2444,
+    "H5_changed_action_improved_cells": 1747,
+    "H5_changed_action_worsened_cells": 697,
+    "interpretation": "The H5 gain is the observed interaction of finite-H L1 action, B10/H5 grid geometry, and zero-heavy outcomes; no leak or implementation defect was found."
+  },
+  "provenance_limitation": "The public outcome source has no native Result availability timestamp and does not prove the complete production Agent fingerprint. The study assumes same-configuration historical outcomes were cached by each cutoff.",
+  "claim_boundary": "Post-result, outcome-open, time-projected Multi-SWE retrospective cached-result counterfactual for same-configuration finite-horizon aggregate calibration only. The result is not independent confirmation and supports no Result-availability, full-Agent-identity, unseen-target, Task-content, temporal-regime, prospective, certification, sealed-holdout, or production-default claim.",
+  "resource_use": {
+    "paid_api_calls": 0,
+    "new_agent_outcome_calls": 0,
+    "embedding_api_calls": 0,
+    "sealed_holdout_reads": 0,
+    "core_schema_or_service_changes": 0
+  },
+  "summary_digest": "ae4997f1c4042d3499b43a7a8eeced9ea6c52f4151277fa94826aabe98888735"
+}

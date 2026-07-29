@@ -18,9 +18,9 @@ Multi-SWE development panel.
 2. The frozen cached-target stationary exact control is simpler and stronger.
    It lowers H5/H10 MAE by `-0.004365`/`-0.003774`, with repository-bootstrap
    intervals entirely below zero, 13/13 and 10/11 repositories favorable, and
-   random midranks `0.9986` and `0.99995`. It uses the exact target Agent's
-   cached historical Results and therefore does not support an unseen-Agent
-   claim.
+   random midranks `0.9986` and `0.99995`. It assumes the same public target
+   configuration's historical outcomes are cached and therefore does not
+   support an unseen-Agent claim.
 
 No preregistered portfolio candidate meets the combined H5/H10 numeric-progress
 rule. No method is nominated as a production Selector. The cached-target
@@ -73,6 +73,12 @@ Two information contracts remain separate:
 
 The first contract can compress or report already-cached evidence. It cannot
 establish performance for a new Agent or a changed Agent identity.
+
+The public source does not provide native Result availability times or prove a
+complete production Agent fingerprint. Its cached-target rows are therefore a
+retrospective same-configuration cache counterfactual. Projected Task cutoffs
+exclude future outcomes from Selection, but production cutoff-safe Result
+availability is an unevaluated runtime requirement.
 
 ## Literature And Candidate Choice
 
@@ -217,8 +223,9 @@ Every leave-one-repository-out aggregate is favorable. H5 is favorable in all
 12 model, three harness, and seven language groups; H10 is favorable in 11/12
 models and every harness and language group.
 
-This is the strongest observed non-hindsight method in this study, but its
-claim is narrow:
+This was the strongest observed non-hindsight method at this study boundary;
+the later finite-horizon family supersedes its point estimates. Its claim is
+narrow:
 
 - exact Agent identity and historical Result identity must match;
 - complete target Results must already exist for the eligible history;
@@ -321,9 +328,9 @@ sealed holdout reads. It changed no core schema or runtime service.
    not tune its hazard, anchor mass, or horizon after seeing this panel.
 2. Retire the AdaNormalHedge layer for cached-target use on this frame. The
    stationary exact control is simpler and better.
-3. Freeze one finite-horizon predictive-median cached-target rule before
-   another outcome replay. Its primary comparison is the stationary exact
-   control, not only full history.
+3. The requested finite-horizon follow-up is complete in
+   [`2026-07-29-finite-horizon-cached-assembly.md`](2026-07-29-finite-horizon-cached-assembly.md);
+   use its H-blind comparison and narrower retrospective-cache boundary.
 4. Keep cached-target compression and unseen-target pre-execution Selection as
    separate product and research modes.
 5. Do not open the six sealed SWE-bench Agents. A confirmation attempt needs a

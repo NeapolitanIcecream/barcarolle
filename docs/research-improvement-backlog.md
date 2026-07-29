@@ -96,6 +96,26 @@ forward.
     self-bound amendment that records prior evidence access; it does not rewrite
     the parent plan. Result terminal states use the plan's frozen vocabulary,
     while mechanism-specific labels remain diagnostics.
+13. Cached-target compression and unseen-target Selection are different
+    information contracts. A cached method may use only cutoff-safe Results
+    from the exact Agent identity; it cannot support a claim about a new or
+    changed Agent. If target pass-rate MAE depends only on selected success
+    count, call the result scalar calibration or quantization, not Task-content
+    prediction.
+14. A known future cohort count may be an input to a finite-horizon
+    cached-target estimator, but it must be declared before Selection. When the
+    count is unknown, use an H-blind rule and report the realized count after
+    evaluation. Runtime `TimeRange` remains the user-facing horizon contract;
+    do not infer a privileged Task count from future arrivals.
+15. Public same-configuration outcomes without native Result availability
+    timestamps or a complete production Agent fingerprint can test a
+    retrospective cached-result counterfactual only. They do not establish
+    that a production cache was cutoff-safe or identity-complete.
+16. A finite-H cached action is identified by Result identity and availability,
+    Selection budget, declared future count, loss, and estimand. Treat the
+    plug-in median as a grid-aware baseline, not Task prediction. Current
+    evidence is `grid_dominant`; do not sweep more budgets, horizons, priors,
+    ties, or smoothing values on the opened panel.
 
 ## Current Evidence And Claim Boundary
 
@@ -133,6 +153,12 @@ The theory-driven extension reached the following decisions:
 | ALG-014 Multi-SWE Response-Composition Shrinkage | Pass-rate MAE H5 `+0.001992`, 4/13 favorable; H10 `+0.008170`, 1/11 favorable | Static AUC `0.9121`; proxy forecast differences `+0.000992`/`+0.001855`; direct MAE has the same harmful direction. | Reject on primary MAE; no proxy false kill. |
 | THY-002S Brier Projection Coreset | Pass-rate MAE H5 `-0.002594`, 7/11 favorable; H10 `+0.002943`, 7/11 favorable | H5 misses the frozen `-0.005` effect and has bootstrap upper `+0.004724`; H10 reverses. | Fails the frozen outcome gate; no proxy false kill. |
 | THY-003 Registry-Dated Dependency-Lag Nearest Regime | Continuous Brier H5/H10 `-0.000223`/`-0.000404`; budget-ten `+0.009057`/`+0.000879` | Source passed at 97.47% coverage; H5 continuous interval crosses zero, deep reverses, materialization fails, temporal null `0.9496` | `closed`; two byte-identical Stage-A runs, no Agent outcomes opened |
+| ALG-015C cached prequential assembly | Pass-rate MAE H5 `-0.002235`; H10 `-0.000246` | H5 misses ALG-007 by `0.000019`; the adaptive forecast and final Selection both lose to the stationary cached control. | `bounded_inconclusive`; remove the adaptive layer from the cached KISS route. |
+| ALG-015U unseen prequential assembly | Pass-rate MAE H5 `-0.000530`; H10 `+0.000854` | Continuous forecasts lose to full history; H10 reverses. | `bounded_inconclusive`; do not tune the expert family on this frame. |
+| ALG-016U unseen shared-change-point assembly | Pass-rate MAE H5 `-0.003335`, 9/13 favorable, random midrank `0.9925`; H10 `+0.001105` | H5 is the best unseen-target point estimate and beats ALG-007 by `0.001081`, but that paired repository interval crosses zero and H10 reverses. | Preserve as an H5 development challenger; no numeric progress or nomination. |
+| Cached-target stationary exact control | Pass-rate MAE H5 `-0.004365`, interval `[-0.005984, -0.002773]`; H10 `-0.003774`, `[-0.005533, -0.001932]` | 13/13 and 10/11 repositories favorable; gain is exact success-count quantization to `q/10`, not Task identity or recency. | Retain as the H-blind cached-target baseline. |
+| ALG-018C Jeffreys finite-horizon median | Pass-rate MAE H5 `-0.014096`; H10 `-0.004094` | Versus the H-blind cached control: H5 `-0.009731`, interval `[-0.013081, -0.006442]`; H10 `-0.000320`, interval `[-0.002109, +0.001565]`. | Superseded by the matched grid audit; retain the family as a cached-result grid-aware baseline, not a general Selector. |
+| Matched B-by-H finite-horizon audit | Plug-in minus H-blind: B5/H5 `-0.000248`; B5/H10 `+0.000467`; B10/H5 `-0.010171`; B10/H10 `-0.000684` | Only B10/H5 has an interval below zero, `[-0.015755, -0.004738]`. B5/H5 and B10/H5 plug-in selected rates are identical in all 3,852 rows; wrong-horizon actions worsen H5/H10 by `+0.005789`/`+0.001834`. | `grid_dominant`; ALG-018C-P is a contract-specific baseline. Close cached scalar/grid search on this panel. |
 
 The original Joint Markov was temporally retrospective: 9,467 of 19,985
 cross-repository training Task uses (`47.37%`) occurred after the target
@@ -187,6 +213,70 @@ byte-identical at `1eda7fe1…fc928`; the committed evidence digest is
 `5f6098f3…fff39`. The plan, exact numbers, controls, and remaining Stage-C
 specification gaps are in
 [`experiments/2026-07-29-surrogate-gate-pass-rate-mae.md`](experiments/2026-07-29-surrogate-gate-pass-rate-mae.md).
+
+A separately frozen prequential-response portfolio then evaluated
+AdaNormalHedge and shared-run-length BOCPD before joining future outcomes.
+ALG-016U is the best unseen-target H5 point estimate: MAE falls from
+`0.067348` to `0.064013`, a `-0.003335` contrast and `0.9925` random midrank.
+Every H5 leave-one-repository-out contrast to full history stays favorable,
+but the repository interval crosses zero and H10 reverses to `+0.001105`.
+ALG-015C improves both horizons by `-0.002235`/`-0.000246`, but its adaptive
+layer loses to the simpler cached stationary control at both. No preregistered
+candidate meets the combined numeric-progress rule.
+
+The frozen `cached_full_target` control is the stronger finding. It maps the
+same public target configuration's historical success rate to the nearest
+feasible `q/10`.
+H5/H10 differences are `-0.004365`/`-0.003774`; both repository-bootstrap
+intervals exclude zero, every leave-one-repository-out aggregate is favorable,
+and random midranks are `0.9986`/`0.99995`. The specific Task identities and
+recency tie do not affect target pass-rate MAE after `q` is fixed. The result
+is therefore cached-Agent scalar calibration under aligned Selection/future
+grids, not evidence that Task content predicts the future. Plan
+`f1517fd0…58c84b`, lock `f4dcec2e…1a91d`, byte-identical result
+`04a2475d…186487`, corrected compact evidence `e6c766fe…4d2e9`, and the complete claim
+boundary are in
+[`experiments/2026-07-29-prequential-response-assembly.md`](experiments/2026-07-29-prequential-response-assembly.md).
+
+A second theory-first plan froze `ALG-018C` after the H-blind result but before
+materializing its memberships. It minimizes exact posterior-predictive
+absolute loss for a declared future cohort size and projects that action onto
+the feasible budget-ten success-count grid. H5 MAE is `0.053252`, improving
+full history by `0.014096` (`20.93%`) and the H-blind control by `0.009731`
+(`15.45%`). The latter paired repository interval excludes zero, 12/13
+repositories are favorable, and every leave-one-repository-out aggregate is
+favorable. H10 MAE is `0.048713`, improving full history by `0.004094` but the
+H-blind control by only `0.000320`; that paired interval crosses zero and only
+5/11 repositories are favorable.
+
+The frozen plug-in Binomial ablation is within `0.000117` of Jeffreys at H5 and
+`0.000015` at H10. The main mechanism is therefore finite-horizon L1/grid
+alignment, not the prior. On this zero-heavy panel, H5 selected success count
+is always 0, 2, or 4 while H10's incremental gain nearly vanishes. This is a
+retrospective same-configuration cached-result finite-cohort counterfactual,
+not evidence that real Result availability or a complete Agent fingerprint
+was cutoff-safe, and not semantic or temporal Task prediction. Plan
+`6602a349…264b7`, lock
+`10e28322…be4b`, byte-identical result `63662482…e045`, and the full boundary
+are in
+[`experiments/2026-07-29-finite-horizon-cached-assembly.md`](experiments/2026-07-29-finite-horizon-cached-assembly.md).
+
+The matched follow-up removes the H5/H10 frame confound by using the same 107
+H10 Origins and the first five future Tasks for H5. Plug-in-minus-H-blind
+contrasts are `-0.000248`, `+0.000467`, `-0.010171`, and `-0.000684` for
+B5/H5, B5/H10, B10/H5, and B10/H10. Only B10/H5 has a repository-bootstrap
+interval wholly below zero. B5/H5 and B10/H5 produce identical selected rates
+row by row; B10 merely lets the H-blind control choose odd tenths that an H5
+future rate cannot attain. Horizon-swap diagnostics also worsen H5/H10 by
+`+0.005789`/`+0.001834`.
+
+The frozen terminal state is therefore `grid_dominant`, not general
+finite-horizon support. Amendment `80dd4596…618c` corrects one exact-zero
+repository direction count with a `1e-15` tolerance; corrected lock
+`03c2dbfb…fcaa5` and byte-identical result `d7d92c6d…b630` preserve every MAE,
+interval, diagnostic, and terminal decision. Compact evidence is
+`32c388c89…e909a`. Full evidence is in
+[`experiments/2026-07-29-finite-horizon-grid-audit.md`](experiments/2026-07-29-finite-horizon-grid-audit.md).
 
 Task-count horizons also encode different calendar periods. Median spans are
 25.7, 39.5, and 75.6 days for 3, 5, and 10 Tasks; the ten-Task maximum is 1,336
@@ -487,6 +577,7 @@ Routes remain separate until evidence supports a combination.
 | MR-J / THY-002S: Brier projection coreset | A deterministic budget-ten subset that projects local historical Tasks onto the frozen THY-002 forecast preserves its future Task-mix advantage and then predicts future Agent response. | Outcome-free H5 mapping improved Brier by `0.019114`; direct pass-rate MAE improves only `0.002594`, its interval crosses zero, and H10 worsens `0.002943`. | `closed` on this frame; both the original front gate and the post-decision frozen outcome gate fail |
 | MR-K / THY-003: registry-dated dependency lag | The direct npm dependency-lag regime at an Origin persists into the next Task cohort and identifies comparable historical Task regimes. | Frozen Stage A passed source admission but failed full-history, deep, materialization, LORO, and temporal-null gates. | `closed`; do not tune or open Agent outcomes |
 | MR-L: forecast-to-budget-k materialization | A discrete subset can preserve explicitly frozen pre-Origin forecast moments better than nearest-Task ranking without using future labels. | THY-003 moved only `0.00572` continuously from full history but `0.06329` after budget-ten materialization; 95/119 H5 cohorts were all zero. This diagnoses a general discretization question, not a rescue result. | `theory-gated`; derive on a new evidence boundary before implementation |
+| MR-M / ALG-018C/P: cached finite-horizon calibration | Complete same-configuration historical Results can be compressed for a declared finite future count by minimizing predictive pass-rate MAE on the feasible Selection grid. | Matched B5/B10 by H5/H10 audit finds stable incremental gain only at B10/H5; equal-grid cells do not support a general correction. Current source does not prove Result availability or full Agent identity. | `grid-baseline-retained`; close scalar/grid search and require a new evidence boundary for broader claims |
 
 ALG-001's shrinkage switch and ALG-004's EWMA guard remain offline safeguards,
 not positive algorithms. ALG-002 is closed for the current duration-stratum
@@ -644,13 +735,14 @@ useful infrastructure project hidden behind the data gate.
 | Official Result schema normalization | Current three-field schema plus one exact legacy schema amendment for three exact blobs | Do not add permissive field handling; bind any future schema exception to exact identities and unchanged endpoints. |
 | Agent-transfer audit | `code-confirmed` leave-one-Agent rematerialization; an evaluated Agent is never a Selector input | Preserve for response-derived Selectors. |
 | Local semantic evidence | `code-confirmed` as 1,632 ignored vectors, committed identities, fixed memberships, and deterministic MMD²/outcome replays | ALG-007 and ALG-012 failed; add no core embedding service or representation search. |
-| Pre-Origin response signal audit | `code-confirmed` complete-repository RCP holdout, leave-one-configuration response composition, prequential expert, equal-repository prior, direct pass-rate MAE audit, amendment-bound logical identities, byte reproductions, controls, and compact evidence | Current opened-source search is closed. Surrogates remain diagnostics; preserve the direct outcome gate for a genuinely independent reopening trigger. |
+| Pre-Origin response signal audit | `code-confirmed` complete-repository RCP holdout, leave-one-configuration response composition, prequential experts, shared-change-point forecasts, matched cached-target finite-horizon actions, direct pass-rate MAE, byte reproductions, controls, and compact evidence | Unseen-target ALG-016U remains an H5-only challenger. Plug-in finite-H is the cached grid-aware baseline; matched audit closes scalar/grid search. Surrogates remain diagnostics. |
 | Pre-Origin repository-process theory | `THY-001R` is retired; `THY-002` passed Task mix but `THY-002S` failed outcomes; `THY-003` passed source admission but failed Stage-A prediction/materialization | Preserve the closed routes and direct example evidence; add no core service or opened-outcome replay. A new route needs an independent theory and evidence boundary. |
 | External benchmark inventory | `code-confirmed` for Verified, Full, PolyBench, and Rebench with exact source bytes and Origin protocols | Preserve source-specific identities; do not introduce a registry. |
 | Multi-SWE public Result normalization | `code-confirmed`: fixed 39-file contract, verified 1.60 GB source projection, 36-vector allowlist, 1,632 projected times, 2,913 sparse positive cells, and offline evidence validation | Use only in outcome-open research; this is still not a runnable Task Pool and needs no generic source layer. |
 
 Infrastructure prerequisites for another paid selector study remain available,
-but no mechanism is nominated. `THY-003` failed before Agent outcomes. No
+but no mechanism is nominated. The cached finite-H baseline needs no new Result
+Store or core service; runtime admission remains caller-gated. No
 multi-repository product execution path or generic training service is needed.
 
 ## Active Work Ledger
@@ -680,6 +772,9 @@ multi-repository product execution path or generic training service is needed.
 | MR-021 / THY-002S | P1 | `closed` | Exact outcome audit: H5 `-0.002594`, bootstrap upper `+0.004724`; H10 `+0.002943`. Frozen outcome gate fails. Keep original `retire_mapping`; do not rescue-tune this frame. |
 | MR-022 / THY-003 | P1 | `closed` | Source admission passed; continuous H5/H10 were `-0.000223`/`-0.000404`, budget-ten `+0.009057`/`+0.000879`, and temporal null `0.9496`. Preserve corrected result `68acfaa5…ccd9`; do not rescue-tune or open Agent outcomes. |
 | MR-023 | P2 | `theory-gated` | Derive a general forecast-to-budget-k materialization rule with an explicit visible-attribute contract and independent evidence boundary. Do not tune against THY-003's opened future labels or add core infrastructure before nomination. |
+| MR-024 / ALG-015C / ALG-015U | P1 | `closed` | Frozen AdaNormalHedge candidates do not beat their appropriate controls across H5/H10. Preserve the deterministic evidence; do not tune their expert menu on this panel. |
+| MR-025 / ALG-016U | P1 | `development-retained` | Shared-run-length BOCPD is the best unseen-target H5 point estimate (`-0.003335`) but reverses at H10 (`+0.001105`). Reopen only with an independently specified mechanism or evidence boundary. |
+| MR-026 / ALG-018C/P | P1 | `closed` | Matched plan `8388fc58…4b1d` terminates `grid_dominant`: only B10/H5 has stable incremental gain over H-blind. Keep plug-in as the KISS grid-aware baseline; do not sweep B/H, prior, tie, or smoothing on this panel. |
 | RI-125 | P2 | `trigger-gated` | The exact 39 source objects and issue-text projection are full-byte verified. A runnable prepared Task Pool still needs solver/verifier material and source-specific certification when a concrete campaign requires it. |
 | RI-129 / RI-160 | P2 | `trigger-gated` | Add a single-writer exact certification checkpoint before the next comparable pool; replay retained entries before reuse. |
 | RI-163 | P2 | `trigger-gated` | Before another Pylint campaign, replace whole-file behavior identity with an explicit version payload and direct-helper digests. |
