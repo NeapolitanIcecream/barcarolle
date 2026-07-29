@@ -55,7 +55,9 @@ from examples.multi_swe_research.semantic_selector import (  # noqa: E402
 HERE = Path(__file__).resolve().parent
 REPOSITORY_ROOT = HERE.parents[1]
 DEFAULT_PLAN = HERE / "plan.json"
+DEFAULT_AMENDMENT = HERE / "plan-amendment-1.json"
 PLAN_SCHEMA = "barcarolle_surrogate_gate_audit_plan_v1"
+AMENDMENT_SCHEMA = "barcarolle_surrogate_gate_audit_amendment_v1"
 RESULT_SCHEMA = "barcarolle_surrogate_gate_audit_results_v1"
 SUMMARY_SCHEMA = "barcarolle_surrogate_gate_audit_summary_v1"
 NUMPY_VERSION = "2.5.1"
@@ -90,10 +92,52 @@ def load_audit_plan(path: Path = DEFAULT_PLAN) -> Mapping[str, Any]:
     ):
         if resources.get(key) != 0:
             raise ValueError("surrogate-gate audit resource boundary changed")
+    amendment = load_audit_amendment(DEFAULT_AMENDMENT, plan=payload)
     for item in _mapping_sequence(payload, "bound_files"):
         path_value = REPOSITORY_ROOT / _required_string(item, "path")
-        if _sha256_file(path_value) != _required_string(item, "sha256"):
+        expected_sha = _required_string(item, "sha256")
+        if item.get("path") == "examples/surrogate_gate_audit/study.py":
+            if amendment.get("parent_implementation_sha256") != expected_sha:
+                raise ValueError("audit amendment does not bind parent executor")
+            expected_sha = _required_string(
+                amendment,
+                "amended_implementation_sha256",
+            )
+        if _sha256_file(path_value) != expected_sha:
             raise ValueError(f"bound file changed: {path_value}")
+    result = dict(payload)
+    result["active_amendment_digest"] = amendment.get("amendment_digest")
+    return result
+
+
+def load_audit_amendment(
+    path: Path = DEFAULT_AMENDMENT,
+    *,
+    plan: Mapping[str, object],
+) -> Mapping[str, Any]:
+    payload = _load_mapping(path)
+    if payload.get("schema_version") != AMENDMENT_SCHEMA:
+        raise ValueError("surrogate-gate audit amendment schema is unsupported")
+    expected = canonical_digest(
+        {key: value for key, value in payload.items() if key != "amendment_digest"}
+    )
+    if payload.get("amendment_digest") != expected:
+        raise ValueError("surrogate-gate audit amendment digest does not match")
+    if (
+        payload.get("parent_plan_digest") != plan.get("plan_digest")
+        or payload.get("status") != "pre_selection_input_adapter_correction"
+    ):
+        raise ValueError("surrogate-gate audit amendment binding changed")
+    resources = _mapping(payload, "evidence_access_before_amendment")
+    if any(
+        resources.get(key) != 0
+        for key in (
+            "selection_memberships_materialized",
+            "paid_api_calls",
+            "sealed_holdout_reads",
+        )
+    ):
+        raise ValueError("surrogate-gate audit amendment scope changed")
     return payload
 
 
@@ -310,6 +354,9 @@ def run_audit(
         "schema_version": RESULT_SCHEMA,
         "study_id": inputs.plan.get("study_id"),
         "plan_digest": inputs.plan.get("plan_digest"),
+        "active_amendment_digest": inputs.plan.get(
+            "active_amendment_digest"
+        ),
         "epistemic_status": "post_decision_opened_development_outcome_audit",
         "algorithms": results,
         "resource_use": {
@@ -342,7 +389,7 @@ def _load_inputs(plan: Mapping[str, Any]) -> AuditInputs:
             "model_family": _required_string(item, "model_family"),
             "harness_family": _required_string(item, "harness_family"),
         }
-        for item in _mapping_sequence(panel, "configuration_metadata")
+        for item in _mapping_sequence(panel, "configurations")
     )
     if tuple(
         item["configuration_id"] for item in configuration_metadata

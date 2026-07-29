@@ -17,6 +17,7 @@ from examples.multi_repository_study.theory import (  # noqa: E402
 from examples.surrogate_gate_audit.study import (  # noqa: E402
     _composition_forecast_only,
     _repository_summary,
+    load_audit_amendment,
     load_audit_plan,
     select_discrete_composition_indices,
     select_mean_matching_indices,
@@ -25,9 +26,11 @@ from examples.surrogate_gate_audit.study import (  # noqa: E402
 
 def test_surrogate_gate_audit_plan_is_self_bound() -> None:
     plan = load_audit_plan()
+    amendment = load_audit_amendment(plan=plan)
 
     assert plan["study_id"] == "proxy-gated-pass-rate-mae-audit-2026-07-29"
     assert plan["resource_boundary"]["paid_api_calls"] == 0
+    assert plan["active_amendment_digest"] == amendment["amendment_digest"]
 
 
 def test_surrogate_gate_audit_plan_rejects_tampering(tmp_path: Path) -> None:
