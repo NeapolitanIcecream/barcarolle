@@ -53,13 +53,14 @@ repository's next Task mix. It is not subset size or static response capacity.
 No Selector was materialized or nominated. No result authorizes paid
 validation, the sealed holdout, a Runner default, or a validity claim.
 
-An independent observable sprint froze `THY-001 Fixed-Half-Life Module Change
-Pressure`: a one-year, Git-only module-pressure forecast with exact smoothing,
-source-visibility rules, and a four-block organic-process falsification. It is
-`data-gated`, not measured. Organic commit prediction cannot establish Task-mix
-or Agent-score prediction. Parent-level work intent remains the strongest
-challenger but is not test-ready; differential upstream nightly CI is
-source-specific.
+An independent observable sprint froze `THY-001`, then a user-reviewed
+amendment removed two false development blockers. Counterfactual research may
+use explicitly projected Task times and retrospective patch-derived scoring
+labels; neither becomes native-arrival evidence. `THY-001R` is the simpler
+fixed one-year Git commit-touch forecast. Its zero-paid plan is digest-bound at
+`examples/pre_origin_task_mix/plan.json`; Multi-SWE is primary and SWE-bench
+Full minus Verified is same-family robustness. No Agent outcome enters the
+Task-mix gate.
 
 ## Current State
 
@@ -79,9 +80,10 @@ not change. No code or core schema was added for `THY-001`.
 ## Stop And Reopen
 
 Stop nomination-oriented candidate invention, parameter search, representation
-search, and replay on the opened Multi-SWE and Verified outcomes. Existing data
-may still support reproduction, audits, power planning, and separately labeled
-fixed-universe compression; those uses cannot reopen temporal nomination.
+search, and unconditional replay on opened Agent outcomes. Existing Task
+sources may support preregistered counterfactual composition tests without
+reading Agent outcomes. The frozen `THY-001R` Task-mix test is the current
+exception; it cannot change parameters or source membership after replay.
 
 Reopen empirical nomination research only with at least one of:
 
@@ -93,14 +95,12 @@ Reopen empirical nomination research only with at least one of:
 An independently specified observable may advance theory design, but it cannot
 authorize another nomination replay on the opened panels.
 
-The next authorized step is outcome-free source admission for `THY-001` Stage
-A and identification of an independent source whose Task module label is
-visible at Task arrival. Barcarolle's 2026-04-17 through 2026-07-28 Git history
-is too short for the frozen four non-overlapping 90-day blocks; do not shorten
-the schedule. A Stage A pass predicts organic module change only. Stage B still
-requires source-attested, versioned Task material, native arrival time, and
-pre-solution module labels; Selection evidence requires an independent
-complete Agent panel or strict prospective campaign.
+The next authorized step is to run and reproduce the zero-paid `THY-001R`
+Task-mix kill test. A pass authorizes only a new, separately frozen,
+non-nominating replay on existing public Agent outcomes. A failure retires
+`THY-001R` and opens a new observable family; it does not authorize half-life,
+module-map, horizon, source, or repository tuning. Native arrival labels,
+independent panels, and prospective campaigns remain claim-strength upgrades.
 
 Any reopened candidate must freeze its information set, code, parameters,
 source, Origin schedule, controls, and gates before outcome replay. Open the

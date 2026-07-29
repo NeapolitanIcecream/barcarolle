@@ -2,6 +2,68 @@
 
 Date: 2026-07-28.
 
+## 2026-07-29 Counterfactual Development Amendment
+
+The original contract below overstates what must be native before useful
+algorithm development can begin. It remains a strict-prospective promotion
+path, but its organic Stage A and arrival-native Task-label requirements are
+not prerequisites for an explicitly labeled counterfactual falsification.
+
+The project claim is conditional on a fixed, reasonable Generator. Selection
+tries to make its historical output estimate its future output. It does not
+prove that the Generator represents all real work. The relevant error terms
+remain separate:
+
+1. Generator representation error;
+2. Selection temporal and sampling error; and
+3. Check measurement error.
+
+For counterfactual replay, an importer or user may supply and edit
+algorithm-relevant Task attributes, including time and module labels, provided
+their derivation and evidence mode are explicit. A retrospective reference
+patch may therefore define the scoring label of a historical or future Task.
+It is not a pre-Origin Selector input and cannot be relabeled as an
+arrival-native label. Likewise, projected PR time can define a development
+cohort without becoming strict historical availability.
+
+The frozen development test is
+[`examples/pre_origin_task_mix/plan.json`](../../examples/pre_origin_task_mix/plan.json),
+digest `10b4fcb2…8459`. It makes four deliberate changes before reading the
+derived Task-mix results:
+
+- `THY-001R` simplifies change pressure to one unit per reachable, non-root,
+  non-merge commit, split across the eligible modules it touches, with the
+  unchanged `365.25`-day half-life and `1/2` smoothing. It removes line-churn,
+  LOC, and hand-authored repository maps.
+- The portable module rule takes at most the first two parent-directory
+  components. Tests, generated/vendor material, locks, and documentation are
+  excluded by one fixed list. Root files map to `ROOT`; modules unseen at an
+  Origin map to `OTHER`.
+- Origins retain declared PR-created Task time and project the repository
+  snapshot from the pinned current default-branch first-parent history at the
+  cutoff. The Task's possibly later `base_commit` does not determine the
+  Origin. Clock anomalies in structurally reachable ancestors are counted and
+  clamped to age zero rather than rejecting the repository.
+- Multi-SWE is the primary development source. SWE-bench Full minus the 500
+  exact Verified Task IDs is a same-family robustness source. H5 is the first
+  half of a non-overlapping H10 block, so the sensitivity does not create a
+  second pseudo-independent sample.
+
+The primary metric is repository-first future Task-module cross-entropy.
+Controls are full Task history, the latest `h` Tasks, full Git touch history,
+90-day Git touch history, and uniform mass. The candidate must beat every
+control on Multi-SWE H5 with at least 7/11 favorable repositories, beat both
+Task-history controls on Full-minus-Verified H5 with at least 6/10 favorable
+repositories, and retain both Task-history directions on H10 in both sources.
+Any failure retires `THY-001R` without parameter, path-rule, horizon, source,
+or repository search.
+
+No Agent outcome enters this test. A complete pass can authorize only a
+separately frozen, non-nominating development replay on already public Agent
+outcomes. A failure keeps them closed and moves research to a genuinely new
+pre-Origin observable. Neither result is external confirmation or strict
+prospective validity.
+
 ## Decision
 
 Freeze `THY-001 Fixed-Half-Life Module Change Pressure` as a data-gated theory.
@@ -479,8 +541,8 @@ remain source-gated. Two challenger mechanisms remain researchable but are not
 test-ready. No result establishes predictive value, Task-source alignment,
 Agent-score improvement, portability, or a product requirement.
 
-The next authorized action is outcome-free source admission for Stage A and a
-search for an independent Task source with versioned material, source-attested
-arrival, and a module label available at that arrival. Do not implement a core
-FeatureSnapshot field, source adapter, trainer, registry, or Selector until a
-concrete source passes its gate.
+The amended next action is the bounded, outcome-free `THY-001R` Task-mix kill
+test above. The original organic and arrival-native stages remain future
+promotion options, not development blockers. Do not implement a core
+FeatureSnapshot field, source adapter, trainer, registry, or Selector unless
+the Task-mix gate passes and a concrete caller is separately frozen.

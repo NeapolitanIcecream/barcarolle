@@ -1,0 +1,165 @@
+{
+  "schema_version": "barcarolle_pre_origin_task_mix_plan_v1",
+  "study_id": "pre-origin-task-mix-kill-test-2026-07-29",
+  "research_question": "Does fixed one-year Git module commit pressure improve prediction of the next generated Task-module mix beyond cutoff-safe Task-history and Git-history controls?",
+  "epistemic_mode": "source_time_safe_counterfactual_development",
+  "candidate": {
+    "algorithm_id": "THY-001R",
+    "name": "Fixed-Half-Life Module Commit Pressure",
+    "half_life_days": 365.25,
+    "commit_filter": "reachable_non_root_non_merge",
+    "commit_contribution": "one unit split uniformly across unique eligible modules touched by the parent diff",
+    "smoothing_per_module": 0.5
+  },
+  "module_projection": {
+    "path_rule": "first two parent-directory components; use the available prefix when shorter",
+    "depth": 2,
+    "root_label": "ROOT",
+    "unseen_label": "OTHER",
+    "excluded_components": [
+      ".git",
+      ".github",
+      ".idea",
+      ".vscode",
+      "__pycache__",
+      "__snapshots__",
+      "benchmark",
+      "benchmarks",
+      "build",
+      "dist",
+      "doc",
+      "docs",
+      "example",
+      "examples",
+      "fixture",
+      "fixtures",
+      "generated",
+      "node_modules",
+      "snapshot",
+      "snapshots",
+      "target",
+      "test",
+      "tests",
+      "testing",
+      "third_party",
+      "vendor",
+      "vendored"
+    ],
+    "excluded_file_names": [
+      "Cargo.lock",
+      "Gemfile.lock",
+      "Pipfile.lock",
+      "composer.lock",
+      "package-lock.json",
+      "pnpm-lock.yaml",
+      "poetry.lock",
+      "uv.lock",
+      "yarn.lock"
+    ],
+    "task_label_rule": "unique eligible paths in the source reference fix patch, split uniformly; no eligible path maps to OTHER",
+    "future_unseen_rule": "a projected module absent from the Origin vocabulary maps to OTHER",
+    "origin_vocabulary": "ROOT, OTHER, and modules observed in cutoff-safe Task history or reachable eligible Git history"
+  },
+  "rolling_origin": {
+    "minimum_initial_history_tasks": 20,
+    "future_block_tasks": 10,
+    "primary_future_tasks": 5,
+    "sensitivity_future_tasks": 10,
+    "block_policy": "complete non-overlapping ten-Task blocks; H5 is the first five Tasks in the same H10 block",
+    "ordering": "declared source Task time then instance_id",
+    "task_time_projection": "use the source PR-created time unchanged as a declared counterfactual Task-availability attribute",
+    "origin_snapshot": "latest first-parent commit on the pinned current default-branch history whose committer time is at or before the Origin cutoff",
+    "future_dated_ancestor_policy": "clamp structurally reachable negative clock age to zero and report the count"
+  },
+  "sources": [
+    {
+      "source_id": "multi_swe_bench",
+      "role": "primary_development",
+      "task_source": "ByteDance-Seed/Multi-SWE-bench@56ff018c04a38e27ada1e9d0a6d5839a51f88f0d",
+      "task_universe": "examples/multi_swe_research/evidence/task-universe.jsonl",
+      "task_times": "examples/multi_swe_research/evidence/task-times.jsonl",
+      "source_tree": "outputs/research/2026-07-28-multi-swe-source/repository",
+      "source_time_field": "projected GitHub pull-request createdAt",
+      "base_commit_field": "base.sha",
+      "fix_patch_field": "fix_patch",
+      "repositories": [
+        "clap-rs/clap",
+        "cli/cli",
+        "elastic/logstash",
+        "fasterxml/jackson-databind",
+        "fmtlib/fmt",
+        "iamkun/dayjs",
+        "mui/material-ui",
+        "nlohmann/json",
+        "ponylang/ponyc",
+        "sveltejs/svelte",
+        "vuejs/core"
+      ]
+    },
+    {
+      "source_id": "swe_bench_full",
+      "role": "same_family_robustness_development",
+      "task_source": "SWE-bench/SWE-bench@7074ef12ea2a6f70a228943c1336553333c22786",
+      "parquet": "outputs/research/2026-07-28-external-benchmark-inventory/sources/swe_bench_full_test.parquet",
+      "parquet_sha256": "0996c4bd66e647ecef89d3ef57e527dcc0ea4e8369ac6f740cdd570734188df2",
+      "source_time_field": "created_at",
+      "base_commit_field": "base_commit",
+      "fix_patch_field": "patch",
+      "primary_frame_exclusion": "exclude every instance_id in the pinned SWE-bench Verified reference parquet",
+      "primary_frame_exclusion_source": "outputs/research/2026-07-28-external-benchmark-inventory/sources/swe_bench_verified_reference.parquet",
+      "primary_frame_exclusion_sha256": "43ed5a3d1d98da36472c1ade65ddd2085d7b4ff694fcaf6a023a07c5c1f32f21",
+      "repositories": [
+        "astropy/astropy",
+        "django/django",
+        "matplotlib/matplotlib",
+        "psf/requests",
+        "pydata/xarray",
+        "pylint-dev/pylint",
+        "pytest-dev/pytest",
+        "scikit-learn/scikit-learn",
+        "sphinx-doc/sphinx",
+        "sympy/sympy"
+      ]
+    }
+  ],
+  "controls": [
+    "task_full_history",
+    "task_trailing_h",
+    "git_full_touch",
+    "git_trailing_90d_touch",
+    "uniform"
+  ],
+  "metrics": {
+    "primary": "future Task module cross-entropy",
+    "descriptive": "total variation to the empirical future module distribution",
+    "aggregation": "Tasks to Origin, Origins to repository, repositories equally",
+    "uncertainty": "deterministic 20000-draw repository bootstrap, descriptive only",
+    "bootstrap_seed": 20260729
+  },
+  "decision_gate": {
+    "primary_source_h5": "candidate macro loss is lower than every control and candidate beats task_full_history in at least 7 of 11 repositories",
+    "transfer_source_h5": "candidate macro loss is lower than task_full_history and task_trailing_h and candidate beats task_full_history in at least 6 of 10 repositories",
+    "h10_sensitivity": "candidate-minus-task_full_history and candidate-minus-task_trailing_h are both negative on both sources",
+    "pass": "all three gates pass",
+    "failure": "retire THY-001R without half-life, horizon, smoothing, path-rule, source, or repository search"
+  },
+  "outcome_boundary": {
+    "agent_results": "prohibited unless the complete Task-mix gate passes",
+    "sealed_holdout": "prohibited",
+    "paid_calls": "prohibited",
+    "claim": "A pass supports only generator-conditional counterfactual Task-mix development and authorizes a separately frozen, non-nominating Selection development replay on existing public outcomes. It is not external confirmation or strict prospective validity."
+  },
+  "forbidden_post_replay_changes": [
+    "searching another half-life, smoothing value, module depth, exclusion list, horizon, source subset, or repository subset",
+    "dropping OTHER or Tasks with no eligible reference-patch path",
+    "promoting total variation or a calendar subgroup after cross-entropy fails",
+    "using reference patch paths as pre-Origin Selector inputs",
+    "opening Agent outcomes after a failed Task-mix gate"
+  ],
+  "resource_budget": {
+    "paid_api_calls": 0,
+    "embedding_calls": 0,
+    "coding_agent_calls": 0
+  },
+  "plan_digest": "10b4fcb22d7c1fa3adf5e3b04fa50bd9fd1272d9f2bc507585997bae03188459"
+}
