@@ -7,6 +7,7 @@ import json
 from pathlib import Path
 import subprocess
 import sys
+from types import SimpleNamespace
 from typing import Any, Mapping, cast
 
 import pytest
@@ -18,14 +19,17 @@ from barcarolle.records import canonical_digest, canonical_json  # noqa: E402
 from examples.dependency_lag_theory.study import (  # noqa: E402
     DependencySnapshot,
     DirectDependency,
+    StatePoint,
     StateVector,
     binary_brier,
+    build_state_index,
     classify_lag,
     dependency_declarations,
     dependency_state,
     load_addendum,
     load_plan,
     load_registry_manifest,
+    load_task_identities,
     locked_direct_versions,
     normalize_pnpm_version,
     parse_strict_semver,
@@ -68,6 +72,126 @@ def test_plan_and_addendum_reject_changes_without_new_digest(
     changed_addendum.write_text(json.dumps(addendum), encoding="utf-8")
     with pytest.raises(ValueError, match="digest"):
         load_addendum(changed_addendum)
+
+
+def test_identity_loader_does_not_read_reference_patch(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    parquet = tmp_path / "source.parquet"
+    parquet.write_bytes(b"identity-only fixture")
+    queries: list[str] = []
+
+    class FakeConnection:
+        rows: list[tuple[object, ...]]
+
+        def execute(
+            self,
+            query: str,
+            _parameters: object,
+        ) -> FakeConnection:
+            queries.append(query)
+            assert "patch" not in query.casefold()
+            if "count(*)" in query:
+                self.rows = [("owner/repo", 1)]
+            else:
+                self.rows = [
+                    (
+                        "owner/repo",
+                        "task-1",
+                        "base-commit",
+                        "2026-01-01 00:00:00",
+                        "TypeScript",
+                        None,
+                    )
+                ]
+            return self
+
+        def fetchall(self) -> list[tuple[object, ...]]:
+            return self.rows
+
+        def close(self) -> None:
+            return None
+
+    monkeypatch.setitem(
+        sys.modules,
+        "duckdb",
+        SimpleNamespace(connect=lambda: FakeConnection()),
+    )
+    parent_plan = {
+        "source": {
+            "parquet": str(parquet),
+            "parquet_sha256": hashlib.sha256(parquet.read_bytes()).hexdigest(),
+            "parquet_size_bytes": parquet.stat().st_size,
+            "selected_source_row_count": 1,
+            "canonical_task_count": 1,
+            "canonical_repository_count": 1,
+            "frame_minimum_source_rows": 1,
+            "source_alias_count": 1,
+            "repositories": [
+                {
+                    "repository_id": "owner/repo",
+                    "source_aliases": ["owner/repo"],
+                    "expected_task_count": 1,
+                }
+            ],
+        }
+    }
+
+    tasks, identity_digest = load_task_identities(parent_plan)
+
+    assert len(queries) == 2
+    assert len(tasks) == 1
+    assert tasks[0].instance_id == "task-1"
+    assert tasks[0].modules == ()
+    assert identity_digest == canonical_digest(
+        {
+            "task-1": (
+                {
+                    "source_alias": "owner/repo",
+                    "source_instance_id": "task-1",
+                },
+            )
+        }
+    )
+
+
+def test_origin_variation_uses_normalized_rational_identity() -> None:
+    cutoff = datetime(2026, 1, 2, tzinfo=UTC)
+    one = DirectDependency("one", "production", "^1", "1.0.0")
+    two = DirectDependency("two", "production", "^1", "1.0.0")
+    points = (
+        StatePoint(
+            repository_id="owner/repo",
+            kind="origin",
+            state_id="origin-1",
+            cutoff=cutoff,
+            commit_id="one",
+            snapshot=DependencySnapshot("one", "package-lock.json", (one,)),
+        ),
+        StatePoint(
+            repository_id="owner/repo",
+            kind="origin",
+            state_id="origin-2",
+            cutoff=cutoff,
+            commit_id="two",
+            snapshot=DependencySnapshot(
+                "two",
+                "package-lock.json",
+                (one, two),
+            ),
+        ),
+    )
+    registry = {
+        "one": {(1, 0, 0): datetime(2026, 1, 1, tzinfo=UTC)},
+        "two": {(1, 0, 0): datetime(2026, 1, 1, tzinfo=UTC)},
+    }
+
+    *_, summary = build_state_index(points, registry)
+
+    assert summary["distinct_origin_state_count_by_repository"] == {
+        "owner/repo": 1
+    }
 
 
 @pytest.mark.parametrize(

@@ -572,10 +572,8 @@ def load_frame(
     if parent_result.get("result_digest") != source.get("parent_result_digest"):
         raise ValueError("THY-003 parent result identity changed")
 
-    all_tasks, parent_manifest, _ = thy2.load_tasks(parent_plan)
-    if parent_manifest.get("task_source_identity_digest") != source.get(
-        "task_source_identity_digest"
-    ):
+    all_tasks, task_source_identity_digest = load_task_identities(parent_plan)
+    if task_source_identity_digest != source.get("task_source_identity_digest"):
         raise ValueError("THY-003 Task source identity changed")
     repository_ids = _string_sequence(
         source.get("wide_repositories"),
@@ -694,6 +692,163 @@ def load_frame(
         repositories=repositories,
         source_manifest=source_manifest,
     )
+
+
+def load_task_identities(
+    parent_plan: Mapping[str, object],
+) -> tuple[tuple[common.TaskProjection, ...], str]:
+    """Load Task identity, time, and base commit without reading patch labels."""
+    try:
+        import duckdb
+    except ImportError as error:
+        raise RuntimeError(
+            "DuckDB is required; run with `uv run --with duckdb`"
+        ) from error
+
+    source = _mapping(parent_plan, "source")
+    parquet_path = REPOSITORY_ROOT / _required_string(source, "parquet")
+    if parquet_path.stat().st_size != _positive_integer(
+        source,
+        "parquet_size_bytes",
+    ):
+        raise ValueError("Rebench parquet size changed")
+    _verify_sha256(parquet_path, _required_string(source, "parquet_sha256"))
+    repositories = _mapping_sequence(source, "repositories")
+    alias_to_repository = {
+        alias: _required_string(repository, "repository_id")
+        for repository in repositories
+        for alias in _string_sequence(repository.get("source_aliases"), "source aliases")
+    }
+    aliases = tuple(sorted(alias_to_repository))
+    if len(aliases) != _positive_integer(source, "source_alias_count"):
+        raise ValueError("Rebench source alias count changed")
+    if len(repositories) != _positive_integer(
+        source,
+        "canonical_repository_count",
+    ):
+        raise ValueError("Rebench repository count changed")
+
+    connection = duckdb.connect()
+    minimum_source_rows = _positive_integer(source, "frame_minimum_source_rows")
+    observed_frame_rows = connection.execute(
+        """
+        SELECT repo, count(*) AS source_row_count
+        FROM read_parquet(?)
+        GROUP BY repo
+        HAVING count(*) >= ?
+        ORDER BY lower(repo), repo
+        """,
+        [str(parquet_path), minimum_source_rows],
+    ).fetchall()
+    observed_aliases = tuple(str(row[0]) for row in observed_frame_rows)
+    if set(observed_aliases) != set(aliases):
+        connection.close()
+        raise ValueError("Rebench repositories passing the frame rule changed")
+    rows = connection.execute(
+        """
+        SELECT
+          repo,
+          instance_id,
+          base_commit,
+          created_at,
+          language,
+          meta.pr_url
+        FROM read_parquet(?)
+        WHERE repo IN (SELECT unnest(?))
+        ORDER BY lower(repo), created_at, instance_id
+        """,
+        [str(parquet_path), list(aliases)],
+    ).fetchall()
+    connection.close()
+
+    projections: dict[str, common.TaskProjection] = {}
+    visible_fingerprints: dict[str, tuple[str, str, str]] = {}
+    source_lineage: dict[str, list[Mapping[str, str]]] = defaultdict(list)
+    for (
+        source_alias,
+        source_instance_id,
+        base_commit,
+        created_at,
+        language,
+        pull_request_url,
+    ) in rows:
+        alias = str(source_alias)
+        repository_id = alias_to_repository[alias]
+        source_id = str(source_instance_id)
+        canonical_id = thy2.canonical_task_id(
+            repository_id=repository_id,
+            source_instance_id=source_id,
+            pull_request_url=(
+                str(pull_request_url) if pull_request_url is not None else None
+            ),
+            source_alias=alias,
+        )
+        source_time = _parse_source_time(str(created_at))
+        projection = common.TaskProjection(
+            instance_id=canonical_id,
+            repository_id=repository_id,
+            source_time=source_time,
+            base_commit=str(base_commit),
+            modules=(),
+        )
+        fingerprint = (str(base_commit), str(created_at), str(language))
+        prior = projections.get(canonical_id)
+        if prior is not None and (
+            prior != projection or visible_fingerprints[canonical_id] != fingerprint
+        ):
+            raise ValueError(
+                f"canonical Task visible identity disagrees: {canonical_id}"
+            )
+        projections.setdefault(canonical_id, projection)
+        visible_fingerprints.setdefault(canonical_id, fingerprint)
+        source_lineage[canonical_id].append(
+            {"source_alias": alias, "source_instance_id": source_id}
+        )
+
+    tasks = tuple(
+        sorted(
+            projections.values(),
+            key=lambda task: (
+                task.repository_id.casefold(),
+                task.source_time,
+                task.instance_id,
+            ),
+        )
+    )
+    if len(rows) != _positive_integer(
+        source,
+        "selected_source_row_count",
+    ) or len(tasks) != _positive_integer(source, "canonical_task_count"):
+        raise ValueError("Rebench frozen frame count changed")
+    observed_counts: dict[str, int] = defaultdict(int)
+    for task in tasks:
+        observed_counts[task.repository_id] += 1
+    if any(
+        observed_counts[_required_string(repository, "repository_id")]
+        != _positive_integer(repository, "expected_task_count")
+        for repository in repositories
+    ):
+        raise ValueError("Rebench repository Task counts changed")
+    task_source_ids = {
+        task_id: tuple(
+            sorted(
+                lineage,
+                key=lambda item: (
+                    item["source_alias"].casefold(),
+                    item["source_instance_id"],
+                ),
+            )
+        )
+        for task_id, lineage in sorted(source_lineage.items())
+    }
+    return tasks, canonical_digest(task_source_ids)
+
+
+def _parse_source_time(value: str) -> datetime:
+    parsed = datetime.fromisoformat(value)
+    if parsed.tzinfo is not None:
+        raise ValueError(f"Rebench source timestamp unexpectedly has a zone: {value}")
+    return parsed.replace(tzinfo=UTC)
 
 
 def snapshot_commit(repository: Path, cutoff: datetime) -> str | None:
@@ -1336,7 +1491,7 @@ def build_state_index(
     numerator = 0
     missing_tasks: dict[str, int] = defaultdict(int)
     missing_origins: dict[str, int] = defaultdict(int)
-    origin_vectors: dict[str, set[tuple[tuple[int, ...], int]]] = defaultdict(set)
+    origin_vectors: dict[str, set[tuple[Fraction, ...]]] = defaultdict(set)
     point_rows = []
     for point in points:
         state, resolved = dependency_state(point.snapshot, point.cutoff, registry)
@@ -1355,7 +1510,7 @@ def build_state_index(
             if state is None:
                 missing_origins[point.repository_id] += 1
             else:
-                origin_vectors[point.repository_id].add((state.counts, state.total))
+                origin_vectors[point.repository_id].add(state.fractions())
         point_rows.append(
             {
                 "repository_id": point.repository_id,
@@ -2742,6 +2897,16 @@ def main(argv: Sequence[str] | None = None) -> int:
         type=Path,
         default=DEFAULT_EXECUTION_LOCK,
     )
+    verify.add_argument(
+        "--repository-cache",
+        type=Path,
+        default=DEFAULT_REPOSITORY_CACHE,
+    )
+    verify.add_argument(
+        "--registry-manifest",
+        type=Path,
+        default=DEFAULT_REGISTRY_MANIFEST,
+    )
     verify.add_argument("--result", type=Path, default=DEFAULT_OUTPUT)
 
     compact = subparsers.add_parser("compact")
@@ -2821,6 +2986,24 @@ def main(argv: Sequence[str] | None = None) -> int:
             execution_lock=execution_lock,
             frame=frame,
         )
+        replay = run_study(
+            plan=plan,
+            addendum=addendum,
+            execution_lock=execution_lock,
+            repository_cache=arguments.repository_cache,
+            registry_manifest_path=arguments.registry_manifest,
+        )
+        verify_result(
+            replay,
+            plan=plan,
+            addendum=addendum,
+            execution_lock=execution_lock,
+            frame=frame,
+        )
+        if canonical_digest(replay) != canonical_digest(result):
+            raise ValueError(
+                "THY-003 result does not reconstruct from frozen raw inputs"
+            )
         print(_required_string(result, "result_digest"))
         return 0
     first = _load_mapping(arguments.first)
