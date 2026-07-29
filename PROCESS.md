@@ -39,6 +39,7 @@ development evidence.
 | ALG-013 Response-Contrast Projection | future AUC `0.5530`, interval `[0.4579, 0.6572]`; history AUC `0.5104`, interval `[0.4689, 0.5500]` | Static embedding response transfer rejected. |
 | ALG-014 Response-Composition Shrinkage | static AUC `0.9121`; H5 `+0.000992`; H10 `+0.001855` | Cross-Agent response structure exists; target next-cohort increment rejected. |
 | THY-001R Git pressure | Multi H5/H10 vs full Task history `+0.17572`/`+0.21704`; Full-minus-Verified `+0.08751`/`+0.08807` | Retired; source, Origin, reproduction, and independent audits passed. |
+| THY-002 Generator-calibrated exposure | H5/H10 vs full history `-0.006562`/`-0.006107`; intervals exclude zero; 27/40 and 28/40 favorable | Task-mix mechanism retained; Agent outcomes remain unopened. |
 
 The experiments factor the problem:
 
@@ -47,19 +48,22 @@ The experiments factor the problem:
 3. fixed embeddings do not transfer that response structure across
    repositories under ALG-013; and
 4. full/recent target history plus one-Task cross-repository shrinkage does not
-   predict the next Task cohort under ALG-014.
+   predict the next Task cohort under ALG-014; but
+5. historical Generator yield per Git exposure combined with current exposure
+   predicts the next Task-module mix slightly better than full Task history.
 
-The current bottleneck is observable pre-Origin prediction of the target
-repository's next Task mix. It is not subset size or static response capacity.
-No Selector was materialized or nominated. No result authorizes paid
-validation, the sealed holdout, a Runner default, or a validity claim.
+The current bottleneck is converting the retained Task-mix forecast into one
+absolute-budget Selection and showing that its Agent-response vector is closer
+to the future than full history and equal-budget random sampling. No Selector
+was materialized or nominated. No result authorizes paid validation, the
+sealed holdout, a Runner default, or a validity claim.
 
 Counterfactual research may use explicitly projected Task times and
 retrospective patch-derived scoring labels; neither becomes native-arrival
-evidence. The frozen `THY-001R` plan and a post-result Git-only vocabulary
-audit both failed the full-history baseline without Agent outcomes. The audit
-revision is current at `examples/pre_origin_task_mix/plan.json`; the original
-plan remains at commit `3257ef81`.
+evidence. The frozen `THY-001R` plan and its Git-only vocabulary audit failed
+the full-history baseline. THY-002 then passed the outcome-free full-history
+and component-ablation gates on 5,365 SWE-rebench V2 Tasks in 40 repositories.
+Its projected Task and Git clocks support association, not native causality.
 
 ## Current State
 
@@ -71,13 +75,14 @@ independent audit corrected RCP's diagnostic null to preserve complete
 the rejection is unchanged. Tests cover target-repository exclusion, cutoff
 safety, equal-repository pooling, bounded prior mass, and prequential inputs.
 
-The Task-mix runner now binds compact evidence to its exact raw result and
-survives JSON sequence round trips. This remains research infrastructure, not
-a runnable Multi-SWE Task Pool.
+The Task-mix runners bind compact evidence to exact raw results and reject
+source, repository, Origin, resource-boundary, and decision drift. THY-002's
+two raw runs are byte-identical at `449e10c1…6ac8`; compact digest
+`26233a42…aa31`. This remains research infrastructure, not a runnable Task Pool.
 Solver/verifier material and source-specific certification are
 campaign-triggered. Core Task Pool, Result, Selection, and Runner contracts did
-not change. `THY-001R` remains a direct example-layer study; no core schema or
-runtime service was added.
+not change. THY-001R and THY-002 remain direct example-layer studies; no core
+schema or runtime service was added.
 
 ## Stop And Reopen
 
@@ -86,28 +91,16 @@ unconditional replay on opened Agent outcomes. `THY-001R` is retired; do not
 rescue it with another half-life, smoothing value, path map, source subset, or
 horizon.
 
-Reopen empirical nomination research only with at least one of:
+THY-002 supplies the previously missing independent source-family Task-mix
+signal. It authorizes design of a downstream Selection study, not automatic
+outcome replay or nomination.
 
-- native Task time plus historical Result availability and denser local
-  Origins;
-- an independent complete Agent panel or source family; or
-- a strict prospective target-repository campaign.
-
-An independently specified observable may advance theory design, but it cannot
-authorize another nomination replay on the opened panels.
-
-The next authorized step is to prepare repositories and run the frozen,
-zero-paid `THY-002` generator-calibrated exposure test. Plan digest
-`0fe42fc1…1c69` binds 5,365 unique SWE-rebench V2 Tasks, 40 canonical
-repositories, aliases, refs, heads, implementation, formula, Brier metric,
-Origins, controls, and gates. Its candidate combines historical Task yield per
-unit of Git exposure with current Git pressure; this is a new mechanism
-hypothesis, not a mixture-weight tune. Because projected Task time and Git
-commit time are distinct clocks, it claims association on that projection, not
-native event-time causality. A Task-mix failure retires the theory without
-outcome replay. Native arrival labels, independent panels, and prospective
-campaigns remain claim-strength upgrades, not counterfactual-development
-prerequisites.
+The next authorized step is a separately frozen, zero-paid Selection study.
+It must map THY-002's forecast to one deterministic absolute budget, compare
+future Agent-response loss with full history and equal-budget random
+Selections, aggregate repository first, and bind H5/H10 plus Agent-breadth
+gates before evaluating contrasts. Reuse of already-open public Agent results
+remains development evidence; the six holdout Agents stay sealed.
 
 Any reopened candidate must freeze its information set, code, parameters,
 source, Origin schedule, controls, and gates before outcome replay. Open the

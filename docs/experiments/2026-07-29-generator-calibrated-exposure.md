@@ -195,3 +195,93 @@ Only after a pass may another plan specify how the predicted module mix becomes
 an absolute-budget Selection and how it compares with the unselected benchmark
 and equal-budget random sampling on Agent outcomes. The current study never
 opens those outcomes.
+
+## Frozen Result
+
+Decision: **pass the Task-mix gate; retain THY-002 for a separately frozen
+Selection study**.
+
+`task-mix-results.json` and `task-mix-results-reproduction.json` were
+byte-identical:
+
+- raw file SHA-256:
+  `449e10c195f07e98e89644ce9957bfbaab23fd9d03c320fe10ac3b7efe9d6ac8`;
+- result digest:
+  `d0666c4e70f4195eb4c81fa1d143a947cbcf8e3fe718136193f82459d0e3ff94`;
+- Origin-row digest:
+  `68cf05b816e06dd37b9c839223df3af7763da0afe894a4105847d502182f7775`;
+- compact-summary digest:
+  `26233a425ecea7794df236ea991139eaa673b1569fc88262ddd2b31b9f8eaa31`.
+  Its committed file SHA-256 is
+  `7b97318cf617dcd1e324774a69de628cef5f69288dd11e7826ba1c61436f470a`.
+
+All 40 repositories and all 436 planned Origins were admitted. Negative
+contrasts favor THY-002:
+
+| Horizon | Candidate Brier | Full history | Candidate − full | 95% repository bootstrap | Favorable repositories |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| H5 | 0.369901 | 0.376463 | -0.006562 | [-0.010743, -0.002855] | 27/40 |
+| H10 | 0.381399 | 0.387505 | -0.006107 | [-0.009734, -0.002796] | 28/40 |
+
+The relative loss reductions against full Task history are 1.74% at H5 and
+1.58% at H10. The effect is modest, but its sign is stable across both nested
+horizons and clears the frozen repository-bootstrap and 24/40 breadth gates.
+Deleting any one repository keeps the macro contrast negative: H5 ranges from
+`-0.007095` to `-0.005745`, and H10 from `-0.006580` to `-0.005328`.
+However, the median per-repository gains are only `0.00125` and `0.00249`;
+13/40 and 12/40 repositories worsen. The mechanism is stable but heterogeneous.
+H5 and H10 repository contrasts correlate at `0.963`, and H5 is nested inside
+H10, so the two passes are horizon stability evidence rather than independent
+replications.
+
+The two mechanism ablations fail more clearly:
+
+| Horizon | Candidate − recent Git | 95% interval | Candidate − yield only | 95% interval |
+| --- | ---: | ---: | ---: | ---: |
+| H5 | -0.068670 | [-0.096032, -0.044543] | -0.215530 | [-0.280333, -0.157310] |
+| H10 | -0.062451 | [-0.089843, -0.038698] | -0.208163 | [-0.270839, -0.149657] |
+
+This supports the multiplicative mechanism: neither current exposure nor
+historical Generator yield alone explains the result. Candidate mean loss also
+beats trailing-H Task history at both horizons, although the H10
+candidate-minus-trailing interval crosses zero; trailing history was a
+descriptive control, not a frozen gate.
+
+## Diagnostics And Interpretation
+
+- The realized H5 and H10 future spans average 56.7 and 118.8 days after
+  repository-first aggregation. Across Origins, medians are 23.5 and 54.0
+  days, while maxima reach 1,207.0 and 1,376.3 days. Task-count horizons
+  therefore represent variable calendar ranges, not fixed short-term
+  forecasts.
+- Future `OTHER` mass is 3.51% at H5 and 4.01% at H10. The gain is not an
+  artifact of a vocabulary that absorbs most future work.
+- All 5,034 unique declared base-commit objects checked by repository
+  manifests are present; no Origin contains a reachable commit dated after its
+  cutoff.
+- 100/436 Origins contain at least one historical Task module with zero
+  observed historical Git exposure; 122 module-Origin cases carry 117.24
+  units of Task mass. This confirms that the empirical-shrinkage interpretation
+  is necessary. It does not invalidate the fixed score, but a literal Poisson
+  posterior claim would have failed on the actual data.
+- Paid calls, embedding calls, Agent outcomes, and sealed-holdout reads are all
+  zero.
+
+The result resolves the immediate theory question: a fixed Generator's
+historical Task-per-exposure association adds a small but reproducible
+pre-Origin signal beyond the unselected full Task history on a new Generator
+family. It does **not** yet show that a ten-Task benchmark compiled from that
+forecast predicts future Agent performance better than the full benchmark.
+
+The next admissible experiment must freeze, before reading its evaluation
+contrasts:
+
+1. one deterministic absolute-budget mapping from the forecast distribution to
+   historical Tasks;
+2. full-history and equal-budget random Selection baselines;
+3. repository-first future Agent-response loss, random-landscape position,
+   Agent breadth, and H5/H10 gates; and
+4. exact reuse boundaries for already-open public Agent results.
+
+No production Selector or Agent-outcome replay is authorized by this result
+alone.

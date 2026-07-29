@@ -79,3 +79,21 @@ uv run python examples/generator_calibrated_exposure/study.py verify \
 
 A pass remains a Task-mix result. It does not nominate a Selector or authorize
 an Agent-outcome replay without a separate frozen plan.
+
+## Result
+
+The two frozen runs are byte-identical at raw SHA-256
+`449e10c1…6ac8`. The compact evidence is
+[`evidence/task-mix-summary.json`](evidence/task-mix-summary.json), digest
+`26233a42…aa31`.
+
+THY-002 passes both horizons:
+
+- H5 candidate-minus-full-history Brier:
+  `-0.006562`, interval `[-0.010743, -0.002855]`, 27/40 repositories;
+- H10: `-0.006107`, interval `[-0.009734, -0.002796]`, 28/40 repositories.
+
+Both current-Git-only and yield-only ablations lose with bootstrap upper bounds
+below zero. The decision retains the mechanism for a separately frozen
+absolute-budget Selection study; `agent_outcome_replay_authorized` remains
+false.
