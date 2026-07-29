@@ -375,3 +375,236 @@ Inventory SHA-256:
 | M3 dependency shock | past-only shock/source feasibility and negative controls | ecosystem propagation evidence | task incidence and subset mapping | open | sufficient manifests and registry history |
 | M4 work queue | material-arrival semantic audit | common but heterogeneous issue labels | exact-identity leakage | open/high risk | event-sourced aggregate that cannot identify future Tasks |
 | M5 CI regime | retention-complete temporal source audit | recent CI history predicts later CI failure | source retention and Check confounding | open/high risk | complete run history with failure provenance |
+
+## Collision Audit
+
+The audit opened the research ledger and detailed prior reports only after the
+inventory and its digest were committed. It compared information paths, not
+names: a new feature does not define a new route when its causal bridge and
+subset materialization repeat a closed experiment.
+
+| Mechanism | Collision or boundary | Decision |
+| --- | --- | --- |
+| M1 release-cycle state | The prior cold-start audit already deprioritized release-calendar phase because it overlaps the closed temporal family. Recency, duration strata, and adaptive temporal routes have also failed their frozen transfer or robustness gates. | Remove. A historically archived calendar could support a different source-specific study, but another phase proxy is not a new route. |
+| M2 ownership transition | Git authorship is available and varied, but the proposed bridge remains Git state → future module mix → historical module-matched subset. `THY-001R` falsified raw Git pressure and `THY-002S` falsified the current Task-mix-to-subset bridge. Adding owner entropy inside that information path would be tuning on opened route knowledge unless an independent ownership-native Task source first supplies a distinct target. | Do not nominate. Preserve as a source-gated hypothesis, not a reopened Git/module candidate. |
+| M3 dependency shock | Broad advisory counts were previously rejected, but the exact Origin lock graph crossed with already-published upstream release times is exposure-specific, exogenous to target-repository Git activity, and not used by `THY-001R`, `THY-002`, or `THY-002S`. | Retain only as registry-dated direct npm dependency lag. Exclude advisories, CI, transitive resolution, dist-tags, and deprecation from version one. |
+| M4 work queue | Open leaf issues expose existing Task identity under the current material-availability contract. Parent-level work intent is already `MR-H`, whose complete event archive and native Task-arrival mapping are unresolved. Aggregate queue aging does not solve that semantic boundary. | Remove. Keep the existing `MR-H` data gate; do not create a second queue route. |
+| M5 CI regime | Broad CI state collides with the prior rejected raw-CI family; the exposure-specific survivor is already the differential upstream-nightly-CI challenger. Historical run retention and Check/source-failure confounding remain unresolved. | Remove. Do not substitute a generic red-build score for the already specified source gate. |
+
+This audit does not refute ownership, planning, or CI effects in software
+engineering. It says they do not presently supply an independent, executable
+Barcarolle theory route under the handoff's no-tuning and information-availability
+rules.
+
+## Outcome-Free Feasibility
+
+All checks used the ignored SWE-rebench repository/source artifacts already
+bound by `THY-002`. They opened no Agent outcomes, no sealed holdout, and made
+no paid or LLM call. The compact record is
+[`source-feasibility.json`](../../examples/dependency_lag_theory/source-feasibility.json).
+
+### Repository and Task support
+
+Across the complete 40-repository, 436-Origin frame, 396 Origins in 39
+repositories contain a recognized dependency declaration. The fixed narrow
+frame is nine Node repositories whose 119 frozen Origins all contain a root
+`package.json` and a committed npm, pnpm, or Yarn lockfile. Those repositories
+contain 1,420 Tasks. Five repositories have at least ten Origins, fixing a
+source-derived deep frame before candidate performance exists.
+
+The scoring-only reference-patch label “touches a root Node manifest or
+lockfile” is sparse but measurable: 103/1,420 Tasks are positive. Twenty-seven
+of 119 H5 Origins and 40/119 H10 Origins have at least one positive future Task;
+eight of nine repositories contribute a positive future Origin at both
+horizons. The between-repository rate is highly heterogeneous, so pooled Task
+weighting would be misleading and repository-first aggregation is mandatory.
+This label never enters Selection.
+
+Python was not chosen as a parallel version-one frame. Eleven repositories and
+103 Origins have root Python declarations, but none has a committed exact lock
+at every frozen Origin. A requirements range retrieved later would not prove
+the resolved Origin state.
+
+### Registry support and variation
+
+npm's full package metadata includes per-version publication times, while its
+registry API is a current response rather than an immutable historical
+snapshot
+([package metadata](https://github.com/npm/registry/blob/master/docs/responses/package-metadata.md),
+[registry API](https://github.com/npm/registry/blob/main/docs/REGISTRY-API.md)).
+Moreover, npm permits package/version removal under declared conditions, so a
+packument fetched today can differ from what an Origin-time client saw
+([unpublish policy](https://docs.npmjs.com/policies/unpublish)).
+
+A bounded current-source check queried four deterministically sampled direct
+dependencies in each of five package-lock repositories at their first and last
+frozen Origins. All 20 requests succeeded. Nine of 20 lag classifications
+changed, spanning four of five repositories; classification projection digest
+is `20ae8bf1…897a`. This establishes source accessibility and temporal
+variation, not historical visibility or predictive value. Raw responses were
+not retained, so the result is exploratory. The frozen study must retain and
+digest every full packument before it can produce accepted counterfactual
+evidence.
+
+## Frozen Theory Contract
+
+### THY-003 — Registry-Dated Dependency-Lag Nearest Regime
+
+The selected hypothesis is deliberately narrower than M3:
+
+> The distribution of direct production and development dependencies that are
+> current, patch-lagged, minor-lagged, major-lagged, or unknown at an Origin
+> persists over a short future window and changes the incidence and
+> verification difficulty of compatibility, update, and toolchain Tasks.
+> Historical Tasks observed under the closest pre-Task lag regimes should
+> therefore estimate the future Agent pass rate better than all history.
+
+The complete frozen design is
+[`plan.json`](../../examples/dependency_lag_theory/plan.json), digest
+`0126c44a4b3c4878637fef969fdf29a5ff5477fa487c967710667c3154853d5d`.
+There is intentionally no runner in this session.
+
+At each cutoff, the candidate reads only the root `package.json`, the first
+supported committed lockfile, and npm versions with publication time no later
+than the cutoff. It ignores current dist-tags, advisories, deprecation,
+downloads, maintainers, transitive packages, prereleases, non-SemVer versions,
+CI, and every future Task field. Exact stable versions are mechanically
+classified under the frozen strict `x.y.z` rule; this operationalization should
+not be confused with a claim that every package follows semantic-versioning
+intent ([SemVer specification](https://semver.org/)).
+
+The state is ten joint proportions: production/development crossed with five
+lag categories. Distance is half the L1 distance. Each historical Task receives
+the state observable at its declared Task time; absence of a supported
+historical state is a visible missing-state marker at distance one. Selection
+is the ten eligible historical Tasks with smallest distance to the Origin
+state, with a SHA-256 tie-break. It is local, absolute-budget, deterministic,
+and outcome-free.
+
+The mechanism bridge has three independently falsifiable links:
+
+1. **Observable:** registry publication timing adds information beyond the
+   manifest/lock alone and survives circular time-shift nulls.
+2. **Forecast:** a fixed inverse-distance historical weighting predicts future
+   root dependency-touch incidence better than full history and trailing-H.
+3. **Materialization:** the deterministic ten-Task nearest-regime subset
+   preserves the continuous forecast closely enough to justify opening the
+   Agent-outcome estimand.
+
+Failure at any link retires `THY-003` on this frame. No category, package scope,
+distance, weighting, budget, horizon, label, repository, or threshold may be
+changed in response.
+
+## Minimum Decisive Empirical Plan
+
+### Stage A — authorized outcome-free falsification
+
+The fixed wide frame is the nine repositories in the plan; the deep frame is
+the five with at least ten Origins. The study reuses the bound 119
+non-overlapping rolling Origins, with H5 primary and H10 sensitivity, and
+reports realized calendar spans. It must first admit every Origin, retain and
+reload-digest the raw registry bytes, resolve at least 70% of declared direct
+dependencies, observe at least three distinct Origin states in six of nine
+repositories, and reproduce byte-identically twice.
+
+The primary diagnostic is future-Task Brier loss for the scoring-only binary
+root dependency-touch label. Tasks aggregate to Origins, Origins to
+repositories, and repositories equally. A deterministic 20,000-draw
+repository bootstrap supplies the paired interval; every
+leave-one-repository-out result is reported.
+
+The candidate must pass all of the following:
+
+- continuous and budget-ten forecasts beat full history at H5, with paired
+  repository interval upper bounds below zero and at least 6/9 repositories
+  favorable;
+- both remain negative against full history at H10 with at least 6/9
+  favorable, and both deep-frame contrasts are negative at H5 and H10;
+- every H5 leave-one-repository-out materialized contrast is negative;
+- the budget-ten loss is no more than `0.005` above its continuous forecast;
+- the budget-ten candidate beats trailing-H and the lock-only ablation at both
+  horizons; and
+- its 20,000-draw circular-state temporal-null as-good-or-better rate is below
+  `0.10`.
+
+There is no practical-effect claim on this diagnostic scale; the value is the
+conjunction of direction, uncertainty, breadth, robustness, ablation, null,
+and reproduction evidence. A failure stops the route without Agent replay.
+
+### Stage B — separately authorized Agent-outcome decision
+
+Stage B is not authorized by this session. If every Stage-A gate passes, an
+additive plan must bind the accepted code and registry bytes, the exact
+nine/five repository frames, Origin schedule, unopened Agent configuration
+digests, budget, H5/H10, calendar spans, controls, 20,000-draw equal-budget
+random protocol, MAE gates, and stop rules before outcomes open.
+
+For each held-out Agent configuration, the estimand is the absolute difference
+between pass rate on the ten selected historical Tasks and the next-H future
+Tasks. Candidate-minus-full-history repository-first MAE must be at most
+`-0.02` at H5, have a paired 95% repository-cluster interval wholly below zero,
+be favorable in at least 6/9 wide and 4/5 deep repositories, remain negative
+in every leave-one-cluster-out view and at H10, and beat at least 95% of
+equal-budget random draws. Agent, model, harness, provider, JavaScript versus
+TypeScript, package-manager, and temporal-null directions are frozen in the
+plan.
+
+Even a Stage-B pass is panel-conditional development evidence. The same
+algorithm must replicate on a later independent npm source or a strict
+prospective collection before a predictive-validity claim.
+
+## Evidence Portfolio
+
+| Evidence class | Available now | Required decision use |
+| --- | --- | --- |
+| Without Agent outcomes | External mechanism literature; 9-repository/119-Origin manifest-lock presence; 1,420-Task scoring-label support; bounded 20-package current-registry access and variation | Enough to freeze `THY-003`; not enough to claim forecast or Selection value |
+| Existing opened outcomes | Multi-SWE and SWE-bench development Results exist, but no current panel is shown to cover the exact frozen npm wide/deep frame | None may be opened for `THY-003` until Stage A passes and a separate exact outcome plan qualifies the source |
+| New source or prospective | Frozen raw npm response capture; later independent npm Task/Agent panel; live Origin-time registry snapshots and complete future `TimeRange` | Required respectively for accepted counterfactual execution, external replication, and strict prospective validity |
+| Sealed holdout | Six SWE-bench Agents remain unread on a Python-heavy frame | Not applicable confirmation for this npm-specific route; keep sealed |
+| Paid evidence | No active authority or plan | Only after Stage A and a qualifying outcome plan pass, with explicit authority and the mandated endpoint variables |
+
+## Adversarial Requirement Audit
+
+| Requirement | Audit result |
+| --- | --- |
+| Pre-Origin availability | Candidate filters repository and package events at each cutoff. Current registry retrieval remains explicitly retrospective; strict evidence requires Origin-time byte capture. |
+| No future Task leakage | Selection consumes Task ID only for deterministic tie-breaking plus each historical Task's pre-Task state. Future identities, text, patches, labels, and outcomes are forbidden. Reference patches score Stage A only. |
+| Local runtime boundary | Every ranking is inside one repository's eligible historical Task Pool. Cross-repository data appears only in offline aggregation. |
+| Generator dependence | Root dependency-touch is Generator-conditional and sparse. Stage A tests this bridge directly and failure stops; no natural-traffic claim follows. |
+| Baselines and calibration | Full history is primary; trailing-H and lock-only are mechanism controls; equal-budget random is downstream calibration only. |
+| H5/H10 and TimeRange | Both task-count controls and calendar spans are required. Runtime remains an explicit future `TimeRange`. |
+| Wide/deep and uncertainty | Nine/five frames are frozen from source availability, not performance. Repository-first bootstrap and leave-one-repository-out checks are mandatory. |
+| Observable/forecast/subset separation | Registry timing, continuous weighting, and ten-Task materialization have separate ablations and gates. |
+| Minimum effect and falsification | Stage A has no surrogate effect claim but requires every robustness gate. Stage B retains the protocol-wide `-0.02` MAE effect and interval gate. Any failure retires the route. |
+| Portability | Version one is npm/Node only. JavaScript/TypeScript and package-manager checks are required; no Python or ecosystem-wide claim is permitted. |
+| Reproduction and source mutation | Accepted Stage A evidence requires retained raw responses and two byte-identical executions. The exploratory registry sample is not promoted. |
+| Holdout and paid boundaries | Six sealed Agents stay unread. No paid or benchmark-producing call occurred or is currently authorized. |
+| Infrastructure proportionality | The frozen deliverable is one direct example-layer plan. No core schema, registry service, source adapter, Generator, or Runner was added. |
+
+## Decision And Recommendation
+
+`THY-003` is a **frozen candidate for outcome-free falsification**, not a
+nominated Selector. npm publication time adds a clock independent of the
+target repository's Git history. The other four inventory mechanisms collide
+with closed routes or unresolved arrival/source semantics.
+
+Stage A can test whether registry timing adds information beyond lockfile state
+without Agent outcomes or paid calls. It reuses the fixed 1,420-Task frame.
+Implementation is limited to npm/pnpm/Yarn lock parsing, raw packument capture,
+state replay, and the existing repository-first report pattern. Source
+mutation and sparse, repository-heterogeneous dependency Tasks are the
+principal risks.
+
+The next authorized action is only to implement and run the frozen Stage-A
+example study. Do not replay opened outcomes, inspect the sealed Agents, build
+a Generator, or request paid authority unless every Stage-A gate passes.
+
+## Approach Registry After Audit
+
+| Family | Evidence gained | Status | Reopen or advance condition |
+| --- | --- | --- | --- |
+| M1 release-cycle | collision with closed temporal family | removed | historically archived schedule plus a source-native, non-temporal target |
+| M2 ownership transition | 436/436 Origins have recent non-bot Git activity; signal availability is not the missing evidence | source-gated, not nominated | ownership-native Task target that avoids the closed Git/module bridge |
+| M3 / THY-003 registry-dated lag | nine-repository frame; measurable scoring label; bounded registry variation; frozen plan `0126c44a…3d5d` | frozen outcome-free candidate | implement Stage A unchanged; all gates must pass |
+| M4 work queue | exact leaf identity leak; parent intent already `MR-H` | removed | existing `MR-H` complete event archive and native Task materialization |
+| M5 CI regime | broad form collides; differential nightly CI already specified | removed | retained, timestamp-complete differential upstream-CI episodes with Task alignment |
