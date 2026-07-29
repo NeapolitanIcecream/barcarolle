@@ -244,9 +244,21 @@ projected-timeline association, not native causality or Agent-score evidence.
 The contract, diagnostics, result, and claim boundary are in
 [`experiments/2026-07-29-generator-calibrated-exposure.md`](experiments/2026-07-29-generator-calibrated-exposure.md).
 
+`THY-002S Brier Projection Coreset` is `closed` on the frozen Multi-SWE
+frame. Its deterministic budget-ten Selection improved full history by
+`0.019114` at H5 and `0.015294` at H10, reached random midrank `1.0` at both
+horizons, and differed from the continuous forecast by less than `0.0005`.
+H10 passed, but the H5 forecast and Selection repository intervals had upper
+bounds `+0.006686` and `+0.005761`; both H5 front gates therefore failed.
+Two accepted runs were byte-identical at `8ec69bb2…a98e`, and compact digest
+`8243d4cb…42a6` binds the zero-outcome resource ledger and outcome-free
+result. Retire this mapping without outcome replay or post-result changes to
+the gate, source, budget, horizon, or algorithm. Details are in
+[`experiments/2026-07-29-generator-calibrated-selection.md`](experiments/2026-07-29-generator-calibrated-selection.md).
+
 All studies recorded here made zero paid benchmark calls. The prior local
 embedding run did not make an API call. The previous USD 300 authority remains
-closed; the next development study needs no paid authority.
+closed. There is no active development or paid study.
 
 ## Multi-Repository Research Contract
 
@@ -426,7 +438,7 @@ Routes remain separate until evidence supports a combination.
 | MR-G / THY-001R: module change pressure | Reachable Git change pressure predicts the module composition of the target repository's next work cohort. | The frozen Multi-SWE and Full-minus-Verified Task-mix test lost to full Task history at both horizons; the Git-only vocabulary audit preserved the result. | `closed`; no tuning or outcome replay |
 | MR-H: parent work intent | Timestamped structural parent state predicts later Task-component mass before source-attested Task material becomes available. | Admit only a complete event archive with source-native parent/component mapping, versioned material, and native Task arrival; issue creation, linking, resolution, and merge times are not substitutes. | `data-gated` challenger; archive schema, event completeness, transform, and Task alignment unresolved |
 | MR-I / THY-002: generator-calibrated exposure | Future generated Task mass follows current Git exposure multiplied by a module's historical Task-per-exposure propensity. | H5/H10 improve over full history by `0.006562`/`0.006107`; all full/Git/yield gates pass on 40 Rebench repositories. | `task-mix-pass`; retain as an observable, not a production Selector |
-| MR-J / THY-002S: Brier projection coreset | A deterministic budget-ten subset that projects local historical Tasks onto the frozen THY-002 forecast preserves its future Task-mix advantage and then predicts future Agent response. | First pass the outcome-free Multi-SWE task-space gate against full history, stationary coreset, and 20,000 random subsets. Only then execute the frozen public-outcome contract. | `frozen-front-gate`; verifier-only amendment A1, plan digest `cb83d866…b1b9a`, no outcome executor yet |
+| MR-J / THY-002S: Brier projection coreset | A deterministic budget-ten subset that projects local historical Tasks onto the frozen THY-002 forecast preserves its future Task-mix advantage and then predicts future Agent response. | H5 Selection improved full history by `0.019114`, reached random midrank `1.0`, and preserved the forecast within `0.000473`, but its repository interval upper bound was `+0.005761`; H10 passed. | `closed` on this frame; H5 front gate failed, no outcome executor or rescue tuning |
 
 ALG-001's shrinkage switch and ALG-004's EWMA guard remain offline safeguards,
 not positive algorithms. ALG-002 is closed for the current duration-stratum
@@ -619,7 +631,7 @@ training service is needed.
 | MR-018 / THY-001R | P1 | `closed` | Original plan `10b4fcb2…8459` and two byte-identical runs retire the candidate: Multi H5/H10 vs full Task history `+0.17572`/`+0.21704`; Full-minus-Verified `+0.08751`/`+0.08807`. Audit revision `dd3e420d…2d44` removes the shared-vocabulary ambiguity and preserves failure. |
 | MR-019 | P2 | `data-gated` | Parent-level work intent is the strongest challenger. Require complete timestamped planning-node history, versioned Task material, and a module/component label available before source-attested Task arrival; do not substitute issue creation, linking, resolution, merge, open leaf issues, or PRs. |
 | MR-020 / THY-002 | P1 | `task-mix-pass` | Plan `0fe42fc1…1c69`; raw/reproduction `449e10c1…6ac8`; H5/H10 full-history contrasts `-0.006562`/`-0.006107`. Retain the mechanism under its projected-time claim boundary. |
-| MR-021 / THY-002S | P1 | `planning` | Freeze one deterministic absolute-budget mapping from the THY-002 forecast to historical Tasks. Compare future Agent-response loss with full history and equal-budget random sampling, repository first, before reusing opened public outcomes. |
+| MR-021 / THY-002S | P1 | `closed` | A1 plan `cb83d866…b1b9a`; accepted raw/reproduction `8ec69bb2…a98e`. H5 improved full history and all non-interval conditions passed, but its repository interval crossed zero. Do not build the outcome executor or rescue-tune this frame. |
 | RI-125 | P2 | `trigger-gated` | The exact 39 source objects and issue-text projection are full-byte verified. A runnable prepared Task Pool still needs solver/verifier material and source-specific certification when a concrete campaign requires it. |
 | RI-129 / RI-160 | P2 | `trigger-gated` | Add a single-writer exact certification checkpoint before the next comparable pool; replay retained entries before reuse. |
 | RI-163 | P2 | `trigger-gated` | Before another Pylint campaign, replace whole-file behavior identity with an explicit version payload and direct-helper digests. |

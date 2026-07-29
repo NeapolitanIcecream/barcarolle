@@ -70,3 +70,12 @@ already-open Multi-SWE outcome bytes. It may add the outcome join and
 predeclared aggregation only; it may not change memberships or any decision
 rule. A later outcome pass would be development nomination, not confirmation
 or permission to open the six sealed SWE-bench Verified Agents.
+
+## Recorded Decision
+
+The accepted A1 replay returned `retire_mapping`: H10 passed, while both H5
+gates missed only their repository-bootstrap-upper-bound condition. The
+outcome executor is therefore not authorized. See the
+[experiment report](../../docs/experiments/2026-07-29-generator-calibrated-selection.md)
+and committed
+[`task-space-summary.json`](evidence/task-space-summary.json).

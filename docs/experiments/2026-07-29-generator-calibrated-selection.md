@@ -134,4 +134,67 @@ the Selector a Runner default.
 
 ## Result
 
-Pending frozen Stage A replay.
+Decision: **retire this frozen mapping without Agent-outcome replay**.
+
+The accepted A1 runs were byte-identical:
+
+- raw file SHA-256:
+  `8ec69bb21243954323ffd75fd13fbde44bbf5595a8a09431eb73e2011f76a98e`;
+- result digest:
+  `1980c887a6e9a30ae51389382900b98c505cd1fb74b5d3335d196d1d25d70197`;
+- Origin-row digest:
+  `8467942c309c4d9e5c67903b9a225d696316e9ce5a527a5cbcc2a9b84828d9d7`;
+- membership digest:
+  `e1cdae6262504e73159e758d3c4ef092446454a40bf9ef8c6c6ec57b33a82fe6`;
+- compact summary digest:
+  `8243d4cb689090688d62f7537d0778da7b9916744ca11d5a59eeba190f0f42a6`;
+- committed summary file SHA-256:
+  `a3eb18abf2de59bdc29a452f7893d39d1fc6e4ee0687a47f29ac5f4d20e66207`.
+
+All 11 repositories and 107 Origins were admitted. Both accepted raw runs
+preserved the parent freeze's Origin-row and membership digests exactly. Paid
+calls, embeddings, Agent outcomes, and sealed holdout reads were all zero.
+
+Negative differences favor the candidate:
+
+| Horizon and contrast | Macro repository difference | Repository interval | Favorable repositories | Random midrank | Gate |
+| --- | ---: | --- | ---: | ---: | --- |
+| H5 forecast minus full | `-0.018640` | `[-0.044943, +0.006686]` | 8/11 | n/a | fail |
+| H5 Selection minus full | `-0.019114` | `[-0.044455, +0.005761]` | 7/11 | `1.0000` | fail |
+| H5 Selection minus stationary | `-0.022645` | `[-0.050094, +0.005967]` | 8/11 | n/a | directional control passes |
+| H5 Selection minus recency | `+0.014093` | `[-0.019779, +0.045215]` | 3/11 | n/a | descriptive only |
+| H10 forecast minus full | `-0.014866` | `[-0.042076, +0.012627]` | 7/11 | n/a | pass |
+| H10 Selection minus full | `-0.015294` | `[-0.041029, +0.011362]` | 7/11 | `1.0000` | pass |
+| H10 Selection minus stationary | `-0.015550` | `[-0.044081, +0.014978]` | 7/11 | n/a | directional control passes |
+| H10 Selection minus recency | `+0.008836` | `[-0.018247, +0.033442]` | 4/11 | n/a | descriptive only |
+
+The two H5 gates each failed only their predeclared repository-bootstrap upper
+bound. Their point estimates, repository counts, Git/yield ablations,
+stationary control, random threshold, and every leave-one-repository-out
+direction passed. Four repositories had harmful Selection directions at both
+horizons: `clap-rs/clap`, `elastic/logstash`, `iamkun/dayjs`, and
+`sveltejs/svelte`. No single omitted repository reverses the macro direction,
+but repository heterogeneity is large enough that resampling 11
+repository-level units still includes zero. Recency has a better point
+estimate than the candidate at both horizons, but both descriptive intervals
+cross zero and recency was not a frozen gate.
+
+The mapping itself is not the measured loss bottleneck. Selection minus the
+continuous forecast is `-0.000473` at H5 and `-0.000429` at H10. Relative to
+full-history Brier loss, the discrete subset improves by `5.11%` and `4.04%`.
+No one of 20,000 equal-budget random global draws is as good as the candidate
+at either horizon. The mean final projection objective is `0.002631`; one-swap
+polishing averages `0.52` swaps. Every Origin has some cold-support forecast
+mass, but its Origin-weighted mean is `3.15%` and maximum is `18.74%`.
+
+These diagnostics support a narrow mechanism conclusion: Brier projection is
+capable of preserving the THY-002 Task-mix forecast in a budget-ten subset.
+They do not override the frozen cross-repository uncertainty gate. The
+outcome executor remains unauthorized and unimplemented. Do not lower the
+gate, tune the mapper, change the budget or horizon, append the two omitted H5
+repositories, or open outcomes to rescue this result.
+
+A future route needs a new pre-outcome theory or an independently frozen,
+wider source frame whose repository count is justified before replay. It may
+reuse the general lesson that the discrete mapping was not the observed
+bottleneck; it may not treat these memberships as a nominated Selector.
