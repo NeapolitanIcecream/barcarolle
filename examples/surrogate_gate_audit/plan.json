@@ -1,0 +1,220 @@
+{
+  "schema_version": "barcarolle_surrogate_gate_audit_plan_v1",
+  "study_id": "proxy-gated-pass-rate-mae-audit-2026-07-29",
+  "frozen_at": "2026-07-29T07:13:13Z",
+  "epistemic_status": "post_decision_methodology_correction_on_opened_development_outcomes",
+  "freeze_disclosure": {
+    "result_visibility": "Independent read-only audit workers reported preliminary primary pass-rate MAE results before this executor plan was committed.",
+    "consequence": "This is a reproducibility and methodology-correction audit, not a blinded prospective experiment. No algorithm, source, Origin, horizon, budget, primary baseline, primary MAE gate, or membership rule may be changed in response to those reported values.",
+    "preexisting_specification": "ALG-013, ALG-014, and THY-002S algorithms and primary Stage-C outcome requirements were frozen in their parent plans before any audit worker ran.",
+    "original_decisions": {
+      "ALG-013": "response_representation_signal_rejected",
+      "ALG-014": "target_future_increment_rejected",
+      "THY-002S": "retire_mapping"
+    }
+  },
+  "research_contract": {
+    "target": "Determine whether ALG-013, ALG-014, or THY-002S was substantively misclassified because a surrogate metric stopped execution before the inexpensive pass-rate MAE join to already-open public Agent outcomes.",
+    "primary_outcome": "For every held-out Agent configuration and rolling Origin, absolute selected-history pass rate minus future-cohort pass rate; aggregate configurations and Origins within repository, then repositories equally.",
+    "primary_baseline": "all eligible target-repository history",
+    "required_evidence": [
+      "exact deterministic membership materialization from each frozen algorithm",
+      "H5 and H10 candidate, full-history, and candidate-minus-full pass-rate MAE",
+      "repository-first wide and deep directions",
+      "favorable repository and leave-one-repository-out directions",
+      "candidate-appropriate frozen controls",
+      "deterministic random calibration where the parent contract specifies it",
+      "two byte-identical raw executions and a compact digest-bound summary"
+    ],
+    "insufficient_outcomes": [
+      "Brier loss, ROC AUC, embedding centroid loss, or difficulty-coordinate loss presented as pass-rate MAE",
+      "a pooled Task, Origin, or Agent average that lets long repositories dominate",
+      "a favorable random percentile without beating full history",
+      "altering a frozen Selector or gate after observing this opened panel",
+      "claiming this development-panel audit is independent confirmation",
+      "claiming an under-specified secondary Stage-C diagnostic was uniquely frozen"
+    ],
+    "allowed_terminal_states": [
+      "primary_mae_rejects",
+      "primary_mae_supports_but_complete_gate_is_under_specified",
+      "would_pass_frozen_outcome_gate",
+      "source_identity_or_executor_blocker"
+    ]
+  },
+  "source_paths": {
+    "task_content": "outputs/research/2026-07-28-multi-swe-task-content/task-content.jsonl",
+    "task_times": "examples/multi_swe_research/evidence/task-times.jsonl",
+    "embeddings": "outputs/research/2026-07-28-multi-swe-task-embeddings.json",
+    "panel_summary": "examples/multi_swe_research/evidence/panel-summary.json",
+    "resolved_outcomes": "examples/multi_swe_research/evidence/resolved-outcomes.jsonl",
+    "alg_007_task_space": "outputs/research/2026-07-28-multi-swe-task-space-results.json",
+    "response_signal_plan": "examples/multi_swe_research/response-signal-plan.json",
+    "response_signal_amendment": "examples/multi_swe_research/response-signal-amendment-1.json",
+    "response_composition_plan": "examples/multi_swe_research/response-composition-plan.json",
+    "thy_002s_plan": "examples/generator_calibrated_selection/plan.json",
+    "thy_002s_result": "outputs/research/2026-07-29-generator-calibrated-selection/task-space-results.json"
+  },
+  "bound_files": [
+    {
+      "path": "examples/surrogate_gate_audit/study.py",
+      "sha256": "e1a3f44a6db8ca6288a432b94642bb2b0759b64f99055ff0d020f3205c535dae"
+    },
+    {
+      "path": "examples/multi_swe_research/selector-plan.json",
+      "sha256": "716145235a6881bd4c31619a9b74eb0aef916ff1d02de7b36bb7eef80197a382"
+    },
+    {
+      "path": "examples/multi_swe_research/contract.json",
+      "sha256": "d47813dbe67857523afd8249afec55e81c6bd341c4cd341fee976dbb2ab82953"
+    },
+    {
+      "path": "examples/multi_swe_research/response-signal-plan.json",
+      "sha256": "82b225fc2483d495845eda25a26af05461ac2477626de5be20ca0aad32145f0e"
+    },
+    {
+      "path": "examples/multi_swe_research/response-signal-amendment-1.json",
+      "sha256": "0e3abedb0f2069056f22c7a37d9b550e24cfd6528a2f45ced5db59c828ae612e"
+    },
+    {
+      "path": "examples/multi_swe_research/response-composition-plan.json",
+      "sha256": "d7b1eff86bce671937212dee0ecebf95dc9d5313c89960e76ea87b687e17b725"
+    },
+    {
+      "path": "examples/generator_calibrated_selection/plan.json",
+      "sha256": "3eb9fa85fb8f75779c3bdc760936f4d21785cc812c944b011a9e4bb5f2d4fd93"
+    },
+    {
+      "path": "examples/multi_swe_research/evidence/task-times.jsonl",
+      "sha256": "c4d86e7cbe0ef78462422335c8ea29bcd29691dc1613b339024d1e75f6f8f745"
+    },
+    {
+      "path": "examples/multi_swe_research/evidence/panel-summary.json",
+      "sha256": "515cc4cc8749a056175853c0ba23d20d26b0b642c48b138890a35493694f6cb0"
+    },
+    {
+      "path": "examples/multi_swe_research/evidence/resolved-outcomes.jsonl",
+      "sha256": "bdcc5b20678fdc44dba5a00c35851caae701d4f1518a3cc1abc6bb6c95eb181d"
+    },
+    {
+      "path": "outputs/research/2026-07-28-multi-swe-task-content/task-content.jsonl",
+      "sha256": "98a6b8b9051e779c75ad52c71de2f005e3251afe1866112cadaa2a04312cd641"
+    },
+    {
+      "path": "outputs/research/2026-07-28-multi-swe-task-embeddings.json",
+      "sha256": "3ce13084a4018f0b013f6b373869c5448f9c1bb81345022f5e410fbfec6559ab"
+    },
+    {
+      "path": "outputs/research/2026-07-28-multi-swe-task-space-results.json",
+      "sha256": "e2be890450e525a54cc1a035c28110e4555499b7a8a69ffc4bffc5c66e605ceb"
+    },
+    {
+      "path": "outputs/research/2026-07-28-multi-swe-response-signal-results.json",
+      "sha256": "1cadce24535af40d25cb040732eb2c60a09d4b775401e0921cc456f046543812"
+    },
+    {
+      "path": "outputs/research/2026-07-28-multi-swe-response-composition-results.json",
+      "sha256": "4c76a98b482d34f5a785d4ab9875336a6edb30f21a7489960ffa46e1d54b9fd2"
+    },
+    {
+      "path": "outputs/research/2026-07-29-generator-calibrated-selection/task-space-results.json",
+      "sha256": "8ec69bb21243954323ffd75fd13fbde44bbf5595a8a09431eb73e2011f76a98e"
+    }
+  ],
+  "logical_bindings": {
+    "selector_plan_digest": "6619ab258039d3f12cf865421faeba7c23248b302f72b06bb6f311b8f65bde05",
+    "import_contract_digest": "1e104613012a95fc534dba23d4adac1b7d6a6c10e70537c732f16da3e6f83307",
+    "panel_digest": "f2658d12451bdab4108a71cfae5cd5044a5bd312633239c09425378b4b682deb",
+    "resolved_outcome_digest": "b9a6d0d8e44d747d23789ec23eb4205178f2ae2d4f737c2446a5fcdf5abc116c",
+    "response_signal_plan_digest": "6e3374c6a2d1ce866ad614198ae1911fdec2fc13a58d5cf32cd94ee66e1b249c",
+    "response_signal_amendment_digest": "4ad6eab151fa460a7bb8ca6957e582446b7607e53da6e1a72f0ff60b53ec0d76",
+    "response_composition_plan_digest": "b703a9fd1484e2bd96376320ad58a2e1495a5f2252f009d2b9bdb49a1cf57fb0",
+    "thy_002s_plan_digest": "cb83d8665f6b8124be926a85c3097fc3e0caa16caffd62929d0b075fb5cb1b9a",
+    "thy_002s_result_digest": "1980c887a6e9a30ae51389382900b98c505cd1fb74b5d3335d196d1d25d70197",
+    "thy_002s_memberships_digest": "e1cdae6262504e73159e758d3c4ef092446454a40bf9ef8c6c6ec57b33a82fe6",
+    "thy_002s_random_membership_digest": "ddafa132915c5e98d2a34aa9b144940cb8abac7b259c0aec16b4fc98fda24db9",
+    "alg_007_task_space_result_digest": "d9916f4c2da3ab8393f73a2895f4e3b014dbbc54664d578b94496def44d401d"
+  },
+  "rolling_origin": {
+    "minimum_initial_history_tasks": 20,
+    "selection_budget_tasks": 10,
+    "horizons": [
+      5,
+      10
+    ],
+    "repository_sets": "Reuse exact H5 wide/deep and H10 common/deep sets from selector-plan.json.",
+    "ordering": "projected created_at then instance_id",
+    "aggregation": "held-out configuration equally, Origins within repository equally, repositories equally"
+  },
+  "algorithms": {
+    "ALG-013": {
+      "materialization": "For each Origin and held-out configuration, use the other active RCP directions, OLS next-block centroid forecast, and the preexisting greedy mean-match plus at most 20 best strictly improving swaps.",
+      "optimizer_provenance": "Same semantics as select_embedding_mean_match, committed before the ALG-013 parent plan; strict improvement tolerance 1e-15.",
+      "controls": [
+        "full history",
+        "RCP full-history centroid matching",
+        "RCP latest-h centroid matching",
+        "raw embedding OLS matching",
+        "unchanged ALG-007",
+        "ordinary recency as a non-gating diagnostic"
+      ],
+      "primary_h5_gate": "difference <= -0.010, at least 10/13 repositories favorable, every leave-one-repository-out favorable, and deep favorable",
+      "primary_h10_gate": "difference below zero, at least 8/11 repositories favorable, and deep favorable"
+    },
+    "ALG-014": {
+      "materialization": "For each held-out configuration, construct integer solved count from the other 35 configurations, run the frozen earlier-Origin expert and one-pseudo-Task prior forecast, then exact bounded composition matching.",
+      "tie_rule": "Minimize absolute forecast distance; ties use lexicographically smallest count vector, then newest projected created_at and instance_id within each solved-count cell.",
+      "controls": [
+        "full history",
+        "static full-history response-composition matching",
+        "fixed recency",
+        "unchanged ALG-007"
+      ],
+      "primary_h5_gate": "difference <= -0.010, at least 10/13 repositories favorable, every leave-one-repository-out favorable, and deep favorable",
+      "primary_h10_gate": "difference below zero, at least 8/11 repositories favorable, and deep favorable"
+    },
+    "THY-002S": {
+      "materialization": "Reuse the exact parent candidate, stationary, recency, history, H5 future, and H10 future Task identities; no Selection is rematerialized from Agent outcomes.",
+      "outcome_gate": "Reuse downstream_outcome_contract from the parent plan without changing any threshold.",
+      "historical_status": "The parent Stage A failure and retire_mapping decision remain true regardless of this audit.",
+      "provider_axis": "Omitted because the parent downstream contract declares provider_count=3 but freezes no provider mapping; provider is descriptive and non-gating."
+    }
+  },
+  "random_protocols": {
+    "ALG-013_and_ALG-014": {
+      "status": "implementation-specific diagnostic, not a uniquely reconstructed original gate",
+      "draws": 20000,
+      "seed": 20260728,
+      "coupling": "Use one equal-budget subset per Origin and draw across all 36 configurations, via the existing Multi-SWE shared-subset implementation."
+    },
+    "THY-002S": {
+      "status": "fully frozen by the parent downstream contract",
+      "draws": 20000,
+      "seed": 2026072902,
+      "chunk_size": 500,
+      "numpy_version": "2.5.1",
+      "coupling": "One RNG stream; Origins sorted by repository casefold then Origin ID; same subset reused for all configurations and both horizons.",
+      "required_membership_digest": "ddafa132915c5e98d2a34aa9b144940cb8abac7b259c0aec16b4fc98fda24db9"
+    }
+  },
+  "under_specified_original_stage_c_items": {
+    "ALG-013": [
+      "random coupling across held-out configurations",
+      "leave-model, leave-harness, leave-language, and double-holdout rematerialization",
+      "selection temporal-null permutation construction"
+    ],
+    "ALG-014": [
+      "random coupling across held-out configurations",
+      "group-holdout rematerialization and denominator",
+      "selection temporal-null permutation construction"
+    ],
+    "handling": "Report primary MAE and deterministic controls. Never fill these gaps silently or claim a complete unique replay of the original Stage C."
+  },
+  "resource_boundary": {
+    "paid_api_calls": 0,
+    "new_agent_outcome_calls": 0,
+    "sealed_holdout_reads": 0,
+    "allowed_compute": "local CPU with ignored frozen artifacts and already-open committed public outcomes"
+  },
+  "claim_boundary": "This audit can show whether the proxy stop changed the substantive development-panel conclusion. It cannot retroactively pass a failed parent gate, nominate a Selector from an under-specified Stage C, establish prospective validity, authorize sealed holdout access, or create a Runner default.",
+  "plan_digest": "7df62c16defb50132249d5e26ce1f892b8f8403fe684dc156aeb6269b467c181"
+}
