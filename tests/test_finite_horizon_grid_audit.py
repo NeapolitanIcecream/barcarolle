@@ -18,9 +18,11 @@ from examples.finite_horizon_cached_assembly.study import (  # noqa: E402
 )
 from examples.finite_horizon_grid_audit.study import (  # noqa: E402
     CELL_SPECS,
+    DIRECTION_ZERO_TOLERANCE,
     _direction_summary,
     _grid_loss_row,
     _q_diagnostics,
+    load_execution_amendment,
     load_plan,
     select_h_blind_action,
 )
@@ -46,6 +48,19 @@ def test_grid_plan_rejects_tampering(tmp_path: Path) -> None:
 
     with pytest.raises(ValueError, match="digest"):
         load_plan(path)
+
+
+def test_grid_execution_amendment_is_self_bound() -> None:
+    plan = load_plan()
+    amendment = load_execution_amendment(plan=plan)
+
+    assert amendment["amendment_digest"] == (
+        "80dd4596ef3bbff45b859245960fb98bc352432f839e992d6c29703b29bf618c"
+    )
+    assert (
+        amendment["authorized_correction"]["direction_zero_tolerance"]
+        == DIRECTION_ZERO_TOLERANCE
+    )
 
 
 @pytest.mark.parametrize(
@@ -164,6 +179,27 @@ def test_direction_summary_exposes_leave_one_out_gate() -> None:
 
     assert summary["favorable_repository_count"] == 3
     assert summary["every_leave_one_repository_out_negative"] is True
+
+
+def test_direction_summary_treats_float_noise_as_zero() -> None:
+    rows = [
+        {
+            "repository_id": "zero",
+            "candidate_loss": 0.0,
+            "full_loss": 6e-20,
+            "difference": -6e-20,
+        },
+        {
+            "repository_id": "negative",
+            "candidate_loss": 0.1,
+            "full_loss": 0.2,
+            "difference": -0.1,
+        },
+    ]
+
+    summary = _direction_summary(rows, ("zero", "negative"))
+
+    assert summary["favorable_repository_count"] == 1
 
 
 def test_h_blind_rejects_invalid_counts() -> None:

@@ -47,12 +47,15 @@ from examples.surrogate_gate_audit.study import (  # noqa: E402
 HERE = Path(__file__).resolve().parent
 REPOSITORY_ROOT = HERE.parents[1]
 DEFAULT_PLAN = HERE / "plan.json"
+DEFAULT_AMENDMENT = HERE / "execution-amendment.json"
 DEFAULT_LOCK = HERE / "execution-lock.json"
 PLAN_SCHEMA = "barcarolle_finite_horizon_grid_audit_plan_v1"
+AMENDMENT_SCHEMA = "barcarolle_finite_horizon_grid_audit_execution_amendment_v1"
 LOCK_SCHEMA = "barcarolle_finite_horizon_grid_audit_execution_lock_v1"
 MEMBERSHIP_SCHEMA = "barcarolle_finite_horizon_grid_audit_memberships_v1"
 RESULT_SCHEMA = "barcarolle_finite_horizon_grid_audit_results_v1"
 METHOD_IDS = ("ALG-018C-P", "ALG-018C", "h_blind_control")
+DIRECTION_ZERO_TOLERANCE = 1e-15
 CELL_SPECS = (
     ("B5_H5", 5, 5),
     ("B5_H10", 5, 10),
@@ -62,6 +65,7 @@ CELL_SPECS = (
 BOUND_FILE_PATHS = frozenset(
     {
         "examples/finite_horizon_grid_audit/plan.json",
+        "examples/finite_horizon_grid_audit/execution-amendment.json",
         "examples/finite_horizon_grid_audit/study.py",
         "tests/test_finite_horizon_grid_audit.py",
         "examples/finite_horizon_cached_assembly/plan.json",
@@ -129,9 +133,12 @@ def load_execution_lock(
         raise ValueError("finite-horizon grid execution lock digest changed")
     parent_plan = load_parent_plan()
     parent_lock = load_parent_execution_lock(plan=parent_plan)
+    amendment = load_execution_amendment(plan=plan)
     source = _mapping(plan, "source_bindings")
     if (
         payload.get("plan_digest") != plan.get("plan_digest")
+        or payload.get("execution_amendment_digest")
+        != amendment.get("amendment_digest")
         or payload.get("parent_plan_digest") != parent_plan.get("plan_digest")
         or payload.get("parent_execution_lock_digest") != parent_lock.get("lock_digest")
         or payload.get("parent_result_digest") != source.get("parent_result_digest")
@@ -159,6 +166,29 @@ def load_execution_lock(
         raise ValueError("finite-horizon grid runtime changed")
     if _mapping(payload, "matched_h10_frame") != _mapping(parent_lock, "frames")["10"]:
         raise ValueError("finite-horizon grid matched frame changed")
+    return payload
+
+
+def load_execution_amendment(
+    path: Path = DEFAULT_AMENDMENT,
+    *,
+    plan: Mapping[str, Any],
+) -> Mapping[str, Any]:
+    """Load the self-bound post-score direction-classification correction."""
+    payload = _load_mapping(path)
+    if payload.get("schema_version") != AMENDMENT_SCHEMA:
+        raise ValueError("finite-horizon grid execution amendment is unsupported")
+    expected = canonical_digest(
+        {key: value for key, value in payload.items() if key != "amendment_digest"}
+    )
+    if payload.get("amendment_digest") != expected:
+        raise ValueError("finite-horizon grid execution amendment changed")
+    correction = _mapping(payload, "authorized_correction")
+    if (
+        payload.get("plan_digest") != plan.get("plan_digest")
+        or correction.get("direction_zero_tolerance") != DIRECTION_ZERO_TOLERANCE
+    ):
+        raise ValueError("finite-horizon grid execution amendment binding changed")
     return payload
 
 
@@ -823,12 +853,23 @@ def _direction_summary(
     repository_ids: Sequence[str],
 ) -> Mapping[str, Any]:
     summary = dict(_repository_summary(rows, repository_ids))
+    repository_rows = summary["repository_rows"]
     leave_one_out = summary["leave_one_repository_out"]
-    if not isinstance(leave_one_out, Sequence):
+    if not isinstance(repository_rows, Sequence) or not isinstance(
+        leave_one_out,
+        Sequence,
+    ):
         raise ValueError("repository leave-one-out summary is invalid")
+    summary["favorable_repository_count"] = sum(
+        isinstance(item, Mapping)
+        and _number(item.get("difference"), "repository difference")
+        < -DIRECTION_ZERO_TOLERANCE
+        for item in repository_rows
+    )
     summary["every_leave_one_repository_out_negative"] = all(
         isinstance(item, Mapping)
-        and _number(item.get("difference"), "LOO difference") < 0
+        and _number(item.get("difference"), "LOO difference")
+        < -DIRECTION_ZERO_TOLERANCE
         for item in leave_one_out
     )
     return summary
