@@ -24,5 +24,21 @@ packument responses were not retained and the registry can mutate. The frozen
 study must cache and digest every raw response before using it as
 counterfactual evidence.
 
+`study.py` is the direct example-layer Stage-A runner. Its accepted workflow is:
+
+1. `discover` verifies the parent source and projects all historical
+   manifest/lock snapshots without labels;
+2. `fetch-registry` retains one full raw packument response for every discovered
+   direct package;
+3. an execution lock binds the committed runner, dependencies, repository
+   heads, and raw response manifest;
+4. `run` executes offline twice from that lock; and
+5. `compact` accepts only byte-identical verified results.
+
+Run source commands with `uv run --with duckdb python
+examples/dependency_lag_theory/study.py ...`. Discovery and acquisition do not
+load reference-patch labels. The run builds and digests every candidate,
+lock-only, and circular-null membership before opening the scoring-only labels.
+
 The cited rationale, collision audit, claim boundary, and recommendation are in
 [`docs/experiments/2026-07-29-controlled-cold-start-pre-origin-theory.md`](../../docs/experiments/2026-07-29-controlled-cold-start-pre-origin-theory.md).
