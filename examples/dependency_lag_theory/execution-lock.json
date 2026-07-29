@@ -4,15 +4,15 @@
   "status": "frozen_after_raw_capture_before_stage_a_result",
   "plan_digest": "0126c44a4b3c4878637fef969fdf29a5ff5477fa487c967710667c3154853d5d",
   "addendum_digest": "f920d1340feb994a8d1a678eb6b19f237cfb2fe34cd3a64670b8e298f230c739",
-  "implementation_commit": "6af962c5a4cc18cbb4b9826b5c735500423c287a",
+  "implementation_commit": "8531d9a4c876a6f4f6f248ab90ec9a9c854818bf",
   "implementation": [
     {
       "path": "examples/dependency_lag_theory/study.py",
-      "sha256": "00d0b0a124ceaf013abfea652f059447f60c4c828c496851fe37ea61f885966c"
+      "sha256": "03bac51b7023299d35e29d9aac2846de2f8c0b03650493b7035122f0c86268d2"
     },
     {
       "path": "tests/test_dependency_lag_theory.py",
-      "sha256": "f5486c711aab6e3723e2a07735d5be5d208fb1941b026faf6ee8f5a54bef32f7"
+      "sha256": "095ec101bacd2328836e25596e0d04cab092ae10cc83cb9b356df79d25038d79"
     }
   ],
   "dependencies": {
@@ -82,5 +82,5 @@
     "sealed_holdout_opened": 0,
     "paid_api_calls": 0
   },
-  "execution_lock_digest": "e9be3d282c32f3eda45f855759f184c5c64aaac25a0a6b674adc9aa1a7f11dc9"
+  "execution_lock_digest": "4774fbfe9abd13664c708790a31b0f2e0c8b60e2857df6f1f849490c83cdf673"
 }
