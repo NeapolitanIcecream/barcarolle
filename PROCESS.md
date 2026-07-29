@@ -3,7 +3,7 @@
 Last updated: 2026-07-29.
 
 Current ledger: `docs/research-improvement-backlog.md`. Latest report:
-`docs/experiments/2026-07-29-generator-calibrated-selection.md`.
+`docs/experiments/2026-07-29-surrogate-gate-pass-rate-mae.md`.
 
 ## Preserve
 
@@ -36,30 +36,29 @@ development evidence.
 | Verified adaptive routes | best nominated-scale wide `-0.01911`; all fail null, deep, Agent-transfer, or replication gates | Retired on this panel. |
 | Multi-SWE ALG-012 semantic herding | H5 `-0.00027`; H10 `+0.00241` | Retired; task-space, deep, horizon, harness, and language gates fail. |
 | Multi-SWE exact budget-ten hindsight | H5 `-0.03264`; H10 `-0.02562`; 328/328 optima certified | Budget-ten response capacity supported; leaked diagnostic only. |
-| ALG-013 Response-Contrast Projection | future AUC `0.5530`, interval `[0.4579, 0.6572]`; history AUC `0.5104`, interval `[0.4689, 0.5500]` | Static embedding response transfer rejected. |
-| ALG-014 Response-Composition Shrinkage | static AUC `0.9121`; H5 `+0.000992`; H10 `+0.001855` | Cross-Agent response structure exists; target next-cohort increment rejected. |
+| ALG-013 Response-Contrast Projection | pass-rate MAE H5/H10 `+0.001729`/`+0.005890` | Direct outcome replay rejects it; the earlier AUC stop did not hide a valid candidate. |
+| ALG-014 Response-Composition Shrinkage | pass-rate MAE H5/H10 `+0.001992`/`+0.008170` | Direct outcome replay rejects it; static response structure does not forecast the next cohort. |
 | THY-001R Git pressure | Multi H5/H10 vs full Task history `+0.17572`/`+0.21704`; Full-minus-Verified `+0.08751`/`+0.08807` | Retired; source, Origin, reproduction, and independent audits passed. |
-| THY-002 Generator-calibrated exposure | H5/H10 vs full history `-0.006562`/`-0.006107`; intervals exclude zero; 27/40 and 28/40 favorable | Task-mix mechanism retained; Agent outcomes remain unopened. |
-| THY-002S Brier projection | Multi H5/H10 vs full history `-0.019114`/`-0.015294`; random midrank `1.0`/`1.0`; H5 upper bound `+0.005761` | H5 front gate failed; mapping retired without outcome replay. |
+| THY-002 Generator-calibrated exposure | H5/H10 vs full history `-0.006562`/`-0.006107`; intervals exclude zero; 27/40 and 28/40 favorable | Task-mix mechanism retained; its THY-002S mapping fails the Agent-outcome gate. |
+| THY-002S Brier projection | pass-rate MAE H5 `-0.002594`, upper `+0.004724`; H10 `+0.002943`; random `0.93485`/`0.78260` | Frozen outcome gate also fails; original mapping retirement stands. |
 
 The experiments factor the problem:
 
 1. a ten-Task subset can represent future Agent responses;
 2. other Agent outcomes strongly describe same-Task difficulty;
 3. fixed embeddings do not transfer that response structure across
-   repositories under ALG-013; and
+   repositories under ALG-013;
 4. full/recent target history plus one-Task cross-repository shrinkage does not
-   predict the next Task cohort under ALG-014; but
-5. historical Generator yield per Git exposure combined with current exposure
+   predict the next Task cohort under ALG-014;
+5. THY-002S preserves some H5 Task-mix signal in Agent MAE, but below its
+   effect and uncertainty requirements and not at H10; and
+6. historical Generator yield per Git exposure combined with current exposure
    predicts the next Task-module mix slightly better than full Task history.
 
-`THY-002S-A` converted the forecast into a deterministic budget-ten Brier
-projection coreset on the common 11-repository Multi-SWE H10 frame. H10 and
-all non-interval H5 conditions passed, but the H5 forecast and Selection
-repository-bootstrap upper bounds were `+0.006686` and `+0.005761`. The
-mapping is retired without outcome replay. No Selector is nominated and no
-result authorizes paid validation, the sealed holdout, a Runner default, or a
-validity claim.
+When complete Agent outcomes already exist, use pass-rate MAE as the outcome
+gate. AUC, Brier, embedding, and response-coordinate losses are diagnostics.
+They may order paid acquisition when outcomes are absent; they may not suppress
+an affordable outcome replay.
 
 Counterfactual research may use explicitly projected Task times and
 retrospective patch-derived scoring labels; neither becomes native-arrival
@@ -70,13 +69,16 @@ Its projected Task and Git clocks support association, not native causality.
 
 ## Current State
 
-The source-specific Multi-SWE research layer binds exact source, content, time,
-embedding, outcome, plan, raw-result, reproduction, and compact evidence
-digests. ALG-013 and ALG-014 stop at their first failed frozen gate. The
-independent audit corrected RCP's diagnostic null to preserve complete
-36-dimensional Task response vectors; its corrected rate remains `0.55` and
-the rejection is unchanged. Tests cover target-repository exclusion, cutoff
-safety, equal-repository pooling, bounded prior mass, and prequential inputs.
+The Multi-SWE research layer binds source, content, time, embedding, outcome,
+plan, raw-result, reproduction, and compact evidence digests. The post-decision
+surrogate-gate audit materializes ALG-013/014 Stage-C primary MAE and the exact
+THY-002S outcome contract. Its amendment chain now corrects two transcribed
+logical identities and validates all twelve bindings before Selection. Two
+accepted runs are byte-identical at `1eda7fe1…fc928`; result digest is
+`1a105781…0599`, and committed evidence digest is `5f6098f3…fff39`. The
+scientific payload equals the superseded pre-correction runs. ALG-013/014
+secondary group-refit and temporal-null details remain under-specified, but
+their primary positive differences already reject them.
 
 The Task-mix runners bind compact evidence to exact raw results and reject
 source, repository, Origin, resource-boundary, and decision drift. THY-002's
@@ -94,13 +96,10 @@ unconditional replay on opened Agent outcomes. `THY-001R` is retired; do not
 rescue it with another half-life, smoothing value, path map, source subset, or
 horizon.
 
-THY-002 supplies an independent source-family Task-mix signal. `THY-002S-A`
-plan `cb83d866…b1b9a` showed that deterministic Brier projection preserves it:
-Selection-minus-forecast is `-0.000473`/`-0.000429`, and no 20,000 random draw
-is as good. It nevertheless failed the predeclared H5 uncertainty gate on the
-11-repository transfer frame. Do not implement the outcome executor, lower
-the gate, tune the mapper, change the source frame, or open the six holdout
-Agents.
+THY-002 supplies an independent source-family Task-mix signal. THY-002S
+preserves part of it in H5 Agent MAE, but fails its frozen effect, uncertainty,
+and H10 gates. Do not lower the gate, tune the mapper, change the source frame,
+or open the six holdout Agents.
 
 There is no active outcome replay or paid plan. A next route needs a new
 pre-outcome theory or an independently frozen wider source frame with its

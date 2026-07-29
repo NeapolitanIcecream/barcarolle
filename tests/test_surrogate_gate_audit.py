@@ -93,6 +93,10 @@ def test_surrogate_gate_audit_evidence_is_self_bound() -> None:
     assert payload["algorithms"]["THY-002S"]["outcome_decision"] == (
         "fails_frozen_outcome_gate"
     )
+    assert payload["scientific_payload_comparison"][
+        "old_and_new_canonical_digest"
+    ] == "4ca4f15db927198a5ebd6fc3abcb64c6b4c696375c9c858e36c19ee88d6d4192"
+    assert payload["scientific_payload_comparison"]["equal"] is True
 
 
 def test_surrogate_gate_audit_validates_every_logical_binding() -> None:

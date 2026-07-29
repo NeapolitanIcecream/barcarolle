@@ -1,0 +1,202 @@
+{
+  "schema_version": "barcarolle_surrogate_gate_audit_evidence_v1",
+  "study_id": "proxy-gated-pass-rate-mae-audit-2026-07-29",
+  "plan_digest": "7df62c16defb50132249d5e26ce1f892b8f8403fe684dc156aeb6269b467c181",
+  "active_amendment_digests": [
+    "9ee6e8d7a360609a6aba182536693d22d3a3ca66f9cdcb9f3d7a4d8568898f49",
+    "1d25336e247ae6bf8508c846e979b9ff936c62ccff5e39a1be0669d1f911a833"
+  ],
+  "result_digest": "1a1057817dfc183c09a6cf930461a26c56b0c35d7cf942d8999c2a257a0e0599",
+  "raw_reproduction": {
+    "run_3_sha256": "1eda7fe12109fe9a7b049b9b51b191f1021f35611f51d8d9c3bfc61e577fc928",
+    "run_4_sha256": "1eda7fe12109fe9a7b049b9b51b191f1021f35611f51d8d9c3bfc61e577fc928",
+    "byte_identical": true,
+    "compact_3_sha256": "3df11e3aa036e87b24dcd96464f223e78d34329c2d68e4fa7349b48c1afba853",
+    "compact_4_sha256": "3df11e3aa036e87b24dcd96464f223e78d34329c2d68e4fa7349b48c1afba853"
+  },
+  "superseded_reproduction": {
+    "run_1_and_2_sha256": "0b9320233bca0742a228031b8a4371ee014a9bec6843dbc863ebe5612485037d",
+    "result_digest": "e9bbd44e2e7351bcbd01cd9cb4e7d597a2be519c7410cfb40f68ad6a1fbf403c",
+    "reason": "provenance bindings and terminal-state output contract corrected by SGA-A2; scientific payload unchanged"
+  },
+  "scientific_payload_comparison": {
+    "normalization": "remove top-level result_digest and amendment provenance; remove each new terminal_state; rename THY-002S frozen_outcome_gate_decision to decision",
+    "old_and_new_canonical_digest": "4ca4f15db927198a5ebd6fc3abcb64c6b4c696375c9c858e36c19ee88d6d4192",
+    "equal": true
+  },
+  "metric": {
+    "name": "held-out-configuration future pass-rate MAE",
+    "contrast": "candidate minus control; negative favors candidate",
+    "aggregation": "configurations and Origins within repository, then repositories equally",
+    "primary_baseline": "all eligible target-repository history"
+  },
+  "algorithms": {
+    "ALG-013": {
+      "original_decision_preserved": "response_representation_signal_rejected",
+      "outcome_decision": "primary_mae_rejects",
+      "terminal_state": "primary_mae_rejects",
+      "membership_digests": {
+        "H5": "c3b0285a781f7e682366fdeca189dde7f309b168594857f6cf0a7c06f1c1a683",
+        "H10": "9b0e5604bd590ec7ff209ed61846f6e90a240d941a09115deaa2a5b653176726"
+      },
+      "H5": {
+        "candidate_mae": 0.06907648832648833,
+        "full_history_mae": 0.0673476429292014,
+        "candidate_minus_full": 0.0017288453972869391,
+        "favorable_repositories": 6,
+        "repository_count": 13,
+        "deep_difference": -0.0005789115862063708,
+        "bootstrap_95": [
+          -0.0022638486116445186,
+          0.005995192521529508
+        ],
+        "random_midrank": 0.5032,
+        "candidate_minus_controls": {
+          "alg_007": 0.0039828227328227335,
+          "ordinary_recency": 0.0019124764124764128,
+          "raw_embedding_ols": 0.0014168331668331668,
+          "rcp_full_centroid": -0.00021165871165871144,
+          "rcp_recent_centroid": 0.0019794094794094792
+        }
+      },
+      "H10": {
+        "candidate_mae": 0.058697226151771614,
+        "full_history_mae": 0.05280696865793433,
+        "candidate_minus_full": 0.005890257493837279,
+        "favorable_repositories": 3,
+        "repository_count": 11,
+        "deep_difference": 0.0017566102838806636,
+        "bootstrap_95": [
+          -0.0009893618853223545,
+          0.015172727415602189
+        ],
+        "random_midrank": 0.3693,
+        "candidate_minus_controls": {
+          "alg_007": 0.003733477278931825,
+          "ordinary_recency": 0.005679625906898634,
+          "raw_embedding_ols": 0.0010792858974677162,
+          "rcp_full_centroid": -0.001404445768082132,
+          "rcp_recent_centroid": 0.00037756765029492255
+        }
+      },
+      "complete_original_stage_c": "not reconstructable without post-hoc defaults"
+    },
+    "ALG-014": {
+      "original_decision_preserved": "target_future_increment_rejected",
+      "outcome_decision": "primary_mae_rejects",
+      "terminal_state": "primary_mae_rejects",
+      "membership_digests": {
+        "H5_candidate": "88223fb09d575bd93f78bca4e7040411b55fbe5947f38def05cf9e558e230d6c",
+        "H10_candidate": "21f7e92ca984711df742f0998c43610d75920fb2a58fd6441bc74b02786166dc",
+        "H5_static": "f10fef46a07c4323e8e42f5b9758ab29da2a46cd133001973bd9884afb73e9a5",
+        "H10_static": "a0a0c675cd84341c7bba7416b6016ace7b57c3f5b40e63047030451474cb89db"
+      },
+      "H5": {
+        "candidate_mae": 0.06934004884004884,
+        "full_history_mae": 0.0673476429292014,
+        "candidate_minus_full": 0.0019924059108474526,
+        "favorable_repositories": 4,
+        "repository_count": 13,
+        "deep_difference": 0.0012961335075887227,
+        "stage_b_proxy_difference": 0.0009919851662771215,
+        "bootstrap_95": [
+          -0.002040809521364123,
+          0.005660334736430394
+        ],
+        "random_midrank": 0.45645,
+        "candidate_minus_controls": {
+          "alg_007": 0.0042463832463832465,
+          "ordinary_recency": 0.0021760369260369265,
+          "static_composition": 0.0013538221038221039
+        }
+      },
+      "H10": {
+        "candidate_mae": 0.06097650956741865,
+        "full_history_mae": 0.05280696865793433,
+        "candidate_minus_full": 0.008169540909484331,
+        "favorable_repositories": 1,
+        "repository_count": 11,
+        "deep_difference": 0.00575251527978566,
+        "stage_b_proxy_difference": 0.0018549196694046621,
+        "bootstrap_95": [
+          0.003569272085944766,
+          0.014560185191187857
+        ],
+        "random_midrank": 0.11745,
+        "candidate_minus_controls": {
+          "alg_007": 0.006012760694578876,
+          "ordinary_recency": 0.007958909322545686,
+          "static_composition": 0.0020162435162435163
+        }
+      },
+      "complete_original_stage_c": "not reconstructable without post-hoc defaults"
+    },
+    "THY-002S": {
+      "original_decision_preserved": "retire_mapping",
+      "original_outcome_executor_authorized": false,
+      "outcome_decision": "fails_frozen_outcome_gate",
+      "terminal_state": "primary_mae_rejects",
+      "parent_memberships_digest": "e1cdae6262504e73159e758d3c4ef092446454a40bf9ef8c6c6ec57b33a82fe6",
+      "random_memberships_digest": "ddafa132915c5e98d2a34aa9b144940cb8abac7b259c0aec16b4fc98fda24db9",
+      "H5": {
+        "candidate_mae": 0.0628394055212237,
+        "full_history_mae": 0.0654330745439794,
+        "candidate_minus_full": -0.0025936690227556947,
+        "favorable_repositories": 7,
+        "repository_count": 11,
+        "deep_difference": -0.005781583654465934,
+        "bootstrap_95": [
+          -0.009243234490631967,
+          0.00472402126752563
+        ],
+        "random_midrank": 0.93485,
+        "favorable_configurations": 24,
+        "favorable_models": 8,
+        "favorable_harnesses": 3,
+        "candidate_minus_controls": {
+          "ordinary_recency": -0.0010008396826578642,
+          "stationary_coreset": -0.003783469419833056
+        },
+        "failed_requirements": [
+          "candidate minus full must be at most -0.005",
+          "repository-bootstrap upper bound must be below zero"
+        ]
+      },
+      "H10": {
+        "candidate_mae": 0.055750345386709026,
+        "full_history_mae": 0.05280696865793433,
+        "candidate_minus_full": 0.002943376728774695,
+        "favorable_repositories": 7,
+        "repository_count": 11,
+        "deep_difference": -0.004726527399257019,
+        "bootstrap_95": [
+          -0.004545110263850704,
+          0.01183450686724789
+        ],
+        "random_midrank": 0.7826,
+        "favorable_configurations": 14,
+        "candidate_minus_controls": {
+          "ordinary_recency": 0.0027327451418360507,
+          "stationary_coreset": -0.0033737787374151017
+        },
+        "failed_requirements": [
+          "candidate minus full must be below zero",
+          "at least 19 configurations must be favorable"
+        ]
+      }
+    }
+  },
+  "methodology_conclusion": {
+    "surrogate_gate_assessment": "Using AUC, Brier, embedding, or difficulty-coordinate proxies to prevent an already-affordable pass-rate MAE join was a methodology regression.",
+    "candidate_decision_assessment": "None of the three audited candidates was falsely retired on this opened development panel. ALG-013 and ALG-014 lose directly on primary MAE. THY-002S gains slightly at H5 but misses effect-size and uncertainty requirements, then reverses at H10.",
+    "future_rule": "Pass-rate MAE is the outcome gate whenever Agent outcomes already exist. Surrogates may diagnose mechanism or order expensive evidence acquisition, but may not replace the outcome."
+  },
+  "provenance_conclusion": "SGA-A2 corrected two transcribed logical digests, added pre-Selection validation of all twelve logical bindings, and mapped unchanged gate booleans to the frozen terminal-state vocabulary.",
+  "claim_boundary": "Opened Multi-SWE development evidence only; not independent confirmation, prospective validity, sealed-holdout authorization, or a Runner default.",
+  "resource_use": {
+    "paid_api_calls": 0,
+    "new_agent_outcome_calls": 0,
+    "sealed_holdout_reads": 0
+  },
+  "summary_digest": "5f6098f3f204d8d9cd9d2e6fbd594326d7b86c09bf100c7ad7512427e0afff39"
+}
