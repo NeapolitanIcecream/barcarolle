@@ -3,7 +3,7 @@
 Last updated: 2026-07-29.
 
 Current ledger: `docs/research-improvement-backlog.md`. Latest report:
-`docs/experiments/2026-07-28-pre-origin-observable-theory.md`.
+`docs/experiments/2026-07-29-generator-calibrated-selection.md`.
 
 ## Preserve
 
@@ -52,11 +52,12 @@ The experiments factor the problem:
 5. historical Generator yield per Git exposure combined with current exposure
    predicts the next Task-module mix slightly better than full Task history.
 
-The current bottleneck is converting the retained Task-mix forecast into one
-absolute-budget Selection and showing that its Agent-response vector is closer
-to the future than full history and equal-budget random sampling. No Selector
-was materialized or nominated. No result authorizes paid validation, the
-sealed holdout, a Runner default, or a validity claim.
+`THY-002S-A` now freezes that conversion as a deterministic budget-ten Brier
+projection coreset on the common 11-repository Multi-SWE H10 frame. Its
+outcome-free front gate must first show structural alignment with future Task
+mix, full history, a stationary coreset, and equal-budget random sampling.
+No Selector is nominated. No result authorizes paid validation, the sealed
+holdout, a Runner default, or a validity claim.
 
 Counterfactual research may use explicitly projected Task times and
 retrospective patch-derived scoring labels; neither becomes native-arrival
@@ -92,15 +93,12 @@ rescue it with another half-life, smoothing value, path map, source subset, or
 horizon.
 
 THY-002 supplies the previously missing independent source-family Task-mix
-signal. It authorizes design of a downstream Selection study, not automatic
-outcome replay or nomination.
-
-The next authorized step is a separately frozen, zero-paid Selection study.
-It must map THY-002's forecast to one deterministic absolute budget, compare
-future Agent-response loss with full history and equal-budget random
-Selections, aggregate repository first, and bind H5/H10 plus Agent-breadth
-gates before evaluating contrasts. Reuse of already-open public Agent results
-remains development evidence; the six holdout Agents stay sealed.
+signal. The separately frozen `THY-002S-A` plan has digest
+`c6edade7…d1b05`. The next authorized step is its zero-paid Task-space replay.
+Only a front-gate pass permits one focused executor amendment that binds the
+frozen memberships to already-open public Agent results. The amendment may
+add the join and predeclared aggregation only; it cannot change the algorithm,
+controls, random indices, or gates. The six holdout Agents stay sealed.
 
 Any reopened candidate must freeze its information set, code, parameters,
 source, Origin schedule, controls, and gates before outcome replay. Open the

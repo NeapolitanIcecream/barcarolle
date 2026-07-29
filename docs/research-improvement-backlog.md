@@ -1,6 +1,6 @@
 # Research Ledger
 
-Last reviewed: 2026-07-28.
+Last reviewed: 2026-07-29.
 
 Status: current decisions, evidence limits, and executable research plan.
 
@@ -426,6 +426,7 @@ Routes remain separate until evidence supports a combination.
 | MR-G / THY-001R: module change pressure | Reachable Git change pressure predicts the module composition of the target repository's next work cohort. | The frozen Multi-SWE and Full-minus-Verified Task-mix test lost to full Task history at both horizons; the Git-only vocabulary audit preserved the result. | `closed`; no tuning or outcome replay |
 | MR-H: parent work intent | Timestamped structural parent state predicts later Task-component mass before source-attested Task material becomes available. | Admit only a complete event archive with source-native parent/component mapping, versioned material, and native Task arrival; issue creation, linking, resolution, and merge times are not substitutes. | `data-gated` challenger; archive schema, event completeness, transform, and Task alignment unresolved |
 | MR-I / THY-002: generator-calibrated exposure | Future generated Task mass follows current Git exposure multiplied by a module's historical Task-per-exposure propensity. | H5/H10 improve over full history by `0.006562`/`0.006107`; all full/Git/yield gates pass on 40 Rebench repositories. | `task-mix-pass`; retain as an observable, not a production Selector |
+| MR-J / THY-002S: Brier projection coreset | A deterministic budget-ten subset that projects local historical Tasks onto the frozen THY-002 forecast preserves its future Task-mix advantage and then predicts future Agent response. | First pass the outcome-free Multi-SWE task-space gate against full history, stationary coreset, and 20,000 random subsets. Only then execute the frozen public-outcome contract. | `frozen-front-gate`; plan digest `c6edade7…d1b05`, no outcome executor yet |
 
 ALG-001's shrinkage switch and ALG-004's EWMA guard remain offline safeguards,
 not positive algorithms. ALG-002 is closed for the current duration-stratum
