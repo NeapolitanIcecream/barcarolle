@@ -11,6 +11,12 @@ outcome replay remains prohibited until every source, forecast, materialization,
 null, and reproduction gate in the plan passes and a separate outcome plan is
 frozen.
 
+`execution-addendum.json` closes mechanical ambiguities in that plan before
+Stage A executes. It fixes the source-frame projection, coverage denominator,
+lockfile parsing, binary Brier scale, exact distance arithmetic, lock-only
+comparison, bootstrap, temporal null, execution order, and terminal-state
+semantics. It does not change the candidate or any scientific gate.
+
 `source-feasibility.json` records bounded design evidence from the ignored
 SWE-rebench and repository caches. Its npm registry sample is exploratory:
 publication times were filtered by historical Origin cutoffs, but the raw
