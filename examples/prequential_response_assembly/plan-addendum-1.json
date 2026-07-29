@@ -1,0 +1,123 @@
+{
+  "schema_version": "barcarolle_prequential_response_assembly_addendum_v1",
+  "study_id": "prequential-response-assembly-2026-07-29",
+  "frozen_at": "2026-07-29T13:49:17Z",
+  "status": "pre_score_semantic_closure",
+  "parent_plan_digest": "f1517fd04a97fc584b8df0f3c3d6be59bd3569a52bbad91694835de15558c84b",
+  "reason": "Independent pre-execution audits found algorithmic and statistical ambiguities that could change membership or pass-rate MAE. This addendum closes them before any new candidate membership is scored.",
+  "result_visibility": {
+    "new_candidate_memberships_materialized": false,
+    "new_candidate_scores_read": false,
+    "existing_panel_baselines_visible": true
+  },
+  "adanormalhedge": {
+    "state_key": "(horizon, repository_id, response_configuration_id)",
+    "state": "For four experts j, uniform prior q_j=1/4 and initial R_j=C_j=0. H5 and H10 states are independent.",
+    "potential": "Phi(R,C)=exp(max(R,0)^2/(3C)); Phi(0,0)=1. The implementation evaluates only Phi(R+1,C+1) and Phi(R-1,C+1), whose denominator is positive.",
+    "raw_weight": "w(R,C)=0.5 * (Phi(R+1,C+1) - Phi(R-1,C+1)).",
+    "prediction_weight": "p_j=q_j*w(R_j,C_j)/sum_k(q_k*w(R_k,C_k)). If every raw weight is mathematically zero, use exactly 1/4 for every expert.",
+    "experts": {
+      "full_history": "mean(y[0:n])",
+      "latest_H": "mean(y[n-H:n])",
+      "latest_2H": "mean(y[n-2H:n])",
+      "linear_drift": "clip(2*mean(y[n-H:n])-mean(y[n-2H:n-H]),0,1)"
+    },
+    "continuous_forecast": "f_hat=sum_j p_j*f_j. Values outside [0,1] beyond floating tolerance are errors, not algorithmic clipping.",
+    "loss_and_update": "After an earlier complete block is available, ell_j=abs(f_j-y_future), ell_hat=sum_j p_j*ell_j, r_j=ell_hat-ell_j, R_j<-R_j+r_j, C_j<-C_j+abs(r_j). The learner loss is weighted expert loss, not abs(f_hat-y_future).",
+    "delayed_order": "Before forecasting the current Origin, absorb exactly once every earlier Origin ordered by (future_block_end_time, origin_id) whose complete future block ends no later than the current cutoff. Each update reuses that earlier Origin's stored f_j and p_j; it is never recomputed from current history. Standard non-overlapping local Origins make the immediately preceding block eligible.",
+    "unseen_target_isolation": "Coordinate states are independent. ALG-015U materialization for held-out configuration a drops a from the forecast and history response matrix; no state update for another coordinate reads a.",
+    "numerics": "Compute log w as a + log(-expm1(b-a)) - log(2), where a=max(R+1,0)^2/(3(C+1)) and b=max(R-1,0)^2/(3(C+1)); normalize with log-sum-exp. Reject nonfinite state, C<0, or abs(R)>C+1e-10."
+  },
+  "cached_scalar_materializer": {
+    "feasible_successes": "q is an integer in [max(0,10-n_zero), min(10,n_one)].",
+    "primary_objective": "minimize abs(q/10-forecast).",
+    "secondary_objective": "Among primary-optimal q values and memberships, maximize the sum of visible Task priority defined below.",
+    "membership": "For a chosen q, take the q success Tasks and 10-q failure Tasks with greatest visible Task priority.",
+    "visible_task_priority": "rank(created_at,instance_id) in ascending target-repository history order plus SHA256(instance_id)[0:12]/16^12 divided by history_count+1. This uses no outcome outside the cached response cell and no future data.",
+    "final_fallback": "If floating secondary sums are exactly equal, choose the lexicographically smallest sorted tuple of instance_id."
+  },
+  "exact_l1_materializer": {
+    "primary_program": "Binary z_i over at most the ten highest-priority Tasks in each visible binary response-pattern cell; sum_i z_i=10; minimize mean_j u_j subject to -u_j <= sum_i z_i*y_ij/10 - forecast_j <= u_j. Discarding lower-priority Tasks beyond ten per identical pattern preserves every feasible primary response composition.",
+    "primary_tolerance": "Binary values within 1e-5 of an integer are rounded and otherwise rejected. Recomputed mean L1 must match the certified primary solver objective within 1e-8.",
+    "secondary_program": "Fix sum_j u_j <= coordinate_count*primary_objective with no semantic relaxation, set slack cost to zero, and maximize sum_i z_i*visible_task_priority(i). Recompute and reject unless primary L1 matches the certified optimum within 1e-8.",
+    "visible_task_priority": "rank(created_at,instance_id) in ascending target-repository history order plus SHA256(instance_id)[0:12]/16^12 divided by history_count+1.",
+    "final_fallback": "Variables are sorted by (visible response pattern, visible Task priority descending, instance_id), SciPy 1.16.3/HiGHS execution is deterministic, and two whole runs must be byte-identical. An exact tie in both linear objectives is resolved by the pinned solver's procedural output, not by an unstated mathematical lexicographic claim; no target-Agent or future outcome may be consulted.",
+    "full_target_control": {
+      "cached_target": "Use the target Agent's scalar full-history pass rate and the cached scalar materializer.",
+      "unseen_target": "Use the other 35 Agents' full-history response-rate vector and the exact L1 materializer."
+    }
+  },
+  "greedy_l1_ablation": {
+    "construction": "Add ten Tasks sequentially. At each step choose the available Task minimizing visible-coordinate mean L1 to the forecast; ties choose greatest visible Task priority, then instance_id.",
+    "swaps": "Run at most 20 passes. Each pass takes the globally best swap whose L1 improves by more than 1e-15; ties prefer removing lower-priority and adding higher-priority Tasks, then instance_id. Stop when no improving swap exists.",
+    "status": "Direct pass-rate MAE diagnostic for ALG-016U materialization only; it is not a fourth portfolio candidate and cannot be selected as this execution's winner."
+  },
+  "bocpd": {
+    "convention": "R_t is the number of observations in the current regime including y_t, so R_t is in 1..t. A change happens before a new observation is generated.",
+    "visible_stream": "For held-out Agent a, y_t is the 35-dimensional binary response vector with a deleted, ordered by (created_at,instance_id).",
+    "empirical_bayes_anchor": "For history length T, g_j=(sum_t y_tj+0.5)/(T+1), kappa=10, alpha0_j=kappa*g_j, beta0_j=kappa*(1-g_j). The anchor and likelihood deliberately reuse visible history; this is empirical Bayes, not target or future leakage.",
+    "hazard": "c=1/(4H).",
+    "initialization": "pi_1,1=1; alpha_1,1,j=alpha0_j+y_1j; beta_1,1,j=beta0_j+1-y_1j.",
+    "change_predictive": "log L0_t=sum_j[y_tj log(alpha0_j/(alpha0_j+beta0_j))+(1-y_tj) log(beta0_j/(alpha0_j+beta0_j))].",
+    "growth_predictive": "For each old r, log L_t,r is the same joint conditionally-independent Bernoulli log likelihood using alpha_t-1,r,j and beta_t-1,r,j.",
+    "recursion": "q_t,1=c*exp(log L0_t); q_t,r+1=(1-c)*pi_t-1,r*exp(log L_t,r); normalize all q with log-sum-exp. Change stats equal prior plus y_t; growth stats add y_t to the old state. Do not prune run lengths.",
+    "posterior_mean": "m_j=sum_r pi_T,r*alpha_T,r,j/(alpha_T,r,j+beta_T,r,j).",
+    "horizon_mean": "w_H=((1-c)*(1-(1-c)^H))/(H*c); forecast_j=w_H*m_j+(1-w_H)*g_j. This averages future steps d=1..H with no-change probability (1-c)^d.",
+    "map_ablation": "Choose the smallest inclusive run length among equal maximum posterior masses, use that state's Beta posterior mean, then apply the same H-step reversion. This is a continuous-forecast diagnostic only; it is not materialized and receives no pass-rate MAE.",
+    "shared_state": "There is one run-length posterior shared by all 35 visible streams, whose conditional likelihood is their product. There is not one run-length posterior per Agent."
+  },
+  "alg_017_decision": {
+    "status": "deferred_before_any_new_candidate_score",
+    "reason": "The fixed six-hour boundary does not leave a safe ninety-minute reserve after exact implementation, dual-run evidence, and audit for the first three candidates. No score from ALG-015C, ALG-015U, or ALG-016U informed this decision.",
+    "consequence": "ALG-017U remains a documented next-wave mechanism and is not part of this execution's multiple-comparison count."
+  },
+  "statistical_protocol": {
+    "repository_bootstrap": {
+      "resamples": 10000,
+      "unit": "paired repository-level candidate-minus-full difference",
+      "h5_seed": 20260733,
+      "h10_seed": 20260738,
+      "generator": "NumPy PCG64",
+      "quantile_method": "NumPy 2.5.1 default linear"
+    },
+    "random": {
+      "implementation": "Reuse examples/multi_swe_research/semantic_selector.py::_random_outcome_calibration bound by the execution lock.",
+      "draws": 20000,
+      "h5_seed": 20260833,
+      "h10_seed": 20260838,
+      "traversal": "repository_ids in frozen selector-plan order, then Origins in build_repository_origins order",
+      "chunk_size": 512,
+      "sampler": "NumPy PCG64 random keys followed by argpartition at budget-1",
+      "coupling": "One subset per Origin and draw shared across all 36 target configurations",
+      "midrank": "(count(random_difference>candidate_difference)+0.5*count(equal))/draws"
+    },
+    "multiple_comparisons": "Exactly three executed algorithms: one cached-target and two unseen-target. Report every result. A best observed value is exploratory and receives no multiplicity-corrected confirmation claim.",
+    "group_and_control_status": "Agent/model/harness/language directions, deep repositories, exact-full-target controls, and continuous forecast/materialization errors are required diagnostics but are not independent gates.",
+    "temporal_null_status": "Not a gate in this execution because no unique null construction was frozen in the parent plan. A candidate cannot receive development_nomination terminal status without a separately frozen temporal-null follow-up.",
+    "decision": "numeric_progress is available exactly as defined in the parent plan, separately by information lane. An executed eligible candidate that misses numeric_progress is bounded_inconclusive because no stronger refutation gate was frozen. The parent development_nomination thresholds are reported as compatibility diagnostics only; development_nomination is unavailable in this execution."
+  },
+  "diagnostic_coordinates": {
+    "cached_target": "Continuous forecast and materialization errors use only the target Agent coordinate allowed by cached_target.",
+    "unseen_target": "Continuous forecast and materialization errors use only the other 35 visible coordinates. Final pass-rate MAE alone uses the held-out target Agent after membership is frozen."
+  },
+  "execution_identity_requirements": {
+    "h5_full_membership_digest": "ec9a10a4f128745b9712920960b03104b18d94557b06ae39a3f6db5df997d7a2",
+    "h10_full_membership_digest": "a7ba3c33cf79931582b570a23e8f48509677c0fbe17f50694069de377f42daa3",
+    "h5_alg_007_membership_digest": "ec2241234149d9eaf0fd1aa748cf86a11fc71bcca4e694ab109e84c23916532a",
+    "h10_alg_007_membership_digest": "b69d1434867690fd1847111e9feaad9a28548f9b26fe2907cdb77b741951504f",
+    "alg_007_task_space_logical_digest": "d9916f4c9acdcf615262f92cb771ed0079a696b4605805ef0c82b17f4f4e401d",
+    "task_time_projection_digest": "56eb7dda0d7fd9787b1e77c432572f212726b92abc189df18ab2a4fe6bb815e5",
+    "active_surrogate_amendment_digests": [
+      "9ee6e8d7a360609a6aba182536693d22d3a3ca66f9cdcb9f3d7a4d8568898f49",
+      "1d25336e247ae6bf8508c846e979b9ff936c62ccff5e39a1be0669d1f911a833"
+    ],
+    "required_lock_bindings": [
+      "runner and directed-test SHA-256",
+      "selector plan, Origin builder, random implementation, task times, resolved outcomes, and ALG-007 artifact SHA-256",
+      "exact H5/H10 repository, deep-repository, Origin, full-history, recency, and ALG-007 membership digests",
+      "NumPy, SciPy, Python, and platform identity"
+    ]
+  },
+  "claim_boundary": "This semantic closure does not alter the finite mechanisms in the parent plan or authorize score-driven rescue. It makes their execution unique enough for an outcome-open development replay. Cached-target and unseen-target claims remain separate.",
+  "addendum_digest": "8f782ce6421de09064459a13a268689908f88014084dd6e6641d0c7785a0ba2c"
+}
