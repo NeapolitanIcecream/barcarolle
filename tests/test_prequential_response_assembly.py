@@ -12,6 +12,7 @@ REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPOSITORY_ROOT))
 
 from examples.prequential_response_assembly.study import (  # noqa: E402
+    _certified_primary_objective,
     adanormalhedge_forecast,
     adanormalhedge_weights,
     create_adanormalhedge_state,
@@ -202,6 +203,15 @@ def test_exact_l1_assembly_matches_brute_force() -> None:
     assert len(result.indices) == 3
     assert result.objective == pytest.approx(brute, abs=1e-8)
     assert result.response_pattern_count == 7
+
+
+def test_primary_replay_uses_rounded_feasible_objective() -> None:
+    reported = 0.019958536261866413
+    feasible = 0.01995856483329498
+
+    assert _certified_primary_objective(reported, feasible) == feasible
+    with pytest.raises(RuntimeError, match="primary objective"):
+        _certified_primary_objective(reported, reported + 1.1e-7)
 
 
 def test_exact_l1_assembly_uses_only_visible_coordinates() -> None:

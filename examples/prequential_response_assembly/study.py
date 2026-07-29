@@ -43,14 +43,19 @@ HERE = Path(__file__).resolve().parent
 REPOSITORY_ROOT = HERE.parents[1]
 DEFAULT_PLAN = HERE / "plan.json"
 DEFAULT_ADDENDUM = HERE / "plan-addendum-1.json"
+DEFAULT_EXECUTION_AMENDMENT = HERE / "execution-amendment-1.json"
 DEFAULT_LOCK = HERE / "execution-lock.json"
 PLAN_SCHEMA = "barcarolle_prequential_response_assembly_plan_v1"
 ADDENDUM_SCHEMA = "barcarolle_prequential_response_assembly_addendum_v1"
+EXECUTION_AMENDMENT_SCHEMA = (
+    "barcarolle_prequential_response_assembly_execution_amendment_v1"
+)
 LOCK_SCHEMA = "barcarolle_prequential_response_assembly_execution_lock_v1"
 MEMBERSHIP_SCHEMA = "barcarolle_prequential_response_assembly_memberships_v1"
 RESULT_SCHEMA = "barcarolle_prequential_response_assembly_results_v1"
 NUMPY_VERSION = "2.5.1"
 SCIPY_VERSION = "1.16.3"
+OBJECTIVE_REPLAY_TOLERANCE = 1e-7
 EXPERT_IDS = (
     "full_history",
     "latest_H",
@@ -62,6 +67,7 @@ BOUND_FILE_PATHS = frozenset(
     {
         "examples/prequential_response_assembly/plan.json",
         "examples/prequential_response_assembly/plan-addendum-1.json",
+        "examples/prequential_response_assembly/execution-amendment-1.json",
         "examples/prequential_response_assembly/study.py",
         "tests/test_prequential_response_assembly.py",
         "examples/surrogate_gate_audit/plan.json",
@@ -182,6 +188,7 @@ def load_execution_lock(
     *,
     plan: Mapping[str, Any],
     addendum: Mapping[str, Any] | None = None,
+    execution_amendment: Mapping[str, Any] | None = None,
 ) -> Mapping[str, Any]:
     """Load the implementation/source lock created before scoring."""
     payload = _load_mapping(path)
@@ -193,9 +200,22 @@ def load_execution_lock(
     if payload.get("lock_digest") != expected:
         raise ValueError("prequential response execution lock digest changed")
     active_addendum = load_addendum(plan=plan) if addendum is None else addendum
-    if payload.get("plan_digest") != plan.get("plan_digest") or payload.get(
-        "addendum_digest"
-    ) != active_addendum.get("addendum_digest"):
+    active_execution_amendment = (
+        load_execution_amendment(
+            plan=plan,
+            addendum=active_addendum,
+        )
+        if execution_amendment is None
+        else execution_amendment
+    )
+    if (
+        payload.get("plan_digest") != plan.get("plan_digest")
+        or payload.get("addendum_digest") != active_addendum.get("addendum_digest")
+        or payload.get("execution_amendment_digest")
+        != active_execution_amendment.get("amendment_digest")
+        or payload.get("supersedes_lock_digest")
+        != active_execution_amendment.get("parent_lock_digest")
+    ):
         raise ValueError("execution lock does not bind the frozen contract")
     bound_files = _mapping_sequence(payload, "bound_files")
     paths = tuple(_required_string(item, "path") for item in bound_files)
@@ -219,6 +239,35 @@ def load_execution_lock(
     frames = _mapping(payload, "frames")
     if set(frames) != {"5", "10"}:
         raise ValueError("execution-lock frame set changed")
+    return payload
+
+
+def load_execution_amendment(
+    path: Path = DEFAULT_EXECUTION_AMENDMENT,
+    *,
+    plan: Mapping[str, Any],
+    addendum: Mapping[str, Any],
+) -> Mapping[str, Any]:
+    """Load the pre-score numerical replay correction."""
+    payload = _load_mapping(path)
+    if payload.get("schema_version") != EXECUTION_AMENDMENT_SCHEMA:
+        raise ValueError("execution amendment schema is unsupported")
+    expected = canonical_digest(
+        {key: value for key, value in payload.items() if key != "amendment_digest"}
+    )
+    correction = _mapping(payload, "correction")
+    visibility = _mapping(payload, "resource_visibility")
+    if (
+        payload.get("amendment_digest") != expected
+        or payload.get("plan_digest") != plan.get("plan_digest")
+        or payload.get("addendum_digest") != addendum.get("addendum_digest")
+        or payload.get("status") != "pre_score_primary_replay_numeric_correction"
+        or correction.get("primary_replay_tolerance") != OBJECTIVE_REPLAY_TOLERANCE
+        or correction.get("secondary_replay_tolerance") != OBJECTIVE_REPLAY_TOLERANCE
+        or visibility.get("membership_artifacts_written") != 0
+        or visibility.get("candidate_scores_read") != 0
+    ):
+        raise ValueError("execution amendment binding changed")
     return payload
 
 
@@ -504,15 +553,17 @@ def solve_exact_l1_assembly(
         for value, flag in zip(raw_flags, flags, strict=True)
     ):
         raise RuntimeError("exact L1 assembly returned invalid binary flags")
-    primary_objective = float(result.fun)
+    solver_objective = float(result.fun)
     primary_selected = tuple(
         eligible[position] for position, flag in enumerate(flags) if flag
     )
     primary_recomputed = float(
         np.abs(values[list(primary_selected)].mean(axis=0) - forecast).mean()
     )
-    if abs(primary_recomputed - primary_objective) > 1e-8:
-        raise RuntimeError("exact L1 primary objective changed after replay")
+    primary_objective = _certified_primary_objective(
+        solver_objective,
+        primary_recomputed,
+    )
 
     secondary_matrix = np.vstack(
         (
@@ -583,7 +634,7 @@ def solve_exact_l1_assembly(
         )
     )
     recomputed = float(np.abs(values[list(selected)].mean(axis=0) - forecast).mean())
-    if recomputed > primary_objective + 1e-8:
+    if abs(recomputed - primary_objective) > OBJECTIVE_REPLAY_TOLERANCE:
         raise RuntimeError("exact L1 assembly objective changed after replay")
     gap_value = getattr(secondary, "mip_gap", None)
     node_value = getattr(secondary, "mip_node_count", None)
@@ -602,6 +653,19 @@ def solve_exact_l1_assembly(
             else None
         ),
     )
+
+
+def _certified_primary_objective(
+    solver_objective: float,
+    feasible_recomputed: float,
+) -> float:
+    if (
+        not isfinite(solver_objective)
+        or not isfinite(feasible_recomputed)
+        or abs(solver_objective - feasible_recomputed) > OBJECTIVE_REPLAY_TOLERANCE
+    ):
+        raise RuntimeError("exact L1 primary objective changed after replay")
+    return feasible_recomputed
 
 
 def shared_bocpd_forecast(
