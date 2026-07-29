@@ -1,10 +1,16 @@
 {
   "schema_version": "barcarolle_pre_origin_task_mix_plan_v1",
-  "study_id": "pre-origin-task-mix-kill-test-2026-07-29",
+  "study_id": "pre-origin-task-mix-kill-test-audit-revision-2026-07-29",
+  "audit_revision": {
+    "original_plan_commit": "3257ef81",
+    "original_plan_digest": "10b4fcb22d7c1fa3adf5e3b04fa50bd9fd1272d9f2bc507585997bae03188459",
+    "original_result_digest": "cb6dea18f58c2270dac708d96849a093cf904cd708997e4278ec14fb3ac24a19",
+    "reason": "Independent audit found that history patch modules changed the shared candidate smoothing vocabulary. This revision restricts the vocabulary to reachable Git history and corrects the descriptive future span. It was specified after the original result and is evidence-preserving sensitivity analysis, not a new preregistration."
+  },
   "research_question": "Does fixed one-year Git module commit pressure improve prediction of the next generated Task-module mix beyond cutoff-safe Task-history and Git-history controls?",
   "epistemic_mode": "source_time_safe_counterfactual_development",
   "candidate": {
-    "algorithm_id": "THY-001R",
+    "algorithm_id": "THY-001R-A",
     "name": "Fixed-Half-Life Module Commit Pressure",
     "half_life_days": 365.25,
     "commit_filter": "reachable_non_root_non_merge",
@@ -58,7 +64,7 @@
     ],
     "task_label_rule": "unique eligible paths in the source reference fix patch, split uniformly; no eligible path maps to OTHER",
     "future_unseen_rule": "a projected module absent from the Origin vocabulary maps to OTHER",
-    "origin_vocabulary": "ROOT, OTHER, and modules observed in cutoff-safe Task history or reachable eligible Git history"
+    "origin_vocabulary": "ROOT, OTHER, and modules observed only in reachable eligible Git history; retrospective Task patch labels never add candidate labels"
   },
   "rolling_origin": {
     "minimum_initial_history_tasks": 20,
@@ -131,7 +137,7 @@
   ],
   "metrics": {
     "primary": "future Task module cross-entropy",
-    "descriptive": "total variation to the empirical future module distribution",
+    "descriptive": "total variation to the empirical future module distribution; future calendar span runs from Origin cutoff through the final Task",
     "aggregation": "Tasks to Origin, Origins to repository, repositories equally",
     "uncertainty": "deterministic 20000-draw repository bootstrap, descriptive only",
     "bootstrap_seed": 20260729
@@ -141,7 +147,7 @@
     "transfer_source_h5": "candidate macro loss is lower than task_full_history and task_trailing_h and candidate beats task_full_history in at least 6 of 10 repositories",
     "h10_sensitivity": "candidate-minus-task_full_history and candidate-minus-task_trailing_h are both negative on both sources",
     "pass": "all three gates pass",
-    "failure": "retire THY-001R without half-life, horizon, smoothing, path-rule, source, or repository search"
+    "failure": "retire THY-001R-A without half-life, horizon, smoothing, path-rule, source, or repository search"
   },
   "outcome_boundary": {
     "agent_results": "prohibited unless the complete Task-mix gate passes",
@@ -161,5 +167,5 @@
     "embedding_calls": 0,
     "coding_agent_calls": 0
   },
-  "plan_digest": "10b4fcb22d7c1fa3adf5e3b04fa50bd9fd1272d9f2bc507585997bae03188459"
+  "plan_digest": "dd3e420df3ae3577d78b57a8761a1f369ceace1ac7b03e4f4d56666fff6a2d44"
 }

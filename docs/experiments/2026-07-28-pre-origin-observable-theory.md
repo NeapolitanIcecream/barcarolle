@@ -26,10 +26,11 @@ It is not a pre-Origin Selector input and cannot be relabeled as an
 arrival-native label. Likewise, projected PR time can define a development
 cohort without becoming strict historical availability.
 
-The frozen development test is
-[`examples/pre_origin_task_mix/plan.json`](../../examples/pre_origin_task_mix/plan.json),
-digest `10b4fcb2…8459`. It makes four deliberate changes before reading the
-derived Task-mix results:
+The original frozen development test is recoverable at commit `3257ef81`,
+digest `10b4fcb2…8459`. The current
+[`examples/pre_origin_task_mix/plan.json`](../../examples/pre_origin_task_mix/plan.json)
+is the explicitly post-result audit revision. The original plan made four
+deliberate changes before reading the derived Task-mix results:
 
 - `THY-001R` simplifies change pressure to one unit per reachable, non-root,
   non-merge commit, split across the eligible modules it touches, with the
@@ -64,7 +65,70 @@ outcomes. A failure keeps them closed and moves research to a genuinely new
 pre-Origin observable. Neither result is external confirmation or strict
 prospective validity.
 
-## Decision
+## 2026-07-29 Result And Independent Audit
+
+`THY-001R` is retired. The source gate passed and two byte-identical runs
+reproduced the decision, but the one-year Git forecast lost to full Task
+history on both sources and both horizons. Candidate minus control is shown
+below; negative values favor the candidate.
+
+| Source | Horizon | vs full Task history | Favorable repositories | vs trailing Task history |
+| --- | ---: | ---: | ---: | ---: |
+| Multi-SWE | H5 | `+0.175720` | 2/11 | `-0.628143` |
+| Multi-SWE | H10 | `+0.217045` | 2/11 | `-0.229131` |
+| Full minus Verified | H5 | `+0.087506` | 2/10 | `-0.861963` |
+| Full minus Verified | H10 | `+0.088073` | 3/10 | `-0.544003` |
+
+The candidate beat the short Task-history, full Git, 90-day Git, and uniform
+controls in macro average. That does not rescue it: the primary baseline is
+the unselected full Task history. The stable Generator-specific Task
+distribution carried more signal than raw repository change pressure, while
+short Task recency discarded too much effective sample size.
+
+The frozen raw and independent reproduction have file SHA-256
+`36aa01cb…8a633`, semantic result digest `cb6dea18…4a19`, and Origin-row digest
+`12b9bf93…ca65`. No Agent outcome, sealed holdout, paid call, or embedding was
+used.
+
+Two independent audits found no decision-changing source, Origin, aggregation,
+or artifact error. They did find an ambiguity: the frozen JSON explicitly
+included historical patch-derived modules in a shared cutoff-time vocabulary,
+while the README said a patch never affects the forecast. Both readings are
+reported rather than retroactively relabeling the preregistration.
+
+The post-result audit revision `THY-001R-A` restricts the vocabulary to
+reachable Git history and corrects the descriptive horizon span from
+Origin-to-final-Task. It was run twice with byte-identical SHA-256
+`70bcbaa3…7911`; result digest `bf74b3fc…50e4`; Origin-row digest
+`daf349be…79b9`. Its full-history contrasts are:
+
+| Source | Horizon | Candidate minus full Task history | Favorable repositories |
+| --- | ---: | ---: | ---: |
+| Multi-SWE | H5 | `+0.187333` | 2/11 |
+| Multi-SWE | H10 | `+0.231330` | 2/11 |
+| Full minus Verified | H5 | `+0.087582` | 2/10 |
+| Full minus Verified | H10 | `+0.088149` | 3/10 |
+
+The audit correction makes the negative conclusion slightly stronger. It is a
+sensitivity analysis, not a second preregistration. The original artifact is
+[`task-mix-summary-preregistered.json`](../../examples/pre_origin_task_mix/evidence/task-mix-summary-preregistered.json);
+the corrected artifact is
+[`task-mix-summary.json`](../../examples/pre_origin_task_mix/evidence/task-mix-summary.json).
+
+The mechanistic failure is now specific: raw Git activity estimates where code
+changes, but not the Generator's module-specific propensity to turn those
+changes into Tasks. Half-life, smoothing, module-depth, horizon, and source
+search cannot add that missing information and remain prohibited.
+
+The next admissible theory family is generator-calibrated exposure, not a tuned
+mixture. `THY-002` will estimate a module's historical Task yield per unit of
+Git exposure, then apply that propensity to current Git pressure. Its first
+test remains outcome-free and repository-local at runtime; multiple
+repositories are independent offline evidence units. SWE-rebench V2 is the
+intended new source family, subject to a frozen lineage and repository
+admission contract.
+
+## Original Theory Decision
 
 Freeze `THY-001 Fixed-Half-Life Module Change Pressure` as a data-gated theory.
 It defines a forecast of a repository's next module composition from Git
@@ -541,8 +605,9 @@ remain source-gated. Two challenger mechanisms remain researchable but are not
 test-ready. No result establishes predictive value, Task-source alignment,
 Agent-score improvement, portability, or a product requirement.
 
-The amended next action is the bounded, outcome-free `THY-001R` Task-mix kill
-test above. The original organic and arrival-native stages remain future
-promotion options, not development blockers. Do not implement a core
-FeatureSnapshot field, source adapter, trainer, registry, or Selector unless
-the Task-mix gate passes and a concrete caller is separately frozen.
+The bounded, outcome-free `THY-001R` Task-mix kill test has now failed and is
+closed. The next action is to freeze and falsify `THY-002` on a lineage-audited
+SWE-rebench V2 frame. The original organic and arrival-native stages remain
+future promotion options, not development blockers. Do not implement a core
+FeatureSnapshot field, source adapter, trainer, registry, or Selector unless a
+Task-mix gate passes and a concrete caller is separately frozen.

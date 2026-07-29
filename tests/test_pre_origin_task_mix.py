@@ -5,24 +5,32 @@ import json
 from pathlib import Path
 import subprocess
 import sys
+from typing import Any
 
 import pytest
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPOSITORY_ROOT))
 
+from barcarolle.records import canonical_digest  # noqa: E402
 from examples.pre_origin_task_mix.study import (  # noqa: E402
     CommitProjection,
     TaskProjection,
     _load_commit_index,
     build_origins,
+    compact_result,
     decide,
+    future_horizon_span_days,
     git_counts,
+    git_vocabulary,
     load_plan,
     module_for_path,
     modules_from_patch,
     smoothed_distribution,
+    summarize_rows,
     task_module_mass,
+    verify_result,
+    verify_summary,
 )
 
 
@@ -44,7 +52,7 @@ def _task(index: int, repository_id: str = "example/repository") -> TaskProjecti
     )
 
 
-def _passing_horizon(repository_count: int) -> dict[str, object]:
+def _passing_horizon(repository_count: int) -> dict[str, Any]:
     return {
         "repository_count": repository_count,
         "contrasts": {
@@ -67,7 +75,10 @@ def _passing_horizon(repository_count: int) -> dict[str, object]:
 def test_frozen_plan_digest_is_valid() -> None:
     plan = load_plan(PLAN_PATH)
 
-    assert plan["candidate"]["algorithm_id"] == "THY-001R"
+    assert plan["candidate"]["algorithm_id"] == "THY-001R-A"
+    assert plan["audit_revision"]["original_plan_digest"] == (
+        "10b4fcb22d7c1fa3adf5e3b04fa50bd9fd1272d9f2bc507585997bae03188459"
+    )
 
 
 def test_plan_rejects_contract_change_without_new_digest(tmp_path: Path) -> None:
@@ -165,6 +176,48 @@ def test_git_pressure_applies_fixed_decay_and_clamps_clock_anomaly() -> None:
 
     assert anomaly_count == 1
     assert counts == pytest.approx({"module-a": 1.0, "module-b": 1.5})
+
+
+def test_candidate_vocabulary_uses_only_cutoff_safe_git_modules() -> None:
+    module_plan = load_plan(PLAN_PATH)["module_projection"]
+    commits = (
+        CommitProjection(
+            "a" * 40,
+            datetime(2022, 1, 1, tzinfo=UTC),
+            ("src/git-visible",),
+        ),
+    )
+
+    vocabulary = git_vocabulary(
+        commits,
+        module_plan=module_plan,
+        unseen_label="OTHER",
+    )
+
+    assert vocabulary == ("OTHER", "ROOT", "src/git-visible")
+    assert "src/patch-only" not in vocabulary
+
+
+def test_future_horizon_span_starts_at_origin_cutoff() -> None:
+    cutoff = datetime(2022, 1, 1, tzinfo=UTC)
+    future = (
+        TaskProjection(
+            instance_id="future-1",
+            repository_id="example/repository",
+            source_time=cutoff + timedelta(days=2),
+            base_commit="a" * 40,
+            modules=("src/module",),
+        ),
+        TaskProjection(
+            instance_id="future-2",
+            repository_id="example/repository",
+            source_time=cutoff + timedelta(days=5),
+            base_commit="b" * 40,
+            modules=("src/module",),
+        ),
+    )
+
+    assert future_horizon_span_days(cutoff, future) == pytest.approx(5.0)
 
 
 def test_additive_smoothing_preserves_probability_mass() -> None:
@@ -275,3 +328,109 @@ def test_git_projection_uses_names_not_blob_contents(tmp_path: Path) -> None:
     )
 
     assert index[commit_id].modules == ("src/parser",)
+
+
+def test_result_verification_survives_json_sequence_round_trip() -> None:
+    plan = load_plan(PLAN_PATH)
+    rows = []
+    for source in plan["sources"]:
+        for repository_id in source["repositories"]:
+            for horizon in (5, 10):
+                rows.append(
+                    {
+                        "source_id": source["source_id"],
+                        "repository_id": repository_id,
+                        "origin_id": f"{repository_id}:origin-001",
+                        "horizon": horizon,
+                        "future_calendar_span_days": 1.0,
+                        "future_other_mass": 0.0,
+                        "losses": {
+                            "candidate": 0.1,
+                            "task_full_history": 0.2,
+                            "task_trailing_h": 0.2,
+                            "git_full_touch": 0.2,
+                            "git_trailing_90d_touch": 0.2,
+                            "uniform": 0.2,
+                        },
+                    }
+                )
+    expected_by_source = {
+        source["source_id"]: tuple(source["repositories"])
+        for source in plan["sources"]
+    }
+    summaries = summarize_rows(
+        rows,
+        expected_by_source=expected_by_source,
+        bootstrap_seed=plan["metrics"]["bootstrap_seed"],
+    )
+    result = {
+        "schema_version": "barcarolle_pre_origin_task_mix_results_v1",
+        "study_id": plan["study_id"],
+        "plan_digest": plan["plan_digest"],
+        "origin_rows": tuple(rows),
+        "origin_rows_digest": canonical_digest(tuple(rows)),
+        "source_summaries": summaries,
+        "admission_failures": (),
+        "decision": decide(summaries, admission_failures=()),
+    }
+    result["result_digest"] = canonical_digest(result)
+    round_tripped = json.loads(json.dumps(result))
+
+    verify_result(round_tripped, plan)
+
+
+def test_summary_verification_binds_compact_projection_to_raw_result() -> None:
+    plan = load_plan(PLAN_PATH)
+    rows = []
+    for source in plan["sources"]:
+        for repository_id in source["repositories"]:
+            for horizon in (5, 10):
+                rows.append(
+                    {
+                        "source_id": source["source_id"],
+                        "repository_id": repository_id,
+                        "origin_id": f"{repository_id}:origin-001",
+                        "horizon": horizon,
+                        "future_calendar_span_days": 1.0,
+                        "future_other_mass": 0.0,
+                        "losses": {
+                            predictor_id: 0.1
+                            for predictor_id in (
+                                "candidate",
+                                "task_full_history",
+                                "task_trailing_h",
+                                "git_full_touch",
+                                "git_trailing_90d_touch",
+                                "uniform",
+                            )
+                        },
+                    }
+                )
+    expected_by_source = {
+        source["source_id"]: tuple(source["repositories"])
+        for source in plan["sources"]
+    }
+    summaries = summarize_rows(
+        rows,
+        expected_by_source=expected_by_source,
+        bootstrap_seed=plan["metrics"]["bootstrap_seed"],
+    )
+    result = {
+        "schema_version": "barcarolle_pre_origin_task_mix_results_v1",
+        "study_id": plan["study_id"],
+        "plan_digest": plan["plan_digest"],
+        "origin_rows": tuple(rows),
+        "origin_rows_digest": canonical_digest(tuple(rows)),
+        "source_summaries": summaries,
+        "admission_failures": (),
+        "decision": decide(summaries, admission_failures=()),
+    }
+    result["result_digest"] = canonical_digest(result)
+    summary = dict(compact_result(result, plan))
+    summary["resource_use"] = {"paid_api_calls": 1}
+    summary["summary_digest"] = canonical_digest(
+        {key: value for key, value in summary.items() if key != "summary_digest"}
+    )
+
+    with pytest.raises(ValueError, match="raw result"):
+        verify_summary(summary, plan, result=result)

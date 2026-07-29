@@ -312,6 +312,37 @@ def git_counts(
     return dict(counts), future_dated
 
 
+def git_vocabulary(
+    commits: Iterable[CommitProjection],
+    *,
+    module_plan: Mapping[str, object],
+    unseen_label: str,
+) -> tuple[str, ...]:
+    """Build the candidate vocabulary without retrospective Task labels."""
+    return tuple(
+        sorted(
+            {
+                _required_string(module_plan, "root_label"),
+                unseen_label,
+                *(module for commit in commits for module in commit.modules),
+            }
+        )
+    )
+
+
+def future_horizon_span_days(
+    cutoff: datetime,
+    future: Sequence[TaskProjection],
+) -> float:
+    """Measure the future horizon from the Origin cutoff to its last Task."""
+    if not future:
+        raise ValueError("future Task cohort must not be empty")
+    span = future[-1].source_time - cutoff
+    if span.total_seconds() < 0:
+        raise ValueError("future Task cohort precedes its Origin cutoff")
+    return span.total_seconds() / 86400.0
+
+
 def future_loss(
     future: Sequence[TaskProjection],
     probabilities: Mapping[str, float],
@@ -807,15 +838,10 @@ def evaluate_repository(
             commit_index[commit_id]
             for commit_id in commit_sets[origin.origin_id]
         )
-        vocabulary = tuple(
-            sorted(
-                {
-                    _required_string(module_plan, "root_label"),
-                    unseen_label,
-                    *(module for task in origin.history for module in task.modules),
-                    *(module for commit in commits for module in commit.modules),
-                }
-            )
+        vocabulary = git_vocabulary(
+            commits,
+            module_plan=module_plan,
+            unseen_label=unseen_label,
         )
         candidate_counts, future_dated = git_counts(
             commits,
@@ -883,10 +909,10 @@ def evaluate_repository(
                     "horizon": horizon,
                     "history_task_count": len(origin.history),
                     "future_task_count": len(future),
-                    "future_calendar_span_days": (
-                        future[-1].source_time - future[0].source_time
-                    ).total_seconds()
-                    / 86400.0,
+                    "future_calendar_span_days": future_horizon_span_days(
+                        origin.cutoff,
+                        future,
+                    ),
                     "vocabulary_size": len(vocabulary),
                     "future_other_mass": fsum(
                         task_module_mass(
@@ -1242,7 +1268,9 @@ def verify_result(
         expected_by_source=expected_by_source,
         bootstrap_seed=_positive_integer(_mapping(plan, "metrics"), "bootstrap_seed"),
     )
-    if result.get("source_summaries") != expected_summaries:
+    if canonical_digest(result.get("source_summaries")) != canonical_digest(
+        expected_summaries
+    ):
         raise ValueError("Task-mix source summaries do not replay")
     failures = tuple(
         {
@@ -1261,6 +1289,8 @@ def verify_result(
 def verify_summary(
     summary: Mapping[str, object],
     plan: Mapping[str, object],
+    *,
+    result: Mapping[str, object] | None = None,
 ) -> None:
     """Verify the compact committed evidence projection."""
     if summary.get("schema_version") != SUMMARY_SCHEMA:
@@ -1271,6 +1301,10 @@ def verify_summary(
     digest = payload.pop("summary_digest", None)
     if canonical_digest(payload) != digest:
         raise ValueError("Task-mix summary digest does not match")
+    if result is not None and canonical_digest(summary) != canonical_digest(
+        compact_result(result, plan)
+    ):
+        raise ValueError("Task-mix summary does not match the raw result")
 
 
 def _bootstrap_interval(
@@ -1530,7 +1564,11 @@ def main(argv: Sequence[str] | None = None) -> int:
         result = _load_mapping(arguments.result)
         verify_result(result, plan)
         if arguments.summary is not None:
-            verify_summary(_load_mapping(arguments.summary), plan)
+            verify_summary(
+                _load_mapping(arguments.summary),
+                plan,
+                result=result,
+            )
         print("verified")
     elif arguments.command == "compact":
         result = _load_mapping(arguments.result)

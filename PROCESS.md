@@ -1,6 +1,6 @@
 # Barcarolle Cross-Session Handoff
 
-Last updated: 2026-07-28.
+Last updated: 2026-07-29.
 
 Current ledger: `docs/research-improvement-backlog.md`. Latest report:
 `docs/experiments/2026-07-28-pre-origin-observable-theory.md`.
@@ -38,6 +38,7 @@ development evidence.
 | Multi-SWE exact budget-ten hindsight | H5 `-0.03264`; H10 `-0.02562`; 328/328 optima certified | Budget-ten response capacity supported; leaked diagnostic only. |
 | ALG-013 Response-Contrast Projection | future AUC `0.5530`, interval `[0.4579, 0.6572]`; history AUC `0.5104`, interval `[0.4689, 0.5500]` | Static embedding response transfer rejected. |
 | ALG-014 Response-Composition Shrinkage | static AUC `0.9121`; H5 `+0.000992`; H10 `+0.001855` | Cross-Agent response structure exists; target next-cohort increment rejected. |
+| THY-001R Git pressure | Multi H5/H10 vs full Task history `+0.17572`/`+0.21704`; Full-minus-Verified `+0.08751`/`+0.08807` | Retired; source, Origin, reproduction, and independent audits passed. |
 
 The experiments factor the problem:
 
@@ -53,14 +54,12 @@ repository's next Task mix. It is not subset size or static response capacity.
 No Selector was materialized or nominated. No result authorizes paid
 validation, the sealed holdout, a Runner default, or a validity claim.
 
-An independent observable sprint froze `THY-001`, then a user-reviewed
-amendment removed two false development blockers. Counterfactual research may
-use explicitly projected Task times and retrospective patch-derived scoring
-labels; neither becomes native-arrival evidence. `THY-001R` is the simpler
-fixed one-year Git commit-touch forecast. Its zero-paid plan is digest-bound at
-`examples/pre_origin_task_mix/plan.json`; Multi-SWE is primary and SWE-bench
-Full minus Verified is same-family robustness. No Agent outcome enters the
-Task-mix gate.
+Counterfactual research may use explicitly projected Task times and
+retrospective patch-derived scoring labels; neither becomes native-arrival
+evidence. The frozen `THY-001R` plan and a post-result Git-only vocabulary
+audit both failed the full-history baseline without Agent outcomes. The audit
+revision is current at `examples/pre_origin_task_mix/plan.json`; the original
+plan remains at commit `3257ef81`.
 
 ## Current State
 
@@ -72,18 +71,20 @@ independent audit corrected RCP's diagnostic null to preserve complete
 the rejection is unchanged. Tests cover target-repository exclusion, cutoff
 safety, equal-repository pooling, bounded prior mass, and prequential inputs.
 
-This remains research infrastructure, not a runnable Multi-SWE Task Pool.
+The Task-mix runner now binds compact evidence to its exact raw result and
+survives JSON sequence round trips. This remains research infrastructure, not
+a runnable Multi-SWE Task Pool.
 Solver/verifier material and source-specific certification are
 campaign-triggered. Core Task Pool, Result, Selection, and Runner contracts did
-not change. No code or core schema was added for `THY-001`.
+not change. `THY-001R` remains a direct example-layer study; no core schema or
+runtime service was added.
 
 ## Stop And Reopen
 
-Stop nomination-oriented candidate invention, parameter search, representation
-search, and unconditional replay on opened Agent outcomes. Existing Task
-sources may support preregistered counterfactual composition tests without
-reading Agent outcomes. The frozen `THY-001R` Task-mix test is the current
-exception; it cannot change parameters or source membership after replay.
+Stop nomination-oriented parameter search, representation search, and
+unconditional replay on opened Agent outcomes. `THY-001R` is retired; do not
+rescue it with another half-life, smoothing value, path map, source subset, or
+horizon.
 
 Reopen empirical nomination research only with at least one of:
 
@@ -95,12 +96,15 @@ Reopen empirical nomination research only with at least one of:
 An independently specified observable may advance theory design, but it cannot
 authorize another nomination replay on the opened panels.
 
-The next authorized step is to run and reproduce the zero-paid `THY-001R`
-Task-mix kill test. A pass authorizes only a new, separately frozen,
-non-nominating replay on existing public Agent outcomes. A failure retires
-`THY-001R` and opens a new observable family; it does not authorize half-life,
-module-map, horizon, source, or repository tuning. Native arrival labels,
-independent panels, and prospective campaigns remain claim-strength upgrades.
+The next authorized step is the zero-paid `THY-002` generator-calibrated
+exposure test. Freeze its source lineage, repository frame, formula, Origins,
+controls, and gates before replaying future Task labels. Its candidate combines
+historical Task yield per unit of Git exposure with current Git pressure; this
+is a new causal model, not a mixture-weight tune. Use SWE-rebench V2 as a new
+source family if its repository aliases and pinned Git heads pass admission.
+A Task-mix failure retires the theory without outcome replay. Native arrival
+labels, independent panels, and prospective campaigns remain claim-strength
+upgrades, not counterfactual-development prerequisites.
 
 Any reopened candidate must freeze its information set, code, parameters,
 source, Origin schedule, controls, and gates before outcome replay. Open the
