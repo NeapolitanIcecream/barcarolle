@@ -1,10 +1,12 @@
 {
   "schema_version": "barcarolle_prequential_response_assembly_execution_lock_v1",
   "study_id": "prequential-response-assembly-2026-07-29",
-  "locked_at": "2026-07-29T14:20:29Z",
-  "implementation_commit": "d06537ec6ecac18393849b7f992e16084512560b",
+  "locked_at": "2026-07-29T14:31:47Z",
+  "implementation_commit": "d7da087828886dfd02a09e379b0ebb0f0a1ac801",
   "plan_digest": "f1517fd04a97fc584b8df0f3c3d6be59bd3569a52bbad91694835de15558c84b",
   "addendum_digest": "8f782ce6421de09064459a13a268689908f88014084dd6e6641d0c7785a0ba2c",
+  "execution_amendment_digest": "20e25fe7b21f2f95732a131082d54f330aafe90d12c1868b16043bac675ee5bd",
+  "supersedes_lock_digest": "4ef7adae60f20bc6198b5d65e151630d172b4a6271eb8399681993f876ac692b",
   "runtime": {
     "python_version": "3.14.0",
     "python_implementation": "CPython",
@@ -119,6 +121,10 @@
       "sha256": "1dba2484b9c4b370322e4330b66b816f1a556e9be081be7afe3902d81d3f7b11"
     },
     {
+      "path": "examples/prequential_response_assembly/execution-amendment-1.json",
+      "sha256": "16be67892b57f7d7cef3e24baf2b962a23644ca3431c8a0fd4437b01f35f3ad7"
+    },
+    {
       "path": "examples/prequential_response_assembly/plan-addendum-1.json",
       "sha256": "60cbd1fe76c06c8c56304b27af64a538bf5cb9ee0429f8741a9f429e71e6aabb"
     },
@@ -128,7 +134,7 @@
     },
     {
       "path": "examples/prequential_response_assembly/study.py",
-      "sha256": "5f833f72199d640aef2c8e6332abd9c5484a7039b37572cf4bcd2710f2f14a6a"
+      "sha256": "4455711d972a7ec5b4d446420f48e489e60274b5f36f90bb4162ccee122b1515"
     },
     {
       "path": "examples/surrogate_gate_audit/plan-amendment-1.json",
@@ -152,7 +158,7 @@
     },
     {
       "path": "tests/test_prequential_response_assembly.py",
-      "sha256": "46de69851f5cfdd21e42909ba9f055b8a30bc12526548d9d51a691221ca851ca"
+      "sha256": "059af7a54fc41312c628a663bbd6f916a28aed72abecdfa0764b507a6d426542"
     }
   ],
   "resource_boundary": {
@@ -163,7 +169,7 @@
   "pre_lock_audit": {
     "status": "pass",
     "known_blocker_count": 0,
-    "directed_tests_passed": 15,
+    "directed_tests_passed": 16,
     "static_checks": [
       "ruff",
       "pyright",
@@ -175,5 +181,5 @@
       "BOCPD and exact L1 assembly"
     ]
   },
-  "lock_digest": "4ef7adae60f20bc6198b5d65e151630d172b4a6271eb8399681993f876ac692b"
+  "lock_digest": "f4dcec2e0c08cc2e1cf8e862a40b4a7ebc1e741326d3f9d02c462d501a81a91d"
 }
