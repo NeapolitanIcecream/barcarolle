@@ -1,0 +1,94 @@
+{
+  "schema_version": "barcarolle_finite_horizon_grid_audit_execution_lock_v1",
+  "study_id": "finite-horizon-grid-audit-2026-07-29",
+  "locked_at": "2026-07-29T16:36:56Z",
+  "implementation_commit": "42d408340318a3be1d9c158448257f545e2446a8",
+  "plan_digest": "8388fc583f7acf68a27c1864b673de91d87e895e2384366461ba87c00f2c4b1d",
+  "parent_plan_digest": "6602a349d5c108fef96fb9e15d405bf268619b0fdd2721500f6a5c62ad9264b7",
+  "parent_execution_lock_digest": "10e2832290b92f40c120b8a6e3a7e9a946ec778ee71bb4bf08f6fa697858be4b",
+  "parent_result_digest": "77c6ae2c893197ecf3c1361433994a41538558142e069d64483ef5e49052afb2",
+  "parent_result_raw_sha256": "63662482080394eb94c6ce2ec416cbaa88172b037b466abfccaea29fcf9ae045",
+  "runtime": {
+    "python_version": "3.14.0",
+    "python_implementation": "CPython",
+    "platform": "macOS-26.5.2-arm64-arm-64bit-Mach-O",
+    "numpy_version": "2.5.1",
+    "scipy_version": "1.16.3"
+  },
+  "matched_h10_frame": {
+    "repository_ids": [
+      "clap-rs/clap",
+      "cli/cli",
+      "elastic/logstash",
+      "fasterxml/jackson-databind",
+      "fmtlib/fmt",
+      "iamkun/dayjs",
+      "mui/material-ui",
+      "nlohmann/json",
+      "ponylang/ponyc",
+      "sveltejs/svelte",
+      "vuejs/core"
+    ],
+    "repository_ids_digest": "e1b0b2cb039c3488a846bb30ed15c0cb58f8b57b9098001640eb49ec5d28b438",
+    "deep_repository_ids": [
+      "clap-rs/clap",
+      "cli/cli",
+      "mui/material-ui",
+      "ponylang/ponyc",
+      "sveltejs/svelte"
+    ],
+    "deep_repository_ids_digest": "c70b1fb2bf00e93099811612e7505c6f4da1f107e296495eaa2f99f556d511f4",
+    "origin_count": 107,
+    "origin_rows_digest": "87a27e440eeac0ec2e5fed01534f724c1a6fedca7a04510ff05c341cfc2112ab",
+    "full_membership_digest_recomputed": "7135c2f1256e26e8703a7fd97abc4de0392456eee4e10f5a5c04555c966eaca0",
+    "recency_membership_digest_recomputed": "0c8108bd2a584ed11242993157ce1b316b1f187d70ecc3a347b4d5f3c3f21030",
+    "alg_007_membership_digest_recomputed": "6d6e30a9f8ebfecb4c2176466c38fa356596a16024c95494a5311927acfc597c"
+  },
+  "bound_files": [
+    {
+      "path": "examples/finite_horizon_grid_audit/plan.json",
+      "sha256": "da63d3476963cae53a4207cf36981f8ab65d458dd2cea662e55079c3813bf66d"
+    },
+    {
+      "path": "examples/finite_horizon_grid_audit/study.py",
+      "sha256": "61a2de62f5becfb518fb339d46e8e5d43bf141b9be5ee09060a899c3efd81351"
+    },
+    {
+      "path": "tests/test_finite_horizon_grid_audit.py",
+      "sha256": "5157a4d60480ec8747a51d04797d81bf95fe92e9f8ead686176df8a921d91f7c"
+    },
+    {
+      "path": "examples/finite_horizon_cached_assembly/plan.json",
+      "sha256": "a27955ddd76ff631c6eae91c7d906a64f751b713ba1210e0c483c25c9b15f3fd"
+    },
+    {
+      "path": "examples/finite_horizon_cached_assembly/study.py",
+      "sha256": "63c52dead7ef6766f1c58aabd58efe594f00d8bd9af2b9c43e8d0da980dba815"
+    },
+    {
+      "path": "examples/finite_horizon_cached_assembly/execution-lock.json",
+      "sha256": "5f989f836ec906edb546ab1b1ea38329d87a569b39a115cd0017611e8bee437b"
+    }
+  ],
+  "pre_lock_evidence": {
+    "directed_tests_passed": 13,
+    "parent_and_new_directed_tests_passed": 26,
+    "static_checks": [
+      "ruff check",
+      "ruff format --check",
+      "pyright",
+      "git diff --check"
+    ],
+    "matched_frame_implementation_reviewed": true,
+    "candidate_memberships_materialized": false,
+    "candidate_scores_read": false
+  },
+  "resource_boundary": {
+    "paid_api_calls": 0,
+    "new_agent_outcome_calls": 0,
+    "embedding_api_calls": 0,
+    "sealed_holdout_reads": 0,
+    "core_schema_or_service_changes": 0
+  },
+  "lock_digest": "2cc985ba3b423149d564f98ad2f109165f04254e2c6936cdb77866a0a51d1427"
+}
