@@ -41,7 +41,7 @@ development evidence.
 | THY-001R Git pressure | Multi H5/H10 vs full Task history `+0.17572`/`+0.21704`; Full-minus-Verified `+0.08751`/`+0.08807` | Retired; source, Origin, reproduction, and independent audits passed. |
 | THY-002 Generator-calibrated exposure | H5/H10 vs full history `-0.006562`/`-0.006107`; intervals exclude zero; 27/40 and 28/40 favorable | Task-mix mechanism retained; its THY-002S mapping fails the Agent-outcome gate. |
 | THY-002S Brier projection | pass-rate MAE H5 `-0.002594`, upper `+0.004724`; H10 `+0.002943`; random `0.93485`/`0.78260` | Frozen outcome gate also fails; original mapping retirement stands. |
-| THY-003 registry-dated dependency lag | 9 npm repositories, 1,420 Tasks, 119 Origins; 20/20 bounded registry requests succeeded and 9/20 sampled lag classes changed | Frozen for outcome-free falsification only; plan `0126c44a…3d5d`. No Agent replay is authorized. |
+| THY-003 registry-dated dependency lag | Continuous H5/H10 `-0.000223`/`-0.000404`; budget-ten `+0.009057`/`+0.000879`; null `0.9496` | Retired at Stage A; source admission and reproduction passed, prediction/materialization gates failed. |
 
 The experiments factor the problem:
 
@@ -56,9 +56,8 @@ The experiments factor the problem:
 6. historical Generator yield per Git exposure combined with current exposure
    predicts the next Task-module mix slightly better than full Task history;
    and
-7. registry publication time is a distinct pre-Origin clock with enough npm
-   source support and variation for an outcome-free falsification, but no
-   forecast result yet.
+7. registry publication time is available and varied, but THY-003's smooth
+   effect is weak and its nearest-regime budget-ten materialization fails.
 
 When complete Agent outcomes already exist, use pass-rate MAE as the outcome
 gate. AUC, Brier, embedding, and response-coordinate losses are diagnostics.
@@ -94,12 +93,13 @@ campaign-triggered. Core Task Pool, Result, Selection, and Runner contracts did
 not change. THY-001R and THY-002 remain direct example-layer studies; no core
 schema or runtime service was added.
 
-The controlled cold-start sprint froze `THY-003 Registry-Dated Dependency-Lag
-Nearest Regime` at plan digest `0126c44a…3d5d`. The design fixes a
-nine-repository wide frame, five-repository deep frame, 119 Origins, budget ten,
-H5/H10, raw npm response retention, lock-only and temporal-null ablations, and
-repository-first gates. No runner, Selection membership, Agent outcome, sealed
-holdout, or paid call was created or opened.
+THY-003 Stage A is complete. Addendum `f920d134…c739` and corrected execution
+lock `4774fbfe…df673` bind 595 retained packuments, 1,539 state points, nine
+repositories, and 119 Origins. Coverage is 97.47%; all Origins are supported.
+Two runs are byte-identical at `02c18c81…01a7`; result `68acfaa5…ccd9` and
+compact evidence `90456efc…1c17` retire the route. A raw-input reconstruction
+verified the accepted result. No Agent outcome, sealed
+holdout, paid call, core schema, or runtime service was opened or added.
 
 ## Stop And Reopen
 
@@ -116,14 +116,17 @@ or open the six holdout Agents.
 There is no active outcome replay or paid plan. No additional core
 infrastructure is currently warranted.
 
-`THY-003` supplies the new pre-outcome theory. The only ready action is its
-frozen Stage-A example-layer implementation and zero-outcome execution. Any
-Stage-A source, forecast, materialization, H10, deep, leave-one-repository-out,
-null, or reproduction failure retires the route without revision. Stage B
-requires every Stage-A gate plus a separate plan and the exact npm outcome
-frame; no current opened panel is asserted to qualify. The six Python-heavy
-SWE-bench holdout Agents cannot confirm this npm-specific route and remain
-sealed.
+`THY-003` is retired without revision. Do not change peer-context parsing,
+categories, distance, weights, budget, horizons, repositories, label, or gates
+on this frame. Its source and reproduction gates passed; full-history, deep,
+materialization, leave-one-repository-out, and temporal-null gates did not.
+Stage B is prohibited. The six SWE-bench holdout Agents remain sealed.
+
+The next research question is theory-gated, not implementation-ready: derive a
+general forecast-to-budget-k materialization rule that preserves explicitly
+frozen pre-Origin moments. Do not tune it on the closed THY-003 frame or add a
+core service. A later plan needs an independent evidence boundary and must
+separate continuous-forecast quality from subset discretization.
 
 Any reopened candidate must freeze its information set, code, parameters,
 source, Origin schedule, controls, and gates before outcome replay. Open the

@@ -2,8 +2,9 @@
 
 Date: 2026-07-29.
 
-Status: initial mechanism inventory frozen before collision audit. This memo
-contains no Agent-outcome replay and makes no Selector-validity claim.
+Status: inventory and plan were frozen before execution; `THY-003` Stage A is
+now reproducibly retired. This memo contains no Agent-outcome replay and makes
+no Selector-validity claim.
 
 ## Research Contract
 
@@ -462,7 +463,7 @@ The selected hypothesis is deliberately narrower than M3:
 The complete frozen design is
 [`plan.json`](../../examples/dependency_lag_theory/plan.json), digest
 `0126c44a4b3c4878637fef969fdf29a5ff5477fa487c967710667c3154853d5d`.
-There is intentionally no runner in this session.
+At design freeze there was intentionally no runner.
 
 At each cutoff, the candidate reads only the root `package.json`, the first
 supported committed lockfile, and npm versions with publication time no later
@@ -531,11 +532,91 @@ There is no practical-effect claim on this diagnostic scale; the value is the
 conjunction of direction, uncertainty, breadth, robustness, ablation, null,
 and reproduction evidence. A failure stops the route without Agent replay.
 
+### Stage-A execution result
+
+An independent pre-execution audit found several mechanical ambiguities in the
+scientific plan. The
+[`execution-addendum.json`](../../examples/dependency_lag_theory/execution-addendum.json),
+digest `f920d134…c739`, closed them before any membership or result existed. It
+fixed the state-cell coverage denominator, lockfile parsers, scalar binary
+Brier definition, exact rational distance, lock-only comparison, bootstrap,
+temporal null, and terminal states without changing the candidate or a gate.
+The accepted execution lock `4774fbfe…df673` binds corrected runner commit
+`8531d9a4`, Python `3.14.0`, DuckDB `1.5.5`, all nine repository heads, and
+595 raw packuments before scoring labels load.
+
+An independent audit invalidated the first execution lock `e9be3d28…1dc9`.
+Its source loader read reference patches while constructing Task identities,
+before the declared scoring-label barrier, and its Origin-variation count used
+unreduced count/denominator pairs. The candidate never consumed the patch
+projection, and independently normalized variation counts were unchanged in
+all nine repositories, but the run was still an execution-contract violation.
+The accepted loader selects only repository, identity, base commit, source
+time, language, and PR URL; a regression test rejects any `patch` projection.
+The corrected discovery file is byte-identical to the invalid run's discovery,
+including all Task, Origin, state-point, and package digests.
+An independent post-correction audit found no remaining blocker and confirmed
+that every scientific payload field is unchanged.
+
+Source admission passed:
+
+- all 1,420 Tasks and 119 Origins reproduced; all Origins had a supported
+  nonempty state and seven historical Tasks used the declared missing marker;
+- 82,279/84,418 state-package cells (`97.47%`) had an exact lock resolution
+  with an eligible publication timestamp;
+- every repository had at least five distinct Origin state vectors;
+- 595/595 full packument responses returned HTTP 200, totaling 641,582,736
+  ignored raw bytes; and
+- two corrected offline runs were byte-identical at SHA-256
+  `02c18c81…01a7`.
+
+The scientific gate failed. Negative candidate-minus-control values favor the
+candidate:
+
+| Diagnostic | H5 | H10 |
+| --- | ---: | ---: |
+| Continuous minus full history | `-0.000223`, 95% `[-0.000846, +0.000240]`, 6/9 favorable | `-0.000404`, 6/9 favorable |
+| Budget-ten minus full history | `+0.009057`, 95% `[+0.003355, +0.015569]`, 1/9 favorable | `+0.000879`, 4/9 favorable |
+| Budget-ten minus continuous | `+0.009280` | `+0.001283` |
+| Budget-ten minus trailing-H | `-0.003947` | `-0.001499` |
+| Budget-ten minus lock-only budget-ten | `-0.002014` | `-0.008823` |
+
+The continuous forecast had the favorable wide direction at both horizons,
+but H5 uncertainty crossed zero and the deep-frame contrasts reversed to
+`+0.000079`/`+0.000042`. Hard materialization caused most of the failure:
+deep H5/H10 contrasts were `+0.009566`/`+0.007206`, the H5
+materialized-versus-continuous gap exceeded `0.005`, and not every H5
+leave-one-repository-out contrast was negative. The candidate did beat the two
+budgeted controls, so registry timing affected ranking; it did not beat the
+primary full-history estimator.
+
+The H5 circular-state null as-good-or-better rate was `0.9496`, against the
+required `<0.10`. Thus the observed budget-ten ranking was not distinguished
+from temporally shifted Origin states. Result digest is `68acfaa5…ccd9`;
+committed evidence digest is `90456efc…1c17`. The strengthened verifier
+reconstructed the complete result from the frozen repository, registry, and
+label inputs; it did not only replay internal row summaries.
+
+A post-decision descriptive diagnostic helps localize the failure without
+reopening the gate. The future label was all zero at 95/119 H5 Origins and
+80/119 H10 Origins; mean positive rates were `5.88%` and `6.64%`. A ten-Task
+subset can express its rate only in increments of `0.1`. The candidate's mean
+absolute movement from full history was `0.06329` after materialization versus
+`0.00572` for the continuous forecast. This does not rescue the weak
+continuous signal; it shows that sparse labels and coarse subset
+discretization amplified it.
+
+`THY-003` is `retired_stage_a` unchanged. Stage B, Agent outcomes, the six
+sealed Agents, and paid calls remain unopened. Do not tune peer handling,
+categories, distance, weighting, budget, horizon, repositories, label, or
+gate on this frame.
+
 ### Stage B — separately authorized Agent-outcome decision
 
-Stage B is not authorized by this session. If every Stage-A gate passes, an
-additive plan must bind the accepted code and registry bytes, the exact
-nine/five repository frames, Origin schedule, unopened Agent configuration
+Stage B was conditional on every Stage-A gate and is not authorized. A passing
+route would have required an additive plan binding the accepted code and
+registry bytes, the exact nine/five repository frames, Origin schedule,
+unopened Agent configuration
 digests, budget, H5/H10, calendar spans, controls, 20,000-draw equal-budget
 random protocol, MAE gates, and stop rules before outcomes open.
 
@@ -557,11 +638,11 @@ prospective collection before a predictive-validity claim.
 
 | Evidence class | Available now | Required decision use |
 | --- | --- | --- |
-| Without Agent outcomes | External mechanism literature; 9-repository/119-Origin manifest-lock presence; 1,420-Task scoring-label support; bounded 20-package current-registry access and variation | Enough to freeze `THY-003`; not enough to claim forecast or Selection value |
-| Existing opened outcomes | Multi-SWE and SWE-bench development Results exist, but no current panel is shown to cover the exact frozen npm wide/deep frame | None may be opened for `THY-003` until Stage A passes and a separate exact outcome plan qualifies the source |
-| New source or prospective | Frozen raw npm response capture; later independent npm Task/Agent panel; live Origin-time registry snapshots and complete future `TimeRange` | Required respectively for accepted counterfactual execution, external replication, and strict prospective validity |
+| Without Agent outcomes | Complete 9-repository/119-Origin Stage A; 97.47% state-cell coverage; byte-identical result `68acfaa5…ccd9` | Retires `THY-003`; continuous direction is weak and budget-ten, deep, null, and robustness gates fail |
+| Existing opened outcomes | Multi-SWE and SWE-bench development Results exist, but no current panel covers the exact frozen npm wide/deep frame | None may be opened for retired `THY-003` |
+| New source or prospective | 595 responses are frozen for this closed replay; live Origin-time registry snapshots remain unavailable | A different route needs its own source contract; strict registry evidence still requires prospective capture |
 | Sealed holdout | Six SWE-bench Agents remain unread on a Python-heavy frame | Not applicable confirmation for this npm-specific route; keep sealed |
-| Paid evidence | No active authority or plan | Only after Stage A and a qualifying outcome plan pass, with explicit authority and the mandated endpoint variables |
+| Paid evidence | No active authority or plan | Not authorized for retired `THY-003` |
 
 ## Adversarial Requirement Audit
 
@@ -577,27 +658,32 @@ prospective collection before a predictive-validity claim.
 | Observable/forecast/subset separation | Registry timing, continuous weighting, and ten-Task materialization have separate ablations and gates. |
 | Minimum effect and falsification | Stage A has no surrogate effect claim but requires every robustness gate. Stage B retains the protocol-wide `-0.02` MAE effect and interval gate. Any failure retires the route. |
 | Portability | Version one is npm/Node only. JavaScript/TypeScript and package-manager checks are required; no Python or ecosystem-wide claim is permitted. |
-| Reproduction and source mutation | Accepted Stage A evidence requires retained raw responses and two byte-identical executions. The exploratory registry sample is not promoted. |
+| Reproduction and source mutation | 595 raw responses are retained and reload-verified; two offline executions are byte-identical. Evidence remains registry-retrospective, not strict historical. |
 | Holdout and paid boundaries | Six sealed Agents stay unread. No paid or benchmark-producing call occurred or is currently authorized. |
 | Infrastructure proportionality | The frozen deliverable is one direct example-layer plan. No core schema, registry service, source adapter, Generator, or Runner was added. |
 
 ## Decision And Recommendation
 
-`THY-003` is a **frozen candidate for outcome-free falsification**, not a
-nominated Selector. npm publication time adds a clock independent of the
-target repository's Git history. The other four inventory mechanisms collide
-with closed routes or unresolved arrival/source semantics.
+`THY-003` is reproducibly retired at Stage A. npm publication time was
+available and varied, and it improved the budgeted ranking over trailing-H and
+lock-only controls, but neither the smooth forecast nor its ten-Task
+materialization met the full-history, deep, robustness, and temporal-null
+contract. The failure is scientific rather than a source or implementation
+blocker.
 
-Stage A can test whether registry timing adds information beyond lockfile state
-without Agent outcomes or paid calls. It reuses the fixed 1,420-Task frame.
-Implementation is limited to npm/pnpm/Yarn lock parsing, raw packument capture,
-state replay, and the existing repository-first report pattern. Source
-mutation and sparse, repository-heterogeneous dependency Tasks are the
-principal risks.
+No Agent replay, holdout access, Generator, core registry service, or paid
+authority follows. A later candidate must introduce an independently motivated
+mechanism or materialization theory and freeze it on a new evidence boundary;
+changing this route's parser, state, distance, budget, horizon, repository
+frame, or gates would be rescue tuning.
 
-The next authorized action is only to implement and run the frozen Stage-A
-example study. Do not replay opened outcomes, inspect the sealed Agents, build
-a Generator, or request paid authority unless every Stage-A gate passes.
+One research direction remains theory-gated: treat forecast-to-budget-k
+materialization as its own algorithmic problem and preserve explicit
+pre-Origin target moments rather than selecting the nearest individual Tasks.
+It is not `THY-003.1`. Before implementation, a new plan must derive the rule
+without this frame's future labels, state which historical Task attributes are
+visible, and choose independent development evidence. No core abstraction is
+warranted until such a plan nominates a caller.
 
 ## Approach Registry After Audit
 
@@ -605,6 +691,6 @@ a Generator, or request paid authority unless every Stage-A gate passes.
 | --- | --- | --- | --- |
 | M1 release-cycle | collision with closed temporal family | removed | historically archived schedule plus a source-native, non-temporal target |
 | M2 ownership transition | 436/436 Origins have recent non-bot Git activity; signal availability is not the missing evidence | source-gated, not nominated | ownership-native Task target that avoids the closed Git/module bridge |
-| M3 / THY-003 registry-dated lag | nine-repository frame; measurable scoring label; bounded registry variation; frozen plan `0126c44a…3d5d` | frozen outcome-free candidate | implement Stage A unchanged; all gates must pass |
+| M3 / THY-003 registry-dated lag | complete Stage A; continuous H5/H10 `-0.000223`/`-0.000404`; materialized `+0.009057`/`+0.000879`; null `0.9496` | retired | do not tune or open Agent outcomes |
 | M4 work queue | exact leaf identity leak; parent intent already `MR-H` | removed | existing `MR-H` complete event archive and native Task materialization |
 | M5 CI regime | broad form collides; differential nightly CI already specified | removed | retained, timestamp-complete differential upstream-CI episodes with Task alignment |
