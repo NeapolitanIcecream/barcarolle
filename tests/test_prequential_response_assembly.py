@@ -205,7 +205,7 @@ def test_exact_l1_assembly_matches_brute_force() -> None:
     assert result.response_pattern_count == 7
 
 
-def test_primary_replay_uses_rounded_feasible_objective() -> None:
+def test_primary_replay_uses_direct_integral_membership_objective() -> None:
     reported = 0.019958536261866413
     feasible = 0.01995856483329498
 

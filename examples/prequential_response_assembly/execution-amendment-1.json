@@ -16,13 +16,13 @@
     "held_out_configuration_index": 25,
     "algorithm_target": "ALG-016U BOCPD forecast",
     "solver_reported_objective": 0.019958536261866413,
-    "rounded_feasible_membership_objective": 0.01995856483329498,
+    "direct_membership_replay_objective": 0.01995856483329498,
     "absolute_replay_error": 2.8571428566798174e-08
   },
-  "diagnosis": "HiGHS returned binary values within the already-frozen 1e-5 integrality tolerance. Rounding those values produced a feasible integer membership whose replay objective differed from the floating solver objective by 2.86e-8, exceeding the frozen 1e-8 objective tolerance. No algorithm, forecast, tie priority, frame, baseline, outcome, or result was observed or changed.",
+  "diagnosis": "HiGHS returned an integral membership with zero binary integrality error, zero reported MIP gap, and a solver objective computed through auxiliary slack variables. Directly replaying that membership against the response target produced an objective 2.86e-8 higher, consistent with roughly 1e-6 linear-feasibility tolerance divided across 35 coordinates, and exceeded the frozen 1e-8 replay tolerance. No algorithm, forecast, tie priority, frame, baseline, outcome, or result was observed or changed.",
   "correction": {
     "primary_replay_tolerance": 1e-07,
-    "primary_objective_for_secondary_program": "The independently recomputed objective of the rounded feasible integer membership, after it is within 1e-7 of the solver-reported optimum.",
+    "primary_objective_for_secondary_program": "The independently recomputed direct objective of the integral membership, after it is within 1e-7 of the solver-reported auxiliary-slack optimum. The 1e-7 value is an acceptance and replay tolerance, not permission for the secondary program to worsen the target; its upper bound uses the direct replay objective without an added semantic relaxation.",
     "secondary_replay_tolerance": 1e-07,
     "unchanged": [
       "all three candidate mechanisms and parameters",
@@ -40,5 +40,5 @@
     "sealed_holdout_reads": 0
   },
   "required_relock": "Bind this amendment, the corrected runner, its directed tests, every prior source binding, and a fresh runtime/frame identity before restarting materialization from the beginning.",
-  "amendment_digest": "dd5b7428de4ee32e364fc53efc10d98a95c04abbd893b4bc8c34ca25af939f1d"
+  "amendment_digest": "20e25fe7b21f2f95732a131082d54f330aafe90d12c1868b16043bac675ee5bd"
 }
