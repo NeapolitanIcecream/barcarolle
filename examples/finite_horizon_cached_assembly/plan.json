@@ -1,0 +1,204 @@
+{
+  "schema_version": "barcarolle_finite_horizon_cached_assembly_plan_v1",
+  "study_id": "finite-horizon-cached-assembly-2026-07-29",
+  "frozen_at": "2026-07-29T15:54:37Z",
+  "epistemic_status": "post_result_theory_driven_exploration_on_opened_development_outcomes",
+  "trigger": {
+    "observation": "A pre-score frozen cached-target stationary exact control was stronger than every adaptive candidate on H5 and H10.",
+    "mechanism_question": "Does an exact finite-horizon absolute-loss action improve on H-blind nearest-grid compression, or is the observed gain already exhausted by q/10 quantization?",
+    "independent_design": "An independent theory agent derived the candidate, exact recurrence, ties, ablation, and golden cases without reading membership or result artifacts.",
+    "claim_limit": "The trigger and source panel are opened. This execution is exploratory development evidence, not independent confirmation."
+  },
+  "research_contract": {
+    "primary_outcome": "Repository-first future pass-rate MAE for the exact cached target Agent.",
+    "primary_baseline": "All eligible target-repository history.",
+    "primary_control": "H-blind cached-target stationary exact assembly: feasible q/10 nearest to s/n.",
+    "primary_frame": "Standard non-overlapping H5 frame: 221 Origins in 13 repositories.",
+    "sensitivity_frame": "Standard non-overlapping H10 frame: 107 Origins in 11 repositories.",
+    "selection_budget_tasks": 10,
+    "minimum_initial_history_tasks": 20,
+    "progress_rule": "ALG-018C candidate-minus-primary-control is strictly negative at both H5 and H10 on repository-first MAE.",
+    "rejection_rule": "If ALG-018C does not beat the H-blind primary control at both horizons, retain the simpler control and close this finite-horizon correction on the current frame.",
+    "required_reports": [
+      "direct H5 and H10 pass-rate MAE versus full history and versus the H-blind cached-target control",
+      "the frozen plug-in Binomial ablation",
+      "repository-first wide and deep results, favorable repositories, leave-one-repository-out directions, repository bootstrap, and equal-budget random calibration",
+      "configuration, model, harness, and language directions",
+      "q-change counts versus H-blind control, q inventory clamps, q distribution, and candidate/ablation membership digests",
+      "two byte-identical membership and score executions"
+    ],
+    "insufficient_outcomes": [
+      "a gain versus full history without beating the H-blind primary control",
+      "random midrank used as a replacement baseline or p-value",
+      "a result from a different Agent identity, future horizon, budget, or outcome cache identity",
+      "a result claimed for unseen-target Selection, Task content prediction, temporal regime prediction, prospective evidence, or a production default"
+    ]
+  },
+  "information_contract": {
+    "name": "cached_exact_target",
+    "allowed_inputs": [
+      "target-repository Task identities and projected availability times at or before the Origin cutoff",
+      "certified binary Results for the exact target Agent identity on every eligible historical Task",
+      "the predeclared future cohort Task count H and Selection budget B"
+    ],
+    "forbidden_inputs": [
+      "current or later future Task identity, attribute, patch, or outcome",
+      "another Agent substituted for missing target Results",
+      "partial or identity-mismatched target Result caches",
+      "sealed Agent outcomes"
+    ],
+    "agent_identity": "model, harness, prompt, skills, tools, runtime budget, and stochastic-result policy must match the cached Result identity",
+    "availability": "Both Task and Result availability must be cutoff-safe. Missing or non-binary history makes the method unavailable."
+  },
+  "candidate": {
+    "algorithm_id": "ALG-018C",
+    "short_name": "jeffreys_finite_horizon_median_assembly",
+    "history": "At an Origin, let n be eligible cached target outcomes and s their success count. B=10 and H is the frozen future cohort size.",
+    "posterior": "p given history is Beta(a,b), a=s+1/2 and b=n-s+1/2.",
+    "predictive": "K given history is Beta-Binomial(H,a,b).",
+    "feasible_success_counts": "Q is every integer q from max(0,B-(n-s)) through min(B,s).",
+    "exact_weights": "Set w_0=1. For k=0..H-1, w_(k+1)=w_k*((H-k)/(k+1))*((a+k)/(b+H-k-1)). Compute with fractions.",
+    "primary_action": "Choose q in Q minimizing A(q)=sum_(k=0)^H w_k*abs(H*q-B*k). This differs from expected abs(q/B-K/H) only by a common positive factor.",
+    "tie_rule": "Lexicographically minimize (A(q), abs(2*q*(n+1)-B*(2*s+1)), q). The second term chooses the primary-optimal q nearest the Jeffreys posterior predictive mean; the final term chooses lower q.",
+    "membership": "Choose q cached-success Tasks and B-q cached-failure Tasks using the existing cutoff-safe visible priority. Validate ten unique Tasks and exactly q successes.",
+    "interpretation": "A constrained posterior-predictive absolute-loss action for the realized finite future cohort, not a latent-p estimator."
+  },
+  "fixed_ablation": {
+    "algorithm_id": "ALG-018C-P",
+    "short_name": "plugin_binomial_finite_horizon_median_assembly",
+    "predictive": "K is Binomial(H,s/n).",
+    "exact_weights": "v_k=choose(H,k)*s^k*(n-s)^(H-k).",
+    "primary_action": "Use the same feasible Q and exact risk with v_k.",
+    "tie_rule": "Lexicographically minimize primary risk, distance to s/n expressed by abs(q*n-B*s), then q.",
+    "status": "Required mechanism ablation. It cannot replace the Jeffreys candidate after scores are read."
+  },
+  "controls": [
+    "all eligible target-repository history",
+    "H-blind cached-target stationary exact assembly",
+    "ALG-015C AdaNormalHedge cached-target assembly",
+    "ordinary latest-ten recency",
+    "unchanged ALG-007",
+    "equal-budget random Selection"
+  ],
+  "golden_cases": [
+    {
+      "name": "symmetric_h5",
+      "inputs": {
+        "n": 20,
+        "s": 10,
+        "H": 5,
+        "B": 10
+      },
+      "expected_jeffreys_probabilities": "261,945,1610,1610,945,261 divided by 5632",
+      "expected_primary_tie": [
+        4,
+        5,
+        6
+      ],
+      "expected_q": 5
+    },
+    {
+      "name": "symmetric_h10",
+      "inputs": {
+        "n": 20,
+        "s": 10,
+        "H": 10,
+        "B": 10
+      },
+      "expected_q": 5
+    },
+    {
+      "name": "jeffreys_plugin_separation",
+      "inputs": {
+        "n": 16,
+        "s": 2,
+        "H": 5,
+        "B": 10
+      },
+      "expected_jeffreys_q": 2,
+      "expected_plugin_q": 0
+    },
+    {
+      "name": "complement_symmetry",
+      "inputs": {
+        "n": 16,
+        "s": 14,
+        "H": 5,
+        "B": 10
+      },
+      "expected_jeffreys_q": 8
+    },
+    {
+      "name": "horizon_sensitivity",
+      "inputs": {
+        "n": 20,
+        "s": 2,
+        "B": 10
+      },
+      "expected_jeffreys_q_by_horizon": {
+        "5": 0,
+        "10": 1
+      }
+    },
+    {
+      "name": "inventory_clamp",
+      "inputs": {
+        "n": 10,
+        "s": 1,
+        "H": 5,
+        "B": 10
+      },
+      "expected_q": 1
+    }
+  ],
+  "statistical_protocol": {
+    "repository_bootstrap": {
+      "resamples": 10000,
+      "unit": "paired repository-level candidate-minus-control or candidate-minus-full difference",
+      "h5_seed": 20260743,
+      "h10_seed": 20260748,
+      "generator": "NumPy PCG64"
+    },
+    "random": {
+      "draws": 20000,
+      "h5_seed": 20260843,
+      "h10_seed": 20260848,
+      "generator": "NumPy PCG64 random-key uniform subsets",
+      "coupling": "One subset per Origin and draw shared across all 36 target configurations"
+    },
+    "multiple_comparisons": "One frozen candidate and one required plug-in ablation. Report both. The opened trigger and panel prohibit a confirmation claim.",
+    "temporal_null": "Not applicable as a nomination gate because the claim is stationary finite-horizon calibration, not temporal regime prediction. Cross-budget and cross-horizon geometry remains required before any broader claim."
+  },
+  "failure_model": [
+    "gain caused only by B=10 and H in {5,10} grid alignment",
+    "nonstationary Task-mixture or Agent-performance shift",
+    "stale or identity-mismatched cached Results",
+    "missing-not-at-random cached outcomes",
+    "inventory clamp at sparse success counts",
+    "future cohort count H differing from the declared action",
+    "same-outcome-cell Task identity being arbitrary for any non-target metric",
+    "opened-panel multiplicity and post-result mechanism choice"
+  ],
+  "source_bindings": {
+    "parent_prequential_plan_digest": "f1517fd04a97fc584b8df0f3c3d6be59bd3569a52bbad91694835de15558c84b",
+    "parent_prequential_execution_lock_digest": "f4dcec2e0c08cc2e1cf8e862a40b4a7ebc1e741326d3f9d02c462d501a81a91d",
+    "multi_swe_contract_digest": "1e104613012a95fc534dba23d4adac1b7d6a6c10e70537c732f16da3e6f83307",
+    "panel_digest": "f2658d12451bdab4108a71cfae5cd5044a5bd312633239c09425378b4b682deb",
+    "resolved_outcome_digest": "b9a6d0d8e44d747d23789ec23eb4205178f2ae2d4f737c2446a5fcdf5abc116c",
+    "task_time_projection_digest": "56eb7dda0d7fd9787b1e77c432572f212726b92abc189df18ab2a4fe6bb815e5",
+    "standard_h5_full_history_mae": 0.0673476429292014,
+    "standard_h10_full_history_mae": 0.05280696865793433,
+    "observed_cached_control_h5_difference": -0.004364875696434155,
+    "observed_cached_control_h10_difference": -0.0037740762614055677
+  },
+  "claim_boundary": "Post-result, outcome-open, time-projected Multi-SWE development evidence for exact cached-Agent finite-horizon aggregate calibration only. No unseen-target, Task-content, temporal-regime, prospective, certification, sealed-holdout, or production-default claim.",
+  "resource_boundary": {
+    "wall_clock_parent_sprint_hours": 6,
+    "paid_api_calls": 0,
+    "new_agent_outcome_calls": 0,
+    "embedding_api_calls": 0,
+    "sealed_holdout_reads": 0,
+    "core_schema_or_service_changes": 0
+  },
+  "plan_digest": "6602a349d5c108fef96fb9e15d405bf268619b0fdd2721500f6a5c62ad9264b7"
+}
