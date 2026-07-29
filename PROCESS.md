@@ -96,15 +96,18 @@ Reopen empirical nomination research only with at least one of:
 An independently specified observable may advance theory design, but it cannot
 authorize another nomination replay on the opened panels.
 
-The next authorized step is the zero-paid `THY-002` generator-calibrated
-exposure test. Freeze its source lineage, repository frame, formula, Origins,
-controls, and gates before replaying future Task labels. Its candidate combines
-historical Task yield per unit of Git exposure with current Git pressure; this
-is a new causal model, not a mixture-weight tune. Use SWE-rebench V2 as a new
-source family if its repository aliases and pinned Git heads pass admission.
-A Task-mix failure retires the theory without outcome replay. Native arrival
-labels, independent panels, and prospective campaigns remain claim-strength
-upgrades, not counterfactual-development prerequisites.
+The next authorized step is to prepare repositories and run the frozen,
+zero-paid `THY-002` generator-calibrated exposure test. Plan digest
+`0fe42fc1…1c69` binds 5,365 unique SWE-rebench V2 Tasks, 40 canonical
+repositories, aliases, refs, heads, implementation, formula, Brier metric,
+Origins, controls, and gates. Its candidate combines historical Task yield per
+unit of Git exposure with current Git pressure; this is a new mechanism
+hypothesis, not a mixture-weight tune. Because projected Task time and Git
+commit time are distinct clocks, it claims association on that projection, not
+native event-time causality. A Task-mix failure retires the theory without
+outcome replay. Native arrival labels, independent panels, and prospective
+campaigns remain claim-strength upgrades, not counterfactual-development
+prerequisites.
 
 Any reopened candidate must freeze its information set, code, parameters,
 source, Origin schedule, controls, and gates before outcome replay. Open the

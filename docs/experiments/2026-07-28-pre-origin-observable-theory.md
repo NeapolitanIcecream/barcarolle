@@ -121,12 +121,12 @@ changes into Tasks. Half-life, smoothing, module-depth, horizon, and source
 search cannot add that missing information and remain prohibited.
 
 The next admissible theory family is generator-calibrated exposure, not a tuned
-mixture. `THY-002` will estimate a module's historical Task yield per unit of
-Git exposure, then apply that propensity to current Git pressure. Its first
-test remains outcome-free and repository-local at runtime; multiple
-repositories are independent offline evidence units. SWE-rebench V2 is the
-intended new source family, subject to a frozen lineage and repository
-admission contract.
+mixture. `THY-002` estimates a module's historical Task yield per unit of Git
+exposure, then applies that propensity to current Git pressure. Its
+outcome-free SWE-rebench V2 contract is now frozen in
+[`2026-07-29-generator-calibrated-exposure.md`](2026-07-29-generator-calibrated-exposure.md).
+Runtime remains repository-local; multiple repositories are independent
+offline evidence units.
 
 ## Original Theory Decision
 

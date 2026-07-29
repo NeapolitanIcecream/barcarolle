@@ -234,13 +234,16 @@ byte reproduction but lost to full Task history on both H5 and H10. A
 Git-vocabulary-only audit revision preserved the failure. Do not tune its
 half-life, smoothing, path map, horizon, source, or repository frame.
 
-`THY-002 Generator-Calibrated Exposure Hazard` is the next planned theory. It
-models generated Tasks as a module-specific thinning of Git change
-opportunities: historical Task yield estimates Generator propensity, and
-current Git pressure estimates current exposure. The intended first source is
-SWE-rebench V2 after repository-alias and pinned-head admission. This remains a
-counterfactual, outcome-free Task-mix test; native labels and prospective
-campaigns are later claim upgrades.
+`THY-002 Generator-Calibrated Module Exposure` is prepared for an
+experiment-frozen replay. It tests whether historical Task yield per Git
+exposure, combined with current Git pressure, predicts the next generated Task
+mix on the explicit projected timeline. It is an association mechanism, not a
+native event-time causal claim. The plan binds
+5,365 unique SWE-rebench V2 Tasks in 40 canonical repositories after exact
+lineage and PR deduplication. This remains a counterfactual, outcome-free
+Task-mix test; native labels and prospective campaigns are later claim
+upgrades. The contract and rationale are in
+[`experiments/2026-07-29-generator-calibrated-exposure.md`](experiments/2026-07-29-generator-calibrated-exposure.md).
 
 All studies recorded here made zero paid benchmark calls. The prior local
 embedding run did not make an API call. The previous USD 300 authority remains
@@ -423,7 +426,7 @@ Routes remain separate until evidence supports a combination.
 | MR-F: adaptive difficulty regime | Historical predictive score can choose between stationary and dynamic task-difficulty forecasts without future leakage. | Prequential adaptation produced wide `-0.00235`, deep `+0.00927`, and temporal-null rate `0.194`. | `closed` on the current pool |
 | MR-G / THY-001R: module change pressure | Reachable Git change pressure predicts the module composition of the target repository's next work cohort. | The frozen Multi-SWE and Full-minus-Verified Task-mix test lost to full Task history at both horizons; the Git-only vocabulary audit preserved the result. | `closed`; no tuning or outcome replay |
 | MR-H: parent work intent | Timestamped structural parent state predicts later Task-component mass before source-attested Task material becomes available. | Admit only a complete event archive with source-native parent/component mapping, versioned material, and native Task arrival; issue creation, linking, resolution, and merge times are not substitutes. | `data-gated` challenger; archive schema, event completeness, transform, and Task alignment unresolved |
-| MR-I / THY-002: generator-calibrated exposure | Future generated Task mass follows current Git exposure multiplied by a module's historical Task-per-exposure propensity. | Freeze a Rebench repository-cluster frame; require lower repository-first future Task-mix loss than full Task history and raw Git pressure at nested H5/H10 Origins. | `planning`; outcome-free, new source family, no parameter search |
+| MR-I / THY-002: generator-calibrated exposure | Future generated Task mass follows current Git exposure multiplied by a module's historical Task-per-exposure propensity. | Frozen Rebench frame requires lower repository-first future Task-mix Brier loss than full Task history, raw Git pressure, and yield-only at nested H5/H10 Origins. | `experiment-frozen`; outcome-free, new source family, no parameter search |
 
 ALG-001's shrinkage switch and ALG-004's EWMA guard remain offline safeguards,
 not positive algorithms. ALG-002 is closed for the current duration-stratum
@@ -615,7 +618,7 @@ training service is needed.
 | MR-017 / ALG-013 / ALG-014 | P1 | `closed` | Frozen RCP and PRCS separated representation from forecast: RCP transfer failed; PRCS static response relevance passed but target future increment failed. Stop current-source nomination search. |
 | MR-018 / THY-001R | P1 | `closed` | Original plan `10b4fcb2…8459` and two byte-identical runs retire the candidate: Multi H5/H10 vs full Task history `+0.17572`/`+0.21704`; Full-minus-Verified `+0.08751`/`+0.08807`. Audit revision `dd3e420d…2d44` removes the shared-vocabulary ambiguity and preserves failure. |
 | MR-019 | P2 | `data-gated` | Parent-level work intent is the strongest challenger. Require complete timestamped planning-node history, versioned Task material, and a module/component label available before source-attested Task arrival; do not substitute issue creation, linking, resolution, merge, open leaf issues, or PRs. |
-| MR-020 / THY-002 | P1 | `planning` | Freeze the Generator-calibrated exposure formula and a lineage-audited SWE-rebench V2 repository-cluster frame before reading future Task-module scores. Compare with full Task history and raw Git pressure; failure retires the family before Agent outcomes. |
+| MR-020 / THY-002 | P1 | `experiment-frozen` | Plan `0fe42fc1…1c69` binds the dimensionally pooled formula, Brier metric, implementation bytes, 5,365 Tasks, 40 canonical repositories, refs, heads, H5/H10 Origins, controls, and gates. Prepare the pinned Git caches, run twice, and retire on any frozen failure before Agent outcomes. |
 | RI-125 | P2 | `trigger-gated` | The exact 39 source objects and issue-text projection are full-byte verified. A runnable prepared Task Pool still needs solver/verifier material and source-specific certification when a concrete campaign requires it. |
 | RI-129 / RI-160 | P2 | `trigger-gated` | Add a single-writer exact certification checkpoint before the next comparable pool; replay retained entries before reuse. |
 | RI-163 | P2 | `trigger-gated` | Before another Pylint campaign, replace whole-file behavior identity with an explicit version payload and direct-helper digests. |
