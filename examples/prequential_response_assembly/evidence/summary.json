@@ -1,0 +1,244 @@
+{
+  "schema_version": "barcarolle_prequential_response_assembly_evidence_v1",
+  "study_id": "prequential-response-assembly-2026-07-29",
+  "plan_digest": "f1517fd04a97fc584b8df0f3c3d6be59bd3569a52bbad91694835de15558c84b",
+  "addendum_digest": "8f782ce6421de09064459a13a268689908f88014084dd6e6641d0c7785a0ba2c",
+  "execution_amendment_digest": "20e25fe7b21f2f95732a131082d54f330aafe90d12c1868b16043bac675ee5bd",
+  "execution_lock_digest": "f4dcec2e0c08cc2e1cf8e862a40b4a7ebc1e741326d3f9d02c462d501a81a91d",
+  "reproduction": {
+    "membership_digest": "9c5d90dd3c16bc8d82843ee6370e4eba64e68e7d28cf12ff556a06ce6d4d942a",
+    "membership_run_1_sha256": "a7c0a394efe2a6a95dc62e18e8ea443aa04dadfe5dea699cdd7b9310a2d25dd8",
+    "membership_run_2_sha256": "a7c0a394efe2a6a95dc62e18e8ea443aa04dadfe5dea699cdd7b9310a2d25dd8",
+    "membership_runs_byte_identical": true,
+    "membership_bytes": 67516778,
+    "result_digest": "393a8ccdf504aa3495bd0099624935ae36b4afb84d20990d0ad3ff26cfd4c08b",
+    "result_run_1_sha256": "04a2475d1b96b53d155f52cb937f7f2c6323fe81e68f216f2d3783f841186487",
+    "result_run_2_sha256": "04a2475d1b96b53d155f52cb937f7f2c6323fe81e68f216f2d3783f841186487",
+    "result_runs_byte_identical": true,
+    "result_bytes": 77645
+  },
+  "metric": {
+    "name": "future pass-rate MAE",
+    "contrast": "candidate minus all eligible target-repository history; negative favors Selection",
+    "aggregation": "target configurations and Origins within repository, then repositories equally",
+    "selection_budget_tasks": 10,
+    "h5_origin_count": 221,
+    "h5_repository_count": 13,
+    "h10_origin_count": 107,
+    "h10_repository_count": 11,
+    "full_history_h5_mae": 0.0673476429292014,
+    "full_history_h10_mae": 0.05280696865793433,
+    "alg_007_h5_difference": -0.0022539773355357935,
+    "alg_007_h10_difference": 0.0021567802149054546
+  },
+  "preregistered_algorithms": {
+    "ALG-015C": {
+      "information_contract": "cached_target",
+      "terminal_state": "bounded_inconclusive",
+      "numeric_progress": false,
+      "H5": {
+        "candidate_mae": 0.06511308136308137,
+        "difference": -0.002234561566120025,
+        "favorable_repositories": 9,
+        "repository_count": 13,
+        "deep_difference": -0.0037497719758167606,
+        "bootstrap_95": [
+          -0.007705127466889198,
+          0.003931871885318804
+        ],
+        "random_midrank": 0.969,
+        "continuous_forecast_minus_full": 0.002086137271371107,
+        "candidate_minus_exact_full_target": 0.0021303141303141296
+      },
+      "H10": {
+        "candidate_mae": 0.05256068465159374,
+        "difference": -0.0002462840063405857,
+        "favorable_repositories": 5,
+        "repository_count": 11,
+        "deep_difference": -0.001743781016510637,
+        "bootstrap_95": [
+          -0.005110389704906728,
+          0.004695688007242521
+        ],
+        "random_midrank": 0.98405,
+        "continuous_forecast_minus_full": 0.0011320516128282049,
+        "candidate_minus_exact_full_target": 0.0035277922550649822
+      }
+    },
+    "ALG-015U": {
+      "information_contract": "unseen_target",
+      "terminal_state": "bounded_inconclusive",
+      "numeric_progress": false,
+      "H5": {
+        "candidate_mae": 0.06681724756724758,
+        "difference": -0.000530395361953821,
+        "favorable_repositories": 8,
+        "repository_count": 13,
+        "deep_difference": -0.003874020412565198,
+        "bootstrap_95": [
+          -0.0061632123314149245,
+          0.005979599806095861
+        ],
+        "random_midrank": 0.84385,
+        "continuous_forecast_minus_full": 0.002086137271371106,
+        "candidate_minus_exact_full_target": 0.001254107004107004
+      },
+      "H10": {
+        "candidate_mae": 0.053660999842818025,
+        "difference": 0.0008540311848836968,
+        "favorable_repositories": 5,
+        "repository_count": 11,
+        "deep_difference": -0.000063828336557957,
+        "bootstrap_95": [
+          -0.004644612377993113,
+          0.006216015611658479
+        ],
+        "random_midrank": 0.95185,
+        "continuous_forecast_minus_full": 0.001132051612828205,
+        "candidate_minus_exact_full_target": -0.0021419146419146425
+      }
+    },
+    "ALG-016U": {
+      "information_contract": "unseen_target",
+      "terminal_state": "bounded_inconclusive",
+      "numeric_progress": false,
+      "H5": {
+        "candidate_mae": 0.06401258001258002,
+        "difference": -0.0033350629166213753,
+        "candidate_minus_alg_007": -0.001081085581085581,
+        "favorable_repositories": 9,
+        "repository_count": 13,
+        "deep_difference": -0.00539341074445553,
+        "bootstrap_95": [
+          -0.00708131273307744,
+          0.0005856322917217573
+        ],
+        "random_midrank": 0.9925,
+        "continuous_forecast_minus_full": 0.0014106474180667584,
+        "candidate_minus_exact_full_target": -0.0015505605505605506,
+        "forecast_to_selection_l1": 0.022728601644854882,
+        "every_leave_one_repository_out_favorable": true
+      },
+      "H10": {
+        "candidate_mae": 0.05391157686612233,
+        "difference": 0.001104608208187993,
+        "candidate_minus_alg_007": -0.0010521720067174613,
+        "favorable_repositories": 5,
+        "repository_count": 11,
+        "deep_difference": -0.001919966292695913,
+        "bootstrap_95": [
+          -0.0033723863798728253,
+          0.0055515304970939795
+        ],
+        "random_midrank": 0.9397,
+        "continuous_forecast_minus_full": 0.002515818056677012,
+        "candidate_minus_exact_full_target": -0.0018913376186103456,
+        "forecast_to_selection_l1": 0.02211756284236147,
+        "every_leave_one_repository_out_favorable": false
+      },
+      "posthoc_h5_alg_007_pairing": {
+        "favorable_repositories": 7,
+        "repository_count": 13,
+        "bootstrap_95": [
+          -0.0034451,
+          0.0011562
+        ],
+        "interpretation": "aggregate point-estimate improvement only; no robust ALG-007 superiority claim"
+      }
+    }
+  },
+  "diagnostic_materializer": {
+    "algorithm_id": "ALG-016U_greedy",
+    "eligible_portfolio_winner": false,
+    "H5_difference": -0.0031812075127659713,
+    "H10_difference": 0.0015665163973689093,
+    "exact_minus_greedy_h5_mae": -0.000153855403855404,
+    "exact_minus_greedy_h10_mae": -0.0004619081891809163
+  },
+  "frozen_controls": {
+    "cached_target_stationary_exact": {
+      "status": "pre_score_frozen_control_posthoc_promotion_candidate",
+      "mechanism": "quantize the exact target Agent full-history success rate to a feasible q/10 and select the newest Tasks within outcome cells",
+      "H5": {
+        "candidate_mae": 0.06298276723276724,
+        "difference": -0.004364875696434155,
+        "relative_mae_reduction": 0.06481111,
+        "favorable_repositories": 13,
+        "repository_count": 13,
+        "deep_difference": -0.004867782437577222,
+        "bootstrap_95": [
+          -0.005984034629930838,
+          -0.002772835154611793
+        ],
+        "random_midrank": 0.9986,
+        "every_leave_one_repository_out_favorable": true,
+        "favorable_configurations": 32,
+        "configuration_count": 36,
+        "zero_success_selection_cells": 5335,
+        "cell_count": 7956
+      },
+      "H10": {
+        "candidate_mae": 0.049032892396528756,
+        "difference": -0.0037740762614055677,
+        "relative_mae_reduction": 0.07146928,
+        "favorable_repositories": 10,
+        "repository_count": 11,
+        "deep_difference": -0.004504923977653598,
+        "bootstrap_95": [
+          -0.005533447663541468,
+          -0.0019321700335493254
+        ],
+        "random_midrank": 0.99995,
+        "every_leave_one_repository_out_favorable": true,
+        "favorable_configurations": 31,
+        "configuration_count": 36,
+        "zero_success_selection_cells": 2594,
+        "cell_count": 3852
+      },
+      "claim_limit": "cached exact-Agent quantized-full compression only; task identity and recency tie do not affect target-Agent pass-rate MAE"
+    },
+    "unseen_target_stationary_exact": {
+      "H5_difference": -0.0017845023660608245,
+      "H10_difference": 0.0029959458267983384
+    },
+    "ordinary_recency": {
+      "H5_mae": 0.06716401191401193,
+      "H5_difference": -0.0001836310151894739,
+      "H10_mae": 0.05301760024487297,
+      "H10_difference": 0.0002106315869386388
+    }
+  },
+  "decisions": {
+    "preregistered_portfolio_numeric_progress": false,
+    "preregistered_development_nomination_available": false,
+    "best_unseen_target_h5": "ALG-016U",
+    "best_observed_non_hindsight": "cached_target_stationary_exact",
+    "cached_target_decision": "freeze quantized-full control as the KISS reference; do not retain the weaker AdaNormalHedge layer",
+    "unseen_target_decision": "retain ALG-016U as an H5 development challenger; H10 reversal blocks promotion",
+    "next_theory": "finite-horizon predictive-median assembly compared directly with cached-target stationary exact under a new frozen plan",
+    "sealed_holdout_authorized": false,
+    "production_selector_authorized": false
+  },
+  "independent_audit": {
+    "status": "pass_with_claim_limits",
+    "artifact_or_digest_mismatches": 0,
+    "candidate_summary_mismatches": 0,
+    "future_or_target_leakage_violations": 0,
+    "exact_replay_mismatches": 0,
+    "random_draws_reproduced_per_horizon": 20000,
+    "claim_limits": [
+      "ALG-016U superiority to ALG-007 is an aggregate H5 point estimate, not a repository-robust comparison",
+      "cached-target stationary exact is a frozen control and post-hoc promotion candidate, not a preregistered portfolio winner",
+      "cached-target gain is success-count quantization, not Task-content or recency prediction"
+    ]
+  },
+  "claim_boundary": "Outcome-open, time-projected Multi-SWE development evidence only. Cached-target and unseen-target lanes are separate. No result establishes prospective validity, certifies a Task Pool, authorizes sealed-holdout access, or creates a production Selector default.",
+  "resource_use": {
+    "paid_api_calls": 0,
+    "new_agent_outcome_calls": 0,
+    "embedding_api_calls": 0,
+    "sealed_holdout_reads": 0,
+    "core_schema_or_service_changes": 0
+  },
+  "summary_digest": "baecf0c1c61657cabc5645c75f5143301a66fc328da57c2103ae7601000cae02"
+}
