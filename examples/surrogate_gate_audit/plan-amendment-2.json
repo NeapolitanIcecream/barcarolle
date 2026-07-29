@@ -1,0 +1,34 @@
+{
+  "schema_version": "barcarolle_surrogate_gate_audit_provenance_amendment_v1",
+  "amendment_id": "SGA-A2",
+  "status": "post_replay_provenance_contract_correction",
+  "parent_plan_digest": "7df62c16defb50132249d5e26ce1f892b8f8403fe684dc156aeb6269b467c181",
+  "prior_amendment_digest": "9ee6e8d7a360609a6aba182536693d22d3a3ca66f9cdcb9f3d7a4d8568898f49",
+  "parent_commit": "7cb8ecd0",
+  "parent_amended_implementation_sha256": "5dc1118b2617b8547bc75903ae570b268307ade3f2568a02589d645dc5b5d272",
+  "trigger": "An independent post-replay audit found two transcribed logical digests that disagreed with byte-valid source artifacts, no executor check for logical_bindings, an output label outside the frozen allowed-terminal-state vocabulary, and omitted candidate-minus-control values in the committed evidence summary.",
+  "code_scope": "Overlay the two corrected logical identities, validate every logical binding before Selection, project existing gate booleans onto the frozen terminal-state vocabulary, bind the full amendment chain in results, and publish the already-computed control contrasts.",
+  "forbidden_scope": "No algorithm, source, Task, Origin, horizon, budget, membership rule, metric, aggregation, control computation, random protocol, threshold, gate boolean, scientific interpretation, resource boundary, or claim boundary may change.",
+  "evidence_access_before_amendment": {
+    "accepted_replays_completed": 2,
+    "opened_development_outcomes_read": true,
+    "paid_api_calls": 0,
+    "new_agent_outcome_calls": 0,
+    "sealed_holdout_reads": 0
+  },
+  "prior_accepted_replay": {
+    "raw_sha256": "0b9320233bca0742a228031b8a4371ee014a9bec6843dbc863ebe5612485037d",
+    "result_digest": "e9bbd44e2e7351bcbd01cd9cb4e7d597a2be519c7410cfb40f68ad6a1fbf403c"
+  },
+  "corrected_logical_bindings": {
+    "response_signal_amendment_digest": "4ad6eab1f0ffe75405debf63e8e07a8ce43230d3249f21f0c65afa6b81ec0d76",
+    "alg_007_task_space_result_digest": "d9916f4c9acdcf615262f92cb771ed0079a696b4605805ef0c82b17f4f4e401d"
+  },
+  "terminal_state_projection": {
+    "primary_gate_failed": "primary_mae_rejects",
+    "primary_gate_passed_but_complete_stage_c_under_specified": "primary_mae_supports_but_complete_gate_is_under_specified",
+    "thy_002s_frozen_outcome_gate_passed": "would_pass_frozen_outcome_gate"
+  },
+  "amended_implementation_sha256": "671e593dd81cdcf3ec7560f1fe8d1c4d92f2ac7df8aee564c0e66d57cf08d7f4",
+  "amendment_digest": "1d25336e247ae6bf8508c846e979b9ff936c62ccff5e39a1be0669d1f911a833"
+}

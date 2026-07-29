@@ -56,11 +56,22 @@ HERE = Path(__file__).resolve().parent
 REPOSITORY_ROOT = HERE.parents[1]
 DEFAULT_PLAN = HERE / "plan.json"
 DEFAULT_AMENDMENT = HERE / "plan-amendment-1.json"
+DEFAULT_PROVENANCE_AMENDMENT = HERE / "plan-amendment-2.json"
 PLAN_SCHEMA = "barcarolle_surrogate_gate_audit_plan_v1"
 AMENDMENT_SCHEMA = "barcarolle_surrogate_gate_audit_amendment_v1"
+PROVENANCE_AMENDMENT_SCHEMA = (
+    "barcarolle_surrogate_gate_audit_provenance_amendment_v1"
+)
 RESULT_SCHEMA = "barcarolle_surrogate_gate_audit_results_v1"
 SUMMARY_SCHEMA = "barcarolle_surrogate_gate_audit_summary_v1"
 NUMPY_VERSION = "2.5.1"
+ALGORITHM_TERMINAL_STATES = frozenset(
+    {
+        "primary_mae_rejects",
+        "primary_mae_supports_but_complete_gate_is_under_specified",
+        "would_pass_frozen_outcome_gate",
+    }
+)
 
 
 @dataclass(frozen=True)
@@ -93,20 +104,51 @@ def load_audit_plan(path: Path = DEFAULT_PLAN) -> Mapping[str, Any]:
         if resources.get(key) != 0:
             raise ValueError("surrogate-gate audit resource boundary changed")
     amendment = load_audit_amendment(DEFAULT_AMENDMENT, plan=payload)
+    provenance_amendment = load_audit_provenance_amendment(
+        DEFAULT_PROVENANCE_AMENDMENT,
+        plan=payload,
+        prior_amendment=amendment,
+    )
     for item in _mapping_sequence(payload, "bound_files"):
         path_value = REPOSITORY_ROOT / _required_string(item, "path")
         expected_sha = _required_string(item, "sha256")
         if item.get("path") == "examples/surrogate_gate_audit/study.py":
             if amendment.get("parent_implementation_sha256") != expected_sha:
                 raise ValueError("audit amendment does not bind parent executor")
-            expected_sha = _required_string(
+            amended_sha = _required_string(
                 amendment,
+                "amended_implementation_sha256",
+            )
+            if (
+                provenance_amendment.get(
+                    "parent_amended_implementation_sha256"
+                )
+                != amended_sha
+            ):
+                raise ValueError(
+                    "provenance amendment does not bind amended executor"
+                )
+            expected_sha = _required_string(
+                provenance_amendment,
                 "amended_implementation_sha256",
             )
         if _sha256_file(path_value) != expected_sha:
             raise ValueError(f"bound file changed: {path_value}")
     result = dict(payload)
-    result["active_amendment_digest"] = amendment.get("amendment_digest")
+    logical_bindings = dict(_mapping(payload, "logical_bindings"))
+    corrections = _mapping(
+        provenance_amendment,
+        "corrected_logical_bindings",
+    )
+    for key, value in corrections.items():
+        if key not in logical_bindings or not isinstance(value, str) or not value:
+            raise ValueError("provenance amendment logical correction changed")
+        logical_bindings[key] = value
+    result["logical_bindings"] = logical_bindings
+    result["active_amendment_digests"] = (
+        amendment.get("amendment_digest"),
+        provenance_amendment.get("amendment_digest"),
+    )
     return result
 
 
@@ -138,6 +180,56 @@ def load_audit_amendment(
         )
     ):
         raise ValueError("surrogate-gate audit amendment scope changed")
+    return payload
+
+
+def load_audit_provenance_amendment(
+    path: Path = DEFAULT_PROVENANCE_AMENDMENT,
+    *,
+    plan: Mapping[str, object],
+    prior_amendment: Mapping[str, object],
+) -> Mapping[str, Any]:
+    """Load the post-replay provenance-only correction."""
+    payload = _load_mapping(path)
+    if payload.get("schema_version") != PROVENANCE_AMENDMENT_SCHEMA:
+        raise ValueError(
+            "surrogate-gate provenance amendment schema is unsupported"
+        )
+    expected = canonical_digest(
+        {key: value for key, value in payload.items() if key != "amendment_digest"}
+    )
+    if payload.get("amendment_digest") != expected:
+        raise ValueError(
+            "surrogate-gate provenance amendment digest does not match"
+        )
+    if (
+        payload.get("parent_plan_digest") != plan.get("plan_digest")
+        or payload.get("prior_amendment_digest")
+        != prior_amendment.get("amendment_digest")
+        or payload.get("status")
+        != "post_replay_provenance_contract_correction"
+    ):
+        raise ValueError("surrogate-gate provenance amendment binding changed")
+    corrections = _mapping(payload, "corrected_logical_bindings")
+    if set(corrections) != {
+        "response_signal_amendment_digest",
+        "alg_007_task_space_result_digest",
+    }:
+        raise ValueError("surrogate-gate logical correction scope changed")
+    resources = _mapping(payload, "evidence_access_before_amendment")
+    if (
+        resources.get("accepted_replays_completed") != 2
+        or resources.get("opened_development_outcomes_read") is not True
+        or any(
+            resources.get(key) != 0
+            for key in (
+                "paid_api_calls",
+                "new_agent_outcome_calls",
+                "sealed_holdout_reads",
+            )
+        )
+    ):
+        raise ValueError("surrogate-gate provenance amendment scope changed")
     return payload
 
 
@@ -354,8 +446,8 @@ def run_audit(
         "schema_version": RESULT_SCHEMA,
         "study_id": inputs.plan.get("study_id"),
         "plan_digest": inputs.plan.get("plan_digest"),
-        "active_amendment_digest": inputs.plan.get(
-            "active_amendment_digest"
+        "active_amendment_digests": inputs.plan.get(
+            "active_amendment_digests"
         ),
         "epistemic_status": "post_decision_opened_development_outcome_audit",
         "algorithms": results,
@@ -373,7 +465,14 @@ def run_audit(
 
 def _load_inputs(plan: Mapping[str, Any]) -> AuditInputs:
     source = _mapping(plan, "source_paths")
-    selector_plan, _, _, data, _, _ = _load_bound_study(
+    (
+        selector_plan,
+        response_signal_plan,
+        response_signal_amendment,
+        data,
+        outcome_diagnostics,
+        _,
+    ) = _load_bound_study(
         task_content_path=_bound_path(source, "task_content"),
         task_time_path=_bound_path(source, "task_times"),
         embedding_path=_bound_path(source, "embeddings"),
@@ -415,6 +514,20 @@ def _load_inputs(plan: Mapping[str, Any]) -> AuditInputs:
     verify_thy_002s_result(thy_result, thy_plan)
     if _mapping(thy_result, "decision").get("status") != "retire_mapping":
         raise ValueError("original THY-002S decision changed")
+    response_composition_plan = load_response_composition_plan(
+        _bound_path(source, "response_composition_plan")
+    )
+    _validate_logical_bindings(
+        plan,
+        selector_plan=selector_plan,
+        response_signal_plan=response_signal_plan,
+        response_signal_amendment=response_signal_amendment,
+        response_composition_plan=response_composition_plan,
+        outcome_diagnostics=outcome_diagnostics,
+        alg_007=alg_007,
+        thy_plan=thy_plan,
+        thy_result=thy_result,
+    )
     return AuditInputs(
         plan=plan,
         selector_plan=selector_plan,
@@ -424,6 +537,61 @@ def _load_inputs(plan: Mapping[str, Any]) -> AuditInputs:
         alg_007_task_space=alg_007,
         thy_002s_result=thy_result,
     )
+
+
+def _validate_logical_bindings(
+    plan: Mapping[str, object],
+    *,
+    selector_plan: Mapping[str, object],
+    response_signal_plan: Mapping[str, object],
+    response_signal_amendment: Mapping[str, object],
+    response_composition_plan: Mapping[str, object],
+    outcome_diagnostics: Mapping[str, object],
+    alg_007: Mapping[str, object],
+    thy_plan: Mapping[str, object],
+    thy_result: Mapping[str, object],
+) -> None:
+    contract = _load_mapping(
+        REPOSITORY_ROOT / "examples/multi_swe_research/contract.json"
+    )
+    actual = {
+        "selector_plan_digest": selector_plan.get("selector_plan_digest"),
+        "import_contract_digest": contract.get("contract_digest"),
+        "panel_digest": outcome_diagnostics.get("panel_digest"),
+        "resolved_outcome_digest": outcome_diagnostics.get(
+            "resolved_outcome_digest"
+        ),
+        "response_signal_plan_digest": response_signal_plan.get(
+            "response_signal_plan_digest"
+        ),
+        "response_signal_amendment_digest": response_signal_amendment.get(
+            "amendment_digest"
+        ),
+        "response_composition_plan_digest": response_composition_plan.get(
+            "response_composition_plan_digest"
+        ),
+        "thy_002s_plan_digest": thy_plan.get("plan_digest"),
+        "thy_002s_result_digest": thy_result.get("result_digest"),
+        "thy_002s_memberships_digest": thy_result.get("memberships_digest"),
+        "thy_002s_random_membership_digest": _mapping(
+            thy_result,
+            "random_landscape_raw",
+        ).get("membership_digest"),
+        "alg_007_task_space_result_digest": alg_007.get(
+            "task_space_results_digest"
+        ),
+    }
+    expected = _mapping(plan, "logical_bindings")
+    if set(expected) != set(actual):
+        raise ValueError("surrogate-gate logical binding set changed")
+    mismatches = tuple(
+        key for key in sorted(actual) if expected.get(key) != actual[key]
+    )
+    if mismatches:
+        raise ValueError(
+            "surrogate-gate logical binding mismatch: "
+            + ", ".join(mismatches)
+        )
 
 
 def _run_alg_013(inputs: AuditInputs) -> Mapping[str, Any]:
@@ -601,6 +769,7 @@ def _run_alg_013(inputs: AuditInputs) -> Mapping[str, Any]:
         "membership_digests": membership_digests,
         "horizons": horizon_results,
         "primary_mae_decision": decision,
+        "terminal_state": _primary_terminal_state(decision),
         "complete_original_stage_c_status": (
             "not_reconstructable_without_post_hoc_defaults"
         ),
@@ -823,6 +992,7 @@ def _run_alg_014(inputs: AuditInputs) -> Mapping[str, Any]:
         "membership_digests": membership_digests,
         "horizons": horizon_results,
         "primary_mae_decision": decision,
+        "terminal_state": _primary_terminal_state(decision),
         "complete_original_stage_c_status": (
             "not_reconstructable_without_post_hoc_defaults"
         ),
@@ -997,10 +1167,15 @@ def _run_thy_002s(inputs: AuditInputs) -> Mapping[str, Any]:
         ),
         "horizons": horizon_results,
         "would_pass_frozen_outcome_gate": gate,
-        "decision": (
+        "frozen_outcome_gate_decision": (
             "would_nominate_for_independent_confirmation"
             if gate["all_requirements_met"]
             else "fails_frozen_outcome_gate"
+        ),
+        "terminal_state": (
+            "would_pass_frozen_outcome_gate"
+            if gate["all_requirements_met"]
+            else "primary_mae_rejects"
         ),
     }
 
@@ -1551,6 +1726,16 @@ def _primary_decision(
     }
 
 
+def _primary_terminal_state(
+    decision: Mapping[str, object],
+) -> str:
+    return (
+        "primary_mae_supports_but_complete_gate_is_under_specified"
+        if decision.get("all_primary_requirements_met") is True
+        else "primary_mae_rejects"
+    )
+
+
 def _horizon_frame(
     tasks: Sequence[TaskMetadata],
     selector_plan: Mapping[str, object],
@@ -1666,6 +1851,20 @@ def verify_result(result: Mapping[str, object]) -> None:
     algorithms = _mapping(result, "algorithms")
     if set(algorithms) != {"ALG-013", "ALG-014", "THY-002S"}:
         raise ValueError("surrogate-gate audit algorithm set changed")
+    if any(
+        not isinstance(algorithm, Mapping)
+        or algorithm.get("terminal_state") not in ALGORITHM_TERMINAL_STATES
+        for algorithm in algorithms.values()
+    ):
+        raise ValueError("surrogate-gate audit terminal state changed")
+    amendments = result.get("active_amendment_digests")
+    if (
+        not isinstance(amendments, Sequence)
+        or isinstance(amendments, (str, bytes))
+        or len(amendments) != 2
+        or any(not isinstance(item, str) or not item for item in amendments)
+    ):
+        raise ValueError("surrogate-gate amendment chain changed")
 
 
 def _bound_path(
