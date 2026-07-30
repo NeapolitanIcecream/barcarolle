@@ -11,6 +11,12 @@ REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPOSITORY_ROOT))
 
 from examples.multi_repository_study.public_replay import TaskMetadata  # noqa: E402
+from examples.prequential_response_assembly.study import (  # noqa: E402
+    adanormalhedge_forecast,
+    create_adanormalhedge_state,
+    response_expert_forecasts,
+    update_adanormalhedge,
+)
 from examples.swe_bench_full_development.diagnostic import (  # noqa: E402
     load_plan as load_diagnostic_plan,
     select_future_oracle_memberships,
@@ -107,6 +113,45 @@ def test_response_membership_does_not_use_target_outcomes() -> None:
 
     assert original_memberships[0] == changed_memberships[0]
     assert all(len(indices) == 3 for indices in original_memberships[0].values())
+
+
+def test_prequential_update_remains_target_column_invariant() -> None:
+    np = pytest.importorskip("numpy")
+    pytest.importorskip("scipy")
+    history = np.asarray(
+        [
+            [index % 2, (index // 2) % 2, (index // 3) % 2]
+            for index in range(12)
+        ],
+        dtype=np.float64,
+    )
+    changed = history.copy()
+    changed[:, 0] = 1.0 - changed[:, 0]
+    order = tuple(
+        (f"2026-01-{index + 1:02d}T00:00:00Z", f"task-{index:02d}")
+        for index in range(len(history))
+    )
+
+    def second_origin_membership(values: object) -> tuple[int, ...]:
+        matrix = np.asarray(values, dtype=np.float64)
+        state = create_adanormalhedge_state(3)
+        first_experts = response_expert_forecasts(matrix[:10], horizon=2)
+        update_adanormalhedge(
+            state,
+            first_experts,
+            matrix[10:12].mean(axis=0),
+        )
+        second_experts = response_expert_forecasts(matrix, horizon=2)
+        forecast, _ = adanormalhedge_forecast(state, second_experts)
+        return select_response_memberships(
+            matrix,
+            forecast,
+            horizon=2,
+            budget=3,
+            created_order=order,
+        )[0]["ALG-015U"]
+
+    assert second_origin_membership(history) == second_origin_membership(changed)
 
 
 def test_reference_future_oracle_does_not_use_target_column() -> None:
