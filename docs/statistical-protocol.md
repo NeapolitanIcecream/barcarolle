@@ -329,6 +329,16 @@ controls, rank agreement, and recommendation regret remain separately labeled
 diagnostics. Changing the primary metric, dependence unit, or practical margin
 after outcomes open is exploratory.
 
+Every temporal null must state what it destroys and preserves. A joint-response
+circular shift preserves response prevalence, Agent dependence, and almost all
+local and long-range adjacency; it tests absolute phase alignment with fixed
+Origin cutoffs, not whether chronology contains any predictive structure.
+Shuffling complete adjacent H-task blocks destroys block order while preserving
+within-block joint responses and instead tests block-level persistence. An
+unrestricted row permutation asks a still different, stronger
+exchangeability question. Report these probabilities separately and do not
+use failure of a narrow null to reject mechanisms outside that null.
+
 Predeclare the future-block horizon from the deployment question. When more
 than one reasonable horizon exists, report a fixed block-size sensitivity and
 dependency-deduplicated view without selecting the most favorable result.

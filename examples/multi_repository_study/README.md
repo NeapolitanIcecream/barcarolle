@@ -36,6 +36,9 @@ continues to compile and select one repository-local Task Pool.
 - `scale-sensitivity-plan.json` freezes one common-Origin response surface for
   budgets 5/10/15 and task-count horizons 3/5/10. It preserves the six-Agent
   holdout and forbids choosing the best observed cell.
+- `suitability-audit-plan.json` freezes the candidate-free eleven-Agent H5
+  source-transfer check. `suitability-audit-summary.json` is its compact
+  reproduced evidence; the six-Agent holdout remains sealed.
 
 The portfolio is useful but unbalanced: 68 Origins are possible, while Django
 contributes 43. The primary summary therefore averages Origins inside each
@@ -68,6 +71,9 @@ diagnostic only.
 - `scale_sensitivity.py` keeps one 56-Origin cohort fixed while varying
   Selection budget and task-count horizon, rematerializes leave-one-Agent
   Selections, and records calendar-span and source-capacity diagnostics.
+- `suitability_audit.py` reports full, fixed-trivial, random, exact-oracle,
+  repository uncertainty, and circular phase-alignment diagnostics without
+  evaluating a candidate Selector.
 
 These are experiment-layer scripts, not a registry, service, Runner extension,
 or general multi-repository abstraction. The only reusable contract is the
@@ -99,6 +105,21 @@ Both commands verify pinned file identities and refuse to overwrite an
 existing output. The public replay can nominate a fixed route for a later
 independent test; it cannot promote a production Selector or establish a
 strict-prospective claim.
+
+The completed candidate-free audit reuses only the eleven opened Agent files:
+
+```bash
+uv run \
+  --with numpy==2.5.1 \
+  --with scipy==1.16.3 \
+  --with pyarrow==25.0.0 \
+  python examples/multi_repository_study/suitability_audit.py run \
+  --output outputs/research/2026-07-30-verified-suitability-audit/run.json
+```
+
+It verifies every input identity and the zero-authority boundary. Its result is
+descriptive because the frozen phase-alignment gate failed; see
+[`docs/experiments/2026-07-30-verified-suitability-audit.md`](../../docs/experiments/2026-07-30-verified-suitability-audit.md).
 
 The opened-outcome development replay reuses the same exact local files:
 

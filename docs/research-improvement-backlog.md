@@ -5,7 +5,7 @@ Last reviewed: 2026-07-30.
 Status: active decisions and the next evidence boundary.
 
 The current scientific interpretation is in
-[`experiments/2026-07-30-multi-swe-failure-region.md`](experiments/2026-07-30-multi-swe-failure-region.md).
+[`experiments/2026-07-30-verified-suitability-audit.md`](experiments/2026-07-30-verified-suitability-audit.md).
 `PROCESS.md` is the short cross-session handoff.
 
 ## Archive Lineage
@@ -84,90 +84,94 @@ opened. Close routes instead of carrying their execution diaries forward.
     caller.
 12. Paid evidence requires explicit authority and
     `OPENAI_BASE_URL` plus `OPENAI_API_KEY`.
+13. A temporal null must name the structure it destroys and preserves.
+    Circular shifts test absolute phase while preserving almost all adjacency;
+    they are not a generic test that chronology contains no information.
 
 ## Current Evidence Decision
 
-The current Multi-SWE research projection contains 1,632 Tasks, 36 public
-Agent configurations, and 2,913 positive outcomes among 58,752 cells
-(`4.9581%`).
+The bounded candidate-free atlas stopped after two independently reproduced
+sources:
 
-| Diagnostic | H5 | H10 |
+| H5 diagnostic | Multi-SWE, 36 configs | Verified, 11 Agents |
 | --- | ---: | ---: |
-| Repositories / Origins | `13 / 221` | `11 / 107` |
-| All-zero Agent-Origin future blocks | `83.61%` | `71.94%` |
-| Always-zero MAE | `0.059870` | `0.060395` |
-| Full-history MAE | `0.067348` | `0.052807` |
-| Always-zero minus full history | `-0.007477` | `+0.007589` |
+| Repositories / Origins | `13 / 221` | `7 / 68` |
+| Always-zero MAE | `0.059870` | `0.359033` |
+| Full-history MAE | `0.067348` | `0.183374` |
+| Exact B10 oracle MAE | `0.034709` | `0.074019` |
+| Full-to-oracle headroom | `0.032639` | `0.109355` |
+| Frozen temporal-null probability | `0.111444` | `0.912044` |
 
-The earlier combined failure-region label is withdrawn. Under the frozen
-end-aligned, equal-repository, scheduled-denominator, shared-unseen-target
-estimator view, H5 full history and retained candidates are dominated by
-always zero. At H10 full history has a favorable point estimate, but that sign
-is sensitive to repository weighting, Origin anchoring, and cohort
-construction. H5 and H10 use different repository and Origin frames; their
-sign change is not a causal horizon result.
+Multi-SWE H5 is always-zero dominated under its named unseen-target estimator
+view. Its H10 point estimate remains aggregation-, repository-, and
+Origin-sensitive. The exact oracle confirms representational capacity but not
+pre-Origin identification.
 
-Exact budget-ten hindsight still reduces full-history loss by about 48% at both
-horizons. Selection capacity exists after future outcomes are known.
-Pre-Origin identification on this opened counterfactual panel remains
-unresolved. More candidate search on the same outcomes cannot establish
-general validity and is closed.
+Verified is not a repeat of the Multi-SWE triviality regime. Full history
+beats always zero by `0.175659`, with repository-bootstrap 95% interval
+`[-0.248315, -0.063516]` and every leave-one-repository-out direction
+negative. Equal-budget random MAE is `0.194647`; exact B10 oracle MAE is
+`0.074019`, leaving `0.109355` Selection headroom.
 
-Historical correction:
+Verified does not clear its frozen chronology gate. The circular statistic is
+full-history minus zero MAE, where lower is favorable. In 1,824 of 2,000
+within-repository circular shifts the statistic was at least as favorable as
+the observed value, giving `p=0.912044`. This only rejects unusually favorable
+absolute phase. Because the null preserves almost all response adjacency, it
+does not prove that Task features, local persistence, or change points are
+useless.
 
-- the current five-Task Boltons report is an H1 mechanism check;
-- the older Boltons full-visible-history result is H10 with MAE `0.136111`
-  under scoreable rates and `0.137500` under the scheduled denominator;
-- the approximately `0.20` result belongs to an older mixed retrospective
-  aggregate, while the later SymPy H5 full-history MAE is `0.193290`.
-
-Future horizon averaging therefore does not explain Multi-SWE's low absolute
-MAE.
+Do not weaken the gate after reading the result. The Verified panel remains
+`descriptive_only`, with terminal state
+`capacity_without_detected_history_persistence`. No opened source is currently
+authorized as the main Stage C development boundary.
 
 ## Next Research Program
 
-### Stage A: Candidate-Free Null And Headroom Pilot
+### Stage A: Candidate-Free Compatibility Audit
 
-State: `ready`; plan digest
+State: `measured`.
+
+The Multi-SWE plan digest is
 `c4f2d34be4fc454c434a9c711c56f40a7902ddaeee1052d2ea25bfb67d05a08d`;
-no paid calls.
+its compact summary digest is
+`6928409f03153a793c09b4e01cb3db05058593cbb35a12b5a90a107dd1ad85fe`.
 
-Run the frozen direct audit on Multi-SWE. It reports separate H5/H10 frames,
-zero/one, a cached-target-only expanding climatology, full history, existing
-random and certified oracle rows, both full-relative and trivial-relative
-headroom, equal-repository uncertainty/LOO, pooled-Origin sensitivity, calendar
-spans, and a joint-response within-repository circular-shift temporal null.
+The Verified eleven-Agent plan digest is
+`59525b1a8168b909a4499f4658e10f5c4208e2fc5d659785d0ee42d44f63f550`;
+its result and summary digests are
+`2311d7da9a285b43dadf9382cebe281473c742ffd6aa79b0d9084cd1e4412ea4`
+and
+`48032bc07d64c693a7d3247b7af4ab8a750c56df93b972ea339e04f5f0392403`.
 
-Exit: decide whether this panel shows only representational capacity, also
-shows candidate-independent chronology alignment, or is unresolved at the
-repository level. The panel remains `descriptive_only`; this Stage cannot
-nominate a Selector or infer workload relevance.
+Both remain source-time counterfactual diagnostics. Neither nominates a
+Selector or resolves workload relevance.
 
-### Stage B: Select The Next Development Boundary
+### Stage B: Normalize SWE-bench Full
 
-State: `data-gated` until Stage A.
+State: `ready`; no paid calls and no sealed Agent open.
 
-A main-region development panel should have:
+Before normalizing outcome bytes, freeze:
 
-- enough nonzero future blocks for pass-rate MAE to distinguish temporal
-  prediction from a constant estimator;
-- material full-history-to-oracle headroom;
-- enough repositories or independent Origins to test portability;
-- an Agent panel with useful pass-rate variation;
-- a defensible Task-time and Result-availability claim for the intended use.
+- the exact checked eleven-Agent allowlist and each official result blob;
+- the 2,294-Task denominator, source revision, Check meaning, and
+  source-specific normalizer;
+- the Agent panel digest and rules for ordinary unlisted, no-generation,
+  missing-log, and schema-variant Tasks;
+- H5 and H10 frames, equal-repository aggregation, full, fixed trivial,
+  equal-budget random, and exact-oracle diagnostics;
+- temporal diagnostics by their exact null. Predeclare an adjacent-H5
+  joint-block permutation to test local persistence; label circular shifts as
+  phase alignment if retained.
 
-Use an existing public or already-paid panel when it meets the gate. A
-cross-source catalog may index per-source audits, but must not average them or
-select a main region from outcomes alone. SWE-bench Full is
-`normalization-gated`: its source/time row is available, while its MAE row
-needs an exact source-specific Result allowlist, Check identity, blob manifest,
-normalizer, and panel digest. Do not authorize calls, open Full outcomes or the
-six sealed SWE-bench Agents, or implement a concrete Generator from this
-ledger.
+Run once. Full remains an opened retrospective development source and cannot
+serve as independent confirmation. If it fails the frozen headroom,
+nontrivial-prediction, resolution, or chronology gates, stop the public atlas
+and specify a workload-matched source with native Task and Result time.
 
 ### Stage C: Theory-Driven Algorithm Research
 
-State: `data-gated` until one main-region development boundary is frozen.
+State: `data-gated` until Stage B yields one exploratory development boundary.
 
 Start from a mechanism stated without target future outcomes. New theory may
 be algorithmically complex; engineering remains a direct experiment module.
@@ -206,10 +210,10 @@ existing records. Add no global Task-Pool registry or generic policy engine.
 | --- | --- | --- |
 | FR-001 | `revised` | H5 is zero-dominated only under the named unseen-target estimator view; H10 is unresolved and sensitivity-bound. The combined failure-region label is withdrawn. |
 | FR-002 | `measured` | Statistical protocol now requires trivial baselines and regime diagnostics before candidate interpretation. |
-| FR-003 | `ready` | Execute the frozen no-paid Multi-SWE null-and-headroom pilot once. |
-| FR-004 | `data-gated` | Choose the next main-region development panel after FR-003. |
-| FR-005 | `trigger-gated` | Add a Reporting warning or abstention only after FR-003 fixes reusable meanings and a concrete caller needs it. |
-| FR-006 | `normalization-gated` | SWE-bench Full source/time capacity is usable; its pass-rate MAE row needs a source-specific allowlist, Check/Result binding, normalizer, and panel digest before outcomes are opened. |
+| FR-003 | `measured` | Multi-SWE candidate-free H5/H10 audit completed and independently reproduced. |
+| FR-004 | `measured` | Verified opened eleven-Agent H5 audit completed; capacity is present but the frozen phase-alignment gate failed. |
+| FR-005 | `trigger-gated` | Add a Reporting warning or abstention only after a practical operating region and concrete caller exist. |
+| FR-006 | `ready` | Freeze the SWE-bench Full checked-eleven allowlist, Check/Result binding, normalizer, panel digest, H5/H10 frames, and named temporal nulls before outcome normalization. |
 | ALG-016U | `closed` on current panel | Preserve as the best unseen-target H5 point estimate. Reopen only through an independently derived mechanism on a new evidence boundary. |
 | THY-002 | `task-mix-pass` | Preserve generator-calibrated exposure as projected Task-mix evidence. Its THY-002S outcome mapping remains closed. |
 | Parent work intent | `data-gated` | Reopen only with complete timestamped planning-node history, versioned Task material, and pre-arrival component labels. |
