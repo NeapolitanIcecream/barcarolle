@@ -1,0 +1,149 @@
+{
+  "decision": {
+    "cross_source_extension": {
+      "automatic_atlas_expansion": false,
+      "horizon_terminal_states": {
+        "10": "capacity_without_detected_history_persistence",
+        "5": "unseen_estimator_full_dominated"
+      },
+      "status": "defer_until_pilot_interpretation",
+      "swe_bench_full_status": "normalization_gated"
+    },
+    "deployment_useful_margin_declared": false,
+    "panel_status": "descriptive_only",
+    "practical_main_region_nominated": false,
+    "selector_nominated": false,
+    "workload_relevance_resolved": false
+  },
+  "epistemic_status": "opened_outcome_candidate_free_descriptive_audit",
+  "identities": {
+    "hindsight_results_digest": "7ccd3153720ce12c98c1781df2fbf654b65ceacad93eb8916c1843baf86cdb4f",
+    "outcome_results_digest": "7b314e1239981c38574960e15f8117ba33c350dbb61fb1e9c0d52eb96e013e36",
+    "panel_digest": "f2658d12451bdab4108a71cfae5cd5044a5bd312633239c09425378b4b682deb",
+    "resolved_outcome_digest": "b9a6d0d8e44d747d23789ec23eb4205178f2ae2d4f737c2446a5fcdf5abc116c",
+    "suitability_audit_plan_digest": "c4f2d34be4fc454c434a9c711c56f40a7902ddaeee1052d2ea25bfb67d05a08d",
+    "suitability_audit_result_digest": "c71f320e140915594a7868eec0d61e0ef7ca04d291da6e8741b619c2234747e7",
+    "task_time_projection_digest": "56eb7dda0d7fd9787b1e77c432572f212726b92abc189df18ab2a4fe6bb815e5"
+  },
+  "implementation": {
+    "implementation_file_sha256": "3b36d7d69633e0e48bb671c00748da1905675aa5bad657393c4742b497970289",
+    "numpy_version": "2.5.1",
+    "python_version": "3.14.0"
+  },
+  "protocol": {
+    "claim_boundary": "Opened public outcomes and projected Task times support a candidate-free source-time counterfactual diagnostic only. The result cannot nominate a Selector, practical workload region, strict-prospective claim, or failure cause.",
+    "configuration_count": 36,
+    "information_contract": "unseen-target estimator diagnostics and a separate cached-target climatology lane",
+    "origin_alignment": "end-aligned complete non-overlapping blocks",
+    "primary_aggregation": "equal repository",
+    "primary_metric": "future pass-rate MAE",
+    "task_count": 1632
+  },
+  "reproduction": {
+    "byte_identical_second_run": true,
+    "result_digest": "c71f320e140915594a7868eec0d61e0ef7ca04d291da6e8741b619c2234747e7"
+  },
+  "resource_use": {
+    "generator_development": false,
+    "new_public_outcome_panels_opened": 0,
+    "paid_api_calls": 0,
+    "sealed_swe_bench_holdout_agents_opened": 0
+  },
+  "results": {
+    "h10": {
+      "all_one_agent_origin_share": 0.0,
+      "all_zero_agent_origin_share": 0.7193665628245067,
+      "always_one_mae": 0.9396045094681459,
+      "always_zero_mae": 0.06039549053185416,
+      "budget_ten_capacity_present": true,
+      "cached_expanding_median_mae": 0.05238735761646689,
+      "calendar_cutoff_to_future_end_days": {
+        "maximum": 909.2508449074074,
+        "median": 48.3202662037037,
+        "minimum": 5.648206018518518
+      },
+      "configuration_directions_favorable": "22/36",
+      "equal_repository_future_density": 0.06039549053185416,
+      "full_history_mae": 0.05280696865793433,
+      "full_minus_zero": -0.007588521873919833,
+      "future_tasks": 10,
+      "history_persistence_detected": false,
+      "leave_one_repository_out_all_negative": false,
+      "oracle_mae": 0.02719079823625278,
+      "origin_count": 107,
+      "pooled_future_density": 0.03997923156801662,
+      "random_mean_mae": 0.05786889734734735,
+      "repository_bootstrap_interval_95": {
+        "half_width": 0.019379158453387953,
+        "lower": -0.030556558191551404,
+        "upper": 0.008201758715224498,
+        "width": 0.038758316906775905
+      },
+      "repository_count": 11,
+      "selection_headroom": 0.025616170421681548,
+      "temporal_null": {
+        "draws": 2000,
+        "null_interval_95": {
+          "lower": -0.011340694453620029,
+          "upper": 0.006219820713650236
+        },
+        "null_mean": -0.0030398558812798643,
+        "observed": -0.00758852187391984,
+        "one_sided_probability": 0.17041479260369816,
+        "values_digest": "1d1a4c732ae1a769750f61db2862066028e1d8adbe2b9215788e389e13fa99b4"
+      },
+      "terminal_state": "capacity_without_detected_history_persistence",
+      "trivial_relative_headroom": 0.033204692295601385,
+      "trivial_separation_full": 0.007588521873919833
+    },
+    "h5": {
+      "all_one_agent_origin_share": 0.0,
+      "all_zero_agent_origin_share": 0.836098541980895,
+      "always_one_mae": 0.9401298516298516,
+      "always_zero_mae": 0.05987014837014837,
+      "budget_ten_capacity_present": true,
+      "cached_expanding_median_mae": 0.06260256564684383,
+      "calendar_cutoff_to_future_end_days": {
+        "maximum": 1161.896701388889,
+        "median": 22.957824074074075,
+        "minimum": 1.6916782407407407
+      },
+      "configuration_directions_favorable": "7/36",
+      "equal_repository_future_density": 0.05987014837014837,
+      "full_history_mae": 0.06734764292920138,
+      "full_minus_zero": 0.007477494559053013,
+      "future_tasks": 5,
+      "history_persistence_detected": false,
+      "leave_one_repository_out_all_negative": false,
+      "oracle_mae": 0.03470895770895771,
+      "origin_count": 221,
+      "pooled_future_density": 0.03984414278531925,
+      "random_mean_mae": 0.06916280848364598,
+      "repository_bootstrap_interval_95": {
+        "half_width": 0.013844515481647307,
+        "lower": -0.009280830628347767,
+        "upper": 0.018408200334946848,
+        "width": 0.027689030963294614
+      },
+      "repository_count": 13,
+      "selection_headroom": 0.03263868522024367,
+      "temporal_null": {
+        "draws": 2000,
+        "null_interval_95": {
+          "lower": 0.004460281804805424,
+          "upper": 0.021304620027378034
+        },
+        "null_mean": 0.012803130589807536,
+        "observed": 0.007477494559053019,
+        "one_sided_probability": 0.11144427786106946,
+        "values_digest": "c105f00f7b4b5a24f542443e8cc6b08ef04816c51e7b2fd8466f83d5654e10de"
+      },
+      "terminal_state": "unseen_estimator_full_dominated",
+      "trivial_relative_headroom": 0.025161190661190658,
+      "trivial_separation_full": -0.007477494559053013
+    }
+  },
+  "schema_version": "barcarolle_multi_swe_suitability_audit_summary_v1",
+  "study_id": "multi-swe-candidate-free-null-headroom-audit-2026-07-30",
+  "suitability_audit_summary_digest": "6928409f03153a793c09b4e01cb3db05058593cbb35a12b5a90a107dd1ad85fe"
+}
