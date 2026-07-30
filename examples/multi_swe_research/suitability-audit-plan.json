@@ -97,6 +97,7 @@
     "construction": "For every draw and repository, choose one independent nonzero circular offset and shift the complete ordered 36-dimensional Task response rows together. Preserve Task times, Origin membership, repository prevalence, joint Agent response vectors, and response-sequence adjacency up to the circular boundary.",
     "draws": 2000,
     "seed": 20260730,
+    "generator": "For each horizon initialize Python random.Random(seed + future_tasks); for each draw and sorted repository call randrange(1, repository_task_count) once.",
     "p_value": "(1 + number of null statistics at most observed) / (draws + 1)",
     "alpha": 0.05,
     "claim": "A small value detects alignment of aggregate history persistence with the observed Task chronology. Failure to detect does not prove that every pre-Origin Task feature is useless."
@@ -104,7 +105,9 @@
   "uncertainty": {
     "repository_bootstrap_resamples": 10000,
     "repository_bootstrap_seed": 20260730,
+    "bootstrap_generator": "For each horizon initialize Python random.Random(repository_bootstrap_seed + future_tasks); sample repository rows with replacement using randrange.",
     "interval": "percentile 95 percent interval over equal-weight repository rows",
+    "quantile_rule": "linear interpolation at index probability times (count minus one)",
     "leave_one_repository_out": true,
     "report_per_repository": true,
     "report_per_configuration": true,
@@ -143,5 +146,5 @@
     "generator_development": false,
     "implementation_scope": "one direct Multi-SWE experiment module, focused tests, ignored raw results, a compact self-digested summary, and claim-boundary documentation"
   },
-  "suitability_audit_plan_digest": "b24b31a49ad4c31177ec73d95bb9da18abdcc215033d2e4f893a3ef593c3d1ca"
+  "suitability_audit_plan_digest": "7650eece7cd20bfa170307db6ff50fcf8d558b4926f29d4f1154d0ad6c852621"
 }
