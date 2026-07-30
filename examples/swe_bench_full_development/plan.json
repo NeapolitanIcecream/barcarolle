@@ -1,0 +1,148 @@
+{
+  "schema_version": "barcarolle_swe_bench_full_development_plan_v1",
+  "study_id": "swe-bench-full-direct-mae-development-2026-07-30",
+  "frozen_at": "2026-07-30T06:54:49Z",
+  "status": "outcome_open_portfolio_frozen_before_score",
+  "question": "Can a fixed before-testing Selector use historical Task data and the other ten Agents' historical outcomes to choose ten Tasks whose target-Agent pass rate is closer than Full history to the next five and next ten Tasks?",
+  "primary_outcome": "Direct target-Agent future pass-rate MAE. Average target Agents and Origins inside each repository, then average repositories equally.",
+  "information_contract": {
+    "target_agent": "Hold out the target Agent's complete outcome column from every membership decision.",
+    "allowed": [
+      "repository-local historical Task identities and created_at order",
+      "the other ten Agents' outcomes on historical Tasks",
+      "for ALG-010 only, other-repository Task outcomes created no later than the current history cutoff"
+    ],
+    "forbidden": [
+      "the target Agent's historical or future outcomes",
+      "any current-Origin future Task or outcome",
+      "any other-repository Task created after the current history cutoff"
+    ],
+    "prequential_update": "ALG-015U updates only when the previous future block has entered the current history.",
+    "task_order": "created_at then instance_id",
+    "result_timestamp": "Result storage or import time is not an algorithm input."
+  },
+  "source": {
+    "dataset_path": "outputs/research/2026-07-28-external-benchmark-inventory/sources/swe_bench_full_test.parquet",
+    "result_directory": "outputs/research/2026-07-30-swe-bench-full-transfer/official-results",
+    "task_count": 2294,
+    "agent_count": 11,
+    "repository_count": 10,
+    "normalized_outcome_matrix_digest": "24648a989b02b70c9fb06c6417adfdc1a67f473f8186326e9c7afa64f1ef06a8",
+    "use": "outcome-open development; not independent confirmation"
+  },
+  "frame": {
+    "minimum_initial_history_tasks": 20,
+    "selection_budget_tasks": 10,
+    "horizons": [
+      5,
+      10
+    ],
+    "expected_origin_counts": {
+      "5": 408,
+      "10": 201
+    },
+    "aggregation": "target Agents and Origins inside repository, then repositories equally"
+  },
+  "baselines": {
+    "full_history": "No-Selection baseline using every eligible repository-local history Task.",
+    "equal_budget_random": "Reuse the frozen 20,000-draw distribution on the exact same Full frame.",
+    "exact_oracle": "Reuse the future-open capacity diagnostic; it is not a candidate."
+  },
+  "candidates": [
+    {
+      "selector_id": "ordinary_recency",
+      "mechanism": "Select the latest ten history Tasks.",
+      "role": "simple temporal control"
+    },
+    {
+      "selector_id": "stationary_response_match",
+      "mechanism": "Select an exact ten-Task subset whose other-Agent response vector matches their full-history mean.",
+      "role": "non-adaptive response control"
+    },
+    {
+      "selector_id": "ALG-010",
+      "mechanism": "Compress other-Agent response rates to five difficulty states, forecast the next state distribution with a cutoff-aware repository-equal Markov model, and match that distribution.",
+      "role": "coarse state-transition candidate"
+    },
+    {
+      "selector_id": "ALG-015U",
+      "mechanism": "Combine full, recent, recent-two-block, and linear response forecasts with coordinate-wise AdaNormalHedge, then exactly match the other-Agent response forecast.",
+      "role": "online expert candidate"
+    },
+    {
+      "selector_id": "ALG-016U",
+      "mechanism": "Forecast the other-Agent response vector with the frozen shared BOCPD change-point model, then exactly match it.",
+      "role": "change-point candidate"
+    }
+  ],
+  "difficulty_markov": {
+    "state_count": 5,
+    "cell_prior_mass": 0.2,
+    "local_prior_strength": 5.0,
+    "within_state_tie_break": "most recent created_at then instance_id",
+    "parameter_search": false
+  },
+  "evaluation": {
+    "report": [
+      "direct MAE",
+      "candidate minus Full",
+      "position in the frozen random sampling distribution",
+      "repository directions",
+      "target-Agent directions",
+      "repository bootstrap interval"
+    ],
+    "repository_bootstrap_resamples": 10000,
+    "repository_bootstrap_seed": 20260805,
+    "ranking": "Report H5 and H10 separately; do not construct a post-hoc composite.",
+    "retention": "A development result may retain, revise, or discard a mechanism. No development result nominates a production Selector."
+  },
+  "reproduction": {
+    "python_version": "3.14.0",
+    "numpy_version": "2.5.1",
+    "scipy_version": "1.16.3",
+    "pyarrow_version": "25.0.0",
+    "required_runs": 2,
+    "comparison": "Membership and result canonical JSON must be byte-identical."
+  },
+  "bound_artifacts": {
+    "source_plan": {
+      "path": "examples/swe_bench_full_transfer/plan.json",
+      "file_sha256": "d0874de8a4f6404ec8a7652847db0f09f62a2513be1f2f264e858f58f97c9742",
+      "logical_digest_key": "plan_digest",
+      "logical_digest": "1c37db6ebd2b65a4acdb81c4e75aec1fcab54a7db31e84558c7435d5dadc4b32"
+    },
+    "suitability_result": {
+      "path": "outputs/research/2026-07-30-swe-bench-full-transfer/suitability-result-a.json",
+      "file_sha256": "35ee63038a9bb869303a6be007f242c01fb299e003d5380937a35692f7b513c9",
+      "logical_digest_key": "suitability_result_digest",
+      "logical_digest": "2f66df63186a6113255ced65e155cce8350aeb9b01eb4c187619e456fccbddf8"
+    },
+    "suitability_summary": {
+      "path": "examples/swe_bench_full_transfer/evidence/summary.json",
+      "file_sha256": "6f1aae46e23788333a970d2960575f3ff9358ef78016eb2b63658ea8543075ae",
+      "logical_digest_key": "summary_digest",
+      "logical_digest": "b01b8bedc82f5311663a658cbf09ae226fd4895cf2c2171513ae1b68543d60d1"
+    },
+    "response_implementation": {
+      "path": "examples/prequential_response_assembly/study.py",
+      "file_sha256": "4455711d972a7ec5b4d446420f48e489e60274b5f36f90bb4162ccee122b1515"
+    },
+    "difficulty_implementation": {
+      "path": "examples/multi_repository_study/agent_invariant.py",
+      "file_sha256": "0b055d4ea7e2994f2a31d2c0beb927d6e1e6ad04a78c779abf522422b554121c"
+    }
+  },
+  "implementation": {
+    "study_file_sha256": "5d848353638d638b48b77ce1979ca5e1148c8642ac471eed6fd389266d6a1697"
+  },
+  "authority": {
+    "paid_api_calls": 0,
+    "new_agent_outcome_calls": 0,
+    "sealed_swe_bench_verified_agent_reads": 0,
+    "generator_development": false,
+    "core_schema_changes": 0,
+    "raw_artifacts": "ignored outputs only"
+  },
+  "claim_boundary": "This is adaptive, outcome-open SWE-bench Full development evidence. It measures direct pass-rate MAE for the fixed panel and frame. It does not independently confirm the chosen method on unseen Tasks, repositories, or Agent identities and does not establish a default Selector.",
+  "plan_digest": "e226462972c5dee46ae675a7d80dc2662a479afc2a377b9d5c400d1c7e551e17"
+}
