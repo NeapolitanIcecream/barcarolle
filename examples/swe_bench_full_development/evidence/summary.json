@@ -1,0 +1,989 @@
+{
+  "claim_boundary": "This is adaptive, outcome-open SWE-bench Full development evidence. It measures direct pass-rate MAE for the fixed panel and frame. It does not independently confirm the chosen method on unseen Tasks, repositories, or Agent identities and does not establish a default Selector.",
+  "decision": {
+    "best_candidate_by_horizon": {
+      "10": "stationary_response_match",
+      "5": "ALG-015U"
+    },
+    "candidates_better_than_full_at_both_horizons": [],
+    "interpretation": "Outcome-open Full development evidence may retain or discard mechanisms; it cannot independently confirm the selected winner.",
+    "production_promotion_allowed": false,
+    "selector_nominated": false
+  },
+  "horizons": {
+    "10": {
+      "candidates": {
+        "ALG-010": {
+          "candidate_minus_full": 0.0067916110853141615,
+          "favorable_repository_count": 2,
+          "favorable_target_agent_count": 3,
+          "mae": 0.06937067534206089,
+          "random_midrank": 0.8941,
+          "repository_bootstrap_interval_95": {
+            "lower": 0.0035009522924822263,
+            "upper": 0.010054330280181326
+          }
+        },
+        "ALG-015U": {
+          "candidate_minus_full": 0.004598944314334136,
+          "favorable_repository_count": 3,
+          "favorable_target_agent_count": 5,
+          "mae": 0.06717800857108086,
+          "random_midrank": 0.96985,
+          "repository_bootstrap_interval_95": {
+            "lower": -0.001666920713672087,
+            "upper": 0.010967763393057968
+          }
+        },
+        "ALG-016U": {
+          "candidate_minus_full": 0.0030304669416398866,
+          "favorable_repository_count": 3,
+          "favorable_target_agent_count": 7,
+          "mae": 0.06560953119838661,
+          "random_midrank": 0.99,
+          "repository_bootstrap_interval_95": {
+            "lower": -0.00020214629016760845,
+            "upper": 0.005879572740491507
+          }
+        },
+        "ordinary_recency": {
+          "candidate_minus_full": 0.0068851953791996545,
+          "favorable_repository_count": 3,
+          "favorable_target_agent_count": 4,
+          "mae": 0.06946425963594638,
+          "random_midrank": 0.8893,
+          "repository_bootstrap_interval_95": {
+            "lower": 0.00048066769152149696,
+            "upper": 0.013236425332594339
+          }
+        },
+        "stationary_response_match": {
+          "candidate_minus_full": 0.001719489264698365,
+          "favorable_repository_count": 3,
+          "favorable_target_agent_count": 7,
+          "mae": 0.06429855352144509,
+          "random_midrank": 0.99675,
+          "repository_bootstrap_interval_95": {
+            "lower": -0.0019390333247709638,
+            "upper": 0.004872954071489521
+          }
+        }
+      },
+      "mae": {
+        "ALG-010": 0.06937067534206089,
+        "ALG-015U": 0.06717800857108086,
+        "ALG-016U": 0.06560953119838661,
+        "full_history": 0.06257906425674672,
+        "ordinary_recency": 0.06946425963594638,
+        "stationary_response_match": 0.06429855352144509
+      },
+      "origin_count": 201,
+      "repository_count": 10,
+      "repository_rows": [
+        {
+          "candidate_minus_full": {
+            "ALG-010": 0.004080362384411285,
+            "ALG-015U": -0.0063092480051991084,
+            "ALG-016U": -0.0011144428103939258,
+            "ordinary_recency": -0.006309248005199122,
+            "stationary_response_match": 0.004080362384411285
+          },
+          "mae": {
+            "ALG-010": 0.07012987012987014,
+            "ALG-015U": 0.059740259740259746,
+            "ALG-016U": 0.06493506493506493,
+            "full_history": 0.06604950774545885,
+            "ordinary_recency": 0.05974025974025973,
+            "stationary_response_match": 0.07012987012987014
+          },
+          "repository_id": "astropy/astropy"
+        },
+        {
+          "candidate_minus_full": {
+            "ALG-010": 0.008355816997902762,
+            "ALG-015U": 0.002879365738318984,
+            "ALG-016U": 0.007479584796369371,
+            "ordinary_recency": 0.017118139013236833,
+            "stationary_response_match": 0.00671288162002763
+          },
+          "mae": {
+            "ALG-010": 0.07667031763417305,
+            "ALG-015U": 0.07119386637458927,
+            "ALG-016U": 0.07579408543263966,
+            "full_history": 0.06831450063627029,
+            "ordinary_recency": 0.08543263964950712,
+            "stationary_response_match": 0.07502738225629792
+          },
+          "repository_id": "django/django"
+        },
+        {
+          "candidate_minus_full": {
+            "ALG-010": 0.008545915156066883,
+            "ALG-015U": 0.010250460610612334,
+            "ALG-016U": 0.005705006065157794,
+            "ordinary_recency": 0.013091369701521423,
+            "stationary_response_match": 0.006273187883339609
+          },
+          "mae": {
+            "ALG-010": 0.05625,
+            "ALG-015U": 0.05795454545454545,
+            "ALG-016U": 0.05340909090909091,
+            "full_history": 0.04770408484393312,
+            "ordinary_recency": 0.06079545454545454,
+            "stationary_response_match": 0.05397727272727273
+          },
+          "repository_id": "matplotlib/matplotlib"
+        },
+        {
+          "candidate_minus_full": {
+            "ALG-010": -0.0007352941176470562,
+            "ALG-015U": -0.00982620320855615,
+            "ALG-016U": -0.005280748663101603,
+            "ordinary_recency": -0.00982620320855615,
+            "stationary_response_match": -0.00982620320855615
+          },
+          "mae": {
+            "ALG-010": 0.1,
+            "ALG-015U": 0.09090909090909091,
+            "ALG-016U": 0.09545454545454546,
+            "full_history": 0.10073529411764706,
+            "ordinary_recency": 0.09090909090909091,
+            "stationary_response_match": 0.09090909090909091
+          },
+          "repository_id": "psf/requests"
+        },
+        {
+          "candidate_minus_full": {
+            "ALG-010": 0.014965528298861636,
+            "ALG-015U": 0.0119352252685586,
+            "ALG-016U": 0.007894821228154561,
+            "ordinary_recency": 0.006884720218053544,
+            "stationary_response_match": 0.0038544171877505223
+          },
+          "mae": {
+            "ALG-010": 0.08080808080808081,
+            "ALG-015U": 0.07777777777777778,
+            "ALG-016U": 0.07373737373737374,
+            "full_history": 0.06584255250921918,
+            "ordinary_recency": 0.07272727272727272,
+            "stationary_response_match": 0.0696969696969697
+          },
+          "repository_id": "pydata/xarray"
+        },
+        {
+          "candidate_minus_full": {
+            "ALG-010": -0.00041459899615927526,
+            "ALG-015U": 0.023827825246264957,
+            "ALG-016U": 0.005646007064446783,
+            "ordinary_recency": 0.023827825246264957,
+            "stationary_response_match": -0.0034449020264623043
+          },
+          "mae": {
+            "ALG-010": 0.06060606060606061,
+            "ALG-015U": 0.08484848484848484,
+            "ALG-016U": 0.06666666666666667,
+            "full_history": 0.06102065960221988,
+            "ordinary_recency": 0.08484848484848484,
+            "stationary_response_match": 0.05757575757575758
+          },
+          "repository_id": "pylint-dev/pylint"
+        },
+        {
+          "candidate_minus_full": {
+            "ALG-010": 0.000362140494993779,
+            "ALG-015U": -0.009738869606016325,
+            "ALG-016U": -0.005698465565612279,
+            "ordinary_recency": -0.0036782635454102597,
+            "stationary_response_match": -0.005698465565612279
+          },
+          "mae": {
+            "ALG-010": 0.06666666666666667,
+            "ALG-015U": 0.05656565656565656,
+            "ALG-016U": 0.06060606060606061,
+            "full_history": 0.06630452617167289,
+            "ordinary_recency": 0.06262626262626263,
+            "stationary_response_match": 0.06060606060606061
+          },
+          "repository_id": "pytest-dev/pytest"
+        },
+        {
+          "candidate_minus_full": {
+            "ALG-010": 0.010443518379609468,
+            "ALG-015U": 0.010443518379609468,
+            "ALG-016U": 0.006807154743245836,
+            "ordinary_recency": 0.014079882015973114,
+            "stationary_response_match": 0.007261700197791293
+          },
+          "mae": {
+            "ALG-010": 0.06818181818181818,
+            "ALG-015U": 0.06818181818181818,
+            "ALG-016U": 0.06454545454545454,
+            "full_history": 0.05773829980220871,
+            "ordinary_recency": 0.07181818181818182,
+            "stationary_response_match": 0.065
+          },
+          "repository_id": "scikit-learn/scikit-learn"
+        },
+        {
+          "candidate_minus_full": {
+            "ALG-010": 0.011202070815516788,
+            "ALG-015U": 0.0072247980882440554,
+            "ALG-016U": 0.006088434451880426,
+            "ordinary_recency": 0.008361161724607699,
+            "stationary_response_match": 0.004952070815516789
+          },
+          "mae": {
+            "ALG-010": 0.05,
+            "ALG-015U": 0.04602272727272727,
+            "ALG-016U": 0.04488636363636364,
+            "full_history": 0.038797929184483215,
+            "ordinary_recency": 0.047159090909090914,
+            "stationary_response_match": 0.043750000000000004
+          },
+          "repository_id": "sphinx-doc/sphinx"
+        },
+        {
+          "candidate_minus_full": {
+            "ALG-010": 0.01111065143958525,
+            "ALG-015U": 0.0053025706315044385,
+            "ALG-016U": 0.002777318106251918,
+            "ordinary_recency": 0.0053025706315044385,
+            "stationary_response_match": 0.003029843358777172
+          },
+          "mae": {
+            "ALG-010": 0.06439393939393939,
+            "ALG-015U": 0.05858585858585858,
+            "ALG-016U": 0.05606060606060606,
+            "full_history": 0.05328328795435414,
+            "ordinary_recency": 0.05858585858585858,
+            "stationary_response_match": 0.056313131313131315
+          },
+          "repository_id": "sympy/sympy"
+        }
+      ],
+      "score_rows_digest": "83d10229e4201ac2bb7f7e0413cf4b1237c43de9b97c4cafdac24a5e5147eb17",
+      "target_agent_count": 11,
+      "target_agent_rows": [
+        {
+          "candidate_minus_full": {
+            "ALG-010": 0.006025219182151709,
+            "ALG-015U": 0.013892163148493286,
+            "ALG-016U": 0.016352384988233187,
+            "ordinary_recency": 0.016311841863352702,
+            "stationary_response_match": 0.016409924670772874
+          },
+          "mae": {
+            "ALG-010": 0.10494226907630522,
+            "ALG-015U": 0.1128092130426468,
+            "ALG-016U": 0.1152694348823867,
+            "full_history": 0.09891704989415351,
+            "ordinary_recency": 0.11522889175750621,
+            "stationary_response_match": 0.11532697456492638
+          },
+          "target_agent_id": "appmap-navie-gpt4o-20240615"
+        },
+        {
+          "candidate_minus_full": {
+            "ALG-010": 0.023552701246586705,
+            "ALG-015U": 0.01177136160229525,
+            "ALG-016U": -0.0019197600270793869,
+            "ordinary_recency": 0.020830933222107828,
+            "stationary_response_match": 0.002994253168560279
+          },
+          "mae": {
+            "ALG-010": 0.1672493067508128,
+            "ALG-015U": 0.15546796710652133,
+            "ALG-016U": 0.1417768454771467,
+            "full_history": 0.14369660550422608,
+            "ordinary_recency": 0.1645275387263339,
+            "stationary_response_match": 0.14669085867278636
+          },
+          "target_agent_id": "openhands-codeact21-sonnet-20241103"
+        },
+        {
+          "candidate_minus_full": {
+            "ALG-010": -0.006293934822673784,
+            "ALG-015U": -0.009780045933784894,
+            "ALG-016U": -0.007071043256408723,
+            "ordinary_recency": -0.008293600150652364,
+            "stationary_response_match": -0.0024731516901436643
+          },
+          "mae": {
+            "ALG-010": 0.025317269076305222,
+            "ALG-015U": 0.021831157965194112,
+            "ALG-016U": 0.024540160642570284,
+            "full_history": 0.03161120389897901,
+            "ordinary_recency": 0.023317603748326643,
+            "stationary_response_match": 0.029138052208835342
+          },
+          "target_agent_id": "rag-claude2-20231010"
+        },
+        {
+          "candidate_minus_full": {
+            "ALG-010": 0.0033779848378434063,
+            "ALG-015U": -0.0007159384744533995,
+            "ALG-016U": -0.0038306831675113395,
+            "ordinary_recency": -0.000669084391454744,
+            "stationary_response_match": -0.0031456095396666314
+          },
+          "mae": {
+            "ALG-010": 0.05162915949512335,
+            "ALG-015U": 0.04753523618282655,
+            "ALG-016U": 0.04442049148976861,
+            "full_history": 0.04825117465727995,
+            "ordinary_recency": 0.0475820902658252,
+            "stationary_response_match": 0.045105565117613315
+          },
+          "target_agent_id": "rag-claude3opus-20240402"
+        },
+        {
+          "candidate_minus_full": {
+            "ALG-010": -0.0033523622064383857,
+            "ALG-015U": -0.003347844134149229,
+            "ALG-016U": -0.004093326061860072,
+            "ordinary_recency": -0.002847844134149229,
+            "stationary_response_match": -0.0035933260618600726
+          },
+          "mae": {
+            "ALG-010": 0.00198644578313253,
+            "ALG-015U": 0.0019909638554216867,
+            "ALG-016U": 0.0012454819277108434,
+            "full_history": 0.005338807989570916,
+            "ordinary_recency": 0.0024909638554216867,
+            "stationary_response_match": 0.0017454819277108434
+          },
+          "target_agent_id": "rag-gpt35-20231010"
+        },
+        {
+          "candidate_minus_full": {
+            "ALG-010": 0.006158953863273111,
+            "ALG-015U": 0.003056663750440832,
+            "ALG-016U": 0.0018292541118866135,
+            "ordinary_recency": 0.002815699895019147,
+            "stationary_response_match": 0.006444453002687919
+          },
+          "mae": {
+            "ALG-010": 0.026655240007649645,
+            "ALG-015U": 0.023552949894817366,
+            "ALG-016U": 0.022325540256263147,
+            "full_history": 0.020496286144376534,
+            "ordinary_recency": 0.02331198603939568,
+            "stationary_response_match": 0.026940739147064453
+          },
+          "target_agent_id": "rag-gpt4-20240402"
+        },
+        {
+          "candidate_minus_full": {
+            "ALG-010": 0.0003718695322459595,
+            "ALG-015U": 0.002418388943223203,
+            "ALG-016U": -0.0006923874958664894,
+            "ordinary_recency": 0.0021774250878015145,
+            "stationary_response_match": -0.0016830166792667581
+          },
+          "mae": {
+            "ALG-010": 0.010985131000191242,
+            "ALG-015U": 0.013031650411168485,
+            "ALG-016U": 0.009920873972078793,
+            "full_history": 0.010613261467945282,
+            "ordinary_recency": 0.012790686555746797,
+            "stationary_response_match": 0.008930244788678524
+          },
+          "target_agent_id": "rag-swellama13b-20231010"
+        },
+        {
+          "candidate_minus_full": {
+            "ALG-010": -0.003040649116160421,
+            "ALG-015U": -0.0035267602272715318,
+            "ALG-016U": -0.0031837214053170478,
+            "ordinary_recency": -0.0021378713383826426,
+            "stationary_response_match": -0.005295501860470998
+          },
+          "mae": {
+            "ALG-010": 0.009589190093708167,
+            "ALG-015U": 0.009103078982597056,
+            "ALG-016U": 0.00944611780455154,
+            "full_history": 0.012629839209868588,
+            "ordinary_recency": 0.010491967871485946,
+            "stationary_response_match": 0.0073343373493975905
+          },
+          "target_agent_id": "rag-swellama7b-20231010"
+        },
+        {
+          "candidate_minus_full": {
+            "ALG-010": 0.006282479990314699,
+            "ALG-015U": 0.006272439829672141,
+            "ALG-016U": 0.008806934953022691,
+            "ordinary_recency": 0.007052225639578441,
+            "stationary_response_match": -0.005778262981572843
+          },
+          "mae": {
+            "ALG-010": 0.10138262574105947,
+            "ALG-015U": 0.10137258558041691,
+            "ALG-016U": 0.10390708070376746,
+            "full_history": 0.09510014575074477,
+            "ordinary_recency": 0.10215237139032321,
+            "stationary_response_match": 0.08932188276917193
+          },
+          "target_agent_id": "sweagent-claude35sonnet-20240620"
+        },
+        {
+          "candidate_minus_full": {
+            "ALG-010": 0.02785946092160968,
+            "ALG-015U": 0.03404023162346473,
+            "ALG-016U": 0.03140686482292923,
+            "ordinary_recency": 0.04024519433143947,
+            "stationary_response_match": 0.01625925055633909
+          },
+          "mae": {
+            "ALG-010": 0.1703516924842226,
+            "ALG-015U": 0.17653246318607765,
+            "ALG-016U": 0.17389909638554216,
+            "full_history": 0.14249223156261293,
+            "ordinary_recency": 0.1827374258940524,
+            "stationary_response_match": 0.15875148211895201
+          },
+          "target_agent_id": "sweagent-claude37sonnet-20250227"
+        },
+        {
+          "candidate_minus_full": {
+            "ALG-010": 0.013765998509703004,
+            "ALG-015U": -0.0034922726702549256,
+            "ALG-016U": -0.004269381103989875,
+            "ordinary_recency": 0.00025222914653605377,
+            "stationary_response_match": -0.001224630673697269
+          },
+          "mae": {
+            "ALG-010": 0.0929890992541595,
+            "ALG-015U": 0.07573082807420158,
+            "ALG-016U": 0.07495371964046663,
+            "full_history": 0.0792231007444565,
+            "ordinary_recency": 0.07947532989099255,
+            "stationary_response_match": 0.07799847007075923
+          },
+          "target_agent_id": "sweagent-gpt4o-20240728"
+        }
+      ]
+    },
+    "5": {
+      "candidates": {
+        "ALG-010": {
+          "candidate_minus_full": 0.004064892652766855,
+          "favorable_repository_count": 2,
+          "favorable_target_agent_count": 4,
+          "mae": 0.0826184162107009,
+          "random_midrank": 0.94665,
+          "repository_bootstrap_interval_95": {
+            "lower": 0.0010244657059563578,
+            "upper": 0.0067837370492461095
+          }
+        },
+        "ALG-015U": {
+          "candidate_minus_full": 0.00011921653797260234,
+          "favorable_repository_count": 4,
+          "favorable_target_agent_count": 7,
+          "mae": 0.07867274009590665,
+          "random_midrank": 0.9996,
+          "repository_bootstrap_interval_95": {
+            "lower": -0.00611425425032692,
+            "upper": 0.005854892887253947
+          }
+        },
+        "ALG-016U": {
+          "candidate_minus_full": 0.0015279829249193466,
+          "favorable_repository_count": 3,
+          "favorable_target_agent_count": 6,
+          "mae": 0.08008150648285339,
+          "random_midrank": 0.9964,
+          "repository_bootstrap_interval_95": {
+            "lower": -0.0025099835849331145,
+            "upper": 0.004762917501781911
+          }
+        },
+        "ordinary_recency": {
+          "candidate_minus_full": 0.004485117208071848,
+          "favorable_repository_count": 3,
+          "favorable_target_agent_count": 4,
+          "mae": 0.0830386407660059,
+          "random_midrank": 0.92435,
+          "repository_bootstrap_interval_95": {
+            "lower": -0.00055094521655244,
+            "upper": 0.009426566579987786
+          }
+        },
+        "stationary_response_match": {
+          "candidate_minus_full": 0.0026517405197205163,
+          "favorable_repository_count": 2,
+          "favorable_target_agent_count": 5,
+          "mae": 0.08120526407765456,
+          "random_midrank": 0.9863,
+          "repository_bootstrap_interval_95": {
+            "lower": -0.00012878942044703253,
+            "upper": 0.005157608051291488
+          }
+        }
+      },
+      "mae": {
+        "ALG-010": 0.0826184162107009,
+        "ALG-015U": 0.07867274009590665,
+        "ALG-016U": 0.08008150648285339,
+        "full_history": 0.07855352355793405,
+        "ordinary_recency": 0.0830386407660059,
+        "stationary_response_match": 0.08120526407765456
+      },
+      "origin_count": 408,
+      "repository_count": 10,
+      "repository_rows": [
+        {
+          "candidate_minus_full": {
+            "ALG-010": 0.007686718114525606,
+            "ALG-015U": -0.0074647970369895456,
+            "ALG-016U": -0.0007981303703228776,
+            "ordinary_recency": -0.0056466152188077295,
+            "stationary_response_match": 0.0028382332660407544
+          },
+          "mae": {
+            "ALG-010": 0.0890909090909091,
+            "ALG-015U": 0.07393939393939394,
+            "ALG-016U": 0.08060606060606061,
+            "full_history": 0.08140419097638349,
+            "ordinary_recency": 0.07575757575757576,
+            "stationary_response_match": 0.08424242424242424
+          },
+          "repository_id": "astropy/astropy"
+        },
+        {
+          "candidate_minus_full": {
+            "ALG-010": 0.0064687865583959725,
+            "ALG-015U": 0.006961667171758515,
+            "ALG-016U": 0.006085434970225123,
+            "ordinary_recency": 0.011123770129042199,
+            "stationary_response_match": 0.006523551070991826
+          },
+          "mae": {
+            "ALG-010": 0.09644030668127053,
+            "ALG-015U": 0.09693318729463307,
+            "ALG-016U": 0.09605695509309968,
+            "full_history": 0.08997152012287456,
+            "ordinary_recency": 0.10109529025191676,
+            "stationary_response_match": 0.09649507119386638
+          },
+          "repository_id": "django/django"
+        },
+        {
+          "candidate_minus_full": {
+            "ALG-010": 0.001852374859507934,
+            "ALG-015U": 0.0029887384958715638,
+            "ALG-016U": 0.0029887384958715638,
+            "ordinary_recency": 0.006966011223144282,
+            "stationary_response_match": 0.0027046475867806632
+          },
+          "mae": {
+            "ALG-010": 0.06278409090909091,
+            "ALG-015U": 0.06392045454545454,
+            "ALG-016U": 0.06392045454545454,
+            "full_history": 0.06093171604958298,
+            "ordinary_recency": 0.06789772727272726,
+            "stationary_response_match": 0.06363636363636364
+          },
+          "repository_id": "matplotlib/matplotlib"
+        },
+        {
+          "candidate_minus_full": {
+            "ALG-010": -0.004562446512243662,
+            "ALG-015U": -0.020471537421334576,
+            "ALG-016U": -0.013653355603152756,
+            "ordinary_recency": -0.009107901057698209,
+            "stationary_response_match": -0.006835173784970949
+          },
+          "mae": {
+            "ALG-010": 0.11363636363636363,
+            "ALG-015U": 0.09772727272727272,
+            "ALG-016U": 0.10454545454545454,
+            "full_history": 0.1181988101486073,
+            "ordinary_recency": 0.10909090909090909,
+            "stationary_response_match": 0.11136363636363635
+          },
+          "repository_id": "psf/requests"
+        },
+        {
+          "candidate_minus_full": {
+            "ALG-010": 0.00899206934458835,
+            "ALG-015U": 0.007476917829436824,
+            "ALG-016U": 0.006466816819335822,
+            "ordinary_recency": 0.0034365137890327996,
+            "stationary_response_match": 0.005456715809234819
+          },
+          "mae": {
+            "ALG-010": 0.0803030303030303,
+            "ALG-015U": 0.07878787878787878,
+            "ALG-016U": 0.07777777777777778,
+            "full_history": 0.07131096095844196,
+            "ordinary_recency": 0.07474747474747476,
+            "stationary_response_match": 0.07676767676767678
+          },
+          "repository_id": "pydata/xarray"
+        },
+        {
+          "candidate_minus_full": {
+            "ALG-010": 0.0008463070341351575,
+            "ALG-015U": -0.006945900758072623,
+            "ALG-016U": 0.0021450083328364566,
+            "ordinary_recency": 0.009937216125044251,
+            "stationary_response_match": -0.0017510955632674269
+          },
+          "mae": {
+            "ALG-010": 0.07532467532467532,
+            "ALG-015U": 0.06753246753246754,
+            "ALG-016U": 0.07662337662337662,
+            "full_history": 0.07447836829054016,
+            "ordinary_recency": 0.08441558441558442,
+            "stationary_response_match": 0.07272727272727274
+          },
+          "repository_id": "pylint-dev/pylint"
+        },
+        {
+          "candidate_minus_full": {
+            "ALG-010": -0.0027604939523278305,
+            "ALG-015U": -0.005631307349457035,
+            "ALG-016U": -0.002282025052806294,
+            "ordinary_recency": -0.0051528384499354984,
+            "stationary_response_match": 0.003938070640973609
+          },
+          "mae": {
+            "ALG-010": 0.08373205741626795,
+            "ALG-015U": 0.08086124401913874,
+            "ALG-016U": 0.08421052631578949,
+            "full_history": 0.08649255136859578,
+            "ordinary_recency": 0.08133971291866028,
+            "stationary_response_match": 0.09043062200956939
+          },
+          "repository_id": "pytest-dev/pytest"
+        },
+        {
+          "candidate_minus_full": {
+            "ALG-010": 0.007373888026518588,
+            "ALG-015U": 0.015134420177294633,
+            "ALG-016U": 0.008704264966651623,
+            "ordinary_recency": 0.017573444567538538,
+            "stationary_response_match": 0.009147723946695982
+          },
+          "mae": {
+            "ALG-010": 0.0917960088691796,
+            "ALG-015U": 0.09955654101995565,
+            "ALG-016U": 0.09312638580931264,
+            "full_history": 0.08442212084266101,
+            "ordinary_recency": 0.10199556541019955,
+            "stationary_response_match": 0.093569844789357
+          },
+          "repository_id": "scikit-learn/scikit-learn"
+        },
+        {
+          "candidate_minus_full": {
+            "ALG-010": 0.008900664506438088,
+            "ALG-015U": 0.003666504726823769,
+            "ALG-016U": 0.002013612164840292,
+            "ordinary_recency": 0.008625182412774178,
+            "stationary_response_match": 0.0006362016965207329
+          },
+          "mae": {
+            "ALG-010": 0.05922865013774105,
+            "ALG-015U": 0.05399449035812673,
+            "ALG-016U": 0.05234159779614325,
+            "full_history": 0.05032798563130296,
+            "ordinary_recency": 0.05895316804407714,
+            "stationary_response_match": 0.05096418732782369
+          },
+          "repository_id": "sphinx-doc/sphinx"
+        },
+        {
+          "candidate_minus_full": {
+            "ALG-010": 0.005851058548130464,
+            "ALG-015U": 0.005477459544394464,
+            "ALG-016U": 0.0036094645257145064,
+            "ordinary_recency": 0.007096388560583755,
+            "stationary_response_match": 0.003858530528205173
+          },
+          "mae": {
+            "ALG-010": 0.07384806973848071,
+            "ALG-015U": 0.07347447073474471,
+            "ALG-016U": 0.07160647571606475,
+            "full_history": 0.06799701119035025,
+            "ordinary_recency": 0.075093399750934,
+            "stationary_response_match": 0.07185554171855542
+          },
+          "repository_id": "sympy/sympy"
+        }
+      ],
+      "score_rows_digest": "028c0f5cb935a23a5dde36ae7dad1b29a8db578ce022e122020a012855f3c73c",
+      "target_agent_count": 11,
+      "target_agent_rows": [
+        {
+          "candidate_minus_full": {
+            "ALG-010": 0.0011183797507595683,
+            "ALG-015U": 0.0029221510451087063,
+            "ALG-016U": 0.0020525675731173226,
+            "ordinary_recency": 0.009426213403382233,
+            "stationary_response_match": 0.006054871228221126
+          },
+          "mae": {
+            "ALG-010": 0.12359612771326497,
+            "ALG-015U": 0.1253998990076141,
+            "ALG-016U": 0.12453031553562273,
+            "full_history": 0.1224777479625054,
+            "ordinary_recency": 0.13190396136588764,
+            "stationary_response_match": 0.12853261919072653
+          },
+          "target_agent_id": "appmap-navie-gpt4o-20240615"
+        },
+        {
+          "candidate_minus_full": {
+            "ALG-010": 0.01620454079585862,
+            "ALG-015U": -0.0003732781935478213,
+            "ALG-016U": -0.0018577879655744256,
+            "ordinary_recency": 0.011841408045740492,
+            "stationary_response_match": 0.005096541641094188
+          },
+          "mae": {
+            "ALG-010": 0.19573918759178058,
+            "ALG-015U": 0.17916136860237414,
+            "ALG-016U": 0.17767685883034753,
+            "full_history": 0.17953464679592196,
+            "ordinary_recency": 0.19137605484166245,
+            "stationary_response_match": 0.18463118843701615
+          },
+          "target_agent_id": "openhands-codeact21-sonnet-20241103"
+        },
+        {
+          "candidate_minus_full": {
+            "ALG-010": -0.0035247087423211226,
+            "ALG-015U": -0.007362460896540364,
+            "ALG-016U": -0.004378707701943797,
+            "ordinary_recency": -0.0042499368418667735,
+            "stationary_response_match": -0.001263886170124684
+          },
+          "mae": {
+            "ALG-010": 0.03528734242997587,
+            "ALG-015U": 0.031449590275756625,
+            "ALG-016U": 0.03443334347035319,
+            "full_history": 0.03881205117229699,
+            "ordinary_recency": 0.034562114330430216,
+            "stationary_response_match": 0.037548165002172305
+          },
+          "target_agent_id": "rag-claude2-20231010"
+        },
+        {
+          "candidate_minus_full": {
+            "ALG-010": -0.0017134810063808362,
+            "ALG-015U": -0.006285154623147118,
+            "ALG-016U": -0.0031549456924068187,
+            "ordinary_recency": -0.003123828292886509,
+            "stationary_response_match": -0.003884932952260403
+          },
+          "mae": {
+            "ALG-010": 0.054010819523544085,
+            "ALG-015U": 0.0494391459067778,
+            "ALG-016U": 0.0525693548375181,
+            "full_history": 0.05572430052992492,
+            "ordinary_recency": 0.05260047223703841,
+            "stationary_response_match": 0.05183936757766452
+          },
+          "target_agent_id": "rag-claude3opus-20240402"
+        },
+        {
+          "candidate_minus_full": {
+            "ALG-010": -0.0033543967619634554,
+            "ALG-015U": -0.0033460401648432673,
+            "ALG-016U": -0.0034665220925541107,
+            "ordinary_recency": -0.0026059762506499087,
+            "stationary_response_match": -0.0033514581783607523
+          },
+          "mae": {
+            "ALG-010": 0.001718153100205701,
+            "ALG-015U": 0.001726509697325889,
+            "ALG-016U": 0.0016060277696150458,
+            "full_history": 0.005072549862169156,
+            "ordinary_recency": 0.0024665736115192477,
+            "stationary_response_match": 0.0017210916838084043
+          },
+          "target_agent_id": "rag-gpt35-20231010"
+        },
+        {
+          "candidate_minus_full": {
+            "ALG-010": 0.006323099738921201,
+            "ALG-015U": -0.005086615733544856,
+            "ALG-016U": 0.0030051310793605644,
+            "ordinary_recency": 0.00035570139157053635,
+            "stationary_response_match": 0.0033340808399698885
+          },
+          "mae": {
+            "ALG-010": 0.03082374419160102,
+            "ALG-015U": 0.019414028719134963,
+            "ALG-016U": 0.027505775532040384,
+            "full_history": 0.02450064445267982,
+            "ordinary_recency": 0.024856345844250356,
+            "stationary_response_match": 0.027834725292649708
+          },
+          "target_agent_id": "rag-gpt4-20240402"
+        },
+        {
+          "candidate_minus_full": {
+            "ALG-010": 0.0005590673831294274,
+            "ALG-015U": 0.0002759345404261121,
+            "ALG-016U": -0.0007836475646211989,
+            "ordinary_recency": 0.0019182202669769804,
+            "stationary_response_match": -0.0015039889759285285
+          },
+          "mae": {
+            "ALG-010": 0.011211257288005882,
+            "ALG-015U": 0.010928124445302567,
+            "ALG-016U": 0.009868542340255256,
+            "full_history": 0.010652189904876454,
+            "ordinary_recency": 0.012570410171853435,
+            "stationary_response_match": 0.009148200928947926
+          },
+          "target_agent_id": "rag-swellama13b-20231010"
+        },
+        {
+          "candidate_minus_full": {
+            "ALG-010": -0.003218172559919694,
+            "ALG-015U": -0.0028694621692100155,
+            "ALG-016U": -0.002137539262271254,
+            "ordinary_recency": -0.002264575558468696,
+            "stationary_response_match": -0.004366647958531906
+          },
+          "mae": {
+            "ALG-010": 0.009270192565942257,
+            "ALG-015U": 0.009618902956651935,
+            "ALG-016U": 0.010350825863590696,
+            "full_history": 0.01248836512586195,
+            "ordinary_recency": 0.010223789567393254,
+            "stationary_response_match": 0.008121717167330044
+          },
+          "target_agent_id": "rag-swellama7b-20231010"
+        },
+        {
+          "candidate_minus_full": {
+            "ALG-010": 0.007525103581003667,
+            "ALG-015U": 0.0033994184571358166,
+            "ALG-016U": 0.00583164346000048,
+            "ordinary_recency": 0.009037474907708176,
+            "stationary_response_match": 0.006188119870286085
+          },
+          "mae": {
+            "ALG-010": 0.13877685131944004,
+            "ALG-015U": 0.1346511661955722,
+            "ALG-016U": 0.13708339119843685,
+            "full_history": 0.13125174773843637,
+            "ordinary_recency": 0.14028922264614455,
+            "stationary_response_match": 0.13743986760872245
+          },
+          "target_agent_id": "sweagent-claude35sonnet-20240620"
+        },
+        {
+          "candidate_minus_full": {
+            "ALG-010": 0.019032773787598517,
+            "ALG-015U": 0.0263381722116669,
+            "ALG-016U": 0.017072022245931268,
+            "ordinary_recency": 0.022519520701825196,
+            "stationary_response_match": 0.01775691205192992
+          },
+          "mae": {
+            "ALG-010": 0.19637283559826554,
+            "ALG-015U": 0.20367823402233393,
+            "ALG-016U": 0.1944120840565983,
+            "full_history": 0.17734006181066703,
+            "ordinary_recency": 0.19985958251249222,
+            "stationary_response_match": 0.19509697386259695
+          },
+          "target_agent_id": "sweagent-claude37sonnet-20250227"
+        },
+        {
+          "candidate_minus_full": {
+            "ALG-010": 0.0057616132137496695,
+            "ALG-015U": -0.006301282555805435,
+            "ALG-016U": 0.004625598095074845,
+            "ordinary_recency": 0.006482067515458767,
+            "stationary_response_match": 0.005109534320630757
+          },
+          "mae": {
+            "ALG-010": 0.11199606699568405,
+            "ALG-015U": 0.09993317122612895,
+            "ALG-016U": 0.11086005187700923,
+            "full_history": 0.10623445378193438,
+            "ordinary_recency": 0.11271652129739315,
+            "stationary_response_match": 0.11134398810256514
+          },
+          "target_agent_id": "sweagent-gpt4o-20240728"
+        }
+      ]
+    }
+  },
+  "input_identities": {
+    "check_projection_digest": "836aee24fd1cc3036ad88a3ba54d3a0d4a09f8e89a2fa0e43893c75f3affe6f6",
+    "dataset_sha256": "0996c4bd66e647ecef89d3ef57e527dcc0ea4e8369ac6f740cdd570734188df2",
+    "normalized_outcome_matrix_digest": "24648a989b02b70c9fb06c6417adfdc1a67f473f8186326e9c7afa64f1ef06a8",
+    "panel_digest": "1c17664d9a72b1a726e5764eb28f04d7ac5e4841128ddd15ab4acf678bf12980",
+    "result_identities": [
+      {
+        "agent_id": "rag-claude2-20231010",
+        "result_blob_sha": "a05b31e13c1d9bd04378a141b609000636eddb48"
+      },
+      {
+        "agent_id": "rag-gpt35-20231010",
+        "result_blob_sha": "4dc566c28dc7399f7a6f61d0d5acdc64a8b6dd2a"
+      },
+      {
+        "agent_id": "rag-swellama13b-20231010",
+        "result_blob_sha": "2e7b6f99b6b8a5a6b6fd237e0deb0d2edff792e6"
+      },
+      {
+        "agent_id": "rag-swellama7b-20231010",
+        "result_blob_sha": "e753087e232a9cecaef3a7b5106688b477eb3a42"
+      },
+      {
+        "agent_id": "rag-claude3opus-20240402",
+        "result_blob_sha": "65687a973ad0906c4fd358fa33bcbeea892e54e8"
+      },
+      {
+        "agent_id": "rag-gpt4-20240402",
+        "result_blob_sha": "7f6617708e2584056fcb34f6075625de920b1473"
+      },
+      {
+        "agent_id": "appmap-navie-gpt4o-20240615",
+        "result_blob_sha": "563517de356c68e6ceb26c9fe298176d2f375e78"
+      },
+      {
+        "agent_id": "sweagent-claude35sonnet-20240620",
+        "result_blob_sha": "f3ba7ff76738f709ce35bd430147bf51cc864678"
+      },
+      {
+        "agent_id": "sweagent-gpt4o-20240728",
+        "result_blob_sha": "a8764721de59312d0c17510e13aa66c4a58cc32a"
+      },
+      {
+        "agent_id": "openhands-codeact21-sonnet-20241103",
+        "result_blob_sha": "bedbdde7a712a491b0eacd4d4bebb5384ab06f1f"
+      },
+      {
+        "agent_id": "sweagent-claude37sonnet-20250227",
+        "result_blob_sha": "3f8d5597f76eace7e96d571ab29d1ce0ca45cb15"
+      }
+    ],
+    "task_denominator_digest": "8348567d58d34d7749213678ac7b3e08cc21c14839262839db45c8c8f4aa4369"
+  },
+  "plan_digest": "e226462972c5dee46ae675a7d80dc2662a479afc2a377b9d5c400d1c7e551e17",
+  "reproduction": {
+    "membership_digest": "e85cd6847d81a95b1a9a82587f5d1bafb47db6259a20335709d37d1a807104e8",
+    "memberships_byte_identical": true,
+    "result_digest": "6f73eb4a5077107cc7182da11d6c0f1ab2ff2f04c886e906ae81675159dffb34",
+    "results_byte_identical": true
+  },
+  "resource_use": {
+    "new_agent_outcome_calls": 0,
+    "paid_api_calls": 0,
+    "sealed_swe_bench_verified_agent_reads": 0
+  },
+  "schema_version": "barcarolle_swe_bench_full_development_summary_v1",
+  "study_id": "swe-bench-full-direct-mae-development-2026-07-30",
+  "summary_digest": "cefdc2f1678baf34cf274e8954881da95116ae91c797803f76a811ff02c9009b"
+}
