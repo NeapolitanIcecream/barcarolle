@@ -145,6 +145,21 @@ An outcome-free Selector may be evaluated on a frozen Agent panel, but
 nominating it after inspecting that panel still does not establish transfer to
 a new Agent. Report panel-conditional and held-out-Agent claims separately.
 
+Before any public or reserved Agent panel is opened, intersect its Agent and
+submission identities with every reserved holdout, and record Task-denominator
+and Check overlap. Two seals must be named separately:
+
+- an exact-Result seal means the bound Task/Check/Agent/Runtime Result bytes
+  have not been read;
+- an unseen-Agent seal means no per-Task outcomes for that Agent have informed
+  research decisions on a materially overlapping Task denominator.
+
+Reading the same Agent's outcomes under a distinct source or Check can preserve
+the exact-Result seal while breaking the unseen-Agent seal. Freeze any
+replacement or restricted confirmation panel before its normalized outcomes
+are read. Do not recover an unseen-Agent claim by choosing a favorable subset
+afterward.
+
 An Origin's future weight is the number of distinct mature Task/Check refs with
 Result cells after common benchmark-owned exclusions. Planned refs with no
 scoreable Result do not increase the weight.
@@ -602,3 +617,14 @@ have historical arrival times, but Check maturity was projected to Task
 arrival. They do not establish strict-prospective validity, held-out-Agent
 transfer, source-family portability, or a Runner default, and authorize no
 campaign.
+
+The 2026-07-30 SWE-bench Full candidate-free audit adds 2,294 Tasks, eleven
+checked public result vectors, ten eligible repositories, 408 H5 Origins, and
+201 H10 Origins. Full history beats always zero and more than 99.9% of 20,000
+equal-budget random draws at both horizons; exact budget-ten oracle MAE is
+`0.013093` at H5 and `0.007353` at H10. The primary H5 joint-future-block-order
+probability is nevertheless `0.126437`, above its frozen `0.05` admission
+gate. No algorithm ran, no Selector was nominated, and public retrospective
+panel replay is closed. Three Full submissions also overlap reserved Verified
+Agent identities, so those identities retain an exact Verified-Result byte
+seal but no longer support a pure unseen-Agent claim.

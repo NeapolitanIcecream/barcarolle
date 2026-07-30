@@ -5,7 +5,7 @@ Last updated: 2026-07-30.
 Current ledger: `docs/research-improvement-backlog.md`.
 
 Current result:
-`docs/experiments/2026-07-30-verified-suitability-audit.md`.
+`docs/experiments/2026-07-30-swe-bench-full-suitability-and-transfer.md`.
 
 No next experiment plan is frozen.
 
@@ -15,83 +15,75 @@ No next experiment plan is frozen.
   Selection. Multiple repositories are offline evidence units.
 - Generators end at a prepared package. User pools open read-only. Task Pool
   and Agent Results remain independent and reuse only under exact identity.
-- Future pass-rate MAE is primary. Full eligible history is the primary
-  no-Selection baseline. Fixed trivial controls, equal-budget random, and
-  future-open oracle are separate diagnostics.
-- Prediction difficulty belongs to the Task Pool, Agent panel, Selection unit,
-  information contract, horizon, denominator, Origin construction, and
-  aggregation together.
-- Candidate-versus-full Selection evidence and candidate-versus-trivial
-  prediction evidence are separate. Cached-target compression and unseen-target
-  Selection are also separate claims.
-- Runtime uses an absolute Selection budget and future `TimeRange`. Task-count
-  horizons are research estimators or declared finite-cohort inputs.
-- KISS/YAGNI constrain engineering, not algorithmic research. Add no registry,
-  trainer service, scheduler, generic source adapter, or multi-repository
+- Future pass-rate MAE is primary. Full history is the no-Selection baseline;
+  trivial controls, equal-budget random, and future-open oracle are distinct
+  diagnostics.
+- Suitability belongs to Task Pool, Agent panel, Selection unit, information
+  contract, horizon, denominator, Origin construction, and aggregation
+  together.
+- An unread exact Result blob is not automatically an unseen Agent. Check
+  Agent/submission and Task-denominator overlap before opening any panel.
+- Runtime uses an absolute Selection budget and future `TimeRange`. H5/H10 are
+  research estimators.
+- KISS/YAGNI constrain engineering, not algorithmic research. Add no generic
+  source adapter, registry, trainer service, scheduler, or multi-repository
   Runner without a measured caller.
 
 ## Current Decision
 
-The candidate-free audits are complete and independently reproduced:
+The final public candidate-free source audit is complete:
 
-| H5 diagnostic | Multi-SWE, 36 configs | Verified, 11 Agents |
+| SWE-bench Full diagnostic | H5 | H10 |
 | --- | ---: | ---: |
-| Repositories / Origins | `13 / 221` | `7 / 68` |
-| Always-zero MAE | `0.059870` | `0.359033` |
-| Full-history MAE | `0.067348` | `0.183374` |
-| Exact B10 oracle MAE | `0.034709` | `0.074019` |
-| Full-to-oracle headroom | `0.032639` | `0.109355` |
-| Frozen temporal-null probability | `0.111444` | `0.912044` |
+| Repositories / Origins | `10 / 408` | `10 / 201` |
+| Always-zero MAE | `0.098671` | `0.099916` |
+| Full-history MAE | `0.078554` | `0.062579` |
+| Equal-budget random MAE | `0.086606` | `0.073798` |
+| Exact B10 oracle MAE | `0.013093` | `0.007353` |
+| Block-order null probability | `0.126437` | `0.326837` |
 
-Multi-SWE H5 is zero-dominated under the named estimator contract. Verified
-has substantial outcome variation, Full beats zero with repository-bootstrap
-95% interval `[-0.248315, -0.063516]`, and the oracle shows large Selection
-capacity. Verified nevertheless fails its frozen chronology gate: 1,824 of
-2,000 circular shifts are at least as favorable as the observed phase.
+Full is nontrivial, beats more than 99.9% of frozen random draws, and has
+substantial oracle headroom. It nevertheless fails the frozen primary H5
+block-order gate (`p > 0.05`). The terminal state is
+`suitability_gate_rejects_before_algorithm`.
 
-Circular shift is a narrow phase-alignment diagnostic. It preserves almost all
-response adjacency, so failure does not prove that Task content, change
-points, or local persistence are useless. Do not weaken the frozen gate after
-seeing the result. Neither opened panel is a Stage C development boundary, and
-no Selector is nominated.
+ALG-016U was not executed and has no Full-panel MAE. Do not interpret this as
+an algorithm failure or rerun it by weakening the gate. Multi-SWE, Verified,
+Full, SymPy, and Boltons are closed to further candidate replay.
 
-The six SWE-bench Verified holdout Agents remain sealed. No paid call or
-Generator development occurred.
+The six exact Verified source/Check-specific result blobs remain unread. Full
+opened outcomes for three of the same Agent identities on all 500 overlapping
+instance IDs, so only three holdout identities remain clean for a pure
+unseen-Agent claim. See the append-only boundary amendment linked from the
+current report.
+
+No paid call, new Agent outcome, Generator work, or core-schema change
+occurred. The implementation, two byte-identical runs, and an independent
+per-Task MILP audit agree.
 
 ## Next Action
 
-Freeze a source-specific SWE-bench Full normalization and suitability plan
-before reading normalized Full outcomes:
+Specify—not yet implement—the smallest concrete workload-matched evidence
+source with:
 
-1. bind the exact checked eleven-Agent allowlist, official result blob
-   identities, 2,294-Task denominator, Check meaning, source revision,
-   normalizer, and panel digest;
-2. predeclare H5/H10 frames, aggregation, full, fixed trivial, random, and
-   exact-oracle rows;
-3. name temporal diagnostics by the property they destroy or preserve. Add an
-   adjacent-H5 joint-block permutation for local persistence; keep circular
-   phase alignment separate if retained;
-4. execute once without treating Full as independent confirmation.
+1. repository-local coding Tasks;
+2. native or defensibly reconstructed Task time;
+3. native Result availability or a frozen replay policy;
+4. enough independent H5/H10 Origins and repositories;
+5. an Agent panel checked against every reserved holdout.
 
-If Full clears the frozen headroom, nontrivial-prediction, resolution, and
-chronology gates, it may become an exploratory counterfactual Stage C
-development boundary. If it does not, stop public retrospective atlas work
-and specify the smallest workload-matched source with native Task and Result
-time.
-
-This route needs no paid Agent run and no sealed Agent. It may require public
-metadata/result retrieval, but outcome bytes must not be normalized before the
-plan commit.
+Run a zero-outcome feasibility preflight before building an importer or
+opening normalized outcomes. Keep ALG-016U frozen unchanged for a new source
+that passes a candidate-free gate. Paid runs remain premature.
 
 ## Stop And Reopen
 
-- Do not run more candidates, Agent subsets, horizons, or rescue diagnostics
-  on the opened Multi-SWE, Verified-500, or SymPy panels.
+- Do not run more algorithms, Agent subsets, rescue horizons, or post-hoc
+  nulls on opened panels.
+- Do not claim the three overlapping Verified identities as unseen Agents.
 - A new algorithm needs an independently stated mechanism and a new evidence
-  boundary. Report direct MAE against full history and the declared trivial
-  control separately.
-- Open sealed Agents or make paid calls only after a frozen development
-  candidate passes its gates.
+  boundary, with direct MAE against Full and the contract-matched trivial
+  control.
 - Paid evidence requires explicit authority and `OPENAI_BASE_URL` plus
   `OPENAI_API_KEY`.
 

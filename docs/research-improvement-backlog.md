@@ -5,7 +5,7 @@ Last reviewed: 2026-07-30.
 Status: active decisions and the next evidence boundary.
 
 The current scientific interpretation is in
-[`experiments/2026-07-30-verified-suitability-audit.md`](experiments/2026-07-30-verified-suitability-audit.md).
+[`experiments/2026-07-30-swe-bench-full-suitability-and-transfer.md`](experiments/2026-07-30-swe-bench-full-suitability-and-transfer.md).
 `PROCESS.md` is the short cross-session handoff.
 
 ## Archive Lineage
@@ -87,44 +87,55 @@ opened. Close routes instead of carrying their execution diaries forward.
 13. A temporal null must name the structure it destroys and preserves.
     Circular shifts test absolute phase while preserving almost all adjacency;
     they are not a generic test that chronology contains no information.
+14. An unread exact Result blob and an unseen Agent are different seals.
+    Opening the same Agent's outcomes on a materially overlapping Task
+    denominator preserves a source/Check-specific byte seal but consumes the
+    stronger unseen-Agent boundary.
 
 ## Current Evidence Decision
 
-The bounded candidate-free atlas stopped after two independently reproduced
-sources:
+The bounded public suitability atlas is complete. Multi-SWE H5 is
+always-zero dominated under its named estimator. Verified has nontrivial
+variation and oracle headroom but fails its circular phase-alignment gate.
+SWE-bench Full was the final predeclared source: it passed resolution,
+nontrivial-prediction, and oracle-headroom gates, then failed the primary H5
+joint-block-order gate.
 
-| H5 diagnostic | Multi-SWE, 36 configs | Verified, 11 Agents |
+| Full diagnostic | H5 | H10 |
 | --- | ---: | ---: |
-| Repositories / Origins | `13 / 221` | `7 / 68` |
-| Always-zero MAE | `0.059870` | `0.359033` |
-| Full-history MAE | `0.067348` | `0.183374` |
-| Exact B10 oracle MAE | `0.034709` | `0.074019` |
-| Full-to-oracle headroom | `0.032639` | `0.109355` |
-| Frozen temporal-null probability | `0.111444` | `0.912044` |
+| Repositories / Origins | `10 / 408` | `10 / 201` |
+| Always-zero MAE | `0.098671` | `0.099916` |
+| Full-history MAE | `0.078554` | `0.062579` |
+| Equal-budget random MAE | `0.086606` | `0.073798` |
+| Exact B10 oracle MAE | `0.013093` | `0.007353` |
+| Full-to-oracle headroom | `0.065460` | `0.055226` |
+| Joint-block-order probability | `0.126437` | `0.326837` |
 
-Multi-SWE H5 is always-zero dominated under its named unseen-target estimator
-view. Its H10 point estimate remains aggregation-, repository-, and
-Origin-sensitive. The exact oracle confirms representational capacity but not
-pre-Origin identification.
+Full beats always zero with repository-bootstrap intervals
+`[-0.029135, -0.010765]` at H5 and `[-0.047309, -0.027290]` at H10. It also
+beats more than 99.9% of the frozen random draws, and the exact oracle shows
+substantial remaining Selection capacity. The panel is therefore not a
+triviality failure region.
 
-Verified is not a repeat of the Multi-SWE triviality regime. Full history
-beats always zero by `0.175659`, with repository-bootstrap 95% interval
-`[-0.248315, -0.063516]` and every leave-one-repository-out direction
-negative. Equal-budget random MAE is `0.194647`; exact B10 oracle MAE is
-`0.074019`, leaving `0.109355` Selection headroom.
+The primary H5 block-order probability nevertheless exceeds the frozen
+`0.05` threshold. This null destroys adjacency and order between complete
+future blocks while preserving within-block joint Agent responses. Its failure
+does not reject Task-feature or every change-point mechanism, but it does
+reject admission of this panel under the frozen contract. ALG-016U was not
+run, has no Full-panel MAE, and is neither supported nor refuted by this
+result.
 
-Verified does not clear its frozen chronology gate. The circular statistic is
-full-history minus zero MAE, where lower is favorable. In 1,824 of 2,000
-within-repository circular shifts the statistic was at least as favorable as
-the observed value, giving `p=0.912044`. This only rejects unusually favorable
-absolute phase. Because the null preserves almost all response adjacency, it
-does not prove that Task features, local persistence, or change points are
-useless.
+An independent audit reproduced the normalizer, 609 Origins, controls, random
+expectation, block null, and every exact oracle with a separate per-Task MILP.
+It also found a claim-boundary error: three Full submissions share Agent
+identities with the six reserved Verified holdouts. The six exact Verified
+result blobs remain unread, but only three Agent identities remain clean for a
+pure unseen-Agent claim. The append-only correction is
+[`../examples/swe_bench_full_transfer/evidence-boundary-amendment-1.json`](../examples/swe_bench_full_transfer/evidence-boundary-amendment-1.json).
 
-Do not weaken the gate after reading the result. The Verified panel remains
-`descriptive_only`, with terminal state
-`capacity_without_detected_history_persistence`. No opened source is currently
-authorized as the main Stage C development boundary.
+No opened source is authorized as the main Stage C development boundary. Stop
+public retrospective algorithm replay rather than weakening a gate or choosing
+a favorable Agent subset after seeing results.
 
 ## Next Research Program
 
@@ -149,40 +160,37 @@ Selector or resolves workload relevance.
 
 ### Stage B: Normalize SWE-bench Full
 
-State: `ready`; no paid calls and no sealed Agent open.
+State: `measured`; rejected before algorithm execution.
 
-Before normalizing outcome bytes, freeze:
+The plan, result, summary, and evidence-boundary-amendment digests are:
 
-- the exact checked eleven-Agent allowlist and each official result blob;
-- the 2,294-Task denominator, source revision, Check meaning, and
-  source-specific normalizer;
-- the Agent panel digest and rules for ordinary unlisted, no-generation,
-  missing-log, and schema-variant Tasks;
-- H5 and H10 frames, equal-repository aggregation, full, fixed trivial,
-  equal-budget random, and exact-oracle diagnostics;
-- temporal diagnostics by their exact null. Predeclare an adjacent-H5
-  joint-block permutation to test local persistence; label circular shifts as
-  phase alignment if retained.
+- plan:
+  `1c37db6ebd2b65a4acdb81c4e75aec1fcab54a7db31e84558c7435d5dadc4b32`;
+- result:
+  `2f66df63186a6113255ced65e155cce8350aeb9b01eb4c187619e456fccbddf8`;
+- summary:
+  `b01b8bedc82f5311663a658cbf09ae226fd4895cf2c2171513ae1b68543d60d1`;
+- boundary amendment:
+  `fd7d78def30fd8ca1a6bfe85c641e29dc9bd642b2396ce7dc97fdcb92dd20812`.
 
-Run once. Full remains an opened retrospective development source and cannot
-serve as independent confirmation. If it fails the frozen headroom,
-nontrivial-prediction, resolution, or chronology gates, stop the public atlas
-and specify a workload-matched source with native Task and Result time.
+The result is `suitability_gate_rejects_before_algorithm`. Do not rerun with
+another Agent panel, horizon, null, or algorithm on this opened source.
 
 ### Stage C: Theory-Driven Algorithm Research
 
-State: `data-gated` until Stage B yields one exploratory development boundary.
+State: `data-gated`; the public suitability route yielded no authorized
+development boundary.
 
-Start from a mechanism stated without target future outcomes. New theory may
-be algorithmically complex; engineering remains a direct experiment module.
-Evaluate full history, trivial controls, random landscape, and oracle in the
-same plan. Use repository-held-out or later-source validation, report H5/H10
-or deployment-derived horizons without choosing the favorable one afterward,
-and reject routes that gain only from pass-rate grid geometry.
+Specify the smallest concrete workload-matched source with native or
+defensibly reconstructed Task time, a Result-availability policy, enough
+independent Origins and repositories, and an identity-clean Agent panel.
+Perform a candidate-free feasibility preflight before building an importer or
+opening outcomes. Keep new theory independent of future outcomes and keep its
+engineering as a direct experiment module.
 
 Do not continue numeric tuning of ALG-007, ALG-012 through ALG-018,
 THY-001R, THY-002S, or THY-003 on their opened panels. ALG-016U remains a
-recorded H5 mechanism clue, not a candidate authorized for rescue tuning.
+frozen mechanism clue, not a candidate authorized for rescue tuning.
 
 ### Stage D: Independent Confirmation
 
@@ -213,8 +221,10 @@ existing records. Add no global Task-Pool registry or generic policy engine.
 | FR-003 | `measured` | Multi-SWE candidate-free H5/H10 audit completed and independently reproduced. |
 | FR-004 | `measured` | Verified opened eleven-Agent H5 audit completed; capacity is present but the frozen phase-alignment gate failed. |
 | FR-005 | `trigger-gated` | Add a Reporting warning or abstention only after a practical operating region and concrete caller exist. |
-| FR-006 | `ready` | Freeze the SWE-bench Full checked-eleven allowlist, Check/Result binding, normalizer, panel digest, H5/H10 frames, and named temporal nulls before outcome normalization. |
-| ALG-016U | `closed` on current panel | Preserve as the best unseen-target H5 point estimate. Reopen only through an independently derived mechanism on a new evidence boundary. |
+| FR-006 | `measured` | Full passed resolution, nontrivial prediction, and headroom but failed H5 block-order chronology; no algorithm ran. |
+| FR-007 | `data-gated` | Specify and candidate-free preflight one workload-matched, native-time source with a clean Agent identity panel. Do not build a generic source adapter first. |
+| HOLDOUT-001 | `revised` | Six exact Verified result blobs remain unread; only three identities remain clean for unseen-Agent confirmation. Freeze a restricted or replacement panel before opening outcomes. |
+| ALG-016U | `data-gated` | Preserve unchanged. It has no Full score; reopen only on a new predeclared evidence boundary that passes suitability. |
 | THY-002 | `task-mix-pass` | Preserve generator-calibrated exposure as projected Task-mix evidence. Its THY-002S outcome mapping remains closed. |
 | Parent work intent | `data-gated` | Reopen only with complete timestamped planning-node history, versioned Task material, and pre-arrival component labels. |
 | Fixed-universe compression | `trigger-gated` | Treat held-out-Agent score reconstruction as a separate estimand when it becomes a product priority. |
