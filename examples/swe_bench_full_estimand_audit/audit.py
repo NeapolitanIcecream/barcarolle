@@ -1051,7 +1051,9 @@ def _cross_agent_residual_signal(
             )
         ),
         "lag_pair_count": len(own_lag),
+        "lag_repository_count": len({row[0] for row in own_lag}),
         "same_future_pair_count": len(same_future),
+        "same_future_repository_count": len({row[0] for row in same_future}),
         "interpretation": (
             "Same-future correlation is future-open capacity. Only lagged "
             "correlations respect the forecast timing, and even they may "
@@ -1661,10 +1663,13 @@ def _repository_equal_weighted_correlation(
         repository_id: sum(row[0] == repository_id for row in rows)
         for repository_id in repository_ids
     }
-    if any(count == 0 for count in counts.values()):
+    active_repository_ids = tuple(
+        repository_id for repository_id in repository_ids if counts[repository_id] > 0
+    )
+    if not active_repository_ids:
         return None
     weights = tuple(
-        1.0 / (len(repository_ids) * counts[repository_id])
+        1.0 / (len(active_repository_ids) * counts[repository_id])
         for repository_id, _, _ in rows
     )
     left_mean = fsum(

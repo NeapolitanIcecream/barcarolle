@@ -123,7 +123,7 @@
     }
   },
   "implementation": {
-    "audit_file_sha256": "e551a835f62b1ced6ac1e8b09fde4ff3c9ac93fc3ab48017a91dd7d420ea4756"
+    "audit_file_sha256": "1ea03e61e15d058efc831639de0da351423ac30fccb6425b7a20da3360806747"
   },
   "authority": {
     "paid_api_calls": 0,
@@ -135,5 +135,5 @@
   },
   "source_policy": "Use the already-open pinned SWE-bench Full Tasks and checked Agent outcomes. Primary literature may inform interpretation but cannot replace local direct-MAE evidence.",
   "claim_boundary": "This adaptive post-anomaly audit can correct interpretation and identify the next discriminating experiment. It cannot confirm a Selector, establish IID sampling noise, or generalize beyond the fixed opened Agent and repository frame.",
-  "plan_digest": "cda05fd3f7b6a5c2d3e39121da163a2828e6f4681775e74f12eca6f7e7ff552f"
+  "plan_digest": "4da2e3ab3e145350506cbb64a9eac0836acb4598c36d3287d312ca24f0848f97"
 }
