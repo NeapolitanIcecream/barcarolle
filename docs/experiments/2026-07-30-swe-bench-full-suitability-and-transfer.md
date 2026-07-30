@@ -6,6 +6,29 @@ Status: complete, reproduced, and independently audited. The source gate
 rejected before algorithm execution. No paid call, new Agent run, Generator,
 core-schema change, or exact Verified holdout-result read occurred.
 
+## Later Interpretation Correction
+
+The frozen decision below remains valid for the question written in its plan:
+the failed chronology gate did not authorize that plan's conditional ALG-016U
+run. It does not follow that SWE-bench Full is unsuitable for algorithm
+development.
+
+Full is an outcome-open development set. A separate experiment may run
+ALG-016U and other candidates on it, provided it reports direct rolling-origin
+pass-rate MAE and does not present repeated development-set search as
+independent confirmation. The block-order probability is one diagnostic of
+aggregate temporal persistence. It is not a prerequisite for task-content,
+response-matching, or other Selection mechanisms.
+
+Result creation or import time is not part of this offline estimator. Results
+may be collected today and partitioned by historical Task order. Observation
+timestamps matter only for a claim about what a live system actually knew at a
+past decision.
+
+The three Agent identities shared with the reserved Verified panel affect only
+a future claim about transfer to previously unseen Agents. They do not affect
+same-Agent future-Task prediction or Full's use as development data.
+
 ## Decision
 
 SWE-bench Full is informative but does not pass the frozen admission gate for
@@ -134,21 +157,17 @@ records the exact identities and future restriction.
 
 ## Consequence and Next Boundary
 
-Stop replaying untested algorithms on the opened Multi-SWE, Verified, Full,
-SymPy, and Boltons panels. More scores there would optimize research choices
-against already-inspected outcomes without repairing the missing evidence.
+The frozen conditional study is complete. Further work on Full belongs in a
+new, explicitly exploratory development study rather than an amendment that
+changes this plan's gate after seeing it.
 
-The next useful zero-paid work is to specify the smallest new evidence source
-that has:
+That development study should:
 
-1. repository-local Tasks in the intended coding-work regime;
-2. native or defensibly reconstructed Task time;
-3. Result availability time or a frozen replay policy;
-4. enough independent H5/H10 Origins and repositories for the declared
-   dependence unit;
-5. a clean Agent panel whose identities are checked against every reserved
-   holdout before outcomes are opened.
+1. use the existing Full Task order, 408 H5 Origins, and 201 H10 Origins;
+2. compare every candidate directly with Full history, equal-budget random,
+   and the existing Oracle diagnostic;
+3. state whether each target Agent's past outcomes may enter Selection;
+4. keep future Task attributes and outcomes out of membership construction;
+5. reserve a later boundary only after a development candidate exists.
 
-Keep ALG-016U frozen unchanged for that new boundary. Do not build a generic
-source framework or make paid calls until a concrete source passes a
-candidate-free feasibility preflight.
+This needs no generic source framework or paid call.

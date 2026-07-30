@@ -49,12 +49,19 @@ Reporting reloads both pools and recomputes mature and censored refs before
 supporting a prospective claim. The original Origin and Task Pool are never
 rewritten.
 
-Result availability is also evidence. Barcarolle-managed Results use the
-recorded local observation time. Imported Results default to an import-time
-floor, preventing late evidence from entering an earlier Origin. An explicit
+For strict-prospective live execution, Result observation time is audit
+evidence. Barcarolle-managed Results use the recorded local observation time.
+Imported Results default to an import-time floor, preventing late evidence
+from entering an earlier Origin. An explicit
 `producer_attested_historical_v1` policy may preserve the producer's source
 timestamp, but reports label that history as producer-attested; it does not
 become a Barcarolle observation-time claim.
+
+That rule governs strict-prospective execution and audit. It is not a
+requirement for an offline counterfactual algorithm study. Such a study may
+collect Agent outcomes today, order Tasks by their declared historical time,
+and expose only history Tasks and the inputs allowed by the experiment at each
+rolling Origin. The Result observation timestamp does not enter the estimator.
 
 ## Evidence Claim Lattice
 
@@ -139,26 +146,13 @@ loads the common frozen Task Pool, validates every Origin and Snapshot against
 its Task/Check records, and requires each Result cache identity to project to
 those records before the loss can affect fitted parameters.
 
-An unseen-Agent claim has another evidence boundary. Reference or training
-Agents that supply Selector features must be disjoint from evaluation Agents.
-An outcome-free Selector may be evaluated on a frozen Agent panel, but
-nominating it after inspecting that panel still does not establish transfer to
-a new Agent. Report panel-conditional and held-out-Agent claims separately.
-
-Before any public or reserved Agent panel is opened, intersect its Agent and
-submission identities with every reserved holdout, and record Task-denominator
-and Check overlap. Two seals must be named separately:
-
-- an exact-Result seal means the bound Task/Check/Agent/Runtime Result bytes
-  have not been read;
-- an unseen-Agent seal means no per-Task outcomes for that Agent have informed
-  research decisions on a materially overlapping Task denominator.
-
-Reading the same Agent's outcomes under a distinct source or Check can preserve
-the exact-Result seal while breaking the unseen-Agent seal. Freeze any
-replacement or restricted confirmation panel before its normalized outcomes
-are read. Do not recover an unseen-Agent claim by choosing a favorable subset
-afterward.
+Agent separation follows the claim. Predicting one known Agent's performance
+on future Tasks should retain that Agent and hold out future Tasks. Claiming
+transfer to a previously unseen Agent additionally requires evaluation Agent
+identities whose outcomes did not influence algorithm design. Claiming
+repository or source transfer requires a corresponding repository or source
+split. These are optional stronger claims, not common admission rules for
+algorithm development.
 
 An Origin's future weight is the number of distinct mature Task/Check refs with
 Result cells after common benchmark-owned exclusions. Planned refs with no
@@ -624,7 +618,7 @@ checked public result vectors, ten eligible repositories, 408 H5 Origins, and
 equal-budget random draws at both horizons; exact budget-ten oracle MAE is
 `0.013093` at H5 and `0.007353` at H10. The primary H5 joint-future-block-order
 probability is nevertheless `0.126437`, above its frozen `0.05` admission
-gate. No algorithm ran, no Selector was nominated, and public retrospective
-panel replay is closed. Three Full submissions also overlap reserved Verified
-Agent identities, so those identities retain an exact Verified-Result byte
-seal but no longer support a pure unseen-Agent claim.
+gate. No algorithm ran under that conditional plan. The result closes that
+plan, not use of Full as an outcome-open development set. Three Full
+submissions overlap reserved Verified Agent identities; this affects only a
+claim about transfer to previously unseen Agents.

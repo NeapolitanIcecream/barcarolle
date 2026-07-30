@@ -14,6 +14,12 @@ nontrivial Full-history prediction passed, but the H5 joint-future-block-order
 null returned `p=0.126437`, above the frozen `0.05` threshold. ALG-016U was
 therefore not executed. This is a source-gate result, not an ALG-016U score.
 
+That decision closes only this frozen conditional plan. It does not make
+SWE-bench Full unsuitable for algorithm development. Full is an outcome-open
+development set, and a separate study may run ALG-016U or other candidates
+while reporting direct H5/H10 MAE. The block-order result remains a mechanism
+diagnostic, not a general algorithm-admission rule.
+
 Raw official results and complete run artifacts remain ignored. The committed
 [`evidence/summary.json`](evidence/summary.json) binds two byte-identical runs.
 An independent implementation reproduced the normalizer, all 609 Origins,
@@ -58,7 +64,8 @@ production Selector.
 
 The six exact Verified source/Check-specific result blobs were not read.
 However, three Full submissions use the same Agent identities and cover all
-500 Verified instance IDs. Those three identities are no longer eligible for
-an unseen-Agent claim. The append-only
+500 Verified instance IDs. This matters only for a claim that the algorithm
+transfers to a previously unseen Agent. It does not affect same-Agent
+future-Task prediction or use of Full as development data. The append-only
 [`evidence-boundary-amendment-1.json`](evidence-boundary-amendment-1.json)
 records the correction without changing the frozen plan or rerunning the gate.
