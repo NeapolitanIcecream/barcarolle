@@ -1,0 +1,107 @@
+{
+  "decision": {
+    "budget_ten_capacity_present": true,
+    "history_persistence_detected": false,
+    "next_route": "stop_atlas_and_normalize_or_acquire",
+    "panel_status": "descriptive_only",
+    "production_claim_allowed": false,
+    "selector_nominated": false,
+    "terminal_state": "capacity_without_detected_history_persistence",
+    "workload_relevance_resolved": false
+  },
+  "epistemic_status": "opened_public_outcome_candidate_free_counterfactual",
+  "identities": {
+    "agent_panel_extension_plan_digest": "52f1f3c1dc6159f2c6f17c7b530fe4aab962728c43049d80284690608aad98f6",
+    "agent_panel_schema_amendment_digest": "7a53f1a46c271a1c86bf0ef01f8f313ad305fdf72d5a1f3149bb797ae82afe4b",
+    "dataset_sha256": "43ed5a3d1d98da36472c1ade65ddd2085d7b4ff694fcaf6a023a07c5c1f32f21",
+    "opened_agent_ids": [
+      "moatless-claude4sonnet-20250611",
+      "openhands-claude4sonnet-20250524",
+      "openhands-gpt5-20250807",
+      "rag-claude2-20231010",
+      "rag-swellama13b-20231010",
+      "skywork-swe-32b-20250616",
+      "swe-fixer-qwen-20250306",
+      "sweagent-claude35sonnet-20240620",
+      "sweagent-claude3opus-20240402",
+      "sweagent-claude4sonnet-20250522",
+      "sweagent-lm-32b-20250511"
+    ],
+    "opened_outcome_matrix_digest": "706ed3d13cc7075d70bed04690df35f6574880981066d82753057a1284714125",
+    "portfolio_digest": "da6372edeae90e1d4a857d61e885ec89632a244c295177752d4cde8e11fb68b1",
+    "public_panel_plan_digest": "0658aa938b34f0f80f6933b8a03f1517b323661eab55031925bd017163759c03",
+    "suitability_audit_plan_digest": "59525b1a8168b909a4499f4658e10f5c4208e2fc5d659785d0ee42d44f63f550",
+    "suitability_audit_result_digest": "2311d7da9a285b43dadf9382cebe281473c742ffd6aa79b0d9084cd1e4412ea4"
+  },
+  "implementation": {
+    "implementation_file_sha256": "26a8f83adbdfcf930020c1074cee0d16e2650b7af1827724669b590db2561172",
+    "numpy_version": "2.5.1",
+    "pyarrow_version": "25.0.0",
+    "python_version": "3.14.0",
+    "scipy_version": "1.16.3"
+  },
+  "protocol": {
+    "agent_count": 11,
+    "claim_boundary": "The public outcomes and projected created_at ordering support an exploratory source-time counterfactual only. They cannot establish native Result availability, production workload relevance, a useful deployment margin, or a Selector.",
+    "future_tasks": 5,
+    "origin_count": 68,
+    "primary_aggregation": "equal repository",
+    "primary_metric": "future pass-rate MAE",
+    "repository_count": 7,
+    "selection_budget_tasks": 10,
+    "task_count": 500
+  },
+  "reproduction": {
+    "byte_identical_second_run": true,
+    "result_digest": "2311d7da9a285b43dadf9382cebe281473c742ffd6aa79b0d9084cd1e4412ea4"
+  },
+  "resource_use": {
+    "generator_development": false,
+    "new_public_outcome_panels_opened": 0,
+    "paid_api_calls": 0,
+    "sealed_swe_bench_holdout_agents_opened": 0
+  },
+  "results": {
+    "agent_directions_favorable": "9/11",
+    "all_one_agent_origin_share": 0.07887700534759358,
+    "all_zero_agent_origin_share": 0.24598930481283424,
+    "always_one_mae": 0.6409674821302728,
+    "always_zero_mae": 0.3590325178697272,
+    "cached_expanding_median_mae": 0.1913580634212069,
+    "calendar_cutoff_to_future_end_days": {
+      "maximum": 1220.9603819444444,
+      "median": 46.72626736111111,
+      "minimum": 11.43025462962963
+    },
+    "equal_repository_future_density": 0.3590325178697272,
+    "full_history_mae": 0.18337377818305925,
+    "full_minus_zero": -0.17565873968666793,
+    "leave_one_repository_out_all_negative": true,
+    "oracle_mae": 0.07401892680962449,
+    "pooled_future_density": 0.40401069518716576,
+    "random_mean_mae": 0.1946469089147287,
+    "repository_bootstrap_interval_95": {
+      "half_width": 0.09239940400536319,
+      "lower": -0.24831488632993223,
+      "upper": -0.06351607831920586,
+      "width": 0.18479880801072637
+    },
+    "selection_headroom": 0.10935485137343476,
+    "temporal_null": {
+      "draws": 2000,
+      "null_interval_95": {
+        "lower": -0.2904927062003066,
+        "upper": -0.14843020950545663
+      },
+      "null_mean": -0.23375661131606681,
+      "observed": -0.17565873968666795,
+      "one_sided_probability": 0.9120439780109945,
+      "values_digest": "e7cceaf50a9e3eae3acd7cd92b5feae4ec0240b91c1b1125b28019f620c0c9ee"
+    },
+    "trivial_relative_headroom": 0.2850135910601027,
+    "trivial_separation_full": 0.17565873968666793
+  },
+  "schema_version": "barcarolle_verified_suitability_audit_summary_v1",
+  "study_id": "verified-opened-eleven-agent-suitability-audit-2026-07-30",
+  "suitability_audit_summary_digest": "48032bc07d64c693a7d3247b7af4ab8a750c56df93b972ea339e04f5f0392403"
+}
