@@ -1,0 +1,648 @@
+{
+  "claim_boundary": "Both Oracles are future-open diagnostics. They localize the frozen development result but cannot be deployed, ranked as candidates, or used as confirmation.",
+  "decision": {
+    "by_horizon": {
+      "10": {
+        "history_pool_can_match_target_future_rate": true,
+        "interpretation": "forecasting_or_materialization_is_the_primary_gap",
+        "reference_agent_signal_can_beat_full": true
+      },
+      "5": {
+        "history_pool_can_match_target_future_rate": true,
+        "interpretation": "forecasting_or_materialization_is_the_primary_gap",
+        "reference_agent_signal_can_beat_full": true
+      }
+    },
+    "candidate_ranking_changed": false,
+    "production_promotion_allowed": false,
+    "selector_nominated": false
+  },
+  "development_plan_digest": "e226462972c5dee46ae675a7d80dc2662a479afc2a377b9d5c400d1c7e551e17",
+  "diagnostic_plan_digest": "0d94681518ed5e592f51ef2f1a8024300ef4f42799eecd23b06eebae8b267a56",
+  "diagnostic_summary_digest": "74e08d12d268c9b0a5fd3648cd93e5f26a223b3bbca3d7897c1b6f03de7cd877",
+  "horizons": {
+    "10": {
+      "mae": {
+        "full_history": 0.06257906425674672,
+        "reference_future_oracle": 0.05264866826613814,
+        "target_future_oracle": 0.0023946413359063963
+      },
+      "oracles": {
+        "reference_future_oracle": {
+          "favorable_repository_count": 8,
+          "favorable_target_agent_count": 10,
+          "mae": 0.05264866826613814,
+          "oracle_minus_full": -0.009930395990608583,
+          "repository_bootstrap_interval_95": {
+            "lower": -0.016253115398103757,
+            "upper": -0.004128444113955366
+          }
+        },
+        "target_future_oracle": {
+          "favorable_repository_count": 10,
+          "favorable_target_agent_count": 11,
+          "mae": 0.0023946413359063963,
+          "oracle_minus_full": -0.06018442292084033,
+          "repository_bootstrap_interval_95": {
+            "lower": -0.07118514121014945,
+            "upper": -0.051027948875661026
+          }
+        }
+      },
+      "origin_count": 201,
+      "portfolio_diversity": {
+        "pairwise": {
+          "ALG-010__ALG-015U": {
+            "exact_membership_rate": 0.0673903211216644,
+            "mean_jaccard": 0.7159648733597173
+          },
+          "ALG-010__ALG-016U": {
+            "exact_membership_rate": 0.041610131162369966,
+            "mean_jaccard": 0.696505966519535
+          },
+          "ALG-015U__ALG-016U": {
+            "exact_membership_rate": 0.17639077340569878,
+            "mean_jaccard": 0.7502696308666458
+          },
+          "ordinary_recency__ALG-010": {
+            "exact_membership_rate": 0.11261872455902307,
+            "mean_jaccard": 0.7578396275818258
+          },
+          "ordinary_recency__ALG-015U": {
+            "exact_membership_rate": 0.2392582541836273,
+            "mean_jaccard": 0.780656852570014
+          },
+          "ordinary_recency__ALG-016U": {
+            "exact_membership_rate": 0.0407055630936228,
+            "mean_jaccard": 0.70078933579612
+          },
+          "ordinary_recency__stationary_response_match": {
+            "exact_membership_rate": 0.02125734961555857,
+            "mean_jaccard": 0.626002408566859
+          },
+          "stationary_response_match__ALG-010": {
+            "exact_membership_rate": 0.03075531433740389,
+            "mean_jaccard": 0.6598593627087521
+          },
+          "stationary_response_match__ALG-015U": {
+            "exact_membership_rate": 0.07236544549977386,
+            "mean_jaccard": 0.6907740232027885
+          },
+          "stationary_response_match__ALG-016U": {
+            "exact_membership_rate": 0.17096336499321574,
+            "mean_jaccard": 0.7524802952211365
+          }
+        },
+        "target_row_count": 2211
+      },
+      "repository_count": 10,
+      "repository_rows": [
+        {
+          "mae": {
+            "full_history": 0.06604950774545885,
+            "reference_future_oracle": 0.03506493506493507,
+            "target_future_oracle": 0.0012987012987012987
+          },
+          "oracle_minus_full": {
+            "reference_future_oracle": -0.030984572680523785,
+            "target_future_oracle": -0.06475080644675756
+          },
+          "repository_id": "astropy/astropy"
+        },
+        {
+          "mae": {
+            "full_history": 0.06831450063627029,
+            "reference_future_oracle": 0.06276013143483022,
+            "target_future_oracle": 0.0004381161007667032
+          },
+          "oracle_minus_full": {
+            "reference_future_oracle": -0.0055543692014400625,
+            "target_future_oracle": -0.06787638453550358
+          },
+          "repository_id": "django/django"
+        },
+        {
+          "mae": {
+            "full_history": 0.04770408484393312,
+            "reference_future_oracle": 0.0528409090909091,
+            "target_future_oracle": 0.004545454545454546
+          },
+          "oracle_minus_full": {
+            "reference_future_oracle": 0.0051368242469759795,
+            "target_future_oracle": -0.04315863029847857
+          },
+          "repository_id": "matplotlib/matplotlib"
+        },
+        {
+          "mae": {
+            "full_history": 0.10073529411764706,
+            "reference_future_oracle": 0.08636363636363636,
+            "target_future_oracle": 0.0
+          },
+          "oracle_minus_full": {
+            "reference_future_oracle": -0.014371657754010697,
+            "target_future_oracle": -0.10073529411764706
+          },
+          "repository_id": "psf/requests"
+        },
+        {
+          "mae": {
+            "full_history": 0.06584255250921918,
+            "reference_future_oracle": 0.0494949494949495,
+            "target_future_oracle": 0.00808080808080808
+          },
+          "oracle_minus_full": {
+            "reference_future_oracle": -0.016347603014269678,
+            "target_future_oracle": -0.0577617444284111
+          },
+          "repository_id": "pydata/xarray"
+        },
+        {
+          "mae": {
+            "full_history": 0.06102065960221988,
+            "reference_future_oracle": 0.048484848484848485,
+            "target_future_oracle": 0.0030303030303030303
+          },
+          "oracle_minus_full": {
+            "reference_future_oracle": -0.012535811117371398,
+            "target_future_oracle": -0.057990356571916854
+          },
+          "repository_id": "pylint-dev/pylint"
+        },
+        {
+          "mae": {
+            "full_history": 0.06630452617167289,
+            "reference_future_oracle": 0.05555555555555555,
+            "target_future_oracle": 0.00202020202020202
+          },
+          "oracle_minus_full": {
+            "reference_future_oracle": -0.010748970616117334,
+            "target_future_oracle": -0.06428432415147087
+          },
+          "repository_id": "pytest-dev/pytest"
+        },
+        {
+          "mae": {
+            "full_history": 0.05773829980220871,
+            "reference_future_oracle": 0.056818181818181816,
+            "target_future_oracle": 0.0018181818181818182
+          },
+          "oracle_minus_full": {
+            "reference_future_oracle": -0.0009201179840268928,
+            "target_future_oracle": -0.05592011798402689
+          },
+          "repository_id": "scikit-learn/scikit-learn"
+        },
+        {
+          "mae": {
+            "full_history": 0.038797929184483215,
+            "reference_future_oracle": 0.03920454545454546,
+            "target_future_oracle": 0.001704545454545455
+          },
+          "oracle_minus_full": {
+            "reference_future_oracle": 0.00040661627006224194,
+            "target_future_oracle": -0.037093383729937764
+          },
+          "repository_id": "sphinx-doc/sphinx"
+        },
+        {
+          "mae": {
+            "full_history": 0.05328328795435414,
+            "reference_future_oracle": 0.0398989898989899,
+            "target_future_oracle": 0.00101010101010101
+          },
+          "oracle_minus_full": {
+            "reference_future_oracle": -0.013384298055364244,
+            "target_future_oracle": -0.05227318694425313
+          },
+          "repository_id": "sympy/sympy"
+        }
+      ],
+      "score_rows_digest": "7976576572cb0c3deb5befcd8017075e2592c1ed120f4da83033476a37434cf3",
+      "target_agent_count": 11,
+      "target_agent_rows": [
+        {
+          "oracle_minus_full": {
+            "reference_future_oracle": -0.019763052954011984,
+            "target_future_oracle": -0.0953059387830424
+          },
+          "target_agent_id": "appmap-navie-gpt4o-20240615"
+        },
+        {
+          "oracle_minus_full": {
+            "reference_future_oracle": -0.03158800443327561,
+            "target_future_oracle": -0.14258549439311496
+          },
+          "target_agent_id": "openhands-codeact21-sonnet-20241103"
+        },
+        {
+          "oracle_minus_full": {
+            "reference_future_oracle": -0.01119085584007673,
+            "target_future_oracle": -0.028263981676756783
+          },
+          "target_agent_id": "rag-claude2-20231010"
+        },
+        {
+          "oracle_minus_full": {
+            "reference_future_oracle": -0.01704630756988274,
+            "target_future_oracle": -0.04240395243505772
+          },
+          "target_agent_id": "rag-claude3opus-20240402"
+        },
+        {
+          "oracle_minus_full": {
+            "reference_future_oracle": -0.0035933260618600726,
+            "target_future_oracle": -0.004093326061860072
+          },
+          "target_agent_id": "rag-gpt35-20231010"
+        },
+        {
+          "oracle_minus_full": {
+            "reference_future_oracle": -0.00022465198870623426,
+            "target_future_oracle": -0.017982397255487646
+          },
+          "target_agent_id": "rag-gpt4-20240402"
+        },
+        {
+          "oracle_minus_full": {
+            "reference_future_oracle": -0.0010170193566429297,
+            "target_future_oracle": -0.005434690039373853
+          },
+          "target_agent_id": "rag-swellama13b-20231010"
+        },
+        {
+          "oracle_minus_full": {
+            "reference_future_oracle": -0.00029968526073873535,
+            "target_future_oracle": -0.009504839209868589
+          },
+          "target_agent_id": "rag-swellama7b-20231010"
+        },
+        {
+          "oracle_minus_full": {
+            "reference_future_oracle": -0.024311467227126488,
+            "target_future_oracle": -0.09510014575074477
+          },
+          "target_agent_id": "sweagent-claude35sonnet-20240620"
+        },
+        {
+          "oracle_minus_full": {
+            "reference_future_oracle": -0.00028420899615660966,
+            "target_future_oracle": -0.14249223156261293
+          },
+          "target_agent_id": "sweagent-claude37sonnet-20250227"
+        },
+        {
+          "oracle_minus_full": {
+            "reference_future_oracle": 8.422379178370243e-05,
+            "target_future_oracle": -0.07886165496132397
+          },
+          "target_agent_id": "sweagent-gpt4o-20240728"
+        }
+      ]
+    },
+    "5": {
+      "mae": {
+        "full_history": 0.07855352355793405,
+        "reference_future_oracle": 0.06586387351433848,
+        "target_future_oracle": 0.0040130847057197345
+      },
+      "oracles": {
+        "reference_future_oracle": {
+          "favorable_repository_count": 8,
+          "favorable_target_agent_count": 11,
+          "mae": 0.06586387351433848,
+          "oracle_minus_full": -0.012689650043595568,
+          "repository_bootstrap_interval_95": {
+            "lower": -0.020720799520487335,
+            "upper": -0.004579836143255543
+          }
+        },
+        "target_future_oracle": {
+          "favorable_repository_count": 10,
+          "favorable_target_agent_count": 11,
+          "mae": 0.0040130847057197345,
+          "oracle_minus_full": -0.07454043885221431,
+          "repository_bootstrap_interval_95": {
+            "lower": -0.0863557825415544,
+            "upper": -0.06367648623137932
+          }
+        }
+      },
+      "origin_count": 408,
+      "portfolio_diversity": {
+        "pairwise": {
+          "ALG-010__ALG-015U": {
+            "exact_membership_rate": 0.038101604278074866,
+            "mean_jaccard": 0.6794438624416604
+          },
+          "ALG-010__ALG-016U": {
+            "exact_membership_rate": 0.044563279857397504,
+            "mean_jaccard": 0.7027919347438064
+          },
+          "ALG-015U__ALG-016U": {
+            "exact_membership_rate": 0.07219251336898395,
+            "mean_jaccard": 0.6993285540784754
+          },
+          "ordinary_recency__ALG-010": {
+            "exact_membership_rate": 0.10672905525846703,
+            "mean_jaccard": 0.7551551797875327
+          },
+          "ordinary_recency__ALG-015U": {
+            "exact_membership_rate": 0.089349376114082,
+            "mean_jaccard": 0.7171178309213069
+          },
+          "ordinary_recency__ALG-016U": {
+            "exact_membership_rate": 0.047014260249554365,
+            "mean_jaccard": 0.7103701408514244
+          },
+          "ordinary_recency__stationary_response_match": {
+            "exact_membership_rate": 0.017602495543672013,
+            "mean_jaccard": 0.6231175023641208
+          },
+          "stationary_response_match__ALG-010": {
+            "exact_membership_rate": 0.033645276292335116,
+            "mean_jaccard": 0.6599069936302557
+          },
+          "stationary_response_match__ALG-015U": {
+            "exact_membership_rate": 0.10962566844919786,
+            "mean_jaccard": 0.6796153509644387
+          },
+          "stationary_response_match__ALG-016U": {
+            "exact_membership_rate": 0.16198752228163993,
+            "mean_jaccard": 0.7506165848411838
+          }
+        },
+        "target_row_count": 4488
+      },
+      "repository_count": 10,
+      "repository_rows": [
+        {
+          "mae": {
+            "full_history": 0.08140419097638349,
+            "reference_future_oracle": 0.04363636363636364,
+            "target_future_oracle": 0.0012121212121212121
+          },
+          "oracle_minus_full": {
+            "reference_future_oracle": -0.03776782734001985,
+            "target_future_oracle": -0.08019206976426228
+          },
+          "repository_id": "astropy/astropy"
+        },
+        {
+          "mae": {
+            "full_history": 0.08997152012287456,
+            "reference_future_oracle": 0.07278203723986856,
+            "target_future_oracle": 0.0008214676889375684
+          },
+          "oracle_minus_full": {
+            "reference_future_oracle": -0.017189482883005994,
+            "target_future_oracle": -0.08915005243393699
+          },
+          "repository_id": "django/django"
+        },
+        {
+          "mae": {
+            "full_history": 0.06093171604958298,
+            "reference_future_oracle": 0.06846590909090909,
+            "target_future_oracle": 0.005397727272727273
+          },
+          "oracle_minus_full": {
+            "reference_future_oracle": 0.007534193041326111,
+            "target_future_oracle": -0.05553398877685571
+          },
+          "repository_id": "matplotlib/matplotlib"
+        },
+        {
+          "mae": {
+            "full_history": 0.1181988101486073,
+            "reference_future_oracle": 0.12727272727272726,
+            "target_future_oracle": 0.004545454545454545
+          },
+          "oracle_minus_full": {
+            "reference_future_oracle": 0.009073917124119965,
+            "target_future_oracle": -0.11365335560315275
+          },
+          "repository_id": "psf/requests"
+        },
+        {
+          "mae": {
+            "full_history": 0.07131096095844196,
+            "reference_future_oracle": 0.0590909090909091,
+            "target_future_oracle": 0.00909090909090909
+          },
+          "oracle_minus_full": {
+            "reference_future_oracle": -0.01222005186753286,
+            "target_future_oracle": -0.06222005186753286
+          },
+          "repository_id": "pydata/xarray"
+        },
+        {
+          "mae": {
+            "full_history": 0.07447836829054016,
+            "reference_future_oracle": 0.053246753246753244,
+            "target_future_oracle": 0.006493506493506494
+          },
+          "oracle_minus_full": {
+            "reference_future_oracle": -0.02123161504378692,
+            "target_future_oracle": -0.06798486179703367
+          },
+          "repository_id": "pylint-dev/pylint"
+        },
+        {
+          "mae": {
+            "full_history": 0.08649255136859578,
+            "reference_future_oracle": 0.06746411483253588,
+            "target_future_oracle": 0.0028708133971291866
+          },
+          "oracle_minus_full": {
+            "reference_future_oracle": -0.0190284365360599,
+            "target_future_oracle": -0.08362173797146659
+          },
+          "repository_id": "pytest-dev/pytest"
+        },
+        {
+          "mae": {
+            "full_history": 0.08442212084266101,
+            "reference_future_oracle": 0.07317073170731707,
+            "target_future_oracle": 0.003547671840354767
+          },
+          "oracle_minus_full": {
+            "reference_future_oracle": -0.011251389135343945,
+            "target_future_oracle": -0.08087444900230625
+          },
+          "repository_id": "scikit-learn/scikit-learn"
+        },
+        {
+          "mae": {
+            "full_history": 0.05032798563130296,
+            "reference_future_oracle": 0.04269972451790634,
+            "target_future_oracle": 0.00440771349862259
+          },
+          "oracle_minus_full": {
+            "reference_future_oracle": -0.007628261113396623,
+            "target_future_oracle": -0.04592027213268037
+          },
+          "repository_id": "sphinx-doc/sphinx"
+        },
+        {
+          "mae": {
+            "full_history": 0.06799701119035025,
+            "reference_future_oracle": 0.05080946450809465,
+            "target_future_oracle": 0.0017434620174346202
+          },
+          "oracle_minus_full": {
+            "reference_future_oracle": -0.017187546682255597,
+            "target_future_oracle": -0.06625354917291562
+          },
+          "repository_id": "sympy/sympy"
+        }
+      ],
+      "score_rows_digest": "8e6c8f46bf76e36b7cadaf652c64d8aaf778585ba84322c9674339d9060996dd",
+      "target_agent_count": 11,
+      "target_agent_rows": [
+        {
+          "oracle_minus_full": {
+            "reference_future_oracle": -0.006274374357962423,
+            "target_future_oracle": -0.11747398422738331
+          },
+          "target_agent_id": "appmap-navie-gpt4o-20240615"
+        },
+        {
+          "oracle_minus_full": {
+            "reference_future_oracle": -0.03918701042806111,
+            "target_future_oracle": -0.17431534855030792
+          },
+          "target_agent_id": "openhands-codeact21-sonnet-20241103"
+        },
+        {
+          "oracle_minus_full": {
+            "reference_future_oracle": -0.011091227589327776,
+            "target_future_oracle": -0.033523725845861906
+          },
+          "target_agent_id": "rag-claude2-20231010"
+        },
+        {
+          "oracle_minus_full": {
+            "reference_future_oracle": -0.018374537743491015,
+            "target_future_oracle": -0.05019536085996871
+          },
+          "target_agent_id": "rag-claude3opus-20240402"
+        },
+        {
+          "oracle_minus_full": {
+            "reference_future_oracle": -0.0012790220925541105,
+            "target_future_oracle": -0.0038392630564095323
+          },
+          "target_agent_id": "rag-gpt35-20231010"
+        },
+        {
+          "oracle_minus_full": {
+            "reference_future_oracle": -0.005075188836006439,
+            "target_future_oracle": -0.01847206992412894
+          },
+          "target_agent_id": "rag-gpt4-20240402"
+        },
+        {
+          "oracle_minus_full": {
+            "reference_future_oracle": -0.0012623736320729328,
+            "target_future_oracle": -0.004623325249163743
+          },
+          "target_agent_id": "rag-swellama13b-20231010"
+        },
+        {
+          "oracle_minus_full": {
+            "reference_future_oracle": -0.004106180250378719,
+            "target_future_oracle": -0.008449017067047418
+          },
+          "target_agent_id": "rag-swellama7b-20231010"
+        },
+        {
+          "oracle_minus_full": {
+            "reference_future_oracle": -0.01029948429883866,
+            "target_future_oracle": -0.1264096310136977
+          },
+          "target_agent_id": "sweagent-claude35sonnet-20240620"
+        },
+        {
+          "oracle_minus_full": {
+            "reference_future_oracle": -0.025921118272806742,
+            "target_future_oracle": -0.17702756181066703
+          },
+          "target_agent_id": "sweagent-claude37sonnet-20250227"
+        },
+        {
+          "oracle_minus_full": {
+            "reference_future_oracle": -0.016715632978051162,
+            "target_future_oracle": -0.10561553976972114
+          },
+          "target_agent_id": "sweagent-gpt4o-20240728"
+        }
+      ]
+    }
+  },
+  "input_identities": {
+    "check_projection_digest": "836aee24fd1cc3036ad88a3ba54d3a0d4a09f8e89a2fa0e43893c75f3affe6f6",
+    "dataset_sha256": "0996c4bd66e647ecef89d3ef57e527dcc0ea4e8369ac6f740cdd570734188df2",
+    "normalized_outcome_matrix_digest": "24648a989b02b70c9fb06c6417adfdc1a67f473f8186326e9c7afa64f1ef06a8",
+    "panel_digest": "1c17664d9a72b1a726e5764eb28f04d7ac5e4841128ddd15ab4acf678bf12980",
+    "result_identities": [
+      {
+        "agent_id": "rag-claude2-20231010",
+        "result_blob_sha": "a05b31e13c1d9bd04378a141b609000636eddb48"
+      },
+      {
+        "agent_id": "rag-gpt35-20231010",
+        "result_blob_sha": "4dc566c28dc7399f7a6f61d0d5acdc64a8b6dd2a"
+      },
+      {
+        "agent_id": "rag-swellama13b-20231010",
+        "result_blob_sha": "2e7b6f99b6b8a5a6b6fd237e0deb0d2edff792e6"
+      },
+      {
+        "agent_id": "rag-swellama7b-20231010",
+        "result_blob_sha": "e753087e232a9cecaef3a7b5106688b477eb3a42"
+      },
+      {
+        "agent_id": "rag-claude3opus-20240402",
+        "result_blob_sha": "65687a973ad0906c4fd358fa33bcbeea892e54e8"
+      },
+      {
+        "agent_id": "rag-gpt4-20240402",
+        "result_blob_sha": "7f6617708e2584056fcb34f6075625de920b1473"
+      },
+      {
+        "agent_id": "appmap-navie-gpt4o-20240615",
+        "result_blob_sha": "563517de356c68e6ceb26c9fe298176d2f375e78"
+      },
+      {
+        "agent_id": "sweagent-claude35sonnet-20240620",
+        "result_blob_sha": "f3ba7ff76738f709ce35bd430147bf51cc864678"
+      },
+      {
+        "agent_id": "sweagent-gpt4o-20240728",
+        "result_blob_sha": "a8764721de59312d0c17510e13aa66c4a58cc32a"
+      },
+      {
+        "agent_id": "openhands-codeact21-sonnet-20241103",
+        "result_blob_sha": "bedbdde7a712a491b0eacd4d4bebb5384ab06f1f"
+      },
+      {
+        "agent_id": "sweagent-claude37sonnet-20250227",
+        "result_blob_sha": "3f8d5597f76eace7e96d571ab29d1ce0ca45cb15"
+      }
+    ],
+    "task_denominator_digest": "8348567d58d34d7749213678ac7b3e08cc21c14839262839db45c8c8f4aa4369"
+  },
+  "membership_digest": "e85cd6847d81a95b1a9a82587f5d1bafb47db6259a20335709d37d1a807104e8",
+  "reproduction": {
+    "byte_identical_second_run": true,
+    "diagnostic_result_digest": "9f4c4a08c97d51f212ac70c42a79dfe039d07d7756a7329cadc3fbb9db65d353"
+  },
+  "resource_use": {
+    "new_agent_outcome_calls": 0,
+    "paid_api_calls": 0,
+    "sealed_swe_bench_verified_agent_reads": 0
+  },
+  "schema_version": "barcarolle_swe_bench_full_diagnostic_summary_v1",
+  "study_id": "swe-bench-full-negative-result-localization-2026-07-30"
+}
