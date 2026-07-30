@@ -221,12 +221,13 @@ varying axis. Held-out-Agent transfer is a separate crossed study. Random
 landscape, support, oracle, horizon, and dependency diagnostics are first
 computed per repository and only then summarized.
 
-The current practical promotion gate remains at least `0.02` lower
-macro-repository MAE than full history with a paired 95% repository-cluster
-interval wholly below zero. The direction must survive every
-leave-one-cluster-out view and the predeclared horizon and dependency
-sensitivities. A later frozen source or strict-prospective campaign is still
-required for an external predictive-validity claim.
+The `0.02` macro-repository margin used by the 2026-07-28 study remains that
+study's preregistered promotion rule; it is not a universal suitability or
+algorithm threshold. A new study must predeclare a deployment-derived useful
+margin before outcomes. Without one, report the paired repository-cluster
+interval, leave-one-cluster-out views, and design resolution, but keep the
+result descriptive. A later frozen source or strict-prospective campaign is
+still required for an external predictive-validity claim.
 
 The current `train_selector` implementation requires every training Origin to
 use one Task Pool. Therefore fixed Selectors can be evaluated under this
@@ -250,36 +251,52 @@ minimum report:
 - positive outcome density by Agent and repository;
 - the shares of Agent-Origin future blocks with pass rate zero and one;
 - always-zero and always-one MAE;
-- a cutoff-safe constant forecast fitted only from earlier Origin blocks,
-  using a median when it is optimized for absolute loss;
+- a fully specified cutoff-safe constant forecast fitted only from evidence
+  admitted by the candidate's information contract, using a median when it is
+  optimized for absolute loss;
 - full-history MAE;
 - equal-budget random loss and discrete hindsight-oracle loss.
 
 These controls do not replace full history as the primary no-Selection
-baseline. They determine whether a low absolute MAE reflects temporal
-prediction or only outcome prevalence and discrete score support. A candidate
-that improves full history but does not beat the strongest trivial control
-cannot support an algorithm-validity claim.
+baseline. A target-Agent expanding climatology is admissible only in a
+cached-target lane; it cannot gate an unseen-target Selector. These diagnostics
+determine whether a low absolute MAE reflects nontrivial prediction or only
+outcome prevalence and discrete score support.
+
+Keep two claims separate:
+
+- Selection/compression evidence requires candidate MAE below full history;
+  equal-budget random locates the candidate in the sampling space.
+- Nontrivial-prediction evidence requires candidate MAE below a trivial
+  estimator admitted by the same information contract.
+
+A strong predictive nomination requires both. Failure of the second claim does
+not erase a separately labeled candidate-versus-full Selection result.
+
+When `MAE_full > MAE_oracle`, report
+
+`selection_capture = (MAE_full - MAE_candidate) / (MAE_full - MAE_oracle)`.
 
 When `MAE_trivial > MAE_oracle`, also report
 
 `captured_headroom = (MAE_trivial - MAE_candidate) / (MAE_trivial - MAE_oracle)`.
 
-Keep direct MAE primary and random percentile separate. Do not report the ratio
-when its denominator is zero or when the trivial and oracle rows use different
-evidence.
+Keep direct MAE primary and random percentile separate. Do not report either
+ratio when its denominator is nonpositive or when its rows differ in Task,
+Check, Agent, Origin, denominator, weighting, budget, or oracle evidence.
 
-An observed failure region is a frozen combination of Task Pool, Agent panel,
-horizon, and aggregation in which the intended prediction claim cannot be
-separated from a trivial estimator or metric support. A failure-region label
-does not invalidate the source for every Agent panel or use. Use such a panel
-for stress and capacity diagnostics, do not rescue-tune opened candidates on
-it, and require a new evidence boundary before treating it as a main
-development region. Freeze deployment-specific suitability thresholds before
-candidate outcomes; do not derive a universal threshold from one opened panel.
+A regime identity includes Task Pool, Agent panel, Selection unit, information
+contract, horizon frame, denominator, Origin construction, and aggregation.
+Do not label a whole source from one estimator lane. Before
+deployment-specific thresholds exist, use descriptive terminal states such as
+`descriptive_only`, `not_evaluable`, or `normalization_failed`; do not infer a
+universal `failure`, `stress`, or `usable` boundary from one opened panel.
 
-The current Multi-SWE projection with its 36 public configurations is one
-measured failure region. Its evidence and exact claim boundary are recorded in
+For the current Multi-SWE projection, H5 full history and retained
+unseen-target candidates are dominated by always zero under the end-aligned
+equal-repository view. H10 has a favorable full-history point estimate whose
+sign is sensitive to repository and Origin construction. The corrected claim
+boundary is recorded in
 [`experiments/2026-07-30-multi-swe-failure-region.md`](experiments/2026-07-30-multi-swe-failure-region.md).
 
 An equal-budget random Selection is calibration, not the primary baseline.
@@ -305,11 +322,12 @@ reconstruction of the complete historical benchmark separately from
 later-Origin future MAE. Accurate historical score reconstruction cannot by
 itself clear the temporal promotion gate.
 
-The current algorithm-promotion gate requires at least `0.02` lower
-macro-Origin MAE than full history and a paired 95% Origin-block interval wholly
-below zero. Random-space position, support, null controls, rank agreement, and
-recommendation regret remain separately labeled diagnostics. Changing the
-primary metric or practical margin after outcomes open is exploratory.
+The earlier `0.02` macro-Origin rule remains a legacy study-specific gate. New
+algorithm work must freeze its deployment-derived useful margin and highest
+valid dependence unit before outcomes. Random-space position, support, null
+controls, rank agreement, and recommendation regret remain separately labeled
+diagnostics. Changing the primary metric, dependence unit, or practical margin
+after outcomes open is exploratory.
 
 Predeclare the future-block horizon from the deployment question. When more
 than one reasonable horizon exists, report a fixed block-size sensitivity and

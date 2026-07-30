@@ -57,19 +57,21 @@ opened. Close routes instead of carrying their execution diaries forward.
    exist. Brier, AUC, embeddings, response losses, and task-mix loss are
    diagnostics.
 5. Full eligible local history is the primary no-Selection baseline.
-   Always-zero and cutoff-safe historical climatology are mandatory
-   suitability controls. Equal-budget random and hindsight oracle describe the
-   attainable selection space.
-6. Prediction difficulty belongs to the joint Task Pool, Agent panel, horizon,
+   Always-zero and always-one are estimator controls. A historical climatology
+   is included only when its inputs are admitted by the same information
+   contract. Equal-budget random and hindsight oracle describe the attainable
+   selection space.
+6. Prediction difficulty belongs to the joint Task Pool, Agent panel, Selection
+   unit, information contract, horizon frame, denominator, Origin construction,
    and aggregation regime. A Task source is not permanently valid or invalid
    independent of those choices.
 7. Barcarolle may have documented failure regions. Research should optimize
    the intended practical main region, detect or report unsupported regimes,
    and avoid rescue-tuning an extreme opened panel.
-8. A low absolute MAE is not evidence of predictive skill when a trivial
-   estimator obtains a similar or lower loss. Candidate claims require
-   improvement over full history and explicit comparison with the strongest
-   trivial control.
+8. A low absolute MAE is not evidence of nontrivial prediction when a
+   contract-matched trivial estimator obtains a similar or lower loss.
+   Candidate-versus-full Selection evidence remains separate. A strong
+   nomination requires both claims.
 9. Cached-target compression and unseen-target Selection are different
    information contracts. Grid-aware cached calibration does not prove Task
    content or future-regime prediction.
@@ -97,17 +99,19 @@ Agent configurations, and 2,913 positive outcomes among 58,752 cells
 | Full-history MAE | `0.067348` | `0.052807` |
 | Always-zero minus full history | `-0.007477` | `+0.007589` |
 
-This Task Pool and Agent-panel combination is an observed failure region for
-the main temporal pass-rate MAE claim. H5 is directly dominated by the
-always-zero estimator. H10 contains nontrivial signal, but the response remains
-sparse and no frozen unseen-target candidate is favorable against full history
-at both horizons.
+The earlier combined failure-region label is withdrawn. Under the frozen
+end-aligned, equal-repository, scheduled-denominator, shared-unseen-target
+estimator view, H5 full history and retained candidates are dominated by
+always zero. At H10 full history has a favorable point estimate, but that sign
+is sensitive to repository weighting, Origin anchoring, and cohort
+construction. H5 and H10 use different repository and Origin frames; their
+sign change is not a causal horizon result.
 
 Exact budget-ten hindsight still reduces full-history loss by about 48% at both
 horizons. Selection capacity exists after future outcomes are known.
-Pre-Origin identification in this sparse regime remains unsolved. More
-candidate search on the opened panel cannot establish general validity and is
-closed.
+Pre-Origin identification on this opened counterfactual panel remains
+unresolved. More candidate search on the same outcomes cannot establish
+general validity and is closed.
 
 Historical correction:
 
@@ -122,29 +126,22 @@ MAE.
 
 ## Next Research Program
 
-### Stage A: Regime Suitability Atlas
+### Stage A: Candidate-Free Null And Headroom Pilot
 
-State: `ready`; no paid calls.
+State: `ready`; plan digest
+`b24b31a49ad4c31177ec73d95bb9da18abdcc215033d2e4f893a3ef593c3d1ca`;
+no paid calls.
 
-Build one experiment-layer diagnostic over already available evidence. Reuse
-direct functions and committed records; do not add a core service or schema.
-For each compatible Boltons, SymPy, SWE-bench Verified, and Multi-SWE view,
-report:
+Run the frozen direct audit on Multi-SWE. It reports separate H5/H10 frames,
+zero/one, a cached-target-only expanding climatology, full history, existing
+random and certified oracle rows, both full-relative and trivial-relative
+headroom, equal-repository uncertainty/LOO, pooled-Origin sensitivity, calendar
+spans, and a joint-response within-repository circular-shift temporal null.
 
-- outcome density and per-Agent dispersion;
-- zero/all-one future-block shares;
-- always-zero, cutoff-safe climatology, and full-history MAE;
-- equal-budget random distribution and discrete oracle;
-- oracle headroom and the fraction captured by each retained comparator;
-- repository, Agent, horizon, budget, and denominator identity.
-
-The atlas must keep unlike estimands separate. It may explain why results
-differ; it must not average Boltons, SymPy, Verified, and Multi-SWE into one
-score.
-
-Exit: identify at least one evidence regime suitable for main-region
-development, or record that current reusable panels are all unsuitable and
-move to Stage B as data-gated.
+Exit: decide whether this panel shows only representational capacity, also
+shows candidate-independent chronology alignment, or is unresolved at the
+repository level. The panel remains `descriptive_only`; this Stage cannot
+nominate a Selector or infer workload relevance.
 
 ### Stage B: Select The Next Development Boundary
 
@@ -159,10 +156,14 @@ A main-region development panel should have:
 - an Agent panel with useful pass-rate variation;
 - a defensible Task-time and Result-availability claim for the intended use.
 
-Use an existing public or already-paid panel when it meets the gate. If none
-does, specify the smallest new outcome acquisition needed. Do not authorize
-calls, open the six sealed SWE-bench Agents, or implement a concrete Generator
-from this ledger.
+Use an existing public or already-paid panel when it meets the gate. A
+cross-source catalog may index per-source audits, but must not average them or
+select a main region from outcomes alone. SWE-bench Full is
+`normalization-gated`: its source/time row is available, while its MAE row
+needs an exact source-specific Result allowlist, Check identity, blob manifest,
+normalizer, and panel digest. Do not authorize calls, open Full outcomes or the
+six sealed SWE-bench Agents, or implement a concrete Generator from this
+ledger.
 
 ### Stage C: Theory-Driven Algorithm Research
 
@@ -183,11 +184,12 @@ recorded H5 mechanism clue, not a candidate authorized for rescue tuning.
 
 State: `authority-gated`.
 
-Only a candidate that beats full history, the strongest trivial control, and
-the frozen practical gate on development evidence may consume a later source,
-sealed Agent panel, prospective campaign, or paid Agent outcomes. Confirmation
-must preserve exact endpoint, Agent, Task, Check, availability, and cost
-identity.
+Only a candidate with a frozen Selection/compression claim against full
+history, a separately frozen nontrivial-prediction claim against an
+information-contract-matched control, and a deployment-derived practical gate
+may consume a later source, sealed Agent panel, prospective campaign, or paid
+Agent outcomes. Confirmation must preserve exact endpoint, Agent, Task, Check,
+availability, and cost identity.
 
 ### Stage E: Product Reporting
 
@@ -202,11 +204,12 @@ existing records. Add no global Task-Pool registry or generic policy engine.
 
 | ID | State | Next action or reopening condition |
 | --- | --- | --- |
-| FR-001 | `measured` | Multi-SWE plus the 36 public configurations is recorded as an observed sparse-outcome failure region. Reassess only for a different Agent panel, horizon contract, or outcome source. |
+| FR-001 | `revised` | H5 is zero-dominated only under the named unseen-target estimator view; H10 is unresolved and sensitivity-bound. The combined failure-region label is withdrawn. |
 | FR-002 | `measured` | Statistical protocol now requires trivial baselines and regime diagnostics before candidate interpretation. |
-| FR-003 | `ready` | Produce the no-paid regime suitability atlas over reusable evidence. |
+| FR-003 | `ready` | Execute the frozen no-paid Multi-SWE null-and-headroom pilot once. |
 | FR-004 | `data-gated` | Choose the next main-region development panel after FR-003. |
 | FR-005 | `trigger-gated` | Add a Reporting warning or abstention only after FR-003 fixes reusable meanings and a concrete caller needs it. |
+| FR-006 | `normalization-gated` | SWE-bench Full source/time capacity is usable; its pass-rate MAE row needs a source-specific allowlist, Check/Result binding, normalizer, and panel digest before outcomes are opened. |
 | ALG-016U | `closed` on current panel | Preserve as the best unseen-target H5 point estimate. Reopen only through an independently derived mechanism on a new evidence boundary. |
 | THY-002 | `task-mix-pass` | Preserve generator-calibrated exposure as projected Task-mix evidence. Its THY-002S outcome mapping remains closed. |
 | Parent work intent | `data-gated` | Reopen only with complete timestamped planning-node history, versioned Task material, and pre-arrival component labels. |
