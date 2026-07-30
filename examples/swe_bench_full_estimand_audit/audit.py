@@ -3,7 +3,7 @@
 
 from __future__ import annotations
 
-# The reproduction command supplies NumPy and PyArrow.
+# The reproduction command supplies NumPy, SciPy, and PyArrow.
 # pyright: reportMissingImports=false, reportMissingModuleSource=false
 import argparse
 import json

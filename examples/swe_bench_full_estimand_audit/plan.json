@@ -57,6 +57,15 @@
     "horizon_scaling": "fit descriptive within-cell block variance against 1/H on repositories eligible at every horizon",
     "oracle_role": "recover joint cells and audit macro capacity; do not rank or deploy an Oracle"
   },
+  "reproduction": {
+    "command": "uv run --with numpy --with scipy --with pyarrow python examples/swe_bench_full_estimand_audit/audit.py run",
+    "required_packages": [
+      "numpy",
+      "scipy",
+      "pyarrow"
+    ],
+    "determinism": "All permutations use the frozen seed; the output is self-digested."
+  },
   "bound_artifacts": {
     "source_plan": {
       "path": "examples/swe_bench_full_transfer/plan.json",
@@ -114,7 +123,7 @@
     }
   },
   "implementation": {
-    "audit_file_sha256": "a8c25775085489caa7ecbb87fb174e645acb36afefd1d679a4f1936b7b925a17"
+    "audit_file_sha256": "e551a835f62b1ced6ac1e8b09fde4ff3c9ac93fc3ab48017a91dd7d420ea4756"
   },
   "authority": {
     "paid_api_calls": 0,
@@ -126,5 +135,5 @@
   },
   "source_policy": "Use the already-open pinned SWE-bench Full Tasks and checked Agent outcomes. Primary literature may inform interpretation but cannot replace local direct-MAE evidence.",
   "claim_boundary": "This adaptive post-anomaly audit can correct interpretation and identify the next discriminating experiment. It cannot confirm a Selector, establish IID sampling noise, or generalize beyond the fixed opened Agent and repository frame.",
-  "plan_digest": "6cb3de04a8fcca92494fdbffe07356494fc676c4b4a799f84c31816d2879f477"
+  "plan_digest": "cda05fd3f7b6a5c2d3e39121da163a2828e6f4681775e74f12eca6f7e7ff552f"
 }
