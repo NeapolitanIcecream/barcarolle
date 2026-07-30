@@ -1,0 +1,387 @@
+{
+  "schema_version": "barcarolle_swe_bench_full_transfer_plan_v1",
+  "study_id": "swe-bench-full-suitability-and-alg-016u-transfer-2026-07-30",
+  "frozen_at": "2026-07-30T04:41:45Z",
+  "epistemic_status": "outcome_open_source_pre_normalization_conditional_transfer",
+  "research_contract": {
+    "target": "Determine whether the checked clean SWE-bench Full panel is a useful rolling-Origin development boundary and, only if it is, test the unchanged ALG-016U mechanism on that new boundary.",
+    "primary_outcome": "Direct future pass-rate MAE: target Agents mean inside Origin, Origins mean inside repository, then repositories equally.",
+    "primary_baseline": "Full eligible repository-local history.",
+    "primary_frame": "Independent end-aligned complete non-overlapping H5 blocks after at least 20 history Tasks.",
+    "sensitivity_frame": "Independent end-aligned complete non-overlapping H10 blocks after at least 20 history Tasks; H10 is required and is not independent confirmation.",
+    "observable_success": "The source clears every frozen suitability gate, then unchanged ALG-016U lowers direct pass-rate MAE against full history at both H5 and H10.",
+    "non_solutions": [
+      "using Brier loss, AUC, response-vector loss, or materialization loss as the primary outcome",
+      "changing the Agent panel, horizon, aggregation, normalizer, null, algorithm constants, or rejection rule after normalized outcomes are read",
+      "running any other unopened algorithm on this panel",
+      "opening the six project-sealed SWE-bench Verified Agents",
+      "claiming SWE-bench Full as independent confirmation",
+      "averaging repositories or Origins with another Task source",
+      "making paid calls or developing a Generator"
+    ],
+    "allowed_terminal_states": [
+      "source_identity_or_normalization_blocker",
+      "suitability_gate_rejects_before_algorithm",
+      "alg_016u_transfer_refuted",
+      "alg_016u_point_transfer_only",
+      "alg_016u_robust_transfer"
+    ]
+  },
+  "source": {
+    "dataset_repository": "SWE-bench/SWE-bench",
+    "dataset_revision": "7074ef12ea2a6f70a228943c1336553333c22786",
+    "dataset_path": "data/test-00000-of-00001.parquet",
+    "local_path": "outputs/research/2026-07-28-external-benchmark-inventory/sources/swe_bench_full_test.parquet",
+    "dataset_sha256": "0996c4bd66e647ecef89d3ef57e527dcc0ea4e8369ac6f740cdd570734188df2",
+    "dataset_size_bytes": 12066326,
+    "task_count": 2294,
+    "repository_count": 12,
+    "task_time": "created_at",
+    "task_time_status": "source pull-request created_at used as declared counterfactual Task availability",
+    "task_denominator_digest": "8348567d58d34d7749213678ac7b3e08cc21c14839262839db45c8c8f4aa4369",
+    "task_denominator_digest_definition": "canonical digest of the 2,294 instance_id strings sorted lexicographically",
+    "check_projection_fields": [
+      "instance_id",
+      "repo",
+      "created_at",
+      "FAIL_TO_PASS",
+      "PASS_TO_PASS"
+    ],
+    "check_projection_digest": "836aee24fd1cc3036ad88a3ba54d3a0d4a09f8e89a2fa0e43893c75f3affe6f6",
+    "check_projection_digest_definition": "canonical digest of objects containing the five named raw parquet values, sorted by instance_id",
+    "check_meaning": "The exact Full row's FAIL_TO_PASS and PASS_TO_PASS oracle contract at the pinned dataset revision; it is not interchangeable with the Verified row for an overlapping instance_id.",
+    "result_repository": "SWE-bench/experiments",
+    "result_revision": "2f15350cd32becc4569e0d826361048555b605c0",
+    "result_tree_sha": "41bb4d56cd7dba1b62a04947728d2f451172af30",
+    "result_directory": "evaluation/test",
+    "outcome_status": "The Full result tree was inspected during the 2026-07-28 external-source audit and is outcome-open development evidence."
+  },
+  "normalization": {
+    "binary_outcome": "An exact denominator Task listed in resolved is pass; every other denominator Task is fail.",
+    "ordinary_unlisted": "fail",
+    "no_generation": "fail",
+    "no_logs": "fail",
+    "missing_result_file": "hard error",
+    "unknown_task_id": "hard error",
+    "duplicate_id_within_any_field": "hard error",
+    "non_string_or_empty_id": "hard error",
+    "current_schema_fields": [
+      "no_generation",
+      "no_logs",
+      "resolved"
+    ],
+    "current_schema_overlap": "forbidden",
+    "legacy_schema_fields": [
+      "applied",
+      "generated",
+      "install_fail",
+      "no_apply",
+      "no_generation",
+      "reset_failed",
+      "resolved",
+      "test_errored",
+      "test_timeout",
+      "with_logs"
+    ],
+    "legacy_schema_overlap": "allowed because fields describe overlapping pipeline stages",
+    "schema_variant_outside_exact_field_sets": "hard error"
+  },
+  "agent_panel": {
+    "selection_rule": "At the pinned result revision, include every evaluation/test submission whose metadata has tags.checked true, whose results/results.json exists, and whose result arrays contain no duplicate IDs. Do not filter on score, model openness, or system openness.",
+    "agent_count": 11,
+    "panel_digest": "1c17664d9a72b1a726e5764eb28f04d7ac5e4841128ddd15ab4acf678bf12980",
+    "agents": [
+      {
+        "agent_id": "rag-claude2-20231010",
+        "submission": "20231010_rag_claude2",
+        "mechanism_family": "RAG",
+        "metadata_blob_sha": "2676675c78e71b4ccadf9eae143cb08827f28331",
+        "result_blob_sha": "a05b31e13c1d9bd04378a141b609000636eddb48",
+        "result_size_bytes": 207879,
+        "result_schema": "legacy"
+      },
+      {
+        "agent_id": "rag-gpt35-20231010",
+        "submission": "20231010_rag_gpt35",
+        "mechanism_family": "RAG",
+        "metadata_blob_sha": "89e4f56c8631e42050f2094a90abb18968ddb47c",
+        "result_blob_sha": "4dc566c28dc7399f7a6f61d0d5acdc64a8b6dd2a",
+        "result_size_bytes": 206505,
+        "result_schema": "legacy"
+      },
+      {
+        "agent_id": "rag-swellama13b-20231010",
+        "submission": "20231010_rag_swellama13b",
+        "mechanism_family": "RAG",
+        "metadata_blob_sha": "dc4d66c46189084a1675417a1b9558b3818e6c8b",
+        "result_blob_sha": "2e7b6f99b6b8a5a6b6fd237e0deb0d2edff792e6",
+        "result_size_bytes": 198082,
+        "result_schema": "legacy"
+      },
+      {
+        "agent_id": "rag-swellama7b-20231010",
+        "submission": "20231010_rag_swellama7b",
+        "mechanism_family": "RAG",
+        "metadata_blob_sha": "815cb395d0b7ca015b1557f7c0a192369018d05b",
+        "result_blob_sha": "e753087e232a9cecaef3a7b5106688b477eb3a42",
+        "result_size_bytes": 203442,
+        "result_schema": "legacy"
+      },
+      {
+        "agent_id": "rag-claude3opus-20240402",
+        "submission": "20240402_rag_claude3opus",
+        "mechanism_family": "RAG",
+        "metadata_blob_sha": "9dd739fc205e88e4461e89d8540ca3a6067bcc48",
+        "result_blob_sha": "65687a973ad0906c4fd358fa33bcbeea892e54e8",
+        "result_size_bytes": 208582,
+        "result_schema": "legacy"
+      },
+      {
+        "agent_id": "rag-gpt4-20240402",
+        "submission": "20240402_rag_gpt4",
+        "mechanism_family": "RAG",
+        "metadata_blob_sha": "3061b425d4966b555fd2eb699bb751fbe814bd0b",
+        "result_blob_sha": "7f6617708e2584056fcb34f6075625de920b1473",
+        "result_size_bytes": 207469,
+        "result_schema": "legacy"
+      },
+      {
+        "agent_id": "appmap-navie-gpt4o-20240615",
+        "submission": "20240615_appmap-navie_gpt4o",
+        "mechanism_family": "AppMap Navie",
+        "metadata_blob_sha": "a71340aa9ba969951bc8bdd4e59750ef69434e68",
+        "result_blob_sha": "563517de356c68e6ceb26c9fe298176d2f375e78",
+        "result_size_bytes": 213393,
+        "result_schema": "legacy"
+      },
+      {
+        "agent_id": "sweagent-claude35sonnet-20240620",
+        "submission": "20240620_sweagent_claude3.5sonnet",
+        "mechanism_family": "SWE-agent",
+        "metadata_blob_sha": "969004ad350344730d6c41d1cf54840172914bc7",
+        "result_blob_sha": "f3ba7ff76738f709ce35bd430147bf51cc864678",
+        "result_size_bytes": 14337,
+        "result_schema": "current"
+      },
+      {
+        "agent_id": "sweagent-gpt4o-20240728",
+        "submission": "20240728_sweagent_gpt4o",
+        "mechanism_family": "SWE-agent",
+        "metadata_blob_sha": "78a1a72f833ebae5d182923925d59a6aca75288c",
+        "result_blob_sha": "a8764721de59312d0c17510e13aa66c4a58cc32a",
+        "result_size_bytes": 17969,
+        "result_schema": "current"
+      },
+      {
+        "agent_id": "openhands-codeact21-sonnet-20241103",
+        "submission": "20241103_OpenHands-CodeAct-2.1-sonnet-20241022",
+        "mechanism_family": "OpenHands",
+        "metadata_blob_sha": "05f2bef62bd1f942e31e32f0267b945f4f859cd9",
+        "result_blob_sha": "bedbdde7a712a491b0eacd4d4bebb5384ab06f1f",
+        "result_size_bytes": 21068,
+        "result_schema": "current"
+      },
+      {
+        "agent_id": "sweagent-claude37sonnet-20250227",
+        "submission": "20250227_sweagent-claude-3-7-20250219",
+        "mechanism_family": "SWE-agent",
+        "metadata_blob_sha": "ed7b19f883bc9fc08ad6f6477c4897c16c367e2d",
+        "result_blob_sha": "3f8d5597f76eace7e96d571ab29d1ce0ca45cb15",
+        "result_size_bytes": 24241,
+        "result_schema": "current"
+      }
+    ],
+    "explicit_duplicate_id_exclusions": [
+      {
+        "submission": "20240402_sweagent_claude3opus",
+        "result_blob_sha": "db2e1d0f1da9cbd6f9bf08df699b400ff27a1b36",
+        "reason": "duplicate IDs occur inside official legacy arrays, including resolved"
+      },
+      {
+        "submission": "20240402_sweagent_gpt4",
+        "result_blob_sha": "086bc8e653f83003e83c271941d0c8607340592c",
+        "reason": "duplicate IDs occur inside the official legacy no_generation array"
+      }
+    ]
+  },
+  "frame": {
+    "minimum_initial_history_tasks": 20,
+    "selection_budget_tasks": 10,
+    "ordering": "created_at then instance_id",
+    "origin_alignment": "For each horizon independently, add the 0 through H-1 Task remainder to the minimum history so every later Task forms a complete non-overlapping future block.",
+    "aggregation": "Agents mean inside Origin, Origins mean inside repository, repositories equally.",
+    "horizons": {
+      "5": {
+        "expected_origin_count": 408,
+        "repository_ids": [
+          "astropy/astropy",
+          "django/django",
+          "matplotlib/matplotlib",
+          "psf/requests",
+          "pydata/xarray",
+          "pylint-dev/pylint",
+          "pytest-dev/pytest",
+          "scikit-learn/scikit-learn",
+          "sphinx-doc/sphinx",
+          "sympy/sympy"
+        ],
+        "repository_origin_counts": {
+          "astropy/astropy": 15,
+          "django/django": 166,
+          "matplotlib/matplotlib": 32,
+          "psf/requests": 4,
+          "pydata/xarray": 18,
+          "pylint-dev/pylint": 7,
+          "pytest-dev/pytest": 19,
+          "scikit-learn/scikit-learn": 41,
+          "sphinx-doc/sphinx": 33,
+          "sympy/sympy": 73
+        }
+      },
+      "10": {
+        "expected_origin_count": 201,
+        "repository_ids": [
+          "astropy/astropy",
+          "django/django",
+          "matplotlib/matplotlib",
+          "psf/requests",
+          "pydata/xarray",
+          "pylint-dev/pylint",
+          "pytest-dev/pytest",
+          "scikit-learn/scikit-learn",
+          "sphinx-doc/sphinx",
+          "sympy/sympy"
+        ],
+        "repository_origin_counts": {
+          "astropy/astropy": 7,
+          "django/django": 83,
+          "matplotlib/matplotlib": 16,
+          "psf/requests": 2,
+          "pydata/xarray": 9,
+          "pylint-dev/pylint": 3,
+          "pytest-dev/pytest": 9,
+          "scikit-learn/scikit-learn": 20,
+          "sphinx-doc/sphinx": 16,
+          "sympy/sympy": 36
+        }
+      }
+    }
+  },
+  "suitability_audit": {
+    "controls": {
+      "always_zero": "predict zero for every target Agent and Origin",
+      "always_one": "predict one for every target Agent and Origin",
+      "full_history": "use every eligible repository-local history Task",
+      "equal_budget_random": "sample ten history Tasks uniformly without replacement per Origin and share that membership across target Agents",
+      "exact_oracle": "after future outcomes are open, solve the exact budget-ten response-pattern subset against the future response vector"
+    },
+    "random": {
+      "draws": 20000,
+      "generator": "NumPy PCG64 random-key uniform subsets",
+      "h5_seed": 2026073005,
+      "h10_seed": 2026073010
+    },
+    "uncertainty": {
+      "repository_bootstrap_resamples": 10000,
+      "h5_seed": 2026073105,
+      "h10_seed": 2026073110,
+      "leave_one_repository_out": true,
+      "report_per_repository": true,
+      "report_per_agent": true
+    },
+    "joint_block_order_null": {
+      "construction": "Within each repository and horizon, keep the end-aligned initial history response rows fixed. Treat every later complete H-row future block as a joint eleven-Agent unit, uniformly permute the order of those blocks, preserve response order inside each block, then recompute rolling full-history MAE.",
+      "destroys": "the observed adjacency and absolute order between future blocks after the initial-history anchor",
+      "preserves": "Task times and Origin positions, the initial-history responses, each future block's internal order, joint Agent response vectors, repository prevalence, and the multiset of future blocks",
+      "statistic": "equal-repository full-history MAE minus the lower-MAE fixed constant among always zero and always one",
+      "draws": 2000,
+      "h5_seed": 2026073205,
+      "h10_seed": 2026073210,
+      "p_value": "(1 + number of null statistics at most observed) / (draws + 1)",
+      "primary_gate_horizon": 5,
+      "alpha": 0.05,
+      "h10_role": "required reported sensitivity, not a second gate"
+    },
+    "gates": {
+      "resolution": "Both horizons have at least 8 repositories, at least 100 Origins, no repository supplies more than half of Origins, the exact normalized 2,294-Task panel has at least 10 observed joint response patterns, and evaluated future outcome-cell density is strictly between 0.05 and 0.95.",
+      "headroom": "At both H5 and H10, exact-oracle MAE is at least 0.02 below full-history MAE.",
+      "nontrivial_prediction": "At both H5 and H10, full-history MAE is at least 0.02 below the better fixed constant and the repository-bootstrap upper endpoint for full minus that constant is below zero.",
+      "chronology": "The H5 joint-block-order null one-sided probability is at most 0.05.",
+      "algorithm_execution": "Run ALG-016U only if resolution, headroom, nontrivial_prediction, and chronology all pass."
+    }
+  },
+  "conditional_algorithm": {
+    "algorithm_id": "ALG-016U",
+    "name": "Unseen Shared Change-Point Response Assembly",
+    "information_contract": "For each target Agent held out completely, only the other ten checked Agents' eligible history outcomes and Task identities/times may enter Selection.",
+    "mechanism": "Use one shared-run-length Bayesian online change-point posterior over the ten visible Beta-Bernoulli response streams. Forecast H steps with posterior-mixture reversion to the local anchor, then select exactly ten history Tasks whose visible response mean minimizes L1 distance to that forecast.",
+    "parameters": {
+      "hazard": "1 / (4H)",
+      "base_prior_mass": 10,
+      "base_prior_mean": "(successes + 0.5) / (history_tasks + 1)",
+      "posterior": "full run-length mixture, not MAP",
+      "materializer": "response-pattern-compressed exact L1 mixed-integer program",
+      "tie_rule": "lexicographic response patterns and newest created_at then instance_id within a selected pattern"
+    },
+    "controls": {
+      "full_history": "primary no-Selection baseline",
+      "ordinary_recency": "latest ten history Tasks",
+      "unseen_full_response_assembly": "same exact L1 materializer targeting the ten visible Agents' full-history response means",
+      "equal_budget_random": "reuse the source-audit distribution",
+      "exact_oracle": "reuse the source-audit capacity diagnostic"
+    },
+    "point_transfer_gate": "ALG-016U minus full-history direct pass-rate MAE is below zero at both H5 and H10.",
+    "robust_transfer_gate": "The point-transfer gate passes; at both horizons the repository-bootstrap upper endpoint is below zero, at least 7 of 10 repositories are favorable, every leave-one-repository-out aggregate is favorable, at least 8 of 11 target-Agent-specific macro differences are favorable, every leave-one-target-Agent-out panel aggregate is favorable, random midrank is at least 0.90, and ALG-016U beats unseen_full_response_assembly.",
+    "practical_effect_diagnostic": "Report whether candidate-minus-full is at most -0.005 at both horizons; this diagnostic does not alter the point or robust transfer labels.",
+    "forbidden_changes": [
+      "changing hazard, prior mass, prior mean, posterior, materializer, tie rule, budget, horizon, or aggregation",
+      "using the held-out target Agent anywhere in forecast or membership materialization",
+      "using current or later future Tasks or outcomes",
+      "adding another algorithm after reading results",
+      "choosing only the favorable horizon, repository subset, or Agent subset"
+    ]
+  },
+  "bound_prior_artifacts": {
+    "alg_016u_plan": {
+      "path": "examples/prequential_response_assembly/plan.json",
+      "file_sha256": "cd80fc59091c4b254fa32c3dcc20bf20bddc030fcd1efbf05188cec2031ea84f",
+      "logical_digest": "f1517fd04a97fc584b8df0f3c3d6be59bd3569a52bbad91694835de15558c84b"
+    },
+    "alg_016u_implementation": {
+      "path": "examples/prequential_response_assembly/study.py",
+      "file_sha256": "4455711d972a7ec5b4d446420f48e489e60274b5f36f90bb4162ccee122b1515"
+    },
+    "external_inventory_plan": {
+      "path": "examples/external_benchmark_inventory/inventory-plan.json",
+      "file_sha256": "016adbe26f2b5cf1ec8011fb739567cb7f85da4b2cb6b28d19556c6c70e698da"
+    },
+    "external_inventory_result": {
+      "path": "examples/external_benchmark_inventory/inventory-results.json",
+      "file_sha256": "ca7b7078c8758b7de6d2571bf6e7c3166f89df3ddca587c7dc56c4756e7cc532",
+      "logical_digest": "f4436fd642f6a229cfbf5dfd0a20e4d5175def8dfaa9a46cd830a41d0e335df8"
+    },
+    "external_source_audit": {
+      "path": "docs/experiments/2026-07-28-external-benchmark-source-audit.md",
+      "file_sha256": "91ccc0a79fb2a85d8f186ab9d66d169135149040518c9359b1bab314cca1d261"
+    }
+  },
+  "reproduction": {
+    "python_version": "3.14.0",
+    "numpy_version": "2.5.1",
+    "scipy_version": "1.16.3",
+    "pyarrow_version": "25.0.0",
+    "required_runs": 2,
+    "comparison": "canonical JSON must be byte-identical"
+  },
+  "authority": {
+    "paid_api_calls": 0,
+    "new_agent_outcome_calls": 0,
+    "sealed_swe_bench_verified_agent_reads": 0,
+    "generator_development": false,
+    "core_schema_changes": 0,
+    "allowed_network_reads_after_plan_commit": "Only the eleven exact allowlisted Full result blobs at the pinned result revision.",
+    "raw_result_policy": "Keep downloaded official results, per-Origin memberships, and raw run artifacts under ignored outputs; commit only the frozen plan, tests and executor, compact self-digested evidence, report, ledger, and handoff."
+  },
+  "claim_boundary": "SWE-bench Full is an outcome-open, source-time counterfactual source in the same benchmark and repository family as Verified. A positive result supports exploratory mechanism portability only. It cannot establish independent confirmation, prospective Result availability, workload relevance, production usefulness, or a default Selector.",
+  "plan_digest": "1c37db6ebd2b65a4acdb81c4e75aec1fcab54a7db31e84558c7435d5dadc4b32"
+}
