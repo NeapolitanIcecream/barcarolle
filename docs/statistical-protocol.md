@@ -246,6 +246,51 @@ extension is a sequence of independently validated repository-local training
 evidence groups that produces the existing `SelectorRecord`; inference remains
 one-Task-Pool, repository-local.
 
+## Deployment Unit And Estimand
+
+The product deployment unit is one target Agent and one repository. For method
+`m`, retain the direct loss
+
+`L_m(r, o, a) = abs(selected_rate_m(r, o, a) - future_rate(r, o, a))`
+
+before every aggregation. The paired effect is
+
+`d_m(r, o, a) = L_m(r, o, a) - L_full(r, o, a)`.
+
+The current repository-equal summary is the realized average loss or paired
+effect on the exact finite Agent-by-repository-by-Origin panel. It does not by
+itself identify the expected loss of a particular Agent-by-repository
+deployment unit or of a new Agent or repository population. Such an expectation
+requires a declared target distribution and a sampling, stationarity, or
+exchangeability assumption.
+
+Every committed development summary must retain Agent-by-repository joint
+cells in addition to repository and Agent marginals. For each candidate report
+cell origin count, MAE, paired difference, favorable/harmful/tie counts, simple
+quantiles, and the worst harm. Repository and Agent marginals can both be
+favorable while one joint cell is harmful.
+
+These cell summaries describe heterogeneity on the opened finite panel. Unless
+frozen from a target utility before scoring, favorable-cell counts, quantiles,
+and worst harm are descriptive diagnostics, not additional promotion gates or
+estimates of future deployment-cell effects.
+
+Keep these targets distinct:
+
+- realized next-H fidelity treats the observed next-H block as the target
+  cohort. Once observed, its pass rate is not a noisy estimate requiring
+  correction; uncertainty concerns performance over other Origins or future
+  cohorts;
+- latent target-task-distribution pass probability treats next-H as a sample
+  from a declared population and requires a separately frozen target
+  population, sampling or measurement model, and dependence assumptions.
+
+Do not interpret the first as the second. Under absolute loss, a point forecast
+of a random future rate, when the action is an unconstrained scalar, targets a
+conditional median. A budgeted Task Selection is a constrained subset action
+and need not attain that median. Direct realized next-H MAE remains primary; a
+variance model, reliability coefficient, or latent-rate estimate is diagnostic.
+
 ## Primary Baseline And Landscape Diagnostics
 
 For the current future-pass-rate fidelity claim, the primary baseline is every
@@ -271,6 +316,26 @@ baseline. A target-Agent expanding climatology is admissible only in a
 cached-target lane; it cannot gate an unseen-target Selector. These diagnostics
 determine whether a low absolute MAE reflects nontrivial prediction or only
 outcome prevalence and discrete score support.
+
+For every small future horizon, also report:
+
+- H-block score granularity and zero/one block shares;
+- Full and trivial MAE at fixed H sensitivities;
+- empirical adjacent-block and split-block stability;
+- an exact descriptive decomposition of realized future-block variation into
+  fitted Agent, repository, Agent-by-repository, and within-cell block
+  components on the opened frame;
+- a clearly labeled finite-block variance approximation.
+
+These fitted sample-mean components are not population variance estimates,
+causal shares, reliability coefficients, or proof of temporal stability.
+Do not treat Tasks as IID Bernoulli draws unless the source design establishes
+that assumption. A `1/H` variance pattern is evidence consistent with finite
+block averaging, not proof that all remaining variation is sampling noise.
+
+Every pairwise control comparison must use identical rows. If a lagged control
+is unavailable on early rows, report its coverage and recompute the candidate
+or baseline on that matched subset.
 
 Keep two claims separate:
 
@@ -323,6 +388,12 @@ density, but cannot enter Selection or be reported as learnable algorithms.
 Low support loss does not establish that pre-origin features can identify the
 corresponding subset.
 
+A future-open reference-Agent Oracle additionally measures contemporaneous
+cross-Agent capacity. It does not establish that the reference vector can be
+forecast from history or that its macro gain transfers to every
+Agent-by-repository cell. Report its joint-cell directions and compare
+same-future association with the corresponding pre-Origin lagged association.
+
 A response-matrix or Item Response Theory subset is first a fixed-universe
 compression comparator. Fit item parameters only from reference-Agent Results
 available before the evaluation boundary, then freeze the subset before
@@ -343,7 +414,9 @@ circular shift preserves response prevalence, Agent dependence, and almost all
 local and long-range adjacency; it tests absolute phase alignment with fixed
 Origin cutoffs, not whether chronology contains any predictive structure.
 Shuffling complete adjacent H-task blocks destroys block order while preserving
-within-block joint responses and instead tests block-level persistence. An
+within-block joint responses and instead tests block-level persistence. When
+multiple Agents share a block, use one common block order per repository so the
+null also preserves same-block cross-Agent dependence. An
 unrestricted row permutation asks a still different, stronger
 exchangeability question. Report these probabilities separately and do not
 use failure of a narrow null to reject mechanisms outside that null.

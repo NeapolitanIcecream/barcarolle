@@ -2,6 +2,11 @@
 
 Date: 2026-07-30.
 
+Interpretation corrected after the
+[estimand and reliability audit](2026-07-30-swe-bench-full-estimand-reliability-audit.md).
+The frozen numbers are unchanged. The earlier random and Oracle interpretation
+was too broad.
+
 ## Question
 
 For each target Agent and repository, can a method use historical Task data and
@@ -48,16 +53,18 @@ Two complete executions produced identical memberships and results.
 No candidate beat Full at either horizon. ALG-015U was nearly tied at H5;
 stationary response matching was best among the candidates at H10.
 
-The candidates were not random-quality selections. Their random midranks
-ranged from `0.92435` to `0.99960` at H5 and `0.88930` to `0.99675` at H10.
-Full itself had random midranks `0.99970` and `0.99975`. Selection therefore
-used real structure but did not recover enough future shift to offset the
-sampling variance introduced by reducing Full history to ten Tasks.
+The candidate random midranks ranged from `0.92435` to `0.99960` at H5 and
+`0.88930` to `0.99675` at H10. Full itself had random midranks `0.99970` and
+`0.99975`. These values show lower macro budget-ten sampling loss than most
+draws from that frozen random policy. They do not establish future-predictive
+structure or improvement for most Agent-by-repository cells.
 
-The negative result is not a single-repository artifact. A candidate was
-favorable in only two to four of ten repositories, depending on method and
-horizon. The candidate memberships also did not collapse: pairwise exact
-equality was generally `2%–24%`, with mean Jaccard overlap `0.62–0.78`.
+A candidate was favorable in only two to four of ten repository marginals,
+depending on method and horizon. The candidate memberships also did not
+collapse: pairwise exact equality was generally `2%–24%`, with mean Jaccard
+overlap `0.62–0.78`. The later joint-cell audit found that each candidate
+improves the six-Agent RAG group mean and harms the five-Agent other-group mean
+at both horizons.
 
 ## Failure localization
 
@@ -78,21 +85,27 @@ horizons. Its repository-bootstrap interval for the difference was
 `[-0.020721, -0.004580]` at H5 and `[-0.016253, -0.004128]` at H10. It helped
 all eleven target Agents at H5 and ten of eleven at H10.
 
+Those marginals hide joint-cell failures. The reference Oracle helps, harms,
+and ties `71/17/22` Agent-by-repository cells at H5 and `68/20/22` at H10. Its
+result is macro capacity, not a guarantee for one target Agent and repository.
+
 This separates three possible explanations:
 
 1. The ten-Task history pool has ample capacity: the target-future Oracle is
    near zero. H5 and H10 future rates lie on grids compatible with a ten-Task
    selected pass rate, so this is a feasibility result rather than evidence of
    a complex mechanism.
-2. Other Agents' response geometry contains transferable signal: a target-
-   hidden perfect reference forecast beats Full.
-3. The exact response matcher can turn that signal into a better Selection.
+2. Other Agents' same-future response geometry contains contemporaneous macro
+   signal: a target-hidden future-open reference vector beats Full on average.
+3. The exact response matcher can turn perfect contemporaneous information into
+   a lower macro loss, although local Agent-by-repository transport is
+   unreliable.
 
-Within the tested response-matching family, the main missing component is
-therefore a sufficiently accurate forecast of the next reference-Agent
-response regime and a budget-ten action that is robust to forecast error. The
-current coordinate-wise expert, shared change-point, and coarse Markov
-forecasts do not provide it.
+Within the tested response-matching family, open problems include forecasting
+the next reference-Agent residual, transferring that residual to a particular
+target Agent and repository, and making a budget-ten action robust to forecast
+error. The current coordinate-wise expert, shared change-point, and coarse
+Markov forecasts do not solve this combined problem.
 
 This conclusion has limits. The reference-future Oracle recovers about `17.0%`
 of target-Oracle headroom at H5 and `16.5%` at H10. It proves that the current
@@ -104,29 +117,25 @@ response forecasting is the project's only useful route.
 
 ## Decision
 
-Do not nominate a Selector from this wave. Do not reopen source suitability,
-Result timestamps, Agent identity separation, or Task Pool capacity as the
-primary explanation for this result. Keep forecast uncertainty and discrete
-materialization coupled until the next decomposition measures them separately.
+Do not nominate a Selector from this wave. The post-result audit found that
+an exact descriptive decomposition assigns `50.89%` of H5 and `67.68%` of H10
+realized variation to fitted Agent, repository, and interaction sample means,
+while within-cell variance scales almost linearly with `1/H`. These are
+in-sample descriptions, not population variance or reliability estimates. The
+current aggregate result does not establish that Selection predicts temporal
+deviations from Full.
 
-The next algorithm wave should first localize the response-family error:
+Permit only one bounded response forecast replay:
 
-1. report forecast-to-future response L1, selected-to-forecast L1,
-   selected-to-future response L1, reference-Oracle regret, and final
-   target-Agent direct MAE;
-2. report the same repository-first H5/H10 and per-Agent directions, so a
-   better surrogate cannot hide a worse Selection;
-3. measure a predeclared noise-to-regret curve around the reference Oracle to
-   learn how accurate a forecast must be before Selection beats Full;
-4. if the decomposition supports more response work, freeze at most three
-   distinct mechanisms: repository-aware empirical-Bayes shrinkage, a
-   rank-one shared-difficulty forecast, and a reliability-shrunk or minimax
-   action;
-5. if historical responses have no stable predictable increment, stop adding
-   response models and run one frozen task-only semantic or repository-process
-   route;
-6. use Full for development and seek a separate boundary only after a
-   candidate exists.
+1. compare only Full, stationary response matching, and ALG-015U;
+2. report forecast error, materialization error, and final direct MAE;
+3. retain every Agent-by-repository paired cell and repository leave-one-out
+   direction;
+4. report whether a gain is confined to the post-hoc RAG subgroup; that
+   narrows the claim and blocks broad-Agent nomination without redefining the
+   primary finite-panel result;
+5. stop response-model work if no stable direct-MAE increment remains at H5 or
+   H10, then open one frozen Task-content or repository-process route.
 
 Forecast and materialization loss may guide diagnosis but must not replace
 direct pass-rate MAE.
@@ -144,9 +153,12 @@ No paid calls or new outcomes are needed for this next wave.
 - diagnostic plan:
   `examples/swe_bench_full_development/diagnostic-plan.json`;
 - diagnostic result:
-  `examples/swe_bench_full_development/evidence/diagnostic-summary.json`.
+  `examples/swe_bench_full_development/evidence/diagnostic-summary.json`;
+- superseding interpretation audit:
+  `examples/swe_bench_full_estimand_audit/evidence/summary.json`.
 
-The frozen plans bind their direct implementation and evidence inputs but not
-every transitive imported module. The two byte-identical runs and Git commits
-make this result auditable; the next plan should bind the complete execution
-commit or tree instead of enumerating only selected files.
+The frozen development plans bind their direct implementation and evidence
+inputs but not every transitive imported module. The superseding estimand audit
+corrects this by binding a canonical manifest of all repository Python
+execution sources and dependency declarations; future evidence plans should
+retain that complete-source and pinned-runtime rule.
