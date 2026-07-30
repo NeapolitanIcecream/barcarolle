@@ -1,15 +1,38 @@
 {
-  "schema_version": "barcarolle_swe_bench_full_estimand_audit_plan_v1",
-  "study_id": "swe-bench-full-estimand-and-reliability-audit-2026-07-30",
+  "schema_version": "barcarolle_swe_bench_full_estimand_audit_plan_v2",
+  "study_id": "swe-bench-full-estimand-and-reliability-audit-2026-07-30-v2",
   "frozen_at": "2026-07-30T08:25:00Z",
-  "status": "post_anomaly_outcome_open_diagnostic_contract",
+  "amended_at": "2026-07-30T08:58:08Z",
+  "status": "post_anomaly_outcome_open_exploratory_contract_amended_before_final_interpretation",
+  "contract_history": {
+    "confirmatory_status": "None. The audit is outcome-open and exploratory.",
+    "initial_freeze": {
+      "commit": "14694645",
+      "plan_digest": "6cb3de04a8fcca92494fdbffe07356494fc676c4b4a799f84c31816d2879f477"
+    },
+    "pre_interpretation_amendments": [
+      {
+        "commit": "b90b59ce",
+        "plan_digest": "cda05fd3f7b6a5c2d3e39121da163a2828e6f4681775e74f12eca6f7e7ff552f",
+        "reason": "Declare the SciPy solver dependency used by the already-frozen future-open Oracle diagnostic."
+      },
+      {
+        "commit": "f6da806c",
+        "plan_digest": "4da2e3ab3e145350506cbb64a9eac0836acb4598c36d3287d312ca24f0848f97",
+        "reason": "Retain all eligible repositories in long-horizon lag diagnostics."
+      },
+      {
+        "reason": "Independent adversarial review found that per-Agent order shuffles destroyed same-block cross-Agent dependence. Version 2 uses one shared multivariate block permutation per repository, records matched H40 controls, pins the runtime and complete execution-source manifest, and corrects descriptive labels. This amendment was made after initial outputs were visible and its permutation result is post-hoc."
+      }
+    ]
+  },
   "research_contract": {
-    "question": "Does the current repository-equal direct-MAE headline demonstrate useful within-repository future Selection, or is it dominated by stable Agent-by-repository prevalence and finite future-block variation?",
+    "question": "What does the current repository-equal direct-MAE headline measure, and does it demonstrate useful within-repository future Selection beyond fitted Agent-by-repository means and finite future-block variation?",
     "observable_evidence": [
       "the fixed Agent-by-repository pass-rate distribution",
       "always-zero, Full-history, previous-block, and candidate direct MAE on the same rolling frame",
       "Agent-by-repository paired candidate-minus-Full cells rather than only repository and Agent marginals",
-      "an orthogonal decomposition of realized future-block variance",
+      "an exact descriptive finite-panel decomposition of realized future-block variation",
       "future-block stability and order diagnostics at H5, H10, H20, and H40",
       "lagged versus same-future cross-Agent residual association",
       "future-open Oracle Agent-by-repository cells omitted by the earlier summary"
@@ -45,7 +68,7 @@
   "diagnostics": {
     "permutation_replicates": 2000,
     "permutation_seed": 20260730,
-    "permutation_unit": "shuffle complete future-block order independently inside each Agent-by-repository cell",
+    "permutation_unit": "shuffle complete multivariate Agent outcome blocks with one shared order inside each repository, preserving same-block cross-Agent dependence",
     "agent_groups": "six source-labeled RAG submissions versus the five remaining checked submissions; post-hoc failure localization only",
     "variance_components": [
       "Agent",
@@ -58,12 +81,18 @@
     "oracle_role": "recover joint cells and audit macro capacity; do not rank or deploy an Oracle"
   },
   "reproduction": {
-    "command": "uv run --with numpy --with scipy --with pyarrow python examples/swe_bench_full_estimand_audit/audit.py run",
+    "command": "uv run --python 3.14.0 --with numpy==2.5.1 --with scipy==1.16.3 --with pyarrow==25.0.0 python examples/swe_bench_full_estimand_audit/audit.py run",
     "required_packages": [
-      "numpy",
-      "scipy",
-      "pyarrow"
+      "numpy==2.5.1",
+      "scipy==1.16.3",
+      "pyarrow==25.0.0"
     ],
+    "runtime": {
+      "python": "3.14.0",
+      "numpy": "2.5.1",
+      "scipy": "1.16.3",
+      "pyarrow": "25.0.0"
+    },
     "determinism": "All permutations use the frozen seed; the output is self-digested."
   },
   "bound_artifacts": {
@@ -123,7 +152,9 @@
     }
   },
   "implementation": {
-    "audit_file_sha256": "1ea03e61e15d058efc831639de0da351423ac30fccb6425b7a20da3360806747"
+    "audit_file_sha256": "16251e31390975a5e928694e76f2eabeac6af69d99e801facc2cb52a66e739d1",
+    "execution_source_file_count": 61,
+    "execution_source_manifest_digest": "5699ea378f6e60ea242a99c1c5bd993a207c604d00b82056eec1988fa3a3a95e"
   },
   "authority": {
     "paid_api_calls": 0,
@@ -135,5 +166,5 @@
   },
   "source_policy": "Use the already-open pinned SWE-bench Full Tasks and checked Agent outcomes. Primary literature may inform interpretation but cannot replace local direct-MAE evidence.",
   "claim_boundary": "This adaptive post-anomaly audit can correct interpretation and identify the next discriminating experiment. It cannot confirm a Selector, establish IID sampling noise, or generalize beyond the fixed opened Agent and repository frame.",
-  "plan_digest": "4da2e3ab3e145350506cbb64a9eac0836acb4598c36d3287d312ca24f0848f97"
+  "plan_digest": "6d1c3237967d859f89352dccec4d4d865b099c6c3f6434084269b967c97f181f"
 }

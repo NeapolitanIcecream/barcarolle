@@ -7,10 +7,12 @@ from __future__ import annotations
 # pyright: reportMissingImports=false, reportMissingModuleSource=false
 import argparse
 import json
+import platform
 import random
 import sys
 from collections.abc import Mapping, Sequence
 from hashlib import sha256
+from importlib.metadata import version
 from itertools import pairwise
 from math import fsum, isfinite, sqrt
 from pathlib import Path
@@ -43,8 +45,8 @@ REPOSITORY_ROOT = HERE.parents[1]
 DEFAULT_PLAN = HERE / "plan.json"
 DEFAULT_OUTPUT = HERE / "evidence" / "summary.json"
 
-PLAN_SCHEMA = "barcarolle_swe_bench_full_estimand_audit_plan_v1"
-SUMMARY_SCHEMA = "barcarolle_swe_bench_full_estimand_audit_summary_v1"
+PLAN_SCHEMA = "barcarolle_swe_bench_full_estimand_audit_plan_v2"
+SUMMARY_SCHEMA = "barcarolle_swe_bench_full_estimand_audit_summary_v2"
 SUMMARY_DIGEST_KEY = "summary_digest"
 
 ALGORITHM_IDS = (
@@ -116,6 +118,15 @@ def load_plan(
             "audit_file_sha256",
         ):
             raise ValueError("estimand audit implementation changed")
+        manifest = _execution_source_manifest()
+        if len(manifest) != _positive_integer(
+            implementation, "execution_source_file_count"
+        ) or canonical_digest(manifest) != _required_string(
+            implementation,
+            "execution_source_manifest_digest",
+        ):
+            raise ValueError("estimand audit execution source tree changed")
+        _validate_runtime(payload)
     return payload
 
 
@@ -262,6 +273,11 @@ def run_audit(plan: Mapping[str, Any]) -> Mapping[str, Any]:
         "plan_digest": plan.get("plan_digest"),
         "epistemic_status": (
             "outcome-open post-anomaly estimand and reliability audit"
+        ),
+        "runtime": _runtime_identity(),
+        "execution_source_manifest_digest": _required_string(
+            _mapping(plan, "implementation"),
+            "execution_source_manifest_digest",
         ),
         "input_identities": dict(identities),
         "agent_groups": agent_groups,
@@ -440,6 +456,15 @@ def summarize_future_blocks(
             _macro_mean(
                 previous_rows,
                 "previous_block_loss",
+                repository_ids,
+            )
+            if previous_rows
+            else None
+        ),
+        "previous_block_matched_full_mae": (
+            _macro_mean(
+                previous_rows,
+                "full_history_loss",
                 repository_ids,
             )
             if previous_rows
@@ -629,9 +654,9 @@ def summarize_horizon_scaling(
         "agent_by_block_residual_variance_fit": residual_fit,
         "interpretation": (
             "A near-linear relation with 1/H is consistent with finite-block "
-            "averaging dominating the within-cell variation. The four nested "
-            "coarsenings are descriptive, not independent observations or an "
-            "IID noise proof."
+            "averaging being a major contributor to within-cell variation. "
+            "The four nested coarsenings are descriptive, not independent "
+            "observations or an IID noise proof."
         ),
     }
 
@@ -796,7 +821,7 @@ def _orthogonal_variance_components(
             key: value / total_variance if total_variance > 0.0 else None
             for key, value in components.items()
         },
-        "stable_agent_repository_fraction": (
+        "block_invariant_mean_component_fraction": (
             stable / total_variance if total_variance > 0.0 else None
         ),
         "within_cell_block_fraction": (
@@ -856,11 +881,11 @@ def temporal_reliability(
     generator = random.Random(permutation_seed)
     null_values = []
     for _ in range(permutation_replicates):
-        permuted = {}
-        for key, sequence in sequences.items():
-            values = list(sequence)
-            generator.shuffle(values)
-            permuted[key] = tuple(values)
+        permuted = _permute_sequences_by_repository(
+            sequences,
+            repository_ids,
+            generator,
+        )
         null_values.append(
             _repository_equal_adjacent_covariance(
                 permuted,
@@ -935,11 +960,11 @@ def temporal_reliability(
 
     return {
         "adjacent_pair_count": len(adjacent_x),
-        "raw_adjacent_block_correlation": _correlation(
+        "pooled_raw_adjacent_block_correlation": _correlation(
             adjacent_x,
             adjacent_y,
         ),
-        "within_cell_adjacent_block_correlation": _correlation(
+        "pooled_within_cell_adjacent_block_correlation": _correlation(
             centered_x,
             centered_y,
         ),
@@ -1182,6 +1207,8 @@ def summarize_candidates(
         prevalence = tuple(_number(row["denominator_pass_rate"]) for row in cell_rows)
         per_candidate[candidate_id] = {
             "favorable_cell_count": sum(value < 0.0 for value in differences),
+            "harmful_cell_count": sum(value > 0.0 for value in differences),
+            "tie_cell_count": sum(value == 0.0 for value in differences),
             "cell_count": len(differences),
             "median_cell_difference": _quantile(differences, 0.5),
             "cell_difference_quantiles": {
@@ -1191,6 +1218,10 @@ def summarize_candidates(
             "spearman_difference_vs_denominator_pass_rate": _spearman(
                 prevalence,
                 differences,
+            ),
+            "worst_harm_cell": max(
+                cell_rows,
+                key=lambda row: _number(row["candidate_minus_full"][candidate_id]),
             ),
         }
     return {
@@ -1359,13 +1390,13 @@ def diagnose(horizons: Mapping[str, Mapping[str, Any]]) -> Mapping[str, Any]:
     group_reversal = any(
         any(
             _number(
-                payload["candidate_audit"]["agent_group_macro"]["legacy_rag"][
+                payload["candidate_audit"]["agent_group_macro"]["rag_submissions"][
                     "candidate_minus_full"
                 ][candidate_id]
             )
             < 0.0
             and _number(
-                payload["candidate_audit"]["agent_group_macro"]["later_non_rag"][
+                payload["candidate_audit"]["agent_group_macro"]["other_submissions"][
                     "candidate_minus_full"
                 ][candidate_id]
             )
@@ -1380,13 +1411,13 @@ def diagnose(horizons: Mapping[str, Mapping[str, Any]]) -> Mapping[str, Any]:
         "no_panel_candidate_beats_full": no_panel_candidate_beats_full,
         "agent_group_direction_reversal_present": group_reversal,
         "algorithm_route": (
-            "pause new candidate optimization until the estimand and "
-            "future-block reliability are resolved"
+            "permit one bounded history-only residual replay; do not broaden "
+            "candidate optimization"
         ),
         "supported_interpretation": (
-            "The current headline is a panel summary. It mixes static "
-            "Agent-by-repository prevalence, temporal variation, and finite-"
-            "block noise; it is not a pass-rate estimate for one deployment "
+            "The current headline is a realized finite-panel summary. It "
+            "mixes fitted Agent-by-repository means with within-frame block "
+            "variation; it is not a pass-rate estimate for one deployment "
             "Agent and repository."
         ),
         "not_established": (
@@ -1473,18 +1504,40 @@ def _candidate_cell_stratum(
 def _agent_groups(
     metadata: Mapping[str, Mapping[str, str]],
 ) -> Mapping[str, tuple[str, ...]]:
-    legacy = tuple(
+    rag = tuple(
         agent_id
         for agent_id in sorted(metadata)
         if metadata[agent_id]["mechanism_family"] == "RAG"
     )
-    later = tuple(agent_id for agent_id in sorted(metadata) if agent_id not in legacy)
-    if len(legacy) != 6 or len(later) != 5:
+    other = tuple(agent_id for agent_id in sorted(metadata) if agent_id not in rag)
+    if len(rag) != 6 or len(other) != 5:
         raise ValueError("SWE-bench Full descriptive Agent groups changed")
     return {
-        "legacy_rag": legacy,
-        "later_non_rag": later,
+        "rag_submissions": rag,
+        "other_submissions": other,
     }
+
+
+def _permute_sequences_by_repository(
+    sequences: Mapping[tuple[str, str], Sequence[float]],
+    repository_ids: Sequence[str],
+    generator: random.Random,
+) -> Mapping[tuple[str, str], tuple[float, ...]]:
+    """Permute block order while preserving each repository's Agent vector."""
+    permuted = {}
+    for repository_id in repository_ids:
+        repository_keys = tuple(key for key in sequences if key[0] == repository_id)
+        if not repository_keys:
+            raise ValueError("repository has no Agent sequences")
+        block_count = len(sequences[repository_keys[0]])
+        if any(len(sequences[key]) != block_count for key in repository_keys):
+            raise ValueError("repository Agent block counts differ")
+        order = list(range(block_count))
+        generator.shuffle(order)
+        for key in repository_keys:
+            sequence = sequences[key]
+            permuted[key] = tuple(sequence[index] for index in order)
+    return permuted
 
 
 def _repository_ids(
@@ -1852,6 +1905,43 @@ def _bound_path(plan: Mapping[str, Any], binding_id: str) -> Path:
     return REPOSITORY_ROOT / _required_string(binding, "path")
 
 
+def _runtime_identity() -> Mapping[str, str]:
+    return {
+        "python": platform.python_version(),
+        "numpy": version("numpy"),
+        "scipy": version("scipy"),
+        "pyarrow": version("pyarrow"),
+    }
+
+
+def _validate_runtime(plan: Mapping[str, Any]) -> None:
+    expected = _mapping(_mapping(plan, "reproduction"), "runtime")
+    if _runtime_identity() != expected:
+        raise ValueError("estimand audit runtime changed")
+
+
+def _execution_source_manifest() -> tuple[Mapping[str, str], ...]:
+    """Bind all repository Python sources plus dependency declarations."""
+    paths = [
+        REPOSITORY_ROOT / "pyproject.toml",
+        REPOSITORY_ROOT / "uv.lock",
+    ]
+    for directory in ("barcarolle", "examples"):
+        paths.extend(
+            path
+            for path in (REPOSITORY_ROOT / directory).rglob("*.py")
+            if "__pycache__" not in path.parts
+        )
+    unique_paths = sorted(set(paths))
+    return tuple(
+        {
+            "path": str(path.relative_to(REPOSITORY_ROOT)),
+            "file_sha256": _file_sha256(path),
+        }
+        for path in unique_paths
+    )
+
+
 def validate_summary(
     plan: Mapping[str, Any],
     summary: Mapping[str, Any],
@@ -1863,6 +1953,13 @@ def validate_summary(
         or summary.get(SUMMARY_DIGEST_KEY) != canonical_digest(body)
     ):
         raise ValueError("estimand audit summary is invalid")
+    implementation = _mapping(plan, "implementation")
+    if summary.get("runtime") != _mapping(
+        _mapping(plan, "reproduction"), "runtime"
+    ) or summary.get("execution_source_manifest_digest") != implementation.get(
+        "execution_source_manifest_digest"
+    ):
+        raise ValueError("estimand audit reproduction identity is invalid")
     resource_use = _mapping(summary, "resource_use")
     if any(resource_use.get(key) != 0 for key in resource_use):
         raise ValueError("estimand audit used a forbidden resource")
