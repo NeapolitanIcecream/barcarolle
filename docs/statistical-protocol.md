@@ -1,6 +1,6 @@
 # Statistical Protocol
 
-Status: current offline contract, 2026-07-28. Empirical thresholds and model
+Status: current offline contract, 2026-07-30. Empirical thresholds and model
 claims remain pending until a larger authorized paired history exists.
 
 This document fixes the statistical meanings used by rolling-origin evaluation.
@@ -242,6 +242,45 @@ For the current future-pass-rate fidelity claim, the primary baseline is every
 eligible historical Task/Check ref without Selection. Its benchmark may be
 larger and more expensive than the selected benchmark; that is the compression
 comparison.
+
+Before interpreting a candidate, report whether the Task Pool, Agent panel,
+horizon, and aggregation form an informative regime for pass-rate MAE. At
+minimum report:
+
+- positive outcome density by Agent and repository;
+- the shares of Agent-Origin future blocks with pass rate zero and one;
+- always-zero and always-one MAE;
+- a cutoff-safe constant forecast fitted only from earlier Origin blocks,
+  using a median when it is optimized for absolute loss;
+- full-history MAE;
+- equal-budget random loss and discrete hindsight-oracle loss.
+
+These controls do not replace full history as the primary no-Selection
+baseline. They determine whether a low absolute MAE reflects temporal
+prediction or only outcome prevalence and discrete score support. A candidate
+that improves full history but does not beat the strongest trivial control
+cannot support an algorithm-validity claim.
+
+When `MAE_trivial > MAE_oracle`, also report
+
+`captured_headroom = (MAE_trivial - MAE_candidate) / (MAE_trivial - MAE_oracle)`.
+
+Keep direct MAE primary and random percentile separate. Do not report the ratio
+when its denominator is zero or when the trivial and oracle rows use different
+evidence.
+
+An observed failure region is a frozen combination of Task Pool, Agent panel,
+horizon, and aggregation in which the intended prediction claim cannot be
+separated from a trivial estimator or metric support. A failure-region label
+does not invalidate the source for every Agent panel or use. Use such a panel
+for stress and capacity diagnostics, do not rescue-tune opened candidates on
+it, and require a new evidence boundary before treating it as a main
+development region. Freeze deployment-specific suitability thresholds before
+candidate outcomes; do not derive a universal threshold from one opened panel.
+
+The current Multi-SWE projection with its 36 public configurations is one
+measured failure region. Its evidence and exact claim boundary are recorded in
+[`experiments/2026-07-30-multi-swe-failure-region.md`](experiments/2026-07-30-multi-swe-failure-region.md).
 
 An equal-budget random Selection is calibration, not the primary baseline.
 Report its loss distribution or a predeclared seed bank and locate the
