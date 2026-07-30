@@ -46,7 +46,9 @@ historical outcomes and must be reported separately.
 ## Baselines
 
 - Full history is the no-Selection baseline.
-- Uniform random ten-Task subsets locate a method in the sampling space.
+- The frozen random policy samples one ten-Task subset per Origin and shares it
+  across target Agents. Its distribution is a calibration reference, not a
+  p-value or every possible random policy.
 - The existing future-open Oracle measures the best attainable subset and is
   not an algorithm.
 - The best previously measured method under the same input rules is the
@@ -54,33 +56,50 @@ historical outcomes and must be reported separately.
 
 ## Current Evidence
 
-On Full:
+The frozen Full development wave compared recency, stationary response
+matching, ALG-010, ALG-015U, and ALG-016U. Two complete runs were identical.
 
-| Diagnostic | H5 | H10 |
+| Method | H5 MAE | H10 MAE |
 | --- | ---: | ---: |
-| Full-history MAE | `0.078554` | `0.062579` |
-| Random mean MAE | `0.086606` | `0.073798` |
-| Oracle MAE | `0.013093` | `0.007353` |
+| Full history | `0.078554` | `0.062579` |
+| Best ten-Task candidate | ALG-015U `0.078673` | stationary `0.064299` |
+| Reference-future Oracle | `0.065864` | `0.052649` |
+| Target-future Oracle | `0.004013` | `0.002395` |
 
-Full has enough variation and Selection headroom for algorithm development.
-Its block-order diagnostic is `p=0.126437` at H5. That result closed one
-conditional ALG-016U plan; it is not a general gate on further algorithms.
-ALG-016U still has no Full MAE.
+No implementable candidate beat Full. The candidates were nevertheless better
+than most random ten-Task subsets and selected materially different
+memberships.
 
-The old plan, result, and summary remain unchanged. New work uses a separate
-outcome-open development plan and cannot retroactively change the old gate.
+The future-open reference Oracle hides the target Agent but knows the other ten
+Agents' next-H response rates. It beat Full by `0.012690` at H5 and `0.009930`
+at H10, helped eight of ten repositories at both horizons, and had
+repository-bootstrap intervals below zero. The history pool, cross-Agent
+response signal, and exact matcher therefore have useful capacity. Within the
+tested response-matching family, the main unresolved component is forecasting
+the next reference-response regime and turning an uncertain forecast into a
+robust budget-ten action. The reference Oracle recovers only about 17% of the
+target-future Oracle headroom, so this is not a claim that response forecasting
+is the project's only possible route.
+
+The earlier H5 block-order result `p=0.126437` remains a diagnostic that closed
+one old conditional plan; it is not a gate on this development evidence.
 
 ## Next Action
 
-Freeze and run a bounded Full development portfolio. At minimum compare
-ordinary recency, stationary response matching, adaptive expert response
-matching, and ALG-016U at H5 and H10. Add a task-content family only as a
-separate mechanism, not as parameter rescue.
+First decompose each existing response method into forecast error,
+materialization error, realized reference mismatch, and final target-Agent MAE.
+Then freeze at most three new directions: repository-aware empirical-Bayes
+shrinkage, a rank-one shared-difficulty forecast, and a reliability-shrunk or
+minimax budget-ten action. Partial pooling learns from multiple research
+repositories; every runtime Origin and Selection remains inside one target
+repository.
 
-Report direct MAE, candidate minus Full, random position, repository and Agent
-directions, and uncertainty. Development-set results decide what to keep or
-discard. A later data boundary is needed only after a candidate exists and we
-want to check that the choice was not specific to Full.
+Forecast and materialization losses are explanatory only; they cannot replace
+direct MAE. If historical responses show no stable forecastable increment,
+switch one bounded wave to a task-only semantic or repository-process route.
+Do not reopen source admission, Result timestamps, disjoint development Agent
+identities, or Task Pool capacity without new evidence. Seek a separate
+confirmation boundary only after a candidate beats Full on development.
 
 No paid Agent run, Generator work, generic source framework, or core-schema
 change is needed.

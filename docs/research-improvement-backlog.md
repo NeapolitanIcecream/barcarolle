@@ -2,7 +2,7 @@
 
 Last reviewed: 2026-07-30.
 
-Status: active algorithm development on SWE-bench Full.
+Status: active reference-response forecasting research on SWE-bench Full.
 
 `PROCESS.md` is the short handoff. Completed history is preserved in
 [`research-improvement-backlog-2026-07-30.md`](research-improvement-backlog-2026-07-30.md)
@@ -63,34 +63,49 @@ required only for a claim about transfer to a previously unseen Agent.
 
 ## Current Measurements
 
-| SWE-bench Full | H5 | H10 |
+| Direct MAE on SWE-bench Full | H5 | H10 |
 | --- | ---: | ---: |
 | Full-history MAE | `0.078554` | `0.062579` |
-| Always-zero MAE | `0.098671` | `0.099916` |
-| Random mean MAE | `0.086606` | `0.073798` |
-| Oracle MAE | `0.013093` | `0.007353` |
-| Full minus Oracle | `0.065460` | `0.055226` |
+| Ordinary recency | `0.083039` | `0.069464` |
+| Stationary response match | `0.081205` | `0.064299` |
+| ALG-010 | `0.082618` | `0.069371` |
+| ALG-015U | `0.078673` | `0.067178` |
+| ALG-016U | `0.080082` | `0.065610` |
+| Reference-future Oracle | `0.065864` | `0.052649` |
+| Target-future Oracle | `0.004013` | `0.002395` |
 
-Full is better than always zero and more than 99.9% of the frozen random
-draws. Oracle is much better than Full. The data therefore has both nontrivial
-prediction and large Selection headroom.
+No frozen candidate beat Full. ALG-015U was nearly tied at H5
+(`+0.000119`); stationary response matching was the best ten-Task method at
+H10 (`+0.001719`). All candidates remained better than most random ten-Task
+subsets, but Full itself was better than `99.97%` and `99.975%` of the frozen
+random draws. Those midranks describe the frozen policy that shares one random
+membership across target Agents at an Origin; they are calibration, not
+p-values.
 
-The H5 block-order permutation probability is `0.126437`. It did not pass the
-`0.05` gate in the old conditional ALG-016U plan, so that plan correctly
-stopped with no algorithm result. This says only that the plan's aggregate
-block-order diagnostic was not strong enough. It does not make chronology a
-prerequisite for every algorithm and does not close Full as a development set.
+This result is reproduced byte-for-byte. The candidate memberships are
+materially different, and no candidate is favorable in more than four of ten
+repositories.
 
-The old plan, result, summary, and boundary amendment remain unchanged:
+The post-result reference-future Oracle hides the target Agent, opens the other
+ten Agents' next-H response rates, and uses the same exact matcher. It beats
+Full by `0.012690` at H5 and `0.009930` at H10, with a repository-bootstrap
+interval below zero and eight favorable repositories at both horizons. The
+target-future Oracle is near zero.
 
-- plan:
-  `1c37db6ebd2b65a4acdb81c4e75aec1fcab54a7db31e84558c7435d5dadc4b32`;
-- suitability result:
-  `2f66df63186a6113255ced65e155cce8350aeb9b01eb4c187619e456fccbddf8`;
-- summary:
-  `b01b8bedc82f5311663a658cbf09ae226fd4895cf2c2171513ae1b68543d60d1`;
-- interpretation:
-  [`experiments/2026-07-30-swe-bench-full-suitability-and-transfer.md`](experiments/2026-07-30-swe-bench-full-suitability-and-transfer.md).
+Within the tested response-matching family, the evidence locates the current
+failure in forecasting the next reference-Agent response regime and making a
+budget-ten action robust to forecast error. It does not support reopening Task
+Pool capacity or the existence of cross-Agent signal as the primary problem.
+The reference Oracle recovers only about 17% of target-Oracle headroom, so it
+does not establish response forecasting as the project's only route or exact
+L1 as the optimal action under forecast uncertainty. It also does not prove
+that realized future reference rates are predictable from history.
+
+Evidence:
+
+- [`experiments/2026-07-30-swe-bench-full-direct-mae-development.md`](experiments/2026-07-30-swe-bench-full-direct-mae-development.md);
+- `examples/swe_bench_full_development/evidence/summary.json`;
+- `examples/swe_bench_full_development/evidence/diagnostic-summary.json`.
 
 ## Corrections Carried Forward
 
@@ -110,32 +125,42 @@ The old plan, result, summary, and boundary amendment remain unchanged:
 
 ## Active Approach Registry
 
-| Route | Mechanism | State | Decisive next evidence |
-| --- | --- | --- | --- |
-| Ordinary recency | Select the latest ten Tasks | ready control | H5/H10 MAE on the exact Full frame |
-| Stationary response matching | Match the other Agents' historical response rates with an exact ten-Task subset | ready control | Direct target-Agent MAE and random position |
-| ALG-015U | Combine full, recent, and linear response forecasts with AdaNormalHedge, then exact response matching | ready candidate | Direct MAE versus Full and stationary matching |
-| ALG-016U | Forecast the other Agents with a shared change-point model, then exact response matching | ready candidate | First Full H5/H10 MAE |
-| Task-content Selection | Match recent Task content without Agent outcomes | pending separate family | Open only if the response-based wave leaves meaningful uncertainty |
-| Cached-target finite-horizon methods | Use the target Agent's known historical outcomes | measured separate case | Reopen only for a concrete cached-result product use |
-
-ALG-016U remains the best previously measured H5 before-testing candidate on
-Multi-SWE (`0.064013` versus Full `0.067348`) but reversed at H10
-(`0.053912` versus Full `0.052807`). Those values neither predict nor replace
-its missing Full result.
+| Route | State | Reason |
+| --- | --- | --- |
+| Ordinary recency | control retained | Simple temporal comparison; worse than Full |
+| Stationary response matching | control retained | Best H10 ten-Task method; still worse than Full |
+| ALG-010 | retired unchanged on this frame | Worse than Full at both horizons |
+| ALG-015U | retain only as H5 incumbent | Nearly tied at H5, clear reversal at H10 |
+| ALG-016U | retired unchanged on this frame | Worse than Full at both horizons |
+| Exact response matcher | retain as control | It beats Full with a perfect reference forecast; noisy-forecast robustness remains open |
+| Cached-target methods | separate case | Use extra target-Agent information |
+| Task-content methods | conditional orthogonal route | Open one frozen wave if response history lacks stable predictable gain |
 
 ## Next Cycle
 
-1. Freeze a separate `swe_bench_full_development` plan that binds the exact
-   Full data and a finite candidate portfolio.
-2. Implement a direct runner by reusing the existing Full loader, rolling
-   frame, forecasts, and exact response matcher. Do not modify or bypass the
-   old conditional runner.
-3. Execute twice and require identical results.
-4. Report candidate MAE, candidate minus Full, random position, repository and
-   Agent directions, and repository-level uncertainty.
-5. Keep, revise, or discard mechanisms from their direct MAE. Do not require
-   another source before this development cycle.
+1. For stationary, ALG-015U, and ALG-016U, report forecast-to-future response
+   L1, selected-to-forecast L1, selected-to-future response L1,
+   reference-Oracle regret, and target-Agent direct MAE.
+2. Add a predeclared noise-to-regret curve around the reference Oracle to
+   measure how much forecast error budget-ten Selection can tolerate.
+3. Explain whether the loss comes from repository shift, Agent dependence,
+   horizon aggregation, or forecast-to-action quantization.
+4. If response history has predictable gain, freeze at most three directions:
+   repository-aware empirical-Bayes shrinkage, a rank-one shared-difficulty
+   forecast, and reliability-shrunk or minimax materialization.
+5. If it does not, stop stacking response models and run one frozen task-only
+   semantic or repository-process route.
+6. Require lower direct MAE than Full at both H5 and H10 before retaining a
+   candidate, then seek an independent data boundary.
+
+Before the next evidence run, bind the complete execution commit or tree rather
+than only selected direct implementation files. Also add an end-to-end
+`materialize_portfolio` regression that perturbs one target Agent's entire
+outcome column and requires that Agent's memberships to remain unchanged.
+
+Partial pooling is a training/research method across repositories. It does not
+change the product contract: each Origin and Selection remains inside one
+target repository.
 
 No paid Agent call, Generator development, generic source adapter, trainer,
 registry, scheduler, or core-schema change is authorized or needed for this
