@@ -129,7 +129,7 @@ MAE.
 ### Stage A: Candidate-Free Null And Headroom Pilot
 
 State: `ready`; plan digest
-`7650eece7cd20bfa170307db6ff50fcf8d558b4926f29d4f1154d0ad6c852621`;
+`c4f2d34be4fc454c434a9c711c56f40a7902ddaeee1052d2ea25bfb67d05a08d`;
 no paid calls.
 
 Run the frozen direct audit on Multi-SWE. It reports separate H5/H10 frames,

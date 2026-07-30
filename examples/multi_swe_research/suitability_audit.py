@@ -315,6 +315,13 @@ def run_suitability_audit(
         },
         "task_count": len(tasks),
         "configuration_count": len(configuration_ids),
+        "implementation": {
+            "implementation_file_sha256": _file_sha256(
+                Path(__file__).resolve()
+            ),
+            "python_version": sys.version.split()[0],
+            "numpy_version": np.__version__,
+        },
         "horizons": horizon_results,
         "decision": {
             "panel_status": "descriptive_only",
@@ -842,7 +849,7 @@ def _temporal_null(
         repository_values = []
         for repository_id in repository_ids:
             response = panel_arrays[repository_id]["response"]
-            offset = generator.randrange(1, int(response.shape[0]))
+            offset = generator.randrange(int(response.shape[0]))
             shifted = np.roll(response, shift=offset, axis=0)
             repository_values.append(
                 _full_minus_zero_for_response(
@@ -868,8 +875,8 @@ def _temporal_null(
         "one_sided_probability": (as_good_or_better + 1) / (draws + 1),
         "null_values_digest": canonical_digest(tuple(null_values)),
         "construction": (
-            "independent nonzero within-repository circular shifts of complete "
-            "joint configuration-response rows"
+            "independent inclusive-zero within-repository circular shifts of "
+            "complete joint configuration-response rows"
         ),
         "interpretation": (
             "Tests aggregate history persistence aligned to observed Task "
@@ -1150,6 +1157,7 @@ def build_suitability_summary(
             ),
             "claim_boundary": result.get("claim_boundary"),
         },
+        "implementation": dict(_mapping(result, "implementation")),
         "results": compact_horizons,
         "decision": dict(_mapping(result, "decision")),
         "resource_use": dict(_mapping(result, "resource_use")),
