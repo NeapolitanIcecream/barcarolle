@@ -11,6 +11,10 @@ REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPOSITORY_ROOT))
 
 from examples.multi_repository_study.public_replay import TaskMetadata  # noqa: E402
+from examples.swe_bench_full_development.diagnostic import (  # noqa: E402
+    load_plan as load_diagnostic_plan,
+    select_future_oracle_memberships,
+)
 from examples.swe_bench_full_development.study import (  # noqa: E402
     ALGORITHM_IDS,
     CANDIDATE_IDS,
@@ -59,6 +63,14 @@ def test_full_development_plan_rejects_tampering(tmp_path: Path) -> None:
         load_plan(path)
 
 
+def test_full_diagnostic_is_future_open_and_zero_cost() -> None:
+    plan = load_diagnostic_plan()
+
+    assert plan["status"] == "post_result_diagnostic_frozen_before_oracle_scores"
+    assert "future-open diagnostics" in plan["claim_boundary"]
+    assert plan["authority"]["paid_api_calls"] == 0
+
+
 def test_response_membership_does_not_use_target_outcomes() -> None:
     np = pytest.importorskip("numpy")
     pytest.importorskip("scipy")
@@ -95,6 +107,48 @@ def test_response_membership_does_not_use_target_outcomes() -> None:
 
     assert original_memberships[0] == changed_memberships[0]
     assert all(len(indices) == 3 for indices in original_memberships[0].values())
+
+
+def test_reference_future_oracle_does_not_use_target_column() -> None:
+    np = pytest.importorskip("numpy")
+    pytest.importorskip("scipy")
+    history = np.asarray(
+        [
+            [index % 2, (index // 2) % 2, (index // 3) % 2]
+            for index in range(12)
+        ],
+        dtype=np.float64,
+    )
+    future = np.asarray(
+        [[0, 1, 0], [1, 1, 0]],
+        dtype=np.float64,
+    )
+    changed_history = history.copy()
+    changed_future = future.copy()
+    changed_history[:, 0] = 1.0 - changed_history[:, 0]
+    changed_future[:, 0] = 1.0 - changed_future[:, 0]
+    order = tuple(
+        (f"2026-01-{index + 1:02d}T00:00:00Z", f"task-{index:02d}")
+        for index in range(len(history))
+    )
+
+    original = select_future_oracle_memberships(
+        history,
+        future,
+        budget=3,
+        created_order=order,
+    )
+    changed = select_future_oracle_memberships(
+        changed_history,
+        changed_future,
+        budget=3,
+        created_order=order,
+    )
+
+    assert (
+        original[0]["reference_future_oracle"]
+        == changed[0]["reference_future_oracle"]
+    )
 
 
 def test_difficulty_markov_excludes_target_and_later_training_tasks() -> None:

@@ -1,0 +1,66 @@
+{
+  "schema_version": "barcarolle_swe_bench_full_diagnostic_plan_v1",
+  "study_id": "swe-bench-full-negative-result-localization-2026-07-30",
+  "frozen_at": "2026-07-30T07:15:21Z",
+  "status": "post_result_diagnostic_frozen_before_oracle_scores",
+  "development_plan_digest": "e226462972c5dee46ae675a7d80dc2662a479afc2a377b9d5c400d1c7e551e17",
+  "observed_before_freeze": "No frozen candidate beat Full at H5 or H10. ALG-015U was closest at H5 and stationary response matching was closest at H10.",
+  "questions": [
+    "If the other ten Agents' future response rates were known perfectly, could their response geometry select a ten-Task subset that beats Full for the hidden target Agent?",
+    "Can the target Agent's own future pass rate be matched from the available history at budget ten?",
+    "Did the frozen candidates collapse to effectively identical memberships?"
+  ],
+  "diagnostics": {
+    "reference_future_oracle": "Hold out the target Agent completely. Match the other ten Agents' actual future response vector with an exact ten-Task historical subset, then score only the target Agent.",
+    "target_future_oracle": "Match the target Agent's actual future pass rate with a ten-Task historical subset. This is a pure Task Pool capacity diagnostic.",
+    "portfolio_diversity": "For every frozen candidate pair, report exact membership equality and mean Jaccard overlap.",
+    "aggregation": "Target Agents and Origins inside repository, then repositories equally.",
+    "primary_metric": "Direct future pass-rate MAE.",
+    "interpretation": {
+      "reference_oracle_beats_full": "The reference panel contains usable cross-Agent signal; forecasting or materialization remains the main gap.",
+      "only_target_oracle_beats_full": "History has capacity, but the other Agents' response geometry does not transfer sufficiently to the target Agent.",
+      "target_oracle_does_not_beat_full": "The ten-Task history pool itself is the main capacity limit."
+    }
+  },
+  "non_solutions": [
+    "adding an Oracle to the candidate ranking",
+    "using an Oracle as an implementable Selector",
+    "changing the frozen candidate results",
+    "opening another Task source or Agent panel",
+    "tuning a candidate after seeing the Oracle result"
+  ],
+  "reproduction": {
+    "required_runs": 2,
+    "comparison": "Canonical diagnostic JSON must be byte-identical."
+  },
+  "bound_artifacts": {
+    "development_plan": {
+      "path": "examples/swe_bench_full_development/plan.json",
+      "file_sha256": "0d731587957aa16d309e356bc8933797444602c6c058cd37bd092c5fdf739622",
+      "logical_digest_key": "plan_digest",
+      "logical_digest": "e226462972c5dee46ae675a7d80dc2662a479afc2a377b9d5c400d1c7e551e17"
+    },
+    "development_summary": {
+      "path": "examples/swe_bench_full_development/evidence/summary.json",
+      "file_sha256": "c030ec3ab333b29f2bb9ab37741d49c2e451903111e90d6da383b82be69afc0c",
+      "logical_digest_key": "summary_digest",
+      "logical_digest": "cefdc2f1678baf34cf274e8954881da95116ae91c797803f76a811ff02c9009b"
+    },
+    "development_membership": {
+      "path": "outputs/research/2026-07-30-swe-bench-full-development/memberships-a.json",
+      "file_sha256": "15463dd70e948c108310d2a18a8bde7d801f3c188b90ad8b851296112b8a9777",
+      "logical_digest_key": "membership_digest",
+      "logical_digest": "e85cd6847d81a95b1a9a82587f5d1bafb47db6259a20335709d37d1a807104e8"
+    }
+  },
+  "implementation": {
+    "diagnostic_file_sha256": "4e364ef25c5a07ddfe29741f2bbe997c9b4d0fbc146e31c8151f5b4d7f5147aa"
+  },
+  "authority": {
+    "paid_api_calls": 0,
+    "new_agent_outcome_calls": 0,
+    "sealed_swe_bench_verified_agent_reads": 0
+  },
+  "claim_boundary": "Both Oracles are future-open diagnostics. They localize the frozen development result but cannot be deployed, ranked as candidates, or used as confirmation.",
+  "diagnostic_plan_digest": "0d94681518ed5e592f51ef2f1a8024300ef4f42799eecd23b06eebae8b267a56"
+}
