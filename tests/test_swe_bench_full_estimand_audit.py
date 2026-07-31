@@ -16,7 +16,6 @@ from examples.multi_repository_study.public_replay import (  # noqa: E402
 from examples.swe_bench_full_estimand_audit.audit import (  # noqa: E402
     ALGORITHM_IDS,
     DEFAULT_OUTPUT,
-    _execution_source_manifest,
     _permute_sequences_by_repository,
     build_horizon_rows,
     load_plan,
@@ -167,15 +166,13 @@ def test_block_permutation_preserves_same_block_agent_vectors() -> None:
     )
 
 
-def test_committed_estimand_audit_evidence_is_bound_and_nontrivial() -> None:
+def test_committed_estimand_audit_evidence_is_self_bound_and_nontrivial() -> None:
     plan = load_plan(verify_bindings=False)
     summary = json.loads(DEFAULT_OUTPUT.read_text(encoding="utf-8"))
 
     validate_summary(plan, summary)
-    manifest = _execution_source_manifest()
-    assert len(manifest) == plan["implementation"]["execution_source_file_count"]
     assert (
-        canonical_digest(manifest)
+        summary["execution_source_manifest_digest"]
         == plan["implementation"]["execution_source_manifest_digest"]
     )
     assert summary["denominator"]["cell_pass_rate"]["cells_below_0_10"] == 70

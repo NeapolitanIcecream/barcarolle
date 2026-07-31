@@ -1,124 +1,87 @@
 # Barcarolle Cross-Session Handoff
 
-Last updated: 2026-07-30.
+Last updated: 2026-07-31.
 
 Current ledger: `docs/research-improvement-backlog.md`.
 
 ## Research Question
 
 For one target Agent and one repository, choose ten historical Tasks so that
-the Agent's pass rate on those ten Tasks is close to its pass rate on the next
+the Agent's pass rate on those Tasks is close to its pass rate on the next
 Tasks.
 
-At each rolling Origin, compute the target Agent's absolute selected-versus-
-future pass-rate error before aggregation. H5 and H10 mean the next five and
-ten Tasks. Direct future pass-rate MAE is primary; surrogate and reliability
-metrics remain diagnostic.
+Direct future pass-rate MAE is primary. H5 and H10 are separate horizons. Full
+history is the no-Selection baseline; random ten-Task subsets calibrate the
+sampling space; future-open Oracles measure capacity only.
 
-The deployment unit is one Agent and one repository. The repository-equal
-headline is the average loss of the fixed research panel, not a pass-rate
-estimate for one deployment cell.
+Runtime remains one Agent, one repository, one Task Pool, and one Selection.
+Repositories are separate offline evidence units.
 
-## Current Data
+## Active Population
 
-SWE-bench Full is the active, outcome-open development set:
+The legacy eleven-Agent SWE-bench Full panel is no longer the primary
+development population. Its six early RAG submissions and other old systems
+made failures dominant, compressed MAE, and biased algorithm design toward
+near-zero prediction.
 
-- 2,294 Tasks and eleven fixed Agent result vectors;
-- ten repositories with enough history;
-- 408 H5 Origins and 201 H10 Origins;
-- Selection budget ten.
+Primary outcome-open development now uses thirteen models evaluated on all 500
+SWE-bench Verified Tasks with the same mini-SWE-agent v2.0.0 Harness:
 
-H20 and H40 are reliability views only. Existing candidates were not reranked
-on them.
+- Agent pass-rate range `0.562–0.768`, pooled `0.713077`;
+- five repositories with minimum history 20;
+- 61 H5 Origins and 30 H10 Origins;
+- no duplicate Agent vectors.
 
-Task order comes from pull-request `created_at`. Agent outcomes may be
-collected or imported later; their storage timestamp is not an input to this
-offline estimator.
+A secondary diagnostic uses three modern complete systems on all 2,294
+SWE-bench Full Tasks: SWE-agent Claude 3.7, Salesforce SAGE, and Sonar
+Foundation Agent Claude Opus 4.5. Their pooled pass rate is `0.435629`.
 
-For the primary before-testing-an-Agent experiment, each target Agent gets its
-own Selection. Membership may use Task data and the other ten Agents'
-historical outcomes, but not the target Agent's outcomes or any future Task or
-outcome. A separate cached-result experiment may use the target Agent's
-historical outcomes and must be reported separately.
-
-## Baselines
-
-- Full history is the no-Selection baseline.
-- The frozen random policy samples one ten-Task subset per Origin and shares it
-  across target Agents. Its distribution is a calibration reference, not a
-  p-value or evidence of temporal prediction.
-- Future-open Oracles measure capacity. They are not algorithms and do not
-  establish forecastability.
-- The best previously measured method under the same input rules is the
-  incumbent when claiming a new best method.
+The six project-sealed Verified full-system holdout Agents remain unread.
 
 ## Current Evidence
 
-The frozen Full development wave compared recency, stationary response
-matching, ALG-010, ALG-015U, and ALG-016U. Two complete runs were identical.
-
-| Method | H5 MAE | H10 MAE |
+| Fixed mini-SWE-agent v2 | H5 | H10 |
 | --- | ---: | ---: |
-| Full history | `0.078554` | `0.062579` |
-| Best ten-Task candidate | ALG-015U `0.078673` | stationary `0.064299` |
-| Reference-future Oracle | `0.065864` | `0.052649` |
-| Target-future Oracle | `0.004013` | `0.002395` |
+| Full-history MAE | `0.179527` | `0.129700` |
+| Mean random-ten MAE | `0.196332` | `0.155752` |
+| Reference-future Oracle MAE | `0.120285` | `0.105282` |
+| Target-future Oracle MAE | `0.014755` | `0.013846` |
 
-No implementable candidate beat Full. The candidates were nevertheless better
-than most draws from the frozen random policy, but that fact does not establish
-future-predictive structure.
+Full beats both constant estimators. The reference Oracle hides the target
+Agent and is favorable in all five repositories at both horizons. This proves
+shared same-future response structure, not pre-Origin forecastability.
 
-The completed estimand audit found:
+On the exact SWE-bench Full frame, changing from the legacy panel to the three
+modern systems raises Full MAE from `0.078554/0.062579` to
+`0.191961/0.150453`. The previous low-MAE regime was therefore substantially
+an Agent-population artifact.
 
-- 70/110 Agent-by-repository cells have pass rate below `0.10`; median
-  prevalence is `0.03646`;
-- zero future blocks are `68.19%` at H5 and `57.81%` at H10;
-- the exact descriptive decomposition assigns `50.89%` of H5 and `67.68%` of
-  H10 realized variation to fitted Agent, repository, and interaction sample
-  means; these are not population variance or reliability estimates;
-- within-cell block variance follows `1/H` with `R²=0.99886` on the common
-  eight-repository horizon frame;
-- each candidate improves the six-Agent RAG group mean and harms the
-  five-Agent other-group mean at both horizons;
-- same-future reference-to-target residual correlations are `0.392/0.437`,
-  while previous-reference-to-next-target correlations are `0.176/0.177`;
-- an exploratory repository-shared block permutation is positive only at H5
-  (`0.001499`; H10 `0.211894`); the v2 contract records that this null was
-  corrected after initial output was visible;
-- the reference Oracle helps/harms/ties `71/17/22` joint cells at H5 and
-  `68/20/22` at H10.
+Two complete executions are byte-identical. Evidence:
 
-The metric implementation computes absolute error in the correct order. The
-claim regression was interpreting one realized panel average and favorable
-marginals as expected deployment evidence. Full beats zero and previous-block
-controls on the panel average, which is consistent with useful local
-prevalence; Selection has not yet shown that it predicts future deviations
-from Full.
+- `docs/experiments/2026-07-31-modern-agent-panel-refresh.md`;
+- `examples/modern_agent_panel/plan.json`;
+- `examples/modern_agent_panel/evidence/summary.json`.
 
-Evidence:
+## Claim Boundary
 
-- `docs/experiments/2026-07-30-swe-bench-full-estimand-reliability-audit.md`;
-- `examples/swe_bench_full_estimand_audit/evidence/summary.json`.
+No Selector was tested or nominated. Oracles use future outcomes. The Tasks end
+by 2023 and may be memorized or unlike current workloads. The fixed-Harness
+panel is suitable for outcome-open algorithm development, not production or
+prospective confirmation.
 
 ## Next Action
 
-Freeze one bounded history-only replay of the next other-Agent Full residual:
+Freeze one unchanged, no-tuning replay of ordinary recency, stationary response
+matching, ALG-015U, and ALG-016U:
 
-1. compare only Full, stationary response matching, and ALG-015U;
-2. report forecast, materialization, and final target-Agent direct-MAE losses;
-3. retain all Agent-by-repository paired cells and repository leave-one-out
-   directions;
-4. report whether a gain is confined to the post-hoc RAG subgroup; that
-   narrows the claim and blocks broad-Agent nomination rather than erasing the
-   primary finite-panel result;
-5. stop response-model work if no stable direct-MAE increment remains, then
-   open one frozen Task-content or repository-process route.
+1. run primary fixed-Harness direct MAE first;
+2. keep each target Agent's entire outcome column out of membership decisions;
+3. report candidate-minus-Full, random percentile, repository and Agent
+   directions, and reference-Oracle headroom captured;
+4. use the modern Full-system lane only as a secondary reversal check;
+5. retain a mechanism only if it beats Full at both horizons on primary and
+   does not reverse on secondary.
 
-Seek a separate confirmation boundary only after a candidate beats Full.
-
-No paid Agent run, Generator work, generic source framework, or core-schema
+If none survives, begin theory-driven Selector work on the modern panel. No
+paid Agent call, Generator work, generic source framework, or core-schema
 change is needed.
-
-Engineering triggers remain unchanged: optimize checkout only after it exceeds
-5% of measured campaign time; add Agent parallelism only for a measured
-campaign need with exact attribution and one Result writer.
