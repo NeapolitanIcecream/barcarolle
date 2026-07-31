@@ -1,0 +1,220 @@
+{
+  "schema_version": "barcarolle_modern_agent_panel_plan_v1",
+  "study_id": "modern-agent-panel-refresh-2026-07-31",
+  "frozen_at": "2026-07-31T02:35:03Z",
+  "epistemic_status": "outcome_open_fixed_harness_development_and_preopen_full_system_audit",
+  "research_contract": {
+    "target": "Replace the legacy-dominated research population with exact modern public Agent cohorts that provide per-Task binary outcomes and can support repository-local rolling-Origin direct pass-rate MAE research.",
+    "primary_question": "Does a same-harness modern model panel on SWE-bench Verified avoid trivial-estimator domination and retain budget-ten Selection headroom at H5 and H10?",
+    "secondary_question": "Do the available modern full-system submissions on SWE-bench Full support the same qualitative diagnosis on the larger Task frame?",
+    "observable_success": "The primary cohort normalizes exactly, Full history beats both constant estimators, and at least one future-open budget-ten Oracle beats Full history at both horizons. The secondary lane is diagnostic and is not required to pass.",
+    "non_solutions": [
+      "using aggregate leaderboard scores without exact per-Task outcomes",
+      "mixing mini-SWE-agent v1 and v2 results",
+      "selecting Agents by pass rate or by favorable Selector loss",
+      "opening the six project-sealed SWE-bench Verified full-system holdout Agents",
+      "reranking or changing a Selector in this candidate-free study",
+      "treating an Oracle as an implementable Selector",
+      "claiming current workload validity from Tasks created no later than 2023",
+      "making a paid Agent call or developing a Generator"
+    ],
+    "allowed_terminal_states": [
+      "modern_fixed_harness_panel_ready_for_outcome_open_algorithm_research",
+      "modern_panel_trivial_or_capacity_limited",
+      "primary_source_identity_or_normalization_blocker",
+      "bounded_mixed_result"
+    ]
+  },
+  "primary_lane": {
+    "lane_id": "verified-mini-swe-agent-v2",
+    "role": "fixed_harness_model_comparison_and_primary_outcome_open_development",
+    "task_source": {
+      "dataset_repository": "SWE-bench/SWE-bench_Verified",
+      "dataset_revision": "91aa3ed51b709be6457e12d00300a6a596d4c6a3",
+      "local_path": "outputs/user-journeys/2026-07-17-swe-bench-verified-pylint-pilot/source/swe-bench-verified-test-91aa3ed.parquet",
+      "sha256": "43ed5a3d1d98da36472c1ade65ddd2085d7b4ff694fcaf6a023a07c5c1f32f21",
+      "task_count": 500
+    },
+    "result_source": {
+      "repository": "SWE-bench/swe-bench.github.io",
+      "revision": "15491f17ea8274f55686338291d7da27df4d1bd7",
+      "path": "data/leaderboards.json",
+      "git_blob_sha": "919477b488398c98c197cfd41f7717962dc826b1",
+      "size_bytes": 7323841,
+      "sha256": "c3bf3a74d7d67ba7e2777e197f96894601917e8e186a078133897ed3e81566e5",
+      "local_path": "outputs/research/2026-07-31-modern-agent-panel/leaderboards.json",
+      "leaderboard_name": "bash-only"
+    },
+    "cohort_rule": {
+      "mini_swe_agent_version": "2.0.0",
+      "required_task_detail_count": 500,
+      "deduplication": "Use the sole complete 500-Task row for an exact folder. Reject conflicting complete duplicates.",
+      "score_filtering": false,
+      "expected_agent_count": 13
+    },
+    "folders": [
+      "20260217_mini-v2.0.0_claude-4-5-haiku-high",
+      "20260217_mini-v2.0.0_claude-4-5-opus-high",
+      "20260217_mini-v2.0.0_claude-4-5-sonnet-high",
+      "20260217_mini-v2.0.0_claude-4-6-opus",
+      "20260217_mini-v2.0.0_deepseek-3-2-high",
+      "20260217_mini-v2.0.0_gemini-3-flash-high",
+      "20260217_mini-v2.0.0_glm-5-high",
+      "20260217_mini-v2.0.0_gpt-5-2-high",
+      "20260217_mini-v2.0.0_gpt-5-mini",
+      "20260217_mini-v2.0.0_kimi-k2-5-high",
+      "20260217_mini-v2.0.0_minimax-2-5-high",
+      "20260219_mini-v2.0.0_gpt-5-2-codex",
+      "20260226_mini-v2.0.0_gemini-3-pro-high"
+    ]
+  },
+  "secondary_lane": {
+    "lane_id": "full-modern-system",
+    "role": "heterogeneous_complete_system_diagnostic",
+    "task_source": {
+      "dataset_repository": "SWE-bench/SWE-bench",
+      "dataset_revision": "7074ef12ea2a6f70a228943c1336553333c22786",
+      "local_path": "outputs/research/2026-07-28-external-benchmark-inventory/sources/swe_bench_full_test.parquet",
+      "sha256": "0996c4bd66e647ecef89d3ef57e527dcc0ea4e8369ac6f740cdd570734188df2",
+      "task_count": 2294
+    },
+    "result_source": {
+      "repository": "SWE-bench/experiments",
+      "revision": "2f15350cd32becc4569e0d826361048555b605c0",
+      "directory": "evaluation/test",
+      "local_directory": "outputs/research/2026-07-31-modern-agent-panel/full-results"
+    },
+    "cohort_rule": "Use every Full submission dated 2025 or later that exposes an explicit model tag and a public per-Task result file at the pinned revision. Do not filter by score, checked status, openness, or attempt count.",
+    "agents": [
+      {
+        "agent_id": "sweagent-claude37-20250227",
+        "submission": "20250227_sweagent-claude-3-7-20250219",
+        "model_label": "claude-3-7-sonnet-20250219",
+        "harness_label": "SWE-agent 1.0",
+        "attempts": "1",
+        "checked": true,
+        "metadata_blob_sha": "ed7b19f883bc9fc08ad6f6477c4897c16c367e2d",
+        "result_blob_sha": "3f8d5597f76eace7e96d571ab29d1ce0ca45cb15",
+        "result_size_bytes": 24241,
+        "result_sha256": "ac0b9969ff8f516d6bd8449dfd9a4271582db5fa9fb868153cbc9bb4e7bd8db2"
+      },
+      {
+        "agent_id": "salesforce-sage-20251027",
+        "submission": "20251027_salesforce_SAGE",
+        "model_label": "claude-sonnet-4.5 + gpt-5",
+        "harness_label": "Salesforce AI Research SAGE bash-only",
+        "attempts": "2+",
+        "checked": false,
+        "metadata_blob_sha": "0d2771c085778eabff6686959826f1cb7e05d995",
+        "result_blob_sha": "a104629d81581a092f962396a608c54e2c320c87",
+        "result_size_bytes": 30508,
+        "result_sha256": "7a8be8373239d3b2dfe7c52b94c582a3215119d378da054cca2baf0e4190afa5"
+      },
+      {
+        "agent_id": "sonar-opus45-20251219",
+        "submission": "20251219_sonar-foundation-agent_claude-opus-4-5",
+        "model_label": "claude-opus-4-5",
+        "harness_label": "Sonar Foundation Agent",
+        "attempts": "1",
+        "checked": false,
+        "metadata_blob_sha": "f52ff5ac67c7763be57be21a28ec96d1b4cbf7fe",
+        "result_blob_sha": "42962637ab56e1b07f6461f789e182d66c3a2c68",
+        "result_size_bytes": 36699,
+        "result_sha256": "07c3254043e68e3e20100466ffa7d854834c1d56018688f9296f522646d5a9cf"
+      }
+    ]
+  },
+  "frame": {
+    "minimum_initial_history_tasks": 20,
+    "selection_budget_tasks": 10,
+    "horizons": [
+      5,
+      10
+    ],
+    "ordering": "created_at then instance_id",
+    "origin_alignment": "end-aligned complete nonoverlapping future blocks",
+    "aggregation": "target Agents and Origins inside repository, then repositories equally",
+    "expected": {
+      "verified-mini-swe-agent-v2": {
+        "5": {
+          "repository_count": 5,
+          "origin_count": 61
+        },
+        "10": {
+          "repository_count": 5,
+          "origin_count": 30
+        }
+      },
+      "full-modern-system": {
+        "5": {
+          "repository_count": 10,
+          "origin_count": 408
+        },
+        "10": {
+          "repository_count": 10,
+          "origin_count": 201
+        }
+      }
+    }
+  },
+  "diagnostics": {
+    "primary_metric": "direct future pass-rate MAE",
+    "controls": [
+      "always zero",
+      "always one",
+      "Full eligible repository-local history",
+      "equal-budget random ten-Task Selection"
+    ],
+    "oracles": [
+      "reference-future Oracle that hides each target Agent and matches the other Agents' future response rates",
+      "target-future Oracle that directly matches the target Agent's future pass rate"
+    ],
+    "report": [
+      "global and per-Agent pass rates",
+      "per-repository pass-rate range",
+      "all-zero and all-one future-block shares",
+      "Full, constant, random, and Oracle MAE",
+      "repository and target-Agent Oracle directions",
+      "Full-to-Oracle headroom"
+    ],
+    "random_draws": 20000,
+    "random_seed": 20260731
+  },
+  "reproduction": {
+    "python_version": "3.14.0",
+    "numpy_version": "2.5.1",
+    "scipy_version": "1.16.3",
+    "pyarrow_version": "25.0.0",
+    "required_runs": 2,
+    "comparison": "canonical JSON must be byte-identical"
+  },
+  "approach_registry": [
+    {
+      "route": "official fixed-harness public outcomes",
+      "status": "selected",
+      "decisive_test": "exact 13 by 500 normalization plus rolling-Origin nontriviality and capacity"
+    },
+    {
+      "route": "official modern Full complete systems",
+      "status": "secondary",
+      "decisive_test": "exact three by 2294 normalization plus the same diagnostics"
+    },
+    {
+      "route": "self-host a recent open 7B Agent",
+      "status": "deferred",
+      "reason": "A public aggregate claim exists, but no compatible per-Task result artifact was found and the released checkpoint requires a custom 15 GB runtime. It has lower information value than the ready official fixed-harness matrix.",
+      "reopen_when": "The authors publish exact per-Task outcomes or a compatible GPU campaign is authorized after public data is exhausted."
+    }
+  ],
+  "authority": {
+    "paid_api_calls": 0,
+    "new_agent_runs": 0,
+    "sealed_verified_full_system_agents_opened": 0,
+    "generator_development": false,
+    "selector_changes": 0,
+    "core_schema_changes": 0,
+    "raw_artifacts": "ignored outputs only"
+  },
+  "claim_boundary": "This study can establish a modern outcome-open development population and diagnose its direct-MAE geometry. It cannot validate a Selector, establish prospective workload validity, compare mini-SWE-agent v1 with v2, or promote a production default.",
+  "plan_digest": "9f2a7004480280638dd250e8e956ace9ab14f4b3512862b188458d52e01b9806"
+}
