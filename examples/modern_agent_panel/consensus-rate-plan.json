@@ -1,0 +1,114 @@
+{
+  "schema_version": "barcarolle_consensus_rate_selector_plan_v1",
+  "study_id": "consensus-rate-selector-development-2026-07-31",
+  "frozen_at": "2026-07-31T04:55:49Z",
+  "epistemic_status": "outcome_open_candidate_frozen_after_bounded_multi_route_search",
+  "research_contract": {
+    "target": "Verify one pre-Origin budget-ten Selector whose direct target-Agent future pass-rate MAE is lower than Full eligible repository-local history at both H5 and H10 on the fixed-Harness modern development panel.",
+    "parent_plan": "examples/modern_agent_panel/optimistic-plan.json",
+    "parent_plan_digest": "6e060093791920e79389896125d2a093d88c3a9840bad2dfa435394f9d6f1fcc",
+    "terminal_success": "The unchanged frozen candidate is strictly better than Full at both H5 and H10, passes target-column and time audits, reproduces byte-identically, and reports repository, Agent, Origin, and random directions.",
+    "claim_boundary": "Passing establishes an outcome-open modern development candidate only. It does not establish prospective validity, production readiness, or independent unseen-population confirmation."
+  },
+  "search_provenance": {
+    "opened_primary_outcomes_used_for_design": true,
+    "candidate_was_identified_after_scores_were_read": true,
+    "bounded_expert_family_size": 72,
+    "expert_family": "nine historical pooled-rate forecasts by four disagreement weights by two deterministic within-count tie modes",
+    "selected_expert": "full pooled-rate forecast, lexicographic minimum disagreement, recent-first within equal response-count groups",
+    "selected_because": "It was the strongest unchanged fixed expert at H5 and also improved H10; it is simpler and had lower direct MAE than the prequential meta policy at both horizons.",
+    "secondary_panel_scores_seen_before_freeze": false,
+    "sealed_agent_outcomes_seen_before_freeze": false
+  },
+  "candidate": {
+    "selector_id": "consensus_rate_match",
+    "runtime_unit": "one target Agent, one repository, one Task Pool, and one Selection",
+    "reference_panel": "All admitted reference Agents other than the target Agent. The target Agent may be absent from the reference panel; the leave-one-target-out development replay simulates that deployment boundary.",
+    "history_order": "created_at then instance_id",
+    "forecast": "The pooled binary pass rate over every eligible historical Task and every reference Agent.",
+    "task_statistic": "For each historical Task, the integer count c of passing reference Agents out of m reference Agents.",
+    "primary_objective": "Among ten-distinct-Task subsets, minimize the absolute difference between the subset pooled reference pass rate sum(c)/(10*m) and the full-history pooled reference pass rate.",
+    "secondary_objective": "Lexicographically minimize sum(c*(m-c)) among primary-objective ties. This prefers reference-panel consensus without trading away the pooled-rate match.",
+    "tertiary_ties": [
+      "prefer the most recent Tasks within an equal response-count group",
+      "then use canonical history position"
+    ],
+    "solver": "Exact dynamic programming over response-count compositions followed by deterministic membership materialization.",
+    "horizon_parameter": "The same Selector is used unchanged at H5 and H10; horizon only determines rolling Origin boundaries and does not alter the objective.",
+    "repository_pooling": false
+  },
+  "information_contract": {
+    "membership_may_read": [
+      "current repository-local eligible Task identities and created_at order",
+      "historical binary outcomes of admitted reference Agents"
+    ],
+    "membership_must_not_read": [
+      "the target Agent outcome column at any time",
+      "current or later future-block outcomes",
+      "future Task text or metadata",
+      "another repository at runtime",
+      "secondary-panel outcomes during primary materialization",
+      "the six project-sealed Agent outcome blobs"
+    ],
+    "required_perturbation": "Flipping the target Agent complete outcome column must leave every membership unchanged."
+  },
+  "frame": {
+    "primary_lane": "verified-mini-swe-agent-v2",
+    "minimum_initial_history_tasks": 20,
+    "selection_budget_tasks": 10,
+    "horizons": [
+      5,
+      10
+    ],
+    "aggregation": "Average target Agents and Origins inside each repository, then weight repositories equally.",
+    "baseline": "Full eligible repository-local history",
+    "primary_metric": "Direct absolute error between selected target-Agent pass rate and next-block target-Agent pass rate."
+  },
+  "required_reporting": {
+    "directions": [
+      "repository",
+      "target Agent",
+      "Origin",
+      "uniform random-ten calibration"
+    ],
+    "sensitivity": [
+      "leave one repository out",
+      "Origin-weighted alternative aggregation",
+      "repositories with more than one Origin"
+    ],
+    "ablations": [
+      "pooled-rate match without the consensus secondary objective",
+      "consensus-first objective without pooled-rate preservation"
+    ],
+    "diagnostics": [
+      "selected-to-full pooled-rate error",
+      "selected disagreement versus full-history disagreement",
+      "reference-to-target transfer error"
+    ]
+  },
+  "reproduction": {
+    "complete_runs": 2,
+    "byte_identical_results_required": true,
+    "python": ">=3.11",
+    "numpy": "2.5.1",
+    "pyarrow": "25.0.0",
+    "random_draws": 20000,
+    "random_seeds": {
+      "5": 20260736,
+      "10": 20260741
+    }
+  },
+  "confirmation": {
+    "secondary_opened_diagnostic": "After implementation and primary evidence are bound, replay unchanged on the already-open three-Agent SWE-bench Full lane. This is a transfer diagnostic, not independent confirmation.",
+    "six_project_sealed_agents": "Remain unread in this study. Their legacy population no longer matches the modern fixed-Harness target population and they are not required by the parent development-success contract.",
+    "paid_calls": "Not authorized or needed."
+  },
+  "authority": {
+    "paid_api_calls": 0,
+    "new_agent_runs": 0,
+    "sealed_verified_full_system_agents_opened": 0,
+    "generator_development": false,
+    "core_schema_changes": 0
+  },
+  "plan_digest": "d64c528c94d5b0e459016cba2f0448df2c34424535f75a2e39a6995e79e2adfb"
+}
