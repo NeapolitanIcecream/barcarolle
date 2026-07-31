@@ -1,0 +1,141 @@
+{
+  "schema_version": "barcarolle_modern_selector_portability_plan_v1",
+  "study_id": "modern-agent-selector-portability-2026-07-31",
+  "frozen_at": "2026-07-31T02:55:15Z",
+  "epistemic_status": "outcome_open_unchanged_mechanism_portability_replay",
+  "research_contract": {
+    "target": "Establish the modern-panel incumbent by replaying the unchanged response-family Selectors that were previously evaluated on the legacy SWE-bench Full population.",
+    "primary_outcome": "Direct target-Agent future pass-rate MAE, with target Agents and Origins averaged inside repository and repositories weighted equally.",
+    "primary_baseline": "Full eligible repository-local history.",
+    "observable_success": "One unchanged candidate has lower direct MAE than Full at both H5 and H10 on the fixed-Harness primary lane and does not have higher MAE than Full at either horizon on the secondary complete-system lane.",
+    "non_solutions": [
+      "changing algorithm constants, windows, priors, hazards, experts, tie breaks, horizons, or aggregation after reading a score",
+      "using Brier loss, response-vector loss, forecast loss, or random rank as the primary outcome",
+      "reading the target Agent's historical or future outcome column when constructing its Selection",
+      "using the secondary lane to choose or tune a candidate",
+      "opening the six project-sealed Verified full-system holdout Agents",
+      "claiming production, prospective, or independent confirmation",
+      "making a paid Agent call or developing a Generator"
+    ],
+    "allowed_terminal_states": [
+      "existing_response_method_retained_as_modern_incumbent",
+      "all_existing_response_methods_retired_on_modern_population",
+      "source_or_target_invariance_blocker"
+    ]
+  },
+  "bound_population": {
+    "plan": {
+      "path": "examples/modern_agent_panel/plan.json",
+      "file_sha256": "e8b5b3cb7bf42fab885aeccf77421b167361cf9e6c341faa20916a77b5323a37",
+      "logical_digest_key": "plan_digest",
+      "logical_digest": "9f2a7004480280638dd250e8e956ace9ab14f4b3512862b188458d52e01b9806"
+    },
+    "summary": {
+      "path": "examples/modern_agent_panel/evidence/summary.json",
+      "file_sha256": "9ad48b8273ab0f974feb1884eff013c120c8398aa81e2cfe4ae33e04a525dcfa",
+      "logical_digest_key": "summary_digest",
+      "logical_digest": "6d84042057cb648c4bd70f76f4eb73c3f3c068c1e0a781c6499fdc49115592b3"
+    },
+    "lanes": [
+      "verified-mini-swe-agent-v2",
+      "full-modern-system"
+    ]
+  },
+  "information_contract": {
+    "allowed": [
+      "repository-local historical Task order",
+      "the other Agents' historical outcomes at or before the current Origin",
+      "the previous complete future block after it has entered current history"
+    ],
+    "forbidden": [
+      "the target Agent's complete outcome column",
+      "any current-Origin future Task or outcome",
+      "any other repository's Tasks or outcomes"
+    ],
+    "target_invariance": "For every target Agent, perturbing its complete outcome column must leave that Agent's memberships unchanged.",
+    "task_order": "created_at then instance_id"
+  },
+  "frame": {
+    "minimum_initial_history_tasks": 20,
+    "selection_budget_tasks": 10,
+    "horizons": [
+      5,
+      10
+    ],
+    "aggregation": "target Agents and Origins inside repository, then repositories equally"
+  },
+  "candidates": [
+    {
+      "selector_id": "ordinary_recency",
+      "mechanism": "Choose the latest ten historical Tasks.",
+      "role": "simple temporal control"
+    },
+    {
+      "selector_id": "stationary_response_match",
+      "mechanism": "Choose ten Tasks whose other-Agent response vector matches the full historical other-Agent mean.",
+      "role": "stationary compression control"
+    },
+    {
+      "selector_id": "ALG-015U",
+      "mechanism": "Combine full, recent, recent-two-block, and linear per-Agent response forecasts with coordinate-wise AdaNormalHedge, then exactly match the visible forecast.",
+      "role": "adaptive online response forecast"
+    },
+    {
+      "selector_id": "ALG-016U",
+      "mechanism": "Forecast the visible response vector with the frozen shared BOCPD change-point model, then exactly match it.",
+      "role": "change-point response forecast"
+    }
+  ],
+  "exclusions": [
+    {
+      "selector_id": "ALG-010",
+      "reason": "It was worse than Full at both legacy horizons and adds cross-repository state machinery. It is not needed to establish the strongest existing response-family incumbent."
+    }
+  ],
+  "evaluation": {
+    "report": [
+      "direct MAE",
+      "candidate minus Full",
+      "repository and target-Agent directions",
+      "share of 20000 random ten-Task draws as good as the candidate",
+      "fraction of reference-Oracle headroom captured"
+    ],
+    "random_draws": 20000,
+    "random_seed": 20260731,
+    "ranking": "Report H5 and H10 separately. Do not construct a composite.",
+    "retention_rule": "Retain an existing mechanism only when it beats Full at both primary horizons and does not reverse on either secondary horizon."
+  },
+  "reproduction": {
+    "python_version": "3.14.0",
+    "numpy_version": "2.5.1",
+    "scipy_version": "1.16.3",
+    "pyarrow_version": "25.0.0",
+    "required_runs": 2,
+    "comparison": "memberships and results must be byte-identical"
+  },
+  "bound_implementations": {
+    "population_loader": {
+      "path": "examples/modern_agent_panel/study.py",
+      "file_sha256": "6eb8b3dd24b80de947ece448a8a1e620536d5f3a31ea7524f07aa188060752a5"
+    },
+    "portfolio_functions": {
+      "path": "examples/swe_bench_full_development/study.py",
+      "file_sha256": "5d848353638d638b48b77ce1979ca5e1148c8642ac471eed6fd389266d6a1697"
+    },
+    "forecast_functions": {
+      "path": "examples/prequential_response_assembly/study.py",
+      "file_sha256": "4455711d972a7ec5b4d446420f48e489e60274b5f36f90bb4162ccee122b1515"
+    }
+  },
+  "authority": {
+    "paid_api_calls": 0,
+    "new_agent_runs": 0,
+    "sealed_verified_full_system_agents_opened": 0,
+    "algorithm_changes": 0,
+    "parameter_searches": 0,
+    "generator_development": false,
+    "core_schema_changes": 0
+  },
+  "claim_boundary": "This is an outcome-open portability screen on public retrospective data. A surviving method becomes the modern development incumbent, not a validated production Selector.",
+  "plan_digest": "88288ee7a27249d60a69a1d7038bc95b3078cc20b49af8d6976bd4d16fe75f02"
+}
