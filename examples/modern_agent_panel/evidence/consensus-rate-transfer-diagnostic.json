@@ -1,0 +1,116 @@
+{
+  "schema_version": "barcarolle_consensus_rate_transfer_diagnostic_v1",
+  "study_id": "consensus-rate-opened-transfer-diagnostic-2026-07-31",
+  "epistemic_status": "opened_postfreeze_diagnostic_not_independent_confirmation",
+  "bound_candidate": {
+    "plan_path": "examples/modern_agent_panel/consensus-rate-plan.json",
+    "plan_digest": "4298d371d83bcd954932a34692ef2692384ce35e0e42989ff02093409a04fb6e",
+    "primary_result_digest": "3816b067491e574d19fd315131cc7080f6da31b644b7f3a7fa4a8864d059f306",
+    "implementation_sha256": "4a6f3a62cf9e203a71533f120b0d87decce8d56f6d87acb0685eb06913cd4237",
+    "selector_id": "consensus_rate_match"
+  },
+  "source_identities": {
+    "primary": {
+      "lane_id": "verified-mini-swe-agent-v2",
+      "task_count": 500,
+      "agent_count": 13,
+      "dataset_sha256": "43ed5a3d1d98da36472c1ade65ddd2085d7b4ff694fcaf6a023a07c5c1f32f21",
+      "result_source_sha256": "c3bf3a74d7d67ba7e2777e197f96894601917e8e186a078133897ed3e81566e5",
+      "outcome_matrix_digest": "b8eb614a74075ea0f1aa96c89d100f3ce3c8702481686b1b5ecd4a095650ac6e"
+    },
+    "secondary": {
+      "lane_id": "full-modern-system",
+      "task_count": 2294,
+      "agent_count": 3,
+      "dataset_sha256": "0996c4bd66e647ecef89d3ef57e527dcc0ea4e8369ac6f740cdd570734188df2",
+      "outcome_matrix_digest": "12fa6177fbf03393f897294d8906f1dc572745b38528c19709809e7ce2354e36"
+    }
+  },
+  "method": {
+    "aggregation": "Average target-Agent-by-Origin absolute errors inside repository, then average repositories equally.",
+    "internal_secondary_loo": "On all 2,294 SWE-bench Full Tasks, target each of the three complete systems and exclude it before constructing the two-Agent reference matrix.",
+    "primary_references_external_targets": "On the common 500 SWE-bench Verified Tasks, use all thirteen fixed-Harness primary Agents as references and the three complete systems as absent external targets.",
+    "algorithm_changes_after_primary": 0,
+    "parameter_searches": 0
+  },
+  "results": {
+    "internal_secondary_loo": {
+      "5": {
+        "reference_agent_count": 2,
+        "repository_count": 10,
+        "origin_count": 408,
+        "target_agent_count": 3,
+        "full_history_mae": 0.1919608835112508,
+        "candidate_mae": 0.20692043922372383,
+        "candidate_minus_full": 0.014959555712473038,
+        "directions": {
+          "repository_favorable": 0,
+          "agent_favorable": 0,
+          "origin_favorable": 144,
+          "origin_tied": 1,
+          "origin_unfavorable": 263
+        }
+      },
+      "10": {
+        "reference_agent_count": 2,
+        "repository_count": 10,
+        "origin_count": 201,
+        "target_agent_count": 3,
+        "full_history_mae": 0.15045290353662305,
+        "candidate_mae": 0.17445923376043856,
+        "candidate_minus_full": 0.024006330223815514,
+        "directions": {
+          "repository_favorable": 0,
+          "agent_favorable": 0,
+          "origin_favorable": 69,
+          "origin_tied": 1,
+          "origin_unfavorable": 131
+        }
+      }
+    },
+    "primary_references_external_targets": {
+      "5": {
+        "reference_agent_count": 13,
+        "repository_count": 5,
+        "origin_count": 61,
+        "target_agent_count": 3,
+        "full_history_mae": 0.17962982819520779,
+        "candidate_mae": 0.19714285714285715,
+        "candidate_minus_full": 0.01751302894764936,
+        "directions": {
+          "repository_favorable": 1,
+          "agent_favorable": 0,
+          "origin_favorable": 29
+        }
+      },
+      "10": {
+        "reference_agent_count": 13,
+        "repository_count": 5,
+        "origin_count": 30,
+        "target_agent_count": 3,
+        "full_history_mae": 0.15689610184587238,
+        "candidate_mae": 0.1646031746031746,
+        "candidate_minus_full": 0.00770707275730223,
+        "directions": {
+          "repository_favorable": 3,
+          "agent_favorable": 1,
+          "origin_favorable": 19
+        }
+      }
+    }
+  },
+  "independent_audit": {
+    "recomputed": true,
+    "primary_membership_and_score_cell_count": 1183,
+    "primary_membership_mismatch_count": 0,
+    "transfer_metric_mismatch_count": 0,
+    "sealed_outcomes_read": 0
+  },
+  "resource_use": {
+    "paid_api_calls": 0,
+    "new_agent_runs": 0,
+    "sealed_verified_full_system_agents_opened": 0
+  },
+  "claim_boundary": "Both opened transfer diagnostics lose to Full and therefore limit the primary result to same-Harness repository-equal outcome-open development. They do not independently estimate prospective validity.",
+  "diagnostic_digest": "4ff5a66e86cd775fcce4992f593e78dc109380f87e07c48670d6594e0b872545"
+}

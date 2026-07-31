@@ -76,3 +76,37 @@ uv run \
 
 The compact evidence retires all four unchanged methods. See
 [`2026-07-31-modern-agent-selector-portability.md`](../../docs/experiments/2026-07-31-modern-agent-selector-portability.md).
+
+The outcome-open consensus-rate candidate is evaluated separately. Its primary
+run reads only the fixed-Harness lane:
+
+```bash
+uv run \
+  --with numpy==2.5.1 \
+  --with pyarrow==25.0.0 \
+  python examples/modern_agent_panel/consensus_rate.py run \
+  --output outputs/research/2026-07-31-consensus-rate-selector/result-a.json
+
+uv run \
+  --with numpy==2.5.1 \
+  --with pyarrow==25.0.0 \
+  python examples/modern_agent_panel/consensus_rate.py run \
+  --output outputs/research/2026-07-31-consensus-rate-selector/result-b.json
+
+uv run \
+  --with numpy==2.5.1 \
+  --with pyarrow==25.0.0 \
+  python examples/modern_agent_panel/consensus_rate.py summarize \
+  --output examples/modern_agent_panel/evidence/consensus-rate-summary.json
+
+uv run \
+  --with numpy==2.5.1 \
+  --with pyarrow==25.0.0 \
+  python examples/modern_agent_panel/consensus_rate.py validate \
+  --summary examples/modern_agent_panel/evidence/consensus-rate-summary.json
+```
+
+See
+[`2026-07-31-consensus-rate-selector.md`](../../docs/experiments/2026-07-31-consensus-rate-selector.md)
+for the algorithm, multi-route search disclosure, sensitivity reversals, and
+opened cross-system failure diagnostics.
