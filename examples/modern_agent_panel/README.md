@@ -45,3 +45,34 @@ uv run \
   --with pyarrow==25.0.0 \
   python examples/modern_agent_panel/study.py validate
 ```
+
+The unchanged Selector portability replay is separate:
+
+```bash
+uv run \
+  --with numpy==2.5.1 \
+  --with scipy==1.16.3 \
+  --with pyarrow==25.0.0 \
+  python examples/modern_agent_panel/portability.py run \
+  --output outputs/research/2026-07-31-modern-agent-portability/result-a.json
+```
+
+Repeat to `result-b.json`, then run `portability.py summarize` and
+`portability.py validate`:
+
+```bash
+uv run \
+  --with numpy==2.5.1 \
+  --with scipy==1.16.3 \
+  --with pyarrow==25.0.0 \
+  python examples/modern_agent_panel/portability.py summarize
+
+uv run \
+  --with numpy==2.5.1 \
+  --with scipy==1.16.3 \
+  --with pyarrow==25.0.0 \
+  python examples/modern_agent_panel/portability.py validate
+```
+
+The compact evidence retires all four unchanged methods. See
+[`2026-07-31-modern-agent-selector-portability.md`](../../docs/experiments/2026-07-31-modern-agent-selector-portability.md).

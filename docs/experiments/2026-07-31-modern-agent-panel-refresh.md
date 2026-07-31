@@ -205,17 +205,15 @@ The Full secondary lane has only three systems, mixes one- and multi-attempt
 policies, and includes two unchecked submissions. Agreement with it is a
 transfer diagnostic, not confirmation.
 
-## Next Decision
+## Subsequent Decision
 
-Freeze one unchanged, no-tuning portability replay of ordinary recency,
-stationary response matching, ALG-015U, and ALG-016U. Run direct MAE on the
-fixed-Harness primary lane first, then use the Full-system lane only as a
-secondary reversal check.
+The planned unchanged replay is complete. Ordinary recency, stationary
+response matching, ALG-015U, and ALG-016U are all worse than Full at H5 and H10
+on both modern panels. No old response-family method is retained.
 
-This replay establishes the modern incumbent; it does not rehabilitate a method
-merely because it beats its obsolete-panel score. If no existing method beats
-Full at both horizons, begin theory-driven Selector research on the modern
-panel.
+See
+[`2026-07-31-modern-agent-selector-portability.md`](2026-07-31-modern-agent-selector-portability.md).
+Full history remains the development baseline and theory-driven work is next.
 
 ## Reproduction
 

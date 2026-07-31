@@ -47,41 +47,45 @@ The six project-sealed Verified full-system holdout Agents remain unread.
 | Reference-future Oracle MAE | `0.120285` | `0.105282` |
 | Target-future Oracle MAE | `0.014755` | `0.013846` |
 
-Full beats both constant estimators. The reference Oracle hides the target
-Agent and is favorable in all five repositories at both horizons. This proves
-shared same-future response structure, not pre-Origin forecastability.
+The unchanged portability replay compared ordinary recency, stationary
+response matching, ALG-015U, and ALG-016U. Every candidate is worse than Full
+at both horizons:
 
-On the exact SWE-bench Full frame, changing from the legacy panel to the three
-modern systems raises Full MAE from `0.078554/0.062579` to
-`0.191961/0.150453`. The previous low-MAE regime was therefore substantially
-an Agent-population artifact.
+| Fixed mini-SWE-agent v2 | H5 candidate − Full | H10 candidate − Full |
+| --- | ---: | ---: |
+| Ordinary recency | `+0.009522` | `+0.035875` |
+| Stationary response match | `+0.006449` | `+0.013267` |
+| ALG-015U | `+0.012734` | `+0.024607` |
+| ALG-016U | `+0.001537` | `+0.011208` |
 
-Two complete executions are byte-identical. Evidence:
+All four also lose at both horizons on the three-system modern Full panel. No
+old response method is retained. Full history is the current development
+incumbent.
 
-- `docs/experiments/2026-07-31-modern-agent-panel-refresh.md`;
-- `examples/modern_agent_panel/plan.json`;
-- `examples/modern_agent_panel/evidence/summary.json`.
+The replay is byte-identical across two executions. Evidence:
+
+- `docs/experiments/2026-07-31-modern-agent-selector-portability.md`;
+- `examples/modern_agent_panel/portability-plan.json`;
+- `examples/modern_agent_panel/evidence/portability-summary.json`.
 
 ## Claim Boundary
 
-No Selector was tested or nominated. Oracles use future outcomes. The Tasks end
-by 2023 and may be memorized or unlike current workloads. The fixed-Harness
-panel is suitable for outcome-open algorithm development, not production or
-prospective confirmation.
+No Selector is nominated. The future-open Oracles show subset capacity, not
+pre-Origin forecastability. The Tasks end by 2023 and may be memorized or unlike
+current workloads. Both public panels are now outcome-open development
+evidence. The six project-sealed Verified full-system Agents remain unread.
 
 ## Next Action
 
-Freeze one unchanged, no-tuning replay of ordinary recency, stationary response
-matching, ALG-015U, and ALG-016U:
+Run one bounded decomposition before proposing a new algorithm:
 
-1. run primary fixed-Harness direct MAE first;
-2. keep each target Agent's entire outcome column out of membership decisions;
-3. report candidate-minus-Full, random percentile, repository and Agent
-   directions, and reference-Oracle headroom captured;
-4. use the modern Full-system lane only as a secondary reversal check;
-5. retain a mechanism only if it beats Full at both horizons on primary and
-   does not reverse on secondary.
+1. separate visible-response forecast error, exact materialization error, and
+   target-transfer error for the frozen old methods;
+2. preserve repository and horizon directions instead of pooling them away;
+3. use the result to freeze one uncertainty-aware distributional coreset that
+   predicts response-pattern distributions and anchors uncertainty to Full
+   history;
+4. gate it on direct MAE versus both Full and random at H5 and H10.
 
-If none survives, begin theory-driven Selector work on the modern panel. No
-paid Agent call, Generator work, generic source framework, or core-schema
-change is needed.
+Do not tune the retired methods or open the sealed Agents. No paid Agent call,
+Generator work, generic source framework, or core-schema change is needed.
