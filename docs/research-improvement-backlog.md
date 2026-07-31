@@ -2,9 +2,10 @@
 
 Last reviewed: 2026-07-31.
 
-Status: modern public Agent population admitted; all four unchanged
-response-family methods failed portability. Full history remains the
-development baseline and theory-driven work is next.
+Status: the first modern-panel outcome-open candidate beats Full at H5 and H10
+under the frozen repository-equal estimand, but reverses under Origin weighting
+and fails opened cross-system transfer. Reference-to-target population shift is
+the next research question.
 
 `PROCESS.md` is the short handoff. The legacy-panel research record is
 preserved in
@@ -130,6 +131,50 @@ Two complete executions are byte-identical. Evidence:
 - `examples/modern_agent_panel/portability-plan.json`;
 - `examples/modern_agent_panel/evidence/portability-summary.json`.
 
+### Consensus-rate development candidate
+
+`consensus_rate_match` matches the selected Tasks' pooled reference-Agent pass
+rate to Full history, then breaks exact matches toward low reference-Agent
+disagreement. It excludes the target Agent before aggregation and uses the same
+rule at H5 and H10.
+
+| Fixed mini-SWE-agent v2 | H5 | H10 |
+| --- | ---: | ---: |
+| Full-history MAE | `0.179527` | `0.129700` |
+| Candidate MAE | `0.173387` | `0.115927` |
+| Candidate − Full | `-0.006140` | `-0.013774` |
+| Favorable repositories | 3/5 | 4/5 |
+| Favorable Agents | 10/13 | 11/13 |
+| Favorable Origins | 23/61 | 13/30 |
+| Origin-weighted candidate − Full | `+0.004284` | `+0.001864` |
+
+Every repository leave-one-out result stays favorable. Both component
+ablations lose to Full. Two complete primary runs are byte-identical and all
+target/future information audits pass.
+
+The result remains outcome-open development evidence. The candidate was chosen
+after a bounded multi-route search; the local META family alone had 72 experts
+and 68 distinct trajectories. It must not be treated as an independent
+discovery.
+
+Opened transfer diagnostics fail:
+
+| Transfer diagnostic candidate − Full | H5 | H10 |
+| --- | ---: | ---: |
+| Three Full systems, internal LOO | `+0.014960` | `+0.024006` |
+| Thirteen primary references → three external targets on common Verified Tasks | `+0.017513` | `+0.007707` |
+
+This is consistent with reference-target non-exchangeability or Harness shift.
+It does not erase the repository-equal primary result; it prevents promotion to
+a general or production Selector.
+
+Evidence:
+
+- [`experiments/2026-07-31-consensus-rate-selector.md`](experiments/2026-07-31-consensus-rate-selector.md);
+- `examples/modern_agent_panel/consensus-rate-plan.json`;
+- `examples/modern_agent_panel/evidence/consensus-rate-summary.json`;
+- `examples/modern_agent_panel/evidence/consensus-rate-transfer-diagnostic.json`.
+
 ## Active Approach Registry
 
 | Route | State | Reopening or exit condition |
@@ -138,44 +183,41 @@ Two complete executions are byte-identical. Evidence:
 | Modern Full complete-system panel | opened secondary diagnostic | It has now informed the portability decision; do not call it independent confirmation for a new method |
 | Legacy Full eleven-Agent panel | archived stress/failure region | Use only to study historical or low-prevalence behavior |
 | Ordinary recency, stationary match, ALG-015U, ALG-016U | retired unchanged | Reopen only under a new causal mechanism or independent evidence, not parameter tuning |
-| Full history | active development baseline | A Selector must beat it directly at H5 and H10 |
-| Forecast/materialization/transfer decomposition | next | Complete once on the modern primary panel before freezing a new family |
-| Uncertainty-aware distributional coreset | leading theory route, not frozen | Freeze only after the decomposition specifies the information contract and falsification gate |
+| Full history | active no-Selection baseline | Every Selector must still beat it directly; random rank is diagnostic only |
+| Forecast/materialization/transfer decomposition | completed | Transfer dominated; exact materialization was not the limiting error |
+| Distributional, MMD, semantic, and IRT routes | closed for this opened panel | Reopen only under a new mechanism or evidence boundary |
+| `consensus_rate_match` | outcome-open development candidate | Retain as the primary-panel incumbent; do not deploy or tune on the same five-repository score |
+| Reference-to-target population shift | next | Map cold-start support and freeze one robust or abstaining mechanism |
+| Warm-start target calibration | research option | Use only cached target outcomes; do not assume they exist in cold start |
 | Self-hosted recent open 7B | deferred | Reopen when exact public outcomes appear or public data no longer answers the next question |
-| Six sealed Verified full-system Agents | unread confirmation boundary | Open only after an outcome-open candidate passes its development gate |
-| New paid Agent outcomes | not needed | Reconsider only after public outcome-open development produces a candidate worth confirming and sealed/public evidence is insufficient |
+| Six sealed Verified full-system Agents | unread but population-mismatched | Do not call them clean modern confirmation; open only for a prespecified question they can answer |
+| New paid Agent outcomes | not needed yet | Reconsider only after existing outcomes identify a candidate and a compatible confirmation population |
 
 ## Next Cycle
 
-First run a bounded, candidate-free decomposition on the primary panel:
+Stop optimizing the same primary repository-equal score. Use the paid-free
+public outcomes to answer the transfer question:
 
-1. compare each frozen method's visible-response forecast with the actual next
-   block;
-2. measure forecast-to-subset materialization error separately;
-3. measure visible-response-to-target-pass-rate transfer by repository,
-   Agent, and horizon;
-4. identify which error dominates without tuning a method on the diagnostic.
+1. map candidate and Full error against reference-panel cardinality, held-out
+   target ability, model family, and Harness change;
+2. distinguish cold start, where no target outcomes exist, from warm start,
+   where the Result Store already contains target outcomes on historical
+   Tasks;
+3. define a support or abstention rule for cold-start targets that are not
+   represented by the reference panel;
+4. freeze one robust cold-start mechanism or one explicitly warm-start
+   mechanism before scoring it;
+5. seek an independent same-Harness target boundary before any production
+   nomination.
 
-Then freeze one theory-driven family. The leading route should:
+Importance weighting or AIPW is a literature-backed lead, not an automatic
+engineering change. A weighted estimator would change the semantics of the
+reported benchmark score and must first be reconciled with the raw pass-rate
+contract.
 
-- predict a repository-local distribution over other-Agent response patterns,
-  rather than only coordinate-wise means;
-- keep Full history as an uncertainty anchor;
-- make the budget-ten decision against predictive uncertainty and
-  target-transfer risk;
-- test direct pass-rate MAE against both Full and 20,000 random subsets at H5
-  and H10;
-- require repository and Agent directional support, not only one pooled
-  aggregate.
-
-This route is a hypothesis, not yet `ALG-019` or a frozen plan. Task content,
-Git, or repository observables may be added only through an explicit
-pre-Origin theory and ablation. Do not perform an unrestricted feature or
-constant search on the opened outcomes.
-
-The public fixed-Harness panel remains development data. The modern Full panel
-is also opened diagnostic data after the portability replay. Preserve the six
-sealed Agents until a candidate passes the outcome-open gate.
+The public fixed-Harness panel and modern Full panel are both opened development
+or diagnostic data. The six sealed Agents remain unread, but their legacy
+population is not a clean answer to the modern target-shift question.
 
 No paid call, Generator development, generic source framework, trainer,
 scheduler, or core-schema change is needed for this cycle.

@@ -10,82 +10,77 @@ For one target Agent and one repository, choose ten historical Tasks so that
 the Agent's pass rate on those Tasks is close to its pass rate on the next
 Tasks.
 
-Direct future pass-rate MAE is primary. H5 and H10 are separate horizons. Full
-history is the no-Selection baseline; random ten-Task subsets calibrate the
-sampling space; future-open Oracles measure capacity only.
+Direct future pass-rate MAE is primary. H5 and H10 are separate. Full history
+is the no-Selection baseline; uniform random ten-Task subsets calibrate the
+sampling space. Runtime never pools Tasks across repositories.
 
-Runtime remains one Agent, one repository, one Task Pool, and one Selection.
-Repositories are separate offline evidence units.
+## Active Data
 
-## Active Population
-
-The legacy eleven-Agent SWE-bench Full panel is no longer the primary
-development population. Its six early RAG submissions and other old systems
-made failures dominant, compressed MAE, and biased algorithm design toward
-near-zero prediction.
-
-Primary outcome-open development now uses thirteen models evaluated on all 500
+Primary outcome-open development uses thirteen models evaluated on all 500
 SWE-bench Verified Tasks with the same mini-SWE-agent v2.0.0 Harness:
 
-- Agent pass-rate range `0.562–0.768`, pooled `0.713077`;
-- five repositories with minimum history 20;
-- 61 H5 Origins and 30 H10 Origins;
-- no duplicate Agent vectors.
+- pass-rate range `0.562–0.768`;
+- five repositories;
+- 61 H5 Origins and 30 H10 Origins.
 
-A secondary diagnostic uses three modern complete systems on all 2,294
-SWE-bench Full Tasks: SWE-agent Claude 3.7, Salesforce SAGE, and Sonar
-Foundation Agent Claude Opus 4.5. Their pooled pass rate is `0.435629`.
+An opened secondary diagnostic contains three modern complete systems on all
+2,294 SWE-bench Full Tasks. The six project-sealed Verified full-system Agents
+remain unread, but their legacy population is not a clean modern confirmation
+boundary.
 
-The six project-sealed Verified full-system holdout Agents remain unread.
+## Current Result
 
-## Current Evidence
+`consensus_rate_match` is the first pre-Origin budget-ten development candidate
+to beat Full at both horizons on the frozen repository-equal estimand:
 
 | Fixed mini-SWE-agent v2 | H5 | H10 |
 | --- | ---: | ---: |
 | Full-history MAE | `0.179527` | `0.129700` |
-| Mean random-ten MAE | `0.196332` | `0.155752` |
-| Reference-future Oracle MAE | `0.120285` | `0.105282` |
-| Target-future Oracle MAE | `0.014755` | `0.013846` |
+| Candidate MAE | `0.173387` | `0.115927` |
+| Candidate − Full | `-0.006140` | `-0.013774` |
+| Favorable repositories | 3/5 | 4/5 |
+| Favorable Agents | 10/13 | 11/13 |
+| Favorable Origins | 23/61 | 13/30 |
 
-The unchanged portability replay compared ordinary recency, stationary
-response matching, ALG-015U, and ALG-016U. Every candidate is worse than Full
-at both horizons:
+The rule matches the selected Tasks' pooled reference-Agent pass rate to Full
+history, then breaks exact matches toward low reference-Agent disagreement.
+The target column and current future block are excluded. Two complete runs are
+byte-identical; both component ablations lose to Full.
 
-| Fixed mini-SWE-agent v2 | H5 candidate − Full | H10 candidate − Full |
-| --- | ---: | ---: |
-| Ordinary recency | `+0.009522` | `+0.035875` |
-| Stationary response match | `+0.006449` | `+0.013267` |
-| ALG-015U | `+0.012734` | `+0.024607` |
-| ALG-016U | `+0.001537` | `+0.011208` |
+Important limits:
 
-All four also lose at both horizons on the three-system modern Full panel. No
-old response method is retained. Full history is the current development
-incumbent.
+- Origin-weighted delta reverses to `+0.004284` at H5 and `+0.001864` at H10;
+- opened three-system internal LOO loses by `+0.014960` and `+0.024006`;
+- thirteen primary references predicting those three external systems on the
+  common Verified Tasks loses by `+0.017513` and `+0.007707`;
+- the candidate was selected after bounded multi-route search on opened
+  primary outcomes.
 
-The replay is byte-identical across two executions. Evidence:
+This is a same-Harness, repository-equal development incumbent, not a
+production Selector or a general cross-Harness result.
 
-- `docs/experiments/2026-07-31-modern-agent-selector-portability.md`;
-- `examples/modern_agent_panel/portability-plan.json`;
-- `examples/modern_agent_panel/evidence/portability-summary.json`.
+Evidence:
 
-## Claim Boundary
-
-No Selector is nominated. The future-open Oracles show subset capacity, not
-pre-Origin forecastability. The Tasks end by 2023 and may be memorized or unlike
-current workloads. Both public panels are now outcome-open development
-evidence. The six project-sealed Verified full-system Agents remain unread.
+- `docs/experiments/2026-07-31-consensus-rate-selector.md`;
+- `examples/modern_agent_panel/consensus-rate-plan.json`;
+- `examples/modern_agent_panel/evidence/consensus-rate-summary.json`;
+- `examples/modern_agent_panel/evidence/consensus-rate-transfer-diagnostic.json`.
 
 ## Next Action
 
-Run one bounded decomposition before proposing a new algorithm:
+Do not tune the same five-repository score again. Use existing public outcomes
+to study reference-to-target population shift:
 
-1. separate visible-response forecast error, exact materialization error, and
-   target-transfer error for the frozen old methods;
-2. preserve repository and horizon directions instead of pooling them away;
-3. use the result to freeze one uncertainty-aware distributional coreset that
-   predicts response-pattern distributions and anchors uncertainty to Full
-   history;
-4. gate it on direct MAE versus both Full and random at H5 and H10.
+1. map sensitivity to reference-panel size, target ability, model family, and
+   Harness change;
+2. separate cold start with no target outcomes from warm start with cached
+   target Results;
+3. freeze a support/abstention rule or a target-robust mechanism before
+   scoring it;
+4. seek a new same-Harness target boundary before production nomination.
 
-Do not tune the retired methods or open the sealed Agents. No paid Agent call,
-Generator work, generic source framework, or core-schema change is needed.
+Importance weighting or AIPW is a research lead, not yet a schema decision,
+because it would change the meaning of the raw benchmark pass rate.
+
+No paid Agent call, Generator work, generic source framework, or core-schema
+change is needed for the next bounded cycle.
