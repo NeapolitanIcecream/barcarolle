@@ -1,8 +1,10 @@
 # Barcarolle Cross-Session Handoff
 
-Last updated: 2026-07-31.
+Last updated: 2026-08-05.
 
 Current ledger: `docs/research-improvement-backlog.md`.
+
+Phase summary: `docs/experiments/2026-08-05-research-phase-summary.md`.
 
 ## Research Question
 
