@@ -78,6 +78,12 @@ def test_verified_suitability_plan_rejects_diagnostic_drift(
 def test_verified_inputs_load_only_opened_development_agents() -> None:
     pytest.importorskip("pyarrow")
     plan = load_verified_suitability_plan()
+    source = plan["source"]
+    if any(
+        not (REPOSITORY_ROOT / source[key]).exists()
+        for key in ("dataset_path", "result_directory")
+    ):
+        pytest.skip("ignored Verified source artifacts are not present")
     tasks, outcomes, diagnostics, metadata, identities = (
         load_verified_inputs(plan=plan)
     )
