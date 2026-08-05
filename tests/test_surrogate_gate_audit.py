@@ -37,7 +37,18 @@ from examples.surrogate_gate_audit.study import (  # noqa: E402
 )
 
 
+def _skip_if_frozen_bound_files_are_unavailable() -> None:
+    path = REPOSITORY_ROOT / "examples" / "surrogate_gate_audit" / "plan.json"
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    if any(
+        not (REPOSITORY_ROOT / item["path"]).exists()
+        for item in payload["bound_files"]
+    ):
+        pytest.skip("ignored frozen binding artifacts are not present")
+
+
 def test_surrogate_gate_audit_plan_is_self_bound() -> None:
+    _skip_if_frozen_bound_files_are_unavailable()
     plan = load_audit_plan()
     amendment = load_audit_amendment(plan=plan)
     provenance_amendment = load_audit_provenance_amendment(
@@ -100,6 +111,7 @@ def test_surrogate_gate_audit_evidence_is_self_bound() -> None:
 
 
 def test_surrogate_gate_audit_validates_every_logical_binding() -> None:
+    _skip_if_frozen_bound_files_are_unavailable()
     plan = load_audit_plan()
     bindings = plan["logical_bindings"]
     keyword_arguments: dict[str, Any] = {

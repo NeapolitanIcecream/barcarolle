@@ -99,9 +99,10 @@ replay 和证据摘要模式。公开 benchmark normalizer 保存逐 Task outcom
 
 合入收口时发现默认 CI 会因缺少 NumPy、SciPy 和 PyArrow 跳过 43 个研究
 与算法测试。三项依赖现已进入锁定的 `research` extra；质量工作流保留
-Python 3.11 核心门禁，并在 Python 3.14 下另跑完整研究套件，只保留两个
-必须显式提供真实目标仓库的 opt-in skip。这样不需要改写绑定源码 digest
-和浮点运行时的冻结实验结果。
+Python 3.11 核心门禁，并在 Python 3.14 下另跑研究套件。依赖被 Git
+忽略的原始来源或中间证据的复现测试，在干净 checkout 中会显式 skip；
+具备完整本地证据时，研究套件为 `1244 passed, 2 skipped`。这样无需上传
+原始产物，也不需要改写绑定源码 digest 和浮点运行时的冻结实验结果。
 
 ## 已付费模型研究
 

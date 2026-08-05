@@ -31,6 +31,21 @@ from examples.swe_bench_full_development.study import (  # noqa: E402
 )
 
 
+def _skip_if_bound_artifacts_are_unavailable(plan_name: str) -> None:
+    path = (
+        REPOSITORY_ROOT
+        / "examples"
+        / "swe_bench_full_development"
+        / plan_name
+    )
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    if any(
+        not (REPOSITORY_ROOT / binding["path"]).exists()
+        for binding in payload["bound_artifacts"].values()
+    ):
+        pytest.skip("ignored frozen binding artifacts are not present")
+
+
 def _task(repository_id: str, index: int) -> TaskMetadata:
     return TaskMetadata(
         instance_id=f"{repository_id}-{index:02d}",
@@ -42,6 +57,7 @@ def _task(repository_id: str, index: int) -> TaskMetadata:
 
 
 def test_full_development_plan_freezes_direct_mae_and_zero_cost() -> None:
+    _skip_if_bound_artifacts_are_unavailable("plan.json")
     plan = load_plan()
 
     assert tuple(row["selector_id"] for row in plan["candidates"]) == CANDIDATE_IDS
@@ -70,6 +86,7 @@ def test_full_development_plan_rejects_tampering(tmp_path: Path) -> None:
 
 
 def test_full_diagnostic_is_future_open_and_zero_cost() -> None:
+    _skip_if_bound_artifacts_are_unavailable("diagnostic-plan.json")
     plan = load_diagnostic_plan()
 
     assert plan["status"] == "post_result_diagnostic_frozen_before_oracle_scores"
