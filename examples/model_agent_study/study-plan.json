@@ -1,0 +1,222 @@
+{
+  "schema_version": "barcarolle_model_agent_study_v1",
+  "study_id": "model-agent-study-2026-07-25",
+  "approved_at": "2026-07-25T13:44:44Z",
+  "model_scope_started_at": "2026-07-25T13:44:44Z",
+  "model_scope_ended_at": "2026-08-15T00:00:00Z",
+  "endpoint_mapping": {
+    "version": "llm_proxy_to_openai_v1",
+    "endpoint_digest": "359ee82d1d341a8d28f3ea8f10f7cc5a5a4e95eac63a449a26eda9d0f8163ac6",
+    "source_variables": [
+      "LLM_BASE_URL",
+      "LLM_API_KEY"
+    ],
+    "harness_variables": [
+      "OPENAI_BASE_URL",
+      "OPENAI_API_KEY"
+    ]
+  },
+  "budget": {
+    "total_usd": 300.0,
+    "calibration_authority_usd": 90.0,
+    "main_and_repeat_authority_usd": 180.0,
+    "unallocated_reserve_usd": 30.0,
+    "quota_points_per_usd": 500000,
+    "quota_baseline_total_used": 707840389,
+    "quota_maximum_total_used": 857840389
+  },
+  "calibration": {
+    "source": "fixed certified 10-task Pylint SWE-bench Verified/Lite pilot",
+    "replicate_fraction": 0.2,
+    "replicate_count": 2,
+    "schedule_seed": 20260725,
+    "campaigns": [
+      {
+        "campaign_id": "model-calibration-cheap-2026-07-25",
+        "agent_keys": [
+          "gpt-5.4-mini-high",
+          "deepseek-v4-pro-high"
+        ],
+        "maximum_estimated_cost_usd": 15.0,
+        "maximum_estimated_cost_per_call_usd": 2.0,
+        "authority_rates": {
+          "uncached_input_tokens": 3e-06,
+          "cached_input_tokens": 7.5e-07,
+          "output_tokens": 6e-06
+        }
+      },
+      {
+        "campaign_id": "model-calibration-cross-provider-2026-07-25",
+        "agent_keys": [
+          "gemini-3.1-pro-preview-thinking-high",
+          "claude-sonnet-4-6-thinking-high"
+        ],
+        "maximum_estimated_cost_usd": 25.0,
+        "maximum_estimated_cost_per_call_usd": 3.0,
+        "authority_rates": {
+          "uncached_input_tokens": 3e-06,
+          "cached_input_tokens": 3e-07,
+          "output_tokens": 1.5e-05
+        }
+      },
+      {
+        "campaign_id": "model-calibration-frontier-2026-07-25",
+        "agent_keys": [
+          "gpt-5.6-terra-high",
+          "gpt-5.6-sol-high"
+        ],
+        "maximum_estimated_cost_usd": 50.0,
+        "maximum_estimated_cost_per_call_usd": 6.0,
+        "authority_rates": {
+          "uncached_input_tokens": 5e-06,
+          "cached_input_tokens": 5e-07,
+          "output_tokens": 3.0000001e-05
+        }
+      }
+    ]
+  },
+  "models": {
+    "gpt-5.4-mini-high": {
+      "agent_id": "codex-gpt-5-4-mini-high",
+      "requested_model_id": "gpt-5.4-mini",
+      "reasoning_effort": "high",
+      "provider_family": "Azure/OpenAI-compatible",
+      "pricing": {
+        "pricing_version": "gateway-pricing-2026-07-25-gpt-5.4-mini",
+        "uncached_input_tokens": 7.5e-07,
+        "cached_input_tokens": 7.5e-07,
+        "output_tokens": 4.5e-06,
+        "raw": {
+          "model_ratio": 0.375,
+          "completion_ratio": 6,
+          "cache_ratio": null
+        }
+      }
+    },
+    "deepseek-v4-pro-high": {
+      "agent_id": "codex-deepseek-v4-pro-high",
+      "requested_model_id": "deepseek-v4-pro",
+      "reasoning_effort": "high",
+      "provider_family": "DeepSeek/OpenAI-compatible",
+      "pricing": {
+        "pricing_version": "gateway-pricing-2026-07-25-deepseek-v4-pro",
+        "uncached_input_tokens": 3e-06,
+        "cached_input_tokens": 2.5e-07,
+        "output_tokens": 6e-06,
+        "raw": {
+          "model_ratio": 1.5,
+          "completion_ratio": 2,
+          "cache_ratio": 0.083333333333
+        }
+      }
+    },
+    "gemini-3.1-pro-preview-thinking-high": {
+      "agent_id": "codex-gemini-3-1-pro-preview-thinking-high",
+      "requested_model_id": "gemini-3.1-pro-preview-thinking",
+      "reasoning_effort": "high",
+      "provider_family": "Google/OpenAI-compatible",
+      "pricing": {
+        "pricing_version": "gateway-pricing-2026-07-25-gemini-3.1-pro-preview-thinking",
+        "uncached_input_tokens": 2e-06,
+        "cached_input_tokens": 2e-07,
+        "output_tokens": 1.2e-05,
+        "raw": {
+          "model_ratio": 1,
+          "completion_ratio": 6,
+          "cache_ratio": 0.1
+        }
+      }
+    },
+    "claude-sonnet-4-6-thinking-high": {
+      "agent_id": "codex-claude-sonnet-4-6-thinking-high",
+      "requested_model_id": "claude-sonnet-4-6-thinking",
+      "reasoning_effort": "high",
+      "provider_family": "Anthropic/AWS/OpenAI-compatible",
+      "pricing": {
+        "pricing_version": "gateway-pricing-2026-07-25-claude-sonnet-4-6-thinking",
+        "uncached_input_tokens": 3e-06,
+        "cached_input_tokens": 3e-07,
+        "output_tokens": 1.5e-05,
+        "raw": {
+          "model_ratio": 1.5,
+          "completion_ratio": 5,
+          "cache_ratio": 0.1,
+          "create_cache_ratio": 2.083333333333
+        }
+      }
+    },
+    "gpt-5.6-terra-high": {
+      "agent_id": "codex-gpt-5-6-terra-high",
+      "requested_model_id": "gpt-5.6-terra",
+      "reasoning_effort": "high",
+      "provider_family": "Azure/OpenAI-compatible",
+      "pricing": {
+        "pricing_version": "gateway-pricing-2026-07-25-gpt-5.6-terra-standard-context",
+        "uncached_input_tokens": 2.5e-06,
+        "cached_input_tokens": 2.5e-07,
+        "output_tokens": 1.5e-05,
+        "raw": {
+          "billing_mode": "tiered_expr",
+          "billing_expr": "len <= 272000 ? tier(\"standard\", p * 2.5 + c * 15 + cr * 0.25 + cc * 3.125) : tier(\"long_context\", p * 5 + c * 22.5 + cr * 0.5 + cc * 6.25)"
+        }
+      }
+    },
+    "gpt-5.6-sol-high": {
+      "agent_id": "codex-gpt-5-6-sol-high",
+      "requested_model_id": "gpt-5.6-sol",
+      "reasoning_effort": "high",
+      "provider_family": "Azure/OpenAI-compatible",
+      "pricing": {
+        "pricing_version": "gateway-pricing-2026-07-25-gpt-5.6-sol-standard-context",
+        "uncached_input_tokens": 5e-06,
+        "cached_input_tokens": 5e-07,
+        "output_tokens": 3.0000001e-05,
+        "raw": {
+          "billing_mode": "tiered_expr",
+          "billing_expr": "len <= 272000 ? tier(\"standard\", p * 5 + c * 30.000001 + cr * 0.5 + cc * 6.25) : tier(\"long_context\", p * 10 + c * 45 + cr * 1 + cc * 12.5)"
+        }
+      }
+    }
+  },
+  "selection_rule": {
+    "eligibility": [
+      "Responses endpoint and exact model request are bound",
+      "all calibration Results are scoreable",
+      "usage is priceable and gateway quota reconciles",
+      "conservative projected main cost fits remaining authority"
+    ],
+    "first_agent": [
+      "maximum hidden-pass count",
+      "lower observed gateway cost"
+    ],
+    "second_agent": [
+      "pass count at least best minus two",
+      "maximum paired outcome disagreement with first",
+      "higher hidden-pass count",
+      "lower observed gateway cost",
+      "different provider family"
+    ]
+  },
+  "main": {
+    "source_manifest_digest": "84a14c406d5d1f0ac89b07b5fd2e50c9888b089feb62f4d14f2c746778ab3c21",
+    "prepared_package_digest": "2169198dfbfc0fc0965cad0c750f062ce51257e9fbbc21b2979d73f9ba1c476c",
+    "repository_id": "sympy/sympy",
+    "task_count": 75,
+    "dependency_cluster_count": 54,
+    "replicate_fraction": 0.3,
+    "replicate_count": 3,
+    "schedule_seed": 20260725,
+    "minimum_first_20_scoreability": 0.9
+  },
+  "pricing_source": {
+    "kind": "authenticated_gateway_pricing_view",
+    "observed_at": "2026-07-25T13:30:00Z",
+    "quota_conversion_source": "New API rate settings documentation",
+    "limitations": [
+      "Codex usage exposes cache reads but not cache-creation tokens",
+      "tiered rates are valid only while context length is at most 272000 tokens",
+      "gateway quota delta is the aggregate accounting reconciliation"
+    ]
+  },
+  "study_plan_digest": "445398963a6e703953f4a4f5c758034b8d4f377b3a0a575197b4d3282191834f"
+}

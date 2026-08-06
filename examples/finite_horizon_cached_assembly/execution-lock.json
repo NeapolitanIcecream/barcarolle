@@ -1,0 +1,119 @@
+{
+  "schema_version": "barcarolle_finite_horizon_cached_assembly_execution_lock_v1",
+  "study_id": "finite-horizon-cached-assembly-2026-07-29",
+  "locked_at": "2026-07-29T16:10:43Z",
+  "implementation_commit": "ee43714c48edd128ba0d59f7cfca438a132ba1fe",
+  "plan_digest": "6602a349d5c108fef96fb9e15d405bf268619b0fdd2721500f6a5c62ad9264b7",
+  "parent_execution_lock_digest": "f4dcec2e0c08cc2e1cf8e862a40b4a7ebc1e741326d3f9d02c462d501a81a91d",
+  "runtime": {
+    "python_version": "3.14.0",
+    "python_implementation": "CPython",
+    "platform": "macOS-26.5.2-arm64-arm-64bit-Mach-O",
+    "numpy_version": "2.5.1",
+    "scipy_version": "1.16.3"
+  },
+  "frames": {
+    "5": {
+      "repository_ids": [
+        "clap-rs/clap",
+        "cli/cli",
+        "elastic/logstash",
+        "facebook/zstd",
+        "fasterxml/jackson-databind",
+        "fmtlib/fmt",
+        "iamkun/dayjs",
+        "mui/material-ui",
+        "nlohmann/json",
+        "ponylang/ponyc",
+        "sveltejs/svelte",
+        "tokio-rs/tokio",
+        "vuejs/core"
+      ],
+      "repository_ids_digest": "15cd0f7644a57379e7b5e9650536e641e44f1cc50f33d77ca7f09e9c7235cd2e",
+      "deep_repository_ids": [
+        "clap-rs/clap",
+        "cli/cli",
+        "iamkun/dayjs",
+        "mui/material-ui",
+        "nlohmann/json",
+        "ponylang/ponyc",
+        "sveltejs/svelte",
+        "vuejs/core"
+      ],
+      "deep_repository_ids_digest": "20a00546147bb5c8e79be3df0f78adb45dc53b41cbb6ce2933f6faabe0a063ab",
+      "origin_count": 221,
+      "origin_rows_digest": "62485b007fa81a47bbbf7424cdb0829ad763bbf4079e182aaee147ba6177b158",
+      "full_membership_digest_recomputed": "a1f38fc669f87aa04eab86e42631481b6df1dafda3425cfeaf5729754c554d89",
+      "recency_membership_digest_recomputed": "6cfe9511d3f138f47683b934afc1b53cb6479dcf44e8e362c5ee8489e92f682b",
+      "alg_007_membership_digest_recomputed": "7b888f8c42185b250f62693c59e39a79e34c86e60bf359218bf967f988a20ebe"
+    },
+    "10": {
+      "repository_ids": [
+        "clap-rs/clap",
+        "cli/cli",
+        "elastic/logstash",
+        "fasterxml/jackson-databind",
+        "fmtlib/fmt",
+        "iamkun/dayjs",
+        "mui/material-ui",
+        "nlohmann/json",
+        "ponylang/ponyc",
+        "sveltejs/svelte",
+        "vuejs/core"
+      ],
+      "repository_ids_digest": "e1b0b2cb039c3488a846bb30ed15c0cb58f8b57b9098001640eb49ec5d28b438",
+      "deep_repository_ids": [
+        "clap-rs/clap",
+        "cli/cli",
+        "mui/material-ui",
+        "ponylang/ponyc",
+        "sveltejs/svelte"
+      ],
+      "deep_repository_ids_digest": "c70b1fb2bf00e93099811612e7505c6f4da1f107e296495eaa2f99f556d511f4",
+      "origin_count": 107,
+      "origin_rows_digest": "87a27e440eeac0ec2e5fed01534f724c1a6fedca7a04510ff05c341cfc2112ab",
+      "full_membership_digest_recomputed": "7135c2f1256e26e8703a7fd97abc4de0392456eee4e10f5a5c04555c966eaca0",
+      "recency_membership_digest_recomputed": "0c8108bd2a584ed11242993157ce1b316b1f187d70ecc3a347b4d5f3c3f21030",
+      "alg_007_membership_digest_recomputed": "6d6e30a9f8ebfecb4c2176466c38fa356596a16024c95494a5311927acfc597c"
+    }
+  },
+  "bound_files": [
+    {
+      "path": "examples/finite_horizon_cached_assembly/plan.json",
+      "sha256": "a27955ddd76ff631c6eae91c7d906a64f751b713ba1210e0c483c25c9b15f3fd"
+    },
+    {
+      "path": "examples/finite_horizon_cached_assembly/study.py",
+      "sha256": "63c52dead7ef6766f1c58aabd58efe594f00d8bd9af2b9c43e8d0da980dba815"
+    },
+    {
+      "path": "tests/test_finite_horizon_cached_assembly.py",
+      "sha256": "cb92429d2c6d924490196af8951e04922941e7e6fb4604b6892647ce314aa8e2"
+    },
+    {
+      "path": "examples/prequential_response_assembly/execution-lock.json",
+      "sha256": "a1c7e19a4d83296e1c0acbad78b47fc5e309992de1c7746638140040bb6eb086"
+    }
+  ],
+  "pre_lock_evidence": {
+    "directed_tests_passed": 13,
+    "parent_and_new_directed_tests_passed": 29,
+    "static_checks": [
+      "ruff check",
+      "ruff format --check",
+      "pyright",
+      "git diff --check"
+    ],
+    "independent_theory_design": true,
+    "candidate_memberships_materialized": false,
+    "candidate_scores_read": false
+  },
+  "resource_boundary": {
+    "paid_api_calls": 0,
+    "new_agent_outcome_calls": 0,
+    "embedding_api_calls": 0,
+    "sealed_holdout_reads": 0,
+    "core_schema_or_service_changes": 0
+  },
+  "lock_digest": "10e2832290b92f40c120b8a6e3a7e9a946ec778ee71bb4bf08f6fa697858be4b"
+}

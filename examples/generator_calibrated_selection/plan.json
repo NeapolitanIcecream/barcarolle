@@ -1,0 +1,394 @@
+{
+  "schema_version": "barcarolle_generator_calibrated_selection_plan_v1",
+  "study_id": "generator-calibrated-selection-front-gate-2026-07-29",
+  "stage": "THY-002S-A_outcome_free_task_space_front_gate",
+  "plan_digest": "cb83d8665f6b8124be926a85c3097fc3e0caa16caffd62929d0b075fb5cb1b9a",
+  "implementation": [
+    {
+      "path": "examples/generator_calibrated_selection/study.py",
+      "sha256": "eab7fa711557721bcafb73e5c9778882c8d83aa4ce6da5006925ee10fa2c6156"
+    },
+    {
+      "path": "examples/generator_calibrated_exposure/study.py",
+      "sha256": "8321893ba0aa61d53b32eff38d031b51227b9b05213ff1ef97a5a06bff14e237"
+    },
+    {
+      "path": "examples/pre_origin_task_mix/study.py",
+      "sha256": "0cc2c5a99c455655ba57ca0068213497a0bea7789f8ab57497b7277deb7cf927"
+    }
+  ],
+  "amendments": [
+    {
+      "amendment_id": "THY-002S-A1",
+      "kind": "verifier_only_before_accepted_replay",
+      "parent_plan_digest": "c6edade7b016225d794d3b05acb6897eb04ff67f3db8ddab3b122254000d1b05",
+      "parent_commit": "9a5e0c43",
+      "parent_implementation_sha256": "98c23dbc4b8dad26571d882c06e918ccd57cdf781df08a71457b2b3c2d7655a4",
+      "parent_raw_file_sha256": "81752a8c2f984004c4bd7517a15855abe0574944fcfa7420cfa3039ed2f79fc5",
+      "parent_result_digest": "8b494ae4e2dc7a7d6db258c425c7216500e2d9c5c66f70821b7a31c9207db367",
+      "parent_origin_rows_digest": "8467942c309c4d9e5c67903b9a225d696316e9ce5a527a5cbcc2a9b84828d9d7",
+      "parent_memberships_digest": "e1cdae6262504e73159e758d3c4ef092446454a40bf9ef8c6c6ec57b33a82fe6",
+      "parent_reproduction": "two raw runs were byte-identical and both returned retire_mapping before compact verification",
+      "trigger": "compact verification rejected the valid empty admission_failures sequence because the generic mapping-sequence helper required nonempty input",
+      "code_scope": "allow an empty mapping sequence only at the two admission_failures verifier call sites; add one regression test",
+      "forbidden_scope": "No source, forecast, Selection, membership, loss, aggregation, random, gate, decision, resource, or outcome-access code changed.",
+      "evidence_access": {
+        "agent_outcomes_opened": 0,
+        "paid_api_calls": 0,
+        "sealed_holdout_opened": 0
+      },
+      "acceptance_rule": "Re-freeze this plan before rerunning; require two byte-identical raw runs, compact verification, and unchanged scientific contrasts and decision."
+    }
+  ],
+  "upstream_thy_002": {
+    "plan": "examples/generator_calibrated_exposure/plan.json",
+    "plan_file_sha256": "d63b3cf521015d8af05f8750e6e07b76820ac8573fce933561bcec0763828a9b",
+    "plan_digest": "0fe42fc13b0112c281669cddca45d6f95467bb307f76c25a3ba058b2c6b51c69",
+    "summary": "examples/generator_calibrated_exposure/evidence/task-mix-summary.json",
+    "summary_file_sha256": "7b97318cf617dcd1e324774a69de628cef5f69288dd11e7826ba1c61436f470a",
+    "result_digest": "d0666c4e70f4195eb4c81fa1d143a947cbcf8e3fe718136193f82459d0e3ff94",
+    "summary_digest": "26233a425ecea7794df236ea991139eaa673b1569fc88262ddd2b31b9f8eaa31",
+    "required_decision": "pass",
+    "reuse_rule": "Reuse the exact THY-002 forecast without changing its information set, half-life, prior, module map, or projected-timeline claim boundary."
+  },
+  "source": {
+    "source_id": "multi_swe_bench_common_h10",
+    "role": "outcome_free_mapping_development_before_opened_outcome_reuse",
+    "source_tree": "outputs/research/2026-07-28-multi-swe-source/repository",
+    "source_revision": "56ff018c04a38e27ada1e9d0a6d5839a51f88f0d",
+    "task_universe": "examples/multi_swe_research/evidence/task-universe.jsonl",
+    "task_universe_sha256": "2b91923b027e447a1b3d8317950bfba22a58dd7d4e28b44ae8f05d290cf69c21",
+    "task_times": "examples/multi_swe_research/evidence/task-times.jsonl",
+    "task_times_sha256": "c4d86e7cbe0ef78462422335c8ea29bcd29691dc1613b339024d1e75f6f8f745",
+    "import_contract": "examples/multi_swe_research/contract.json",
+    "import_contract_sha256": "d47813dbe67857523afd8249afec55e81c6bd341c4cd341fee976dbb2ab82953",
+    "import_contract_digest": "1e104613012a95fc534dba23d4adac1b7d6a6c10e70537c732f16da3e6f83307",
+    "task_count": 1337,
+    "repository_count": 11,
+    "origin_count": 107,
+    "frame_rule": "Use every Multi-SWE repository with at least one complete nested H10 Origin under the fixed 20-history plus non-overlapping 10-future schedule.",
+    "timestamp_policy": "Use the already-declared GitHub pull-request createdAt projection. This is source-time-safe counterfactual development, not native Task arrival.",
+    "label_policy": "Use retrospective reference-fix patch modules for task-space scoring and Selection construction; do not call them arrival-native attributes.",
+    "repositories": [
+      {
+        "repository_id": "clap-rs/clap",
+        "remote_url": "https://github.com/clap-rs/clap.git",
+        "head_ref": "refs/heads/master",
+        "head_commit": "f8ac8c5f1b3554657b557ba2d21279930434b401",
+        "source_path": "rust/clap-rs__clap_dataset.jsonl",
+        "source_sha256": "098ea3afa5700cb67e3a27e859bdcce18f4468e373172254155862c313f9cf32",
+        "source_size_bytes": 28813289,
+        "expected_task_count": 132,
+        "expected_origin_count": 11
+      },
+      {
+        "repository_id": "cli/cli",
+        "remote_url": "https://github.com/cli/cli.git",
+        "head_ref": "refs/heads/trunk",
+        "head_commit": "b1a9f7b183c12ae111ea63048d49aad2a53e9101",
+        "source_path": "go/cli__cli_dataset.jsonl",
+        "source_sha256": "18abaac48227bf15a64bcf649a4fcdb34ea8148962f371241ea2bb91608cf4b1",
+        "source_size_bytes": 167907603,
+        "expected_task_count": 397,
+        "expected_origin_count": 37
+      },
+      {
+        "repository_id": "elastic/logstash",
+        "remote_url": "https://github.com/elastic/logstash.git",
+        "head_ref": "refs/heads/main",
+        "head_commit": "2e68a2646167334628a79d9dffd2b2370aaaedac",
+        "source_path": "java/elastic__logstash_dataset.jsonl",
+        "source_sha256": "e3bd997cdedacc450f9c079bcdd81f287c7260f27f211fd8de7bf63af3d09e98",
+        "source_size_bytes": 12174447,
+        "expected_task_count": 38,
+        "expected_origin_count": 1
+      },
+      {
+        "repository_id": "fasterxml/jackson-databind",
+        "remote_url": "https://github.com/FasterXML/jackson-databind.git",
+        "head_ref": "refs/heads/3.x",
+        "head_commit": "1a5b191bd0a268ab4b5db2f4503d8e1df543565e",
+        "source_path": "java/fasterxml__jackson-databind_dataset.jsonl",
+        "source_sha256": "60911e77fe7d581d09edde04cb329f894984e4bfefa2101360cc4ff11ebb6f55",
+        "source_size_bytes": 8412746,
+        "expected_task_count": 42,
+        "expected_origin_count": 2
+      },
+      {
+        "repository_id": "fmtlib/fmt",
+        "remote_url": "https://github.com/fmtlib/fmt.git",
+        "head_ref": "refs/heads/main",
+        "head_commit": "caf5e48b1c56c3dee14768ed7ce08a9d51d03b58",
+        "source_path": "cpp/fmtlib__fmt_dataset.jsonl",
+        "source_sha256": "7d060ca46ba6343373aa68ced7fcca70e2ce0addac7ec610c47d2bbfcfed6762",
+        "source_size_bytes": 375788,
+        "expected_task_count": 41,
+        "expected_origin_count": 2
+      },
+      {
+        "repository_id": "iamkun/dayjs",
+        "remote_url": "https://github.com/iamkun/dayjs.git",
+        "head_ref": "refs/heads/dev",
+        "head_commit": "98364bcebc047529345cc8c2bbcc44a6a8c18e79",
+        "source_path": "js/iamkun__dayjs_dataset.jsonl",
+        "source_sha256": "2385ad31059b7448d35aa2dba38c03c2cae9ed09f6e794d299649a22bef71c71",
+        "source_size_bytes": 954834,
+        "expected_task_count": 56,
+        "expected_origin_count": 3
+      },
+      {
+        "repository_id": "mui/material-ui",
+        "remote_url": "https://github.com/mui/material-ui.git",
+        "head_ref": "refs/heads/master",
+        "head_commit": "7fb01101f45fb72fdbeb3d826984030583e71ea9",
+        "source_path": "ts/mui__material-ui_dataset.jsonl",
+        "source_sha256": "3e87ddc463f5193577cf7e3be25d9fd3bceebfbfbf717ba702ffd55208c56543",
+        "source_size_bytes": 749837961,
+        "expected_task_count": 174,
+        "expected_origin_count": 15
+      },
+      {
+        "repository_id": "nlohmann/json",
+        "remote_url": "https://github.com/nlohmann/json.git",
+        "head_ref": "refs/heads/develop",
+        "head_commit": "2e23687092840a66876b4bea48060bd79595ea4b",
+        "source_path": "cpp/nlohmann__json_dataset.jsonl",
+        "source_sha256": "bdc33098e920b20fcdef5680953a723c171bd8f53608e8cecad305e96495a93c",
+        "source_size_bytes": 4019513,
+        "expected_task_count": 55,
+        "expected_origin_count": 3
+      },
+      {
+        "repository_id": "ponylang/ponyc",
+        "remote_url": "https://github.com/ponylang/ponyc.git",
+        "head_ref": "refs/heads/main",
+        "head_commit": "2b685acc94b42723efee63b428c2f9e12b6d13b2",
+        "source_path": "c/ponylang__ponyc_dataset.jsonl",
+        "source_sha256": "cddd6e471bd8a1ad9e9971d8a16ca5a0e9f002789cefc5a40ee025f8875122ee",
+        "source_size_bytes": 26444998,
+        "expected_task_count": 82,
+        "expected_origin_count": 6
+      },
+      {
+        "repository_id": "sveltejs/svelte",
+        "remote_url": "https://github.com/sveltejs/svelte.git",
+        "head_ref": "refs/heads/main",
+        "head_commit": "44a7813730579b94004e182e5a67aab27aa9d2a6",
+        "source_path": "js/sveltejs__svelte_dataset.jsonl",
+        "source_sha256": "bd58d8e5348afcee93c1e9cb79398888c73b92b336ab09e1825068eb5fda1b09",
+        "source_size_bytes": 503163595,
+        "expected_task_count": 272,
+        "expected_origin_count": 25
+      },
+      {
+        "repository_id": "vuejs/core",
+        "remote_url": "https://github.com/vuejs/core.git",
+        "head_ref": "refs/heads/main",
+        "head_commit": "b5f8518379b77c3b62a7a9d2b52f6c76cda09bd5",
+        "source_path": "ts/vuejs__core_dataset.jsonl",
+        "source_sha256": "10365ee2414d80b0985a1fda64588c06e260646b7f90b916551d0bfd00203b30",
+        "source_size_bytes": 73660728,
+        "expected_task_count": 48,
+        "expected_origin_count": 2
+      }
+    ]
+  },
+  "module_projection": {
+    "path_rule": "first two parent-directory components; use the available prefix when shorter",
+    "path_input_rule": "Git --name-only paths are already repository-relative and retain real top-level a/ or b/ directories; reference-patch diff headers remove exactly one side prefix before applying path_rule",
+    "git_path_transport": "read git show --name-only with NUL delimiters so whitespace, non-ASCII names, and Git quotePath behavior cannot alter module identity",
+    "depth": 2,
+    "root_label": "ROOT",
+    "unseen_label": "OTHER",
+    "excluded_components": [
+      ".git",
+      ".github",
+      ".idea",
+      ".vscode",
+      "__pycache__",
+      "__snapshots__",
+      "benchmark",
+      "benchmarks",
+      "build",
+      "dist",
+      "doc",
+      "docs",
+      "example",
+      "examples",
+      "fixture",
+      "fixtures",
+      "generated",
+      "node_modules",
+      "snapshot",
+      "snapshots",
+      "target",
+      "test",
+      "tests",
+      "testing",
+      "third_party",
+      "vendor",
+      "vendored"
+    ],
+    "excluded_file_names": [
+      "Cargo.lock",
+      "Gemfile.lock",
+      "Pipfile.lock",
+      "composer.lock",
+      "package-lock.json",
+      "pnpm-lock.yaml",
+      "poetry.lock",
+      "uv.lock",
+      "yarn.lock"
+    ],
+    "task_label_rule": "unique eligible paths in the source reference fix patch, split uniformly; no eligible path maps to OTHER",
+    "origin_vocabulary": "ROOT, OTHER, cutoff-safe historical Task modules, and reachable eligible Git modules",
+    "future_unseen_rule": "a future patch module absent from the Origin vocabulary maps to OTHER"
+  },
+  "rolling_origin": {
+    "minimum_initial_history_tasks": 20,
+    "future_block_tasks": 10,
+    "primary_future_tasks": 5,
+    "sensitivity_future_tasks": 10,
+    "remainder_policy": "leading remainder is absorbed into the initial history so every retained future cohort is a complete non-overlapping H10 block",
+    "block_policy": "H5 is the first five Tasks in the same H10 block",
+    "ordering": "projected pull-request createdAt then source Task identity",
+    "task_time_projection": "use the frozen Multi-SWE GitHub pull-request createdAt sidecar as a source-time-safe counterfactual clock",
+    "origin_snapshot": "latest first-parent commit on the frozen default-branch history whose committer time is at or before the Origin cutoff",
+    "future_dated_ancestor_policy": "clamp structurally reachable negative clock age to zero and report the count"
+  },
+  "forecast": {
+    "algorithm_id": "THY-002",
+    "name": "Generator-Calibrated Module Exposure",
+    "historical_task_mass": "one unit per admitted historical Task split uniformly across retrospective eligible reference-fix patch modules",
+    "historical_exposure": "one unit per reachable non-root non-merge commit split uniformly across eligible touched modules, from the repository's first selected source Task time through the Origin cutoff",
+    "recent_exposure": "the identical commit-touch exposure with a fixed exponential age kernel",
+    "recent_half_life_days": 365.25,
+    "prior_task_shape": 0.5,
+    "formula": "rho=sum(T)/sum(E); beta=0.5/rho; q_m=(T_m+0.5)/(E_m+beta); p_m=G_m*q_m/sum_j(G_j*q_j)",
+    "no_recent_exposure_rule": "G_m=0 contributes exactly zero forecast mass",
+    "zero_total_rule": "zero historical or recent eligible exposure is an admission failure"
+  },
+  "selector": {
+    "algorithm_id": "THY-002S",
+    "name": "Brier Projection Coreset",
+    "budget_tasks": 10,
+    "replacement": false,
+    "task_weights": "equal",
+    "objective": "minimize squared Euclidean distance between selected Task module-distribution and the unchanged THY-002 forecast",
+    "construction": "greedily add one unselected historical Task minimizing squared distance to budget times forecast, then apply strict-improvement deterministic one-swap polishing to a local optimum",
+    "tie_domain": "THY-002S/brier-projection/v1",
+    "tie_rule": "domain-separated SHA-256 of repository and Task identity; swap ties use the canonical selected-identity digest; no time or outcome tie-break",
+    "cold_support_rule": "retain forecast mass on modules with no historical Task support, report its mass, count, and irreducible Brier lower bound; do not renormalize, synthesize pseudo-Tasks, or use fallback modules",
+    "cold_support_failure": "reject an Origin only when all forecast mass lacks historical Task support",
+    "membership_freeze": "Stage A binds exact candidate, stationary-control, and recency-control Task identities before any Agent outcome join."
+  },
+  "predictors": [
+    "forecast",
+    "task_full_history",
+    "git_recent_touch",
+    "yield_only",
+    "selection_candidate",
+    "selection_stationary",
+    "selection_recency"
+  ],
+  "task_space_estimand": {
+    "metric": "multiclass Brier loss on equal-Task, fractional multi-module distributions",
+    "contrast_sign": "candidate minus control; negative favors the candidate",
+    "aggregation": "average Origins within each repository, then macro-average repositories equally",
+    "primary_baseline": "full eligible historical Task distribution",
+    "mechanism_ablations": [
+      "recent Git exposure without Generator-yield calibration",
+      "Generator yield without current exposure"
+    ],
+    "mapping_controls": [
+      "stationary Brier coreset targeting full historical Task distribution",
+      "ten most recent eligible Tasks"
+    ],
+    "uncertainty": "deterministic 20000-draw repository bootstrap; one predeclared primary inferential contrast at H5"
+  },
+  "random_landscape": {
+    "role": "dense equal-budget sampling calibration, never a replacement for full history",
+    "draws": 20000,
+    "seed": 2026072902,
+    "chunk_size": 500,
+    "numpy_version": "2.5.1",
+    "sampling": "independent uniform ten-Task subset without replacement for every Origin; one draw index is aggregated repository-first across the whole cohort",
+    "reuse": "the same task-space draw memberships and indices are reused for H5 and H10; any later outcome amendment must reuse the same indices across all Agent configurations",
+    "position": "midrank fraction of random macro-repository contrasts strictly worse than the candidate plus half of ties"
+  },
+  "task_space_gate": {
+    "bootstrap_draws": 20000,
+    "bootstrap_seed": 2026072903,
+    "complete_admission": "all 11 repositories and 107 Origins",
+    "h5_forecast": "forecast-minus-full below zero, repository-bootstrap upper bound below zero, at least 7/11 repositories favorable, and forecast beats both Git-only and yield-only",
+    "h10_forecast": "forecast-minus-full below zero, at least 6/11 repositories favorable, and forecast beats both Git-only and yield-only",
+    "h5_mapping": "selection-minus-full below zero with repository-bootstrap upper bound below zero, at least 7/11 repositories favorable, every leave-one-repository-out contrast below zero, candidate beats stationary coreset, and random midrank at least 0.90",
+    "h10_mapping": "selection-minus-full below zero, at least 6/11 repositories favorable, candidate beats stationary coreset, and random midrank at least 0.50",
+    "decision": "all gates pass or retire this deterministic mapping without opening Agent outcomes"
+  },
+  "downstream_outcome_contract": {
+    "state": "frozen_not_executable_before_front_gate_pass",
+    "amendment_rule": "After a Stage A pass only, one focused executor amendment may bind the exact Stage A result and membership digests plus the already-open outcome bytes. It may not change source, Origins, forecast, memberships, budget, metric, controls, random indices, gates, or aggregation.",
+    "source": "Multi-SWE common 11-repository complete public panel",
+    "panel_summary": "examples/multi_swe_research/evidence/panel-summary.json",
+    "panel_summary_sha256": "515cc4cc8749a056175853c0ba23d20d26b0b642c48b138890a35493694f6cb0",
+    "panel_digest": "f2658d12451bdab4108a71cfae5cd5044a5bd312633239c09425378b4b682deb",
+    "resolved_outcomes": "examples/multi_swe_research/evidence/resolved-outcomes.jsonl",
+    "resolved_outcomes_sha256": "bdcc5b20678fdc44dba5a00c35851caae701d4f1518a3cc1abc6bb6c95eb181d",
+    "resolved_outcomes_digest": "b9a6d0d8e44d747d23789ec23eb4205178f2ae2d4f737c2446a5fcdf5abc116c",
+    "agent_configuration_count": 36,
+    "agent_axes": {
+      "model_count": 12,
+      "harness_count": 3,
+      "provider_count": 3
+    },
+    "per_agent_loss": "absolute difference between selected-history pass rate and future-cohort pass rate",
+    "cell_loss": "For every Agent configuration a and Origin o, compute the absolute selected-history pass-rate minus future-cohort pass-rate error for candidate and each control; define d[a,o] as candidate error minus control error.",
+    "primary_aggregation": "For each repository and Agent configuration, average d[a,o] equally over that repository's Origins. Average those values equally over all 36 configurations within the repository, then macro-average the 11 repository values equally.",
+    "agent_configuration_view": "For each configuration, average its Origin contrasts within repository and then macro-average the same 11 repositories. A configuration is favorable exactly when this macro contrast is below zero.",
+    "configuration_axis_rule": "Every exact configuration ID in the imported contract has form YYYYMMDD_<harness>_<model>. Harness is exactly one of MSWE-agent, MagentLess, or MopenHands; model is the complete remaining suffix. The date is provenance, not a grouping axis. This yields 12 model groups with one configuration per harness.",
+    "model_harness_views": "For each model or harness, average its member configurations' repository-level contrasts equally, then macro-average the same 11 repositories. A group is favorable exactly when this contrast is below zero. Provider groups are descriptive only.",
+    "repository_bootstrap_draws": 20000,
+    "repository_bootstrap_seed": 2026072904,
+    "repository_bootstrap": "Resample the 11 repositories with replacement and keep every sampled repository's complete Origin and 36-configuration cluster intact. Recompute the full primary aggregation in each draw.",
+    "configuration_missingness": "All 36 configurations must have complete binary outcomes for every one of the 1337 frozen Tasks; no imputation, failed-as-zero rule, configuration dropping, or task dropping is allowed.",
+    "primary_baseline": "all eligible historical Tasks",
+    "random_calibration": "For random draw j, reuse its frozen per-Origin subset for every Agent configuration and both horizons, compute d[j,a,o], and apply the identical Origin-to-repository, configuration-within-repository, and repository-macro aggregation. Candidate position uses midrank against the resulting 20000 primary macro contrasts.",
+    "source_replication_scope": "This contract contains one Multi-SWE development source only. SWE-bench Verified and any later or prospective source require a separate freeze and are not implied by a Multi-SWE pass.",
+    "h5_gate": {
+      "candidate_minus_full_at_most": -0.005,
+      "repository_bootstrap_upper_below_zero": true,
+      "favorable_repository_count_at_least": 7,
+      "every_leave_one_repository_out_below_zero": true,
+      "random_midrank_at_least": 0.9,
+      "candidate_beats_stationary_coreset": true,
+      "favorable_agent_configurations_at_least": 24,
+      "favorable_models_at_least": 8,
+      "favorable_harnesses_at_least": 2
+    },
+    "h10_gate": {
+      "candidate_minus_full_below_zero": true,
+      "favorable_repository_count_at_least": 6,
+      "random_midrank_at_least": 0.5,
+      "favorable_agent_configurations_at_least": 19
+    },
+    "decision_boundary": "A pass nominates THY-002S for independent confirmation only. These outcomes were already open and cannot confirm a Selector, authorize sealed holdout access, or create a Runner default."
+  },
+  "resource_budget": {
+    "paid_api_calls": 0,
+    "embedding_calls": 0,
+    "agent_outcomes_opened": 0,
+    "sealed_holdout_opened": 0
+  },
+  "forbidden_changes_after_freeze": [
+    "forecast formula, half-life, prior, or module map",
+    "source repositories, task identities, projected times, Origins, or horizons",
+    "Selection budget, objective, greedy rule, swap rule, ties, or cold-support behavior",
+    "full-history baseline, stationary control, random sampler, aggregation, or gates",
+    "opening Agent outcomes before a Stage A pass",
+    "opening the six SWE-bench Verified holdout Agents",
+    "paid benchmark or evidence calls",
+    "claiming projected timestamps or retrospective patch modules are native prospective evidence"
+  ],
+  "claim_boundary": "Stage A tests whether the retained THY-002 module forecast can be converted into one deterministic local budget-ten Selection that is structurally closer to future Task mix than full history and random subsets. It cannot establish Agent-response prediction, benchmark validity, native prospective validity, or a production Selector."
+}

@@ -19,6 +19,7 @@ from barcarolle.records import (  # noqa: E402
     AgentRecord,
     ResultRecord,
     RuntimeConfig,
+    canonical_digest,
     load_jsonl_records,
 )
 from barcarolle.result_store import ResultStore, ScoringConfig  # noqa: E402
@@ -213,7 +214,7 @@ def _campaign_paths(args: argparse.Namespace) -> CampaignCliPaths:
             ).resolve(),
             harness_python=(
                 args.harness_python or pilot_output_dir / "harness-env/bin/python"
-            ).resolve(),
+            ).absolute(),
         ),
         campaign_dir=campaign_dir,
         agents_path=(args.agents or records_dir / "agents.jsonl").resolve(),
@@ -246,7 +247,13 @@ def _agent_command(campaign_dir: Path, agent: AgentRecord) -> tuple[str, ...]:
         "env",
         f"BARCAROLLE_CODEX_MODEL={agent.requested_model_id}",
         f"BARCAROLLE_CODEX_REASONING_EFFORT={effort}",
-        f"BARCAROLLE_CODEX_HOME={(campaign_dir / f'codex-home-{effort}').resolve()}",
+        "BARCAROLLE_CODEX_HOME="
+        + str(
+            (
+                campaign_dir
+                / ("codex-home-" + canonical_digest({"agent_id": agent.agent_id})[:16])
+            ).resolve()
+        ),
         str(HARNESS),
     )
 

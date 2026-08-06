@@ -1,6 +1,6 @@
 # Module Design: Runner
 
-Status: current, 2026-07-24.
+Status: current, 2026-07-27.
 
 ## Responsibility
 
@@ -231,6 +231,11 @@ Effect:
   query.
 - Uses a null Result-availability lower bound for this selection-only query;
   it does not construct a malformed TimeRange as an open-bound sentinel.
+- Skips Result Store access when the FeatureConfig contains only Task metadata.
+  When Result features are required, strict mode applies the physical
+  availability cutoff. Counterfactual mode loads exact matching Task Pool and
+  Agent Results without projecting their observation timestamps; Selection
+  then limits the view to mature history refs and verifies cache identity.
 - Does not count repriced views as additional Agent executions; executions with
   genuinely different verifier evidence remain distinct.
 
@@ -281,12 +286,17 @@ Effect:
   label maturity at the origin cutoff or after the configured maturity lag;
   immature refs stay in censored origin fields. Arrivals before
   `history_window.start` are excluded from that origin's history.
-  Runner loads one physical Result snapshot through the maximum origin cutoff,
-  releases the store lock, and derives every origin's conflict-checked cutoff
-  view from that immutable tuple, with `history_window.start` as the
-  availability lower bound. It computes every Selector/origin Selection in
-  Selector-major order and appends all Selectors, Origins, FeatureSnapshots,
-  SelectorInputs, and Selections before opening future outcomes.
+  Runner loads one immutable Result snapshot. Strict mode bounds it by physical
+  availability. Counterfactual mode loads all exact matching pool/Agent
+  Results, then derives each Origin view from mature history membership and
+  cache identity regardless of physical observation time. Metadata-only
+  FeatureConfigs skip this read. Runner computes every Selector/origin
+  Selection in Selector-major order and appends all Selectors, Origins,
+  FeatureSnapshots, SelectorInputs, and Selections before opening future
+  outcomes.
+- Within one Result Store, resume reuses the exact persisted FeatureSnapshot
+  and SelectorInput for an Origin. Results appended by selected-cell lazy
+  evaluation cannot retroactively change that frozen counterfactual input.
 - Plans the first-occurrence union of each Selection's selected refs and its
   origin's mature future refs. Censored refs are never sent to Workspace. One
   locked Result Store session resolves, executes, and

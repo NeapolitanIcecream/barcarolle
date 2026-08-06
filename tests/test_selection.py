@@ -1002,7 +1002,7 @@ def test_build_rolling_origin_compares_timezone_offsets_as_instants() -> None:
     )
 
 
-def test_build_selector_input_lints_features_and_rejects_future_results() -> None:
+def test_build_selector_input_lints_features() -> None:
     task_pool = _task_pool(("task-old",), ("check-old",))
     origin = _origin(task_pool)
     feature_config = FeatureConfig(("task_count",))
@@ -1072,15 +1072,57 @@ def test_build_selector_input_lints_features_and_rejects_future_results() -> Non
     for invalid_input, expected_error in invalid_inputs:
         assert expected_error in validate_selector_input(invalid_input).errors
 
+def test_result_time_gates_strict_but_not_counterfactual_history() -> None:
+    task_pool = _task_pool(("task-old",), ("check-old",))
+    task = _task("task-old", "check-old")
+    check = _check("check-old", "task-old")
+    late_observed_result = _result(result_available_at="2026-01-06T00:00:00Z")
+    feature_config = FeatureConfig(("pre_origin_result_count",))
+    counterfactual_origin = _origin(task_pool)
+
+    counterfactual_snapshot = build_feature_snapshot(
+        counterfactual_origin,
+        task_pool,
+        (task,),
+        {check.check_id: check},
+        (late_observed_result,),
+        feature_config,
+    )
+    counterfactual_input = build_selector_input(
+        counterfactual_origin,
+        task_pool,
+        counterfactual_snapshot,
+        (late_observed_result,),
+        (_agent(),),
+        SelectionBudget(1),
+        feature_config.leakage_policy(counterfactual_origin.as_of_cutoff),
+    )
+
+    assert counterfactual_input.pre_origin_result_ids == (
+        late_observed_result.result_id,
+    )
+
+    strict_origin = build_rolling_origin(
+        task_pool,
+        (task,),
+        {check.check_id: check},
+        datetime(2026, 1, 5, tzinfo=UTC),
+        TimeRange("2026-01-06T00:00:00Z", "2026-01-10T00:00:00Z"),
+        RollingOriginPolicy(
+            as_of_cutoff_rule="origin_time",
+            eligibility_mode="strict_prospective",
+            holdout_overlap_policy="allow_cluster_overlap",
+            future_holdout_known=False,
+        ),
+    )
     with pytest.raises(ValueError, match="after the origin cutoff"):
-        build_selector_input(
-            origin,
+        build_feature_snapshot(
+            strict_origin,
             task_pool,
-            snapshot,
-            (_result(result_available_at="2026-01-06T00:00:00Z"),),
-            (_agent(),),
-            SelectionBudget(1),
-            LeakagePolicy(("task_metadata",), origin.as_of_cutoff),
+            (task,),
+            {check.check_id: check},
+            (late_observed_result,),
+            feature_config,
         )
 
 
@@ -1283,13 +1325,27 @@ def test_selector_input_result_evidence_requires_exact_frozen_bindings() -> None
 
 def test_build_selector_input_rejects_timezone_offset_post_origin_result() -> None:
     task_pool = _task_pool(("task-old",), ("check-old",))
-    origin = _origin(task_pool)
+    task = _task("task-old", "check-old")
+    check = _check("check-old", "task-old")
+    origin = build_rolling_origin(
+        task_pool,
+        (task,),
+        {check.check_id: check},
+        datetime(2026, 1, 5, tzinfo=UTC),
+        TimeRange("2026-01-06T00:00:00Z", "2026-01-10T00:00:00Z"),
+        RollingOriginPolicy(
+            as_of_cutoff_rule="origin_time",
+            eligibility_mode="strict_prospective",
+            holdout_overlap_policy="allow_cluster_overlap",
+            future_holdout_known=False,
+        ),
+    )
     feature_config = FeatureConfig(("task_count",))
     snapshot = build_feature_snapshot(
         origin,
         task_pool,
-        (_task("task-old", "check-old"),),
-        {"check-old": _check("check-old", "task-old")},
+        (task,),
+        {check.check_id: check},
         (_result(result_available_at="2026-01-04T00:00:00Z"),),
         feature_config,
     )
@@ -2067,6 +2123,61 @@ def test_rule_mixture_coverage_score_round_robins_across_groups() -> None:
     )
 
     assert selection.selected_task_check_refs == (refs[0], refs[2])
+
+
+def test_rule_mixture_uses_stable_sum_before_tie_breaking() -> None:
+    refs = tuple(
+        TaskCheckRef(f"task-{name}", f"check-{name}")
+        for name in ("a", "b", "c", "d")
+    )
+    task_pool = _task_pool(
+        tuple(ref.task_id for ref in refs),
+        tuple(ref.check_id for ref in refs),
+    )
+    origin = _origin(task_pool, refs=refs)
+    tasks = tuple(_task(ref.task_id, ref.check_id) for ref in refs)
+    checks = {ref.check_id: _check(ref.check_id, ref.task_id) for ref in refs}
+    snapshot = build_feature_snapshot(
+        origin,
+        task_pool,
+        tasks,
+        checks,
+        (),
+        FeatureConfig(("task_count",)),
+    )
+    selector_input = build_selector_input(
+        origin,
+        task_pool,
+        snapshot,
+        (),
+        (_agent(),),
+        SelectionBudget(4),
+        LeakagePolicy(("task_metadata",), origin.as_of_cutoff),
+    )
+    coverage_order = (refs[1], refs[3], refs[2], refs[0])
+    group_by_ref_key = {
+        canonical_digest(ref): f"group-{rank}"
+        for rank, ref in enumerate(coverage_order)
+    }
+    selector = _rule_mixture_selector(
+        {
+            "expert_weights": {
+                "coverage": 1.0 / 3.0,
+                "random": 1.0 / 3.0,
+                "recency": 1.0 / 3.0,
+            },
+            "random_seed": 5,
+            "group_by_ref_key": group_by_ref_key,
+        }
+    )
+
+    selection = select_with_selector(selector_input, snapshot, selector)
+
+    # task-a and task-c have the same mathematical mixture score. Stable
+    # summation preserves the tie so the documented Task ID tie-break applies.
+    assert selection.selected_task_check_refs.index(
+        refs[0]
+    ) < selection.selected_task_check_refs.index(refs[2])
 
 
 def test_build_rule_mixture_grid_freezes_ten_executable_simplex_points() -> None:

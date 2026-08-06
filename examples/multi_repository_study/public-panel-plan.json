@@ -1,0 +1,168 @@
+{
+  "schema_version": "barcarolle_public_multi_repository_replay_plan_v1",
+  "study_id": "public-multi-repository-replay-2026-07-28",
+  "frozen_at": "2026-07-28T01:32:09Z",
+  "epistemic_status": "sealed_file_exploratory_counterfactual",
+  "research_contract": {
+    "target": "Use unopened pinned official result files to test fixed outcome-free Selectors across repository-local rolling Origins without a paid LLM call.",
+    "primary_baseline": "all eligible historical Tasks from the same repository",
+    "primary_loss": "mean across the frozen public Agent panel of absolute selected-history versus future-cohort pass-rate error",
+    "primary_estimand": "repository-equal mean of per-repository mean candidate-minus-full-history loss",
+    "required_evidence": [
+      "all selected result blobs match their preregistered Git blob SHA",
+      "every result normalizes against the exact 500-task dataset denominator",
+      "Origins and Selections remain repository-local",
+      "per-repository, macro-repository, cluster interval, direction count, upper quartile, and leave-one-cluster-out summaries",
+      "random and time-permutation controls"
+    ],
+    "non_solutions": [
+      "flattening Origins across repositories",
+      "using a public Agent outcome as a Selector feature",
+      "promoting a Runner default from public retrospective results",
+      "calling benchmark difficulty source-time metadata",
+      "treating unlisted official results as missing from the denominator",
+      "changing the Agent panel or Selector rules after opening its result blobs"
+    ],
+    "allowed_terminal_states": [
+      "fixed_route_nominated_for_later_confirmation",
+      "no_fixed_route_beats_full_history",
+      "public_result_schema_or_identity_blocker",
+      "bounded_inconclusive_repository_portfolio"
+    ]
+  },
+  "task_source": {
+    "dataset_repository": "SWE-bench/SWE-bench_Verified",
+    "dataset_revision": "91aa3ed51b709be6457e12d00300a6a596d4c6a3",
+    "dataset_sha256": "43ed5a3d1d98da36472c1ade65ddd2085d7b4ff694fcaf6a023a07c5c1f32f21",
+    "task_count": 500,
+    "task_time": "created_at",
+    "check_maturity": "projected_to_task_arrival",
+    "evidence_mode": "counterfactual_replay"
+  },
+  "portfolio": {
+    "portfolio_digest": "da6372edeae90e1d4a857d61e885ec89632a244c295177752d4cde8e11fb68b1",
+    "wide_repository_ids": [
+      "astropy/astropy",
+      "django/django",
+      "matplotlib/matplotlib",
+      "pydata/xarray",
+      "scikit-learn/scikit-learn",
+      "sphinx-doc/sphinx",
+      "sympy/sympy"
+    ],
+    "deep_repository_ids": [
+      "django/django",
+      "sphinx-doc/sphinx",
+      "sympy/sympy"
+    ]
+  },
+  "public_result_source": {
+    "repository": "SWE-bench/experiments",
+    "revision": "2f15350cd32becc4569e0d826361048555b605c0",
+    "tree_sha": "41bb4d56cd7dba1b62a04947728d2f451172af30",
+    "normalization": "resolved is pass; no_generation, no_logs, and all other denominator Tasks are fail",
+    "allowed_result_fields": [
+      "resolved",
+      "no_generation",
+      "no_logs"
+    ]
+  },
+  "agent_panel": [
+    {
+      "agent_id": "sweagent-lm-32b-20250511",
+      "submission": "20250511_sweagent_lm_32b",
+      "metadata_blob_sha": "47e8f4ccc41a87701a29f6960a0325e50e99d5bc",
+      "result_blob_sha": "2ca4f9a8d3c7a6f9ec52e23ade846db9e1ca3abe",
+      "selection_basis": "checked, open model, open system, one attempt, SWE-agent mechanism"
+    },
+    {
+      "agent_id": "swe-fixer-qwen-20250306",
+      "submission": "20250306_SWE-Fixer_Qwen2.5-7b-retriever_Qwen2.5-72b-editor",
+      "metadata_blob_sha": "e1f64d146e8ae109f5c31cad440912f107b34106",
+      "result_blob_sha": "ed32450aa3ae55d094158a88490ebf2541013579",
+      "selection_basis": "checked, open model, open system, one attempt, retriever-editor mechanism"
+    },
+    {
+      "agent_id": "skywork-swe-32b-20250616",
+      "submission": "20250616_Skywork-SWE-32B",
+      "metadata_blob_sha": "740af7e63e8a22306a1a42a6f54bae121a28e276",
+      "result_blob_sha": "04b53ca1b196b810c741d04d6e3f750d7b2f7a3e",
+      "selection_basis": "checked, open model, open system, one attempt, Skywork-SWE mechanism"
+    }
+  ],
+  "pre_outcome_exclusions": [
+    {
+      "submission": "20250520_openhands_devstral_small",
+      "reason": "result content was inspected during route feasibility and is not sealed evidence"
+    },
+    {
+      "submission": "20250627_agentless_MCTS-Refine-7B",
+      "reason": "official metadata checked flag is false"
+    },
+    {
+      "submission": "20250515_Refact_Agent",
+      "reason": "official metadata checked flag is false and model treatment is not open"
+    }
+  ],
+  "rolling_origin": {
+    "minimum_initial_history_tasks": 15,
+    "future_block_tasks": 5,
+    "selection_budget_task_checks": 10,
+    "initial_history_adjustment": "add the 0-4 Task remainder so all later Tasks form complete blocks",
+    "ordering": "created_at_then_instance_id",
+    "future_blocks_overlap": false
+  },
+  "selectors": [
+    {
+      "selector_id": "full_history",
+      "role": "primary_no_selection_baseline",
+      "rule": "all eligible local history"
+    },
+    {
+      "selector_id": "recency",
+      "role": "outcome_free_candidate",
+      "rule": "ten most recent eligible local Tasks"
+    },
+    {
+      "selector_id": "difficulty_coverage",
+      "role": "annotation_dependent_diagnostic",
+      "rule": "round robin sorted benchmark difficulty strata, chronological within stratum"
+    }
+  ],
+  "random_calibration": {
+    "draws": 20000,
+    "seed": 20260728,
+    "sampling": "independent uniform ten-Task subset at every repository-local Origin",
+    "maximum_binomial_standard_error": 0.003536
+  },
+  "null_control": {
+    "within_repository_outcome_permutations": 2000,
+    "seed": 20260729,
+    "rule": "permute joint Agent outcome vectors over Tasks inside each repository, preserving repository-level panel outcomes"
+  },
+  "aggregation": {
+    "repository_weighting": "Origins equal within repository; repositories equal in macro result",
+    "repository_cluster_source": "frozen portfolio manifest",
+    "bootstrap_resamples": 10000,
+    "bootstrap_seed": 20260728,
+    "primary_views": [
+      "wide",
+      "deep"
+    ]
+  },
+  "decision_rules": {
+    "exploratory_nomination": "candidate wide macro-repository difference is negative, every wide leave-one-cluster-out difference is negative, wide permutation as-good-or-better rate is below 0.10, and deep macro-repository direction is also negative",
+    "promotion": "not allowed from this public retrospective study",
+    "later_gate": "frozen independent source or strict-prospective evidence must meet the project 0.02 and interval gates"
+  },
+  "authority": {
+    "paid_api_calls": 0,
+    "coding_agent_calls": 0,
+    "embedding_calls": 0,
+    "allowed_network_reads": [
+      "three preregistered result blobs at the pinned official repository revision"
+    ],
+    "raw_result_policy": "Downloaded official result files remain ignored; commit only blob identities, normalized counts, contrasts, summaries, and digests."
+  },
+  "public_panel_plan_digest": "0658aa938b34f0f80f6933b8a03f1517b323661eab55031925bd017163759c03"
+}

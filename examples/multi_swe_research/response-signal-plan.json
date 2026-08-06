@@ -1,0 +1,177 @@
+{
+  "schema_version": "barcarolle_multi_swe_response_signal_plan_v1",
+  "study_id": "multi-swe-response-contrast-signal-2026-07-28",
+  "frozen_at": "2026-07-28T13:01:15Z",
+  "epistemic_status": "outcome_open_development_with_predeclared_signal_cascade",
+  "source": {
+    "selector_plan_digest": "6619ab258039d3f12cf865421faeba7c23248b302f72b06bb6f311b8f65bde05",
+    "contract_digest": "1e104613012a95fc534dba23d4adac1b7d6a6c10e70537c732f16da3e6f83307",
+    "panel_digest": "f2658d12451bdab4108a71cfae5cd5044a5bd312633239c09425378b4b682deb",
+    "resolved_outcome_digest": "b9a6d0d8e44d747d23789ec23eb4205178f2ae2d4f737c2446a5fcdf5abc116c",
+    "task_time_projection_digest": "56eb7dda0d7fd9787b1e77c432572f212726b92abc189df18ab2a4fe6bb815e5",
+    "embedding_manifest_digest": "458a9375af9a079126b2a64b0ed115387d5602aad4b0c6439572d0b9a5a40f0d",
+    "embedding_artifact_digest": "cc6f791d2770f1e265240e73e47ccd517ed6bae26b1ed3abc78d17cad14e8a23",
+    "vector_values_digest": "f703b0a5161e0d1bfabcee4fcc05e972257ebd56180eeeb89780877e0b1506d1",
+    "task_count": 1632,
+    "configuration_count": 36,
+    "embedding_dimensions": 384,
+    "outcome_status": "opened development evidence; no result from this study is confirmatory",
+    "time_status": "GitHub pull-request createdAt projection with public outcomes projected to Task arrival; source-time-safe counterfactual only"
+  },
+  "research_contract": {
+    "target": "Determine whether source-time-eligible other-repository evidence can learn a response-relevant Task representation and whether observable target-repository history can forecast the next Task cohort in that representation strongly enough to justify one budgeted Selection experiment.",
+    "runtime_boundary": "Deployment remains one target repository, one local Task Pool, and one local Selection. Other repositories are offline fitting evidence and never contribute candidate Tasks.",
+    "primary_baseline": "the complete eligible target-repository history",
+    "primary_independent_unit": "repository or declared repository cluster",
+    "primary_outcome_if_selection_is_reached": "held-out-configuration pass-rate MAE between a ten-Task Selection and the future cohort, aggregated configuration then Origin within repository then repository equally",
+    "claim_boundary": "The signal cascade may nominate one fixed experiment-layer Selector for independent later confirmation. It cannot establish strict historical replay, source-family portability, prospective validity, or a Runner default.",
+    "allowed_terminal_states": [
+      "response_representation_signal_rejected",
+      "target_future_increment_rejected",
+      "alg_013_selection_rejected",
+      "nominate_alg_013_for_independent_confirmation",
+      "source_identity_or_runtime_blocker"
+    ],
+    "non_solutions": [
+      "training on hindsight optimal memberships",
+      "using target-repository outcomes to train the response projection",
+      "using target future Task text, embeddings, identities, or outcomes before freezing Selection",
+      "using cutoff-later Tasks or projected Results from another repository",
+      "pooling candidate Tasks from multiple repositories",
+      "treating static task-to-response prediction as future-distribution prediction",
+      "promoting a high random percentile without beating full history",
+      "searching projection rank, model family, regularization, embedding, forecast order, budget, horizon, clipping rule, or gate after replay",
+      "opening the sealed SWE-bench Agent holdout",
+      "adding a trainer framework, model registry, embedding service, or multi-repository Runner"
+    ]
+  },
+  "rolling_origin": {
+    "minimum_initial_history_tasks": 20,
+    "selection_budget_tasks": 10,
+    "primary_future_tasks": 5,
+    "sensitivity_future_tasks": 10,
+    "repository_sets": "reuse the exact H5 wide/deep and H10 common/deep repository sets from the bound selector plan",
+    "ordering": "projected created_at then instance_id",
+    "training_cutoff": "for target Origin cutoff tau, every fitting Task must belong to another repository and have projected created_at no later than tau",
+    "result_availability": "public Result is projected to its Task created_at; this is counterfactual and must never be relabeled strict historical replay",
+    "outer_holdout": "exclude the complete target repository from every fitted response direction",
+    "repository_weighting": "center within each fitting repository and average repository covariance directions equally"
+  },
+  "candidate": {
+    "algorithm_id": "ALG-013",
+    "name": "outer-repository response-contrast projection",
+    "short_name": "RCP",
+    "representation": {
+      "for_each_configuration_and_fitting_repository": "g[s,a] = mean_t((y[t,a] - mean_s(y[a])) * (e[t] - mean_s(e)))",
+      "aggregate": "g[a] is the equal-repository mean of g[s,a]",
+      "direction": "v[a] = g[a] / L2_norm(g[a])",
+      "task_coordinate": "z[t,a] = dot(e[t], v[a])",
+      "standardization": "center and scale each coordinate using equally weighted fitting-repository coordinate moments",
+      "zero_signal_rule": "drop a coordinate whose aggregate covariance norm or training scale is at most 1e-12; reject the representation if no coordinate remains",
+      "fit_scope": "one representation per target repository, Origin cutoff, and retained configuration set",
+      "theory": "repository-centered response covariance removes repository base rates and projects the fixed semantic representation onto directions that transfer Agent-response contrast across repositories"
+    },
+    "forecast": {
+      "history_blocks": "partition target history from the newest Task backward into complete horizon-sized blocks; ignore only the oldest incomplete remainder",
+      "minimum_complete_blocks": 2,
+      "rule": "fit an ordinary least-squares line from chronological block index to each mean z coordinate and extrapolate exactly one block",
+      "clipping": "none",
+      "fallback": "if fewer than two complete blocks exist, use the complete-history z mean",
+      "parameters": "no learned rank, window, trend order, shrinkage weight, threshold, or target-outcome tuning"
+    },
+    "selection_if_signal_passes": {
+      "evaluation_form": "leave one configuration out: omit its response direction from fitting, forecast, and Selection; evaluate only that configuration",
+      "rule": "greedy forward mean matching to the forecast z vector followed by at most 20 deterministic improving one-for-one swap passes",
+      "budget": 10,
+      "tie_break": "projected created_at then instance_id",
+      "weights": "equal",
+      "implementation_boundary": "experiment layer only"
+    }
+  },
+  "signal_cascade": {
+    "stage_a_response_representation": {
+      "metric": "For every target Origin and configuration with both terminal classes in its future cohort, compute future-task ROC AUC of z[t,a] for y[t,a]; average valid configurations within Origin, Origins within repository, then repositories equally.",
+      "baseline": 0.5,
+      "requirements": [
+        "H5 repository-macro AUC is greater than 0.5",
+        "the repository bootstrap 95 percent lower bound is greater than 0.5",
+        "at least 9 of 13 H5 repositories have mean AUC greater than 0.5",
+        "every H5 leave-one-repository-out macro AUC is greater than 0.5",
+        "at least one valid coordinate and one valid AUC row exist for every H5 repository",
+        "nineteen deterministic within-fitting-repository outcome permutations give an as-good-or-better rate below 0.10"
+      ],
+      "failure_action": "retire ALG-013 without evaluating forecast or Selection"
+    },
+    "stage_b_target_future_increment": {
+      "metric": "mean squared distance per retained z coordinate between the forecast centroid and actual future centroid",
+      "primary_baseline": "complete target-history z centroid under the same fitted representation",
+      "controls": [
+        "latest-h target-history z centroid",
+        "OLS forecast in the unmodified 384-dimensional embedding",
+        "target-history time-order circular-shift null"
+      ],
+      "requirements": [
+        "H5 repository-macro forecast loss is at least 10 percent lower than the complete-history baseline",
+        "at least 10 of 13 H5 repositories have negative forecast-minus-baseline difference",
+        "every H5 leave-one-repository-out macro difference is negative",
+        "H5 deep macro difference is negative",
+        "H5 RCP forecast loss is lower than latest-h RCP and raw-embedding OLS controls",
+        "H10 common-11 macro and deep differences are negative with at least 8 of 11 repositories favorable",
+        "short- and long-calendar-span H5 groups both have negative difference",
+        "one hundred ninety-nine repository-block circular shifts give an as-good-or-better rate below 0.10"
+      ],
+      "failure_action": "retire ALG-013 without materializing an outcome Selection"
+    },
+    "stage_c_budgeted_selection": {
+      "run_condition": "all Stage A and Stage B requirements pass exactly",
+      "controls": [
+        "full history",
+        "twenty thousand equal-budget random subsets",
+        "RCP with the complete-history centroid",
+        "RCP with the latest-h centroid",
+        "raw-embedding OLS forecast with the same optimizer",
+        "unchanged ALG-007 transfer memberships"
+      ],
+      "requirements": [
+        "H5 held-out-configuration repository-macro difference is at most -0.010",
+        "at least 10 of 13 H5 repositories and every H5 leave-one-repository-out view are favorable",
+        "H5 deep difference is negative",
+        "H10 common-11 and deep differences are negative with at least 8 of 11 repositories favorable",
+        "H5 is better than at least 75 percent of equal-budget random draws and H10 is not below the random median",
+        "candidate H5 loss is lower than every static, recent, raw-semantic, and unchanged ALG-007 control",
+        "leave-one-model, leave-one-harness, and leave-one-language refits preserve negative macro direction",
+        "a model-family by harness-family double-holdout audit does not reverse the aggregate direction",
+        "a target-history circular-shift null has corrected lower-tail rate below 0.10"
+      ],
+      "failure_action": "retire ALG-013 and stop candidate invention on the current opened sources"
+    }
+  },
+  "diagnostics": {
+    "bootstrap_resamples": 10000,
+    "bootstrap_seed": 20260728,
+    "representation_null_permutations": 19,
+    "forecast_null_permutations": 199,
+    "selection_random_draws": 20000,
+    "selection_random_seed": 20260728,
+    "numerical_tolerance": 1e-12,
+    "report": [
+      "repository-first wide and deep summaries",
+      "valid and dropped response coordinates",
+      "training repository, Task, cutoff, and representation digests",
+      "H5 and H10 common-11 comparison",
+      "calendar-span short and long directions",
+      "per-repository and per-language directions",
+      "model, harness, configuration, and double-holdout directions if Selection is reached",
+      "negative controls and exact stopping decision",
+      "resource use and contamination boundary"
+    ]
+  },
+  "resource_boundary": {
+    "paid_api_calls": 0,
+    "embedding_api_calls": 0,
+    "coding_agent_calls": 0,
+    "sealed_holdout_reads": 0,
+    "allowed_compute": "local CPU with the already materialized ignored embeddings and committed sparse public outcomes"
+  },
+  "response_signal_plan_digest": "6e3374c6a2d1ce866ad614198ae1911fdec2fc13a58d5cf32cd94ee66e1b249c"
+}

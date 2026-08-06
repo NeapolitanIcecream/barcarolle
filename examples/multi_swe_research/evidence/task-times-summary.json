@@ -1,0 +1,18 @@
+{
+  "claim_boundary": "GitHub pull-request createdAt is projected metadata for source-time-safe counterfactual research, not native dataset time.",
+  "contract_digest": "1e104613012a95fc534dba23d4adac1b7d6a6c10e70537c732f16da3e6f83307",
+  "evidence": "github_graphql_pull_request_created_at",
+  "maximum_created_at": "2025-02-07T15:24:59.000000Z",
+  "minimum_created_at": "2014-12-09T08:54:31.000000Z",
+  "observed_at": "2026-07-28T10:56:12.000000Z",
+  "projection_digest": "56eb7dda0d7fd9787b1e77c432572f212726b92abc189df18ab2a4fe6bb815e5",
+  "resource_use": {
+    "github_graphql_queries": 50,
+    "paid_api_calls": 0
+  },
+  "schema_version": "barcarolle_multi_swe_task_time_projection_v1",
+  "study_id": "multi-swe-zero-paid-development-2026-07-28",
+  "summary_digest": "5f81c76c27275d2f9aaf8b6222e154b9d6e7edad96837cebadb23405361f3cdd",
+  "task_count": 1632,
+  "task_id_line_digest": "cfbe75888d4eb3ff1062debcbc85c1b9f4ac5dcfe1a2fce48f34d116e2a45a21"
+}

@@ -1,0 +1,86 @@
+{
+  "schema_version": "barcarolle_dependency_lag_execution_lock_v1",
+  "study_id": "registry-dated-dependency-lag-theory-2026-07-29",
+  "status": "frozen_after_raw_capture_before_stage_a_result",
+  "plan_digest": "0126c44a4b3c4878637fef969fdf29a5ff5477fa487c967710667c3154853d5d",
+  "addendum_digest": "f920d1340feb994a8d1a678eb6b19f237cfb2fe34cd3a64670b8e298f230c739",
+  "implementation_commit": "8531d9a4c876a6f4f6f248ab90ec9a9c854818bf",
+  "implementation": [
+    {
+      "path": "examples/dependency_lag_theory/study.py",
+      "sha256": "03bac51b7023299d35e29d9aac2846de2f8c0b03650493b7035122f0c86268d2"
+    },
+    {
+      "path": "tests/test_dependency_lag_theory.py",
+      "sha256": "095ec101bacd2328836e25596e0d04cab092ae10cc83cb9b356df79d25038d79"
+    }
+  ],
+  "dependencies": {
+    "python": "3.14.0",
+    "duckdb": "1.5.5"
+  },
+  "source_discovery": {
+    "path": "outputs/research/2026-07-29-dependency-lag-theory/discovery.json",
+    "file_sha256": "82dd8c9ff5b7b021b03714d7a007a3c62b902a5548f450e8f1411008f2922675",
+    "discovery_digest": "66facc4e11ec1ea3297c92bf95f394923646a43769c9c735def4e713e701a732",
+    "state_point_count": 1539,
+    "package_count": 595,
+    "package_digest": "16f4280b97da4f8338ddce28861c1a5cdb9a2f27c69400e1d1f14218a75f6fe5"
+  },
+  "registry_manifest": {
+    "path": "outputs/research/2026-07-29-dependency-lag-theory/raw-registry/manifest.json",
+    "file_sha256": "1531decd13c24eab7fdbf6eb329eadb7f3293dfaa19d4451da52c514b955d066",
+    "digest": "e4cfec0d86d2f34b47a14d744aa42db8cb2ef8bffa7b83e8842f306742dba418",
+    "package_count": 595,
+    "response_count": 595,
+    "response_bytes": 641582736,
+    "http_200_count": 595
+  },
+  "repositories": [
+    {
+      "repository_id": "FHIR/sushi",
+      "head_commit": "a6168a02bb17e0893aeeca5e1ec9d126076396c4"
+    },
+    {
+      "repository_id": "JoshuaKGoldberg/create-typescript-app",
+      "head_commit": "1a1355799f8b0d7ad9953b597da136c10ec8110c"
+    },
+    {
+      "repository_id": "Sage/carbon",
+      "head_commit": "b22011e2c10011ce700532a30c5ec71ed1539d82"
+    },
+    {
+      "repository_id": "obsidian-tasks-group/obsidian-tasks",
+      "head_commit": "2082f657abfc6388c6d1b841e36d4022286a8211"
+    },
+    {
+      "repository_id": "platers/obsidian-linter",
+      "head_commit": "9cec25fcfd5289076afddc3c58e72b7e57436bf2"
+    },
+    {
+      "repository_id": "statamic/cms",
+      "head_commit": "c2e5197ebfc5ca8574635ab4df70e9b2baf7e749"
+    },
+    {
+      "repository_id": "sveltejs/kit",
+      "head_commit": "40efca1b4afd6f0b6329bed652025b99edc8978c"
+    },
+    {
+      "repository_id": "swc-project/swc",
+      "head_commit": "eb38433c37a347c3efa19f4fe907e49f3b128d72"
+    },
+    {
+      "repository_id": "typescript-eslint/tslint-to-eslint-config",
+      "head_commit": "03751ec2525cb5b7e000543809be37ca9bd9aee7"
+    }
+  ],
+  "result_boundary": {
+    "candidate_membership_opened": false,
+    "scoring_labels_loaded_by_runner": false,
+    "stage_a_result_opened": false,
+    "agent_outcomes_opened": 0,
+    "sealed_holdout_opened": 0,
+    "paid_api_calls": 0
+  },
+  "execution_lock_digest": "4774fbfe9abd13664c708790a31b0f2e0c8b60e2857df6f1f849490c83cdf673"
+}

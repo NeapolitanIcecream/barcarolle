@@ -981,11 +981,15 @@ def select_benchmark(
     )
     selector = _append_selector_record(selector, result_store)
     _append_origin_record(origin, result_store)
-    pre_origin_results = _load_pre_origin_results(
-        result_store,
-        origin,
-        agents,
-        result_available_after=None,
+    pre_origin_results = (
+        _load_pre_origin_results(
+            result_store,
+            origin,
+            agents,
+            result_available_after=None,
+        )
+        if feature_config.requires_pre_origin_results
+        else ()
     )
     snapshot = selection_module.build_feature_snapshot(
         origin,
@@ -1111,18 +1115,40 @@ def evaluate_selectors(
     )
     for origin in origins:
         _append_origin_record(origin, result_store)
-    selection_result_snapshot = tuple(
-        result_store_module.load_results(
+    frozen_origin_material = {
+        origin.origin_id: _load_frozen_origin_material(
+            origin,
+            task_pool,
+            agents,
+            evaluation_config.budget,
+            feature_config,
             result_store,
-            result_store_module.ResultQuery(
-                agent_ids=agent_ids,
-                result_available_after=history_window.start,
-                result_available_before=max(origin.as_of_cutoff for origin in origins),
-            ),
         )
+        for origin in origins
+    }
+    needs_new_material = any(
+        material is None for material in frozen_origin_material.values()
+    )
+    selection_result_snapshot = (
+        tuple(
+            result_store_module.load_results(
+                result_store,
+                result_store_module.ResultQuery(
+                    agent_ids=agent_ids,
+                    task_ids=task_pool.task_ids,
+                    check_ids=task_pool.check_ids,
+                ),
+            )
+        )
+        if needs_new_material and feature_config.requires_pre_origin_results
+        else ()
     )
     origin_material: dict[str, tuple[FeatureSnapshotRecord, SelectorInput]] = {}
     for origin in origins:
+        frozen = frozen_origin_material[origin.origin_id]
+        if frozen is not None:
+            origin_material[origin.origin_id] = frozen
+            continue
         pre_origin_results = _results_for_refs_snapshot(
             selection_result_snapshot,
             origin,
@@ -2582,7 +2608,7 @@ def _load_results_for_refs(
     agents: Sequence[AgentRecord],
     *,
     result_available_after: str | None,
-    result_available_before: str,
+    result_available_before: str | None,
 ) -> tuple[ResultRecord, ...]:
     task_ids, check_ids = _refs_query_parts(refs)
     if not task_ids or not agents:
@@ -2630,18 +2656,26 @@ def _results_for_refs_snapshot(
         (ref.task_id, ref.check_id) for ref in origin.history_task_check_refs
     }
     agent_ids = {agent.agent_id for agent in agents}
+    enforce_physical_visibility = origin.eligibility_mode == "strict_prospective"
     after = (
         parse_utc_timestamp(result_available_after)
-        if result_available_after is not None
+        if enforce_physical_visibility and result_available_after is not None
         else None
     )
-    before = parse_utc_timestamp(origin.as_of_cutoff)
+    before = (
+        parse_utc_timestamp(origin.as_of_cutoff)
+        if enforce_physical_visibility
+        else None
+    )
     filtered = tuple(
         result
         for result in snapshot
         if result.agent_id in agent_ids
         and (after is None or parse_utc_timestamp(result.result_available_at) >= after)
-        and parse_utc_timestamp(result.result_available_at) <= before
+        and (
+            before is None
+            or parse_utc_timestamp(result.result_available_at) <= before
+        )
     )
     return _distinct_unambiguous_results(filtered, allowed_refs)
 
@@ -2653,13 +2687,118 @@ def _load_pre_origin_results(
     *,
     result_available_after: str | None,
 ) -> tuple[ResultRecord, ...]:
+    enforce_physical_visibility = origin.eligibility_mode == "strict_prospective"
     return _load_results_for_refs(
         result_store,
         origin.history_task_check_refs,
         agents,
-        result_available_after=result_available_after,
-        result_available_before=origin.as_of_cutoff,
+        result_available_after=(
+            result_available_after if enforce_physical_visibility else None
+        ),
+        result_available_before=(
+            origin.as_of_cutoff if enforce_physical_visibility else None
+        ),
     )
+
+
+def _load_frozen_origin_material(
+    origin: RollingOriginRecord,
+    task_pool: TaskPoolRecord,
+    agents: Sequence[AgentRecord],
+    budget: selection_module.SelectionBudget,
+    feature_config: selection_module.FeatureConfig,
+    result_store: result_store_module.ResultStore,
+) -> tuple[FeatureSnapshotRecord, SelectorInput] | None:
+    selector_input_path = _selector_input_log_path(result_store)
+    snapshot_path = _feature_snapshot_log_path(result_store)
+    if not selector_input_path.exists():
+        return None
+    expected_agent_ids = tuple(agent.agent_id for agent in agents)
+    expected_agent_digests = tuple(canonical_digest(agent) for agent in agents)
+    leakage_policy_digest = feature_config.leakage_policy(
+        origin.as_of_cutoff
+    ).leakage_policy_digest
+    candidates = tuple(
+        selector_input
+        for selector_input in load_jsonl_records(
+            selector_input_path,
+            SelectorInput,
+        )
+        if selector_input.origin_id == origin.origin_id
+        and selector_input.task_pool_id == task_pool.task_pool_id
+        and selector_input.task_pool_digest == task_pool.task_pool_digest
+        and selector_input.agent_ids == expected_agent_ids
+        and selector_input.agent_record_digests == expected_agent_digests
+        and selector_input.budget_digest == budget.budget_digest
+        and selector_input.selection_budget_limit == budget.max_task_checks
+        and selector_input.leakage_policy_digest == leakage_policy_digest
+        and selector_input.eligible_task_check_refs
+        == origin.history_task_check_refs
+        and selector_input.eligibility_mode == origin.eligibility_mode
+    )
+    if not candidates:
+        return None
+    if not snapshot_path.exists():
+        raise ValueError("frozen SelectorInput is missing its FeatureSnapshot log")
+    snapshots_by_id: dict[str, FeatureSnapshotRecord] = {}
+    for snapshot in load_jsonl_records(snapshot_path, FeatureSnapshotRecord):
+        if snapshot.feature_snapshot_id in snapshots_by_id:
+            raise ValueError(
+                "FeatureSnapshot log contains duplicate feature_snapshot_id"
+            )
+        snapshots_by_id[snapshot.feature_snapshot_id] = snapshot
+    missing_snapshot_ids = tuple(
+        selector_input.feature_snapshot_id
+        for selector_input in candidates
+        if selector_input.feature_snapshot_id not in snapshots_by_id
+    )
+    if missing_snapshot_ids:
+        raise ValueError("frozen SelectorInput references a missing FeatureSnapshot")
+    matching = tuple(
+        (snapshots_by_id[selector_input.feature_snapshot_id], selector_input)
+        for selector_input in candidates
+        if selector_input.feature_snapshot_id in snapshots_by_id
+        and snapshots_by_id[
+            selector_input.feature_snapshot_id
+        ].feature_config_digest
+        == feature_config.feature_config_digest
+    )
+    if not matching:
+        return None
+    if len(matching) != 1:
+        raise ValueError(
+            "multiple frozen SelectorInputs match the same evaluation origin"
+        )
+    snapshot, selector_input = matching[0]
+    validation = validate_feature_snapshot(snapshot)
+    if not validation.ok:
+        raise ValueError(
+            "frozen FeatureSnapshot is invalid: " + ", ".join(validation.errors)
+        )
+    validation = validate_selector_input(selector_input)
+    if not validation.ok:
+        raise ValueError(
+            "frozen SelectorInput is invalid: " + ", ".join(validation.errors)
+        )
+    pre_origin_results = (
+        ()
+        if not selector_input.pre_origin_result_ids
+        else tuple(
+            result_store_module.load_results(
+                result_store,
+                result_store_module.ResultQuery(
+                    result_ids=selector_input.pre_origin_result_ids,
+                ),
+            )
+        )
+    )
+    selection_module.ensure_selector_input_result_evidence(
+        selector_input,
+        origin,
+        snapshot,
+        pre_origin_results,
+    )
+    return snapshot, selector_input
 
 
 def _refs_query_parts(

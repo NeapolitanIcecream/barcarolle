@@ -1,0 +1,69 @@
+{
+  "schema_version": "barcarolle_theory_selector_audit_plan_v1",
+  "study_id": "joint-markov-adversarial-audit-2026-07-28",
+  "epistemic_status": "post_nomination_adversarial_development_audit",
+  "frozen_at": "2026-07-28T03:26:00Z",
+  "audit_plan_digest": "d71e6ebee99192bfe65fece34150b862419b8fc1b1ec99a59224080850d99037",
+  "authority": {
+    "paid_api_calls": 0,
+    "coding_agent_calls": 0,
+    "embedding_api_calls": 0,
+    "allowed_inputs": "The same pinned local Task source and three opened public Agent outcome vectors.",
+    "implementation_scope": "One direct audit script and focused tests; the frozen candidate implementation and parameters remain unchanged."
+  },
+  "source_results": {
+    "theory_plan_digest": "ae58832e7bcd335e3c246ae9da351fecf181044757589dabc60b4f30c11fb83b",
+    "theory_results_digest": "f9cb181ff9c2b67d7dbf67514e9c27e684cba4a786170cb333c3fee7f1bcf0f7",
+    "nominated_selector_id": "joint_markov_match",
+    "observed_wide_macro_repository_difference": -0.019107886181284034,
+    "outcome_status": "Opened. This audit can challenge or narrow the nomination but cannot strengthen it into confirmation."
+  },
+  "audit_contract": {
+    "target": "Determine whether the joint-Markov nomination is plausibly temporal and reference-panel transferable, rather than a repository imbalance, outcome-permutation artifact, or three-Agent in-panel matching artifact.",
+    "candidate_changes_allowed": false,
+    "allowed_terminal_states": [
+      "retain_candidate_for_independent_agent_validation",
+      "retain_only_as_panel_conditional_candidate",
+      "retire_candidate_after_adversarial_audit",
+      "audit_protocol_or_source_blocker"
+    ],
+    "non_solutions": [
+      "changing the Markov prior, horizon, state encoding, budget, or fitting repositories",
+      "choosing a more favorable permutation seed or count after observing the audit",
+      "evaluating held-out Agents with a Selection that used their outcomes",
+      "calling a favorable retrospective audit independent confirmation"
+    ]
+  },
+  "leave_one_agent_out": {
+    "rule": "For each held-out Agent, rebuild joint states, cross-repository transition matrices, target-local transitions, forecasts, and ten-Task Selections from the other two Agents only; evaluate candidate-minus-full-history loss on the held-out Agent only.",
+    "state_count": 4,
+    "training_transition_dirichlet_total_mass_per_row": 1.0,
+    "training_transition_dirichlet_cell_mass": 0.25,
+    "target_local_transition_prior_total_mass_per_row": 4.0,
+    "horizon": 5,
+    "selection_budget_tasks": 10,
+    "aggregation": "Origins equal within repository; repositories equal in wide and deep summaries."
+  },
+  "temporal_null": {
+    "rule": "Independently within each repository, shuffle complete joint three-Agent outcome vectors over Task order; refit every outer-repository Markov model and Selection under the shuffled data, preserving repository outcome marginals and inter-Agent dependence.",
+    "permutations": 500,
+    "seed": 20260730,
+    "test_statistic": "Seven-repository wide macro candidate-minus-full-history difference.",
+    "as_good_or_better_direction": "permuted difference less than or equal to the observed negative difference",
+    "maximum_binomial_standard_error": 0.022361
+  },
+  "decision_rule": {
+    "retain_candidate_for_independent_agent_validation": [
+      "temporal-null as-good-or-better rate is below 0.10",
+      "macro mean over the three held-out-Agent wide summaries is negative",
+      "at least two of three held-out-Agent wide summaries are negative"
+    ],
+    "retain_only_as_panel_conditional_candidate": "The temporal-null rate is below 0.10, but either held-out-Agent condition fails.",
+    "retire_candidate_after_adversarial_audit": "The temporal-null as-good-or-better rate is at least 0.10."
+  },
+  "claim_limits": [
+    "Complete non-target repository histories are used for outer fitting, so the audit is repository-held-out but not global-calendar prospective.",
+    "Three leave-one-Agent-out folds are a diagnostic, not an independent Agent panel.",
+    "The original seven-repository interval crosses zero and remains unchanged by this audit."
+  ]
+}

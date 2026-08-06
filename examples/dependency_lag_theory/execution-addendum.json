@@ -1,0 +1,91 @@
+{
+  "schema_version": "barcarolle_dependency_lag_execution_addendum_v1",
+  "study_id": "registry-dated-dependency-lag-theory-2026-07-29",
+  "status": "frozen_before_stage_a_execution",
+  "parent_plan_digest": "0126c44a4b3c4878637fef969fdf29a5ff5477fa487c967710667c3154853d5d",
+  "purpose": "Close mechanical execution ambiguities without changing the THY-003 hypothesis, information set, candidate, controls, repositories, horizons, seeds, or gates.",
+  "source_frame": {
+    "task_material_time": "created_at interpreted as UTC when timezone-naive",
+    "task_count": 1420,
+    "origin_count": 119,
+    "task_projection_digest": "e7d18727fd0cb34efd1ef894b34795efd208b714862edc33dfd43eb9f440eb6c",
+    "origin_schedule_digest": "604b83ce57481dccca377a5f107043b910a9b9075ac312e4e4a4e1a0a5278640",
+    "origin_task_frame_digest": "fbf5cfeccca76a4c2ba09b46ee706fbc9b6444f2b3c2170537d4dca98c815c7d",
+    "origin_schedule_record": [
+      "repository_id",
+      "origin_id",
+      "origin_cutoff",
+      "origin_commit",
+      "history_task_count"
+    ],
+    "origin_task_frame_record": [
+      "repository_id",
+      "origin_id",
+      "origin_cutoff",
+      "origin_commit",
+      "history_task_ids",
+      "future_h10_task_ids"
+    ],
+    "binding": "Load Task identities through the frozen THY-002 source loader, construct its unchanged rolling schedule, and bind each Origin cutoff and commit to the accepted THY-002 raw result. Do not infer a new schedule."
+  },
+  "scoring_label": {
+    "definition": "A Task is positive exactly when a diff --git header names package.json, package-lock.json, npm-shrinkwrap.json, pnpm-lock.yaml, or yarn.lock at repository root on either side.",
+    "label_projection_digest": "82df5a28491394c0b120aa5ad7521da05ce716db6978cd39feca41b19c28f753",
+    "loading_barrier": "Build and digest all candidate and lock-only memberships before loading any reference patch or scoring label into the evaluation phase.",
+    "binary_brier": "For forecast probability p and binary label y, Task loss is (p-y)^2. Average Tasks within Origin, Origins within repository, then repositories equally."
+  },
+  "state_cells_and_admission": {
+    "coverage_denominator": "One cell for every distinct declared direct package within each required Task or Origin state point: (repository_id, state_kind, state_id, package_name). A package declared in both scopes contributes one production cell.",
+    "coverage_numerator": "A denominator cell whose first-present lockfile records an exact stable direct version and whose retained packument has a parseable time[that_version] timestamp at or before that state cutoff.",
+    "missing_snapshot_cells": "A historical Task with no supported state contributes no dependency cells and is separately reported as a missing-state Task. Every Origin must have a supported nonempty state.",
+    "variation_identity": "Distinct Origin state vectors are compared as exact normalized rational values."
+  },
+  "snapshot_and_lock_rules": {
+    "snapshot": "Use the latest first-parent commit returned by git rev-list --first-parent --max-count=1 --before=<UTC cutoff> HEAD. Each frozen Origin must equal the commit bound by the parent result.",
+    "precedence": "Use the first present lockfile in the parent plan's order. A malformed or unsupported first-present file does not fall through to a lower-precedence file.",
+    "empty_direct_dependencies": "A zero-direct-dependency historical snapshot is a missing-state marker; the same condition at an Origin is inadmissible.",
+    "npm_lock": "For lockfileVersion 1 read dependencies[name].version. For versions 2 and 3 read packages[node_modules/name].version, including scoped names.",
+    "pnpm_lock": "Read only importer '.' dependencies and devDependencies. A scalar value or mapping.version may remove one pnpm peer-context suffix beginning with '_' in lockfile 5 or '(' in later lockfiles; the remaining whole prefix must be strict stable x.y.z.",
+    "yarn_classic": "Match the direct manifest selector name@declared_spec to a Yarn v1 stanza and read its version. Combined selector stanzas are allowed.",
+    "yarn_berry": "Parse the mapping and match name@declared_spec or name@npm:declared_spec in a selector key; read that entry's version.",
+    "unknown": "Workspace, file, Git, URL, npm alias, unmatched selector, range-only, prerelease, build metadata, malformed, and non-strict versions are unknown.",
+    "no_manifest_range_use": "Manifest ranges identify direct declarations and Yarn selectors only; they never supply a resolved version."
+  },
+  "numeric_and_selection_rules": {
+    "distance": "Represent category counts, denominators, L1 distance, weights, and forecast rates as exact rational numbers through membership creation. Convert only final forecast probabilities to IEEE-754 binary64 for Brier reporting.",
+    "tie": "Apply the frozen SHA-256 tie-break only when exact rational distances are equal.",
+    "lock_only": "For every declared package, map a strict stable version resolved from the first-present lockfile to current without reading registry data; retain every other package as unknown. Repeat both continuous and materialized pipelines.",
+    "lock_only_gate": "The formal decision compares registry-dated materialized loss with lock-only materialized loss. Continuous lock-only loss is reported as an ablation diagnostic."
+  },
+  "uncertainty_and_null": {
+    "runtime": "CPython random.Random with seed 20260729.",
+    "bootstrap": "Generate one 20000-draw matrix in frozen repository order; each draw samples nine repository indices with replacement. Reuse the matrix for every paired wide-frame contrast. Sort draw means and report zero-based order statistics 500 and 19500 as the 95 percent interval.",
+    "leave_one_repository_out": "For each repository in frozen order, report the arithmetic mean contrast over the other eight repositories.",
+    "temporal_null": "For each of 20000 draws and each repository in frozen order, draw one offset uniformly from integers 1 through origin_count-1. For chronological Origin index i use the donor Origin state at (i+offset) modulo origin_count, recompute the materialized selection against the same historical Tasks, and score H5. The donor Origin identity never enters the candidate tie-break.",
+    "temporal_null_rate": "Count null H5 materialized-minus-full macro contrasts less than or equal to the true contrast and divide by 20000, with no plus-one correction."
+  },
+  "execution_and_terminal_states": {
+    "freeze_order": [
+      "Commit this addendum before implementing accepted Stage A.",
+      "Test and commit the runner and parser fixtures before registry acquisition.",
+      "Acquire each distinct package packument once and retain its raw response, URL, status, query time, byte count, and SHA-256.",
+      "Create a separate execution lock binding the committed runner, dependency versions, repository heads, and raw registry manifest before reading any candidate result.",
+      "Run twice offline from the same frozen responses and require byte-identical accepted outputs."
+    ],
+    "terminal_states": {
+      "invalid_execution": "An implementation, identity, verifier, or reproduction defect; not scientific evidence.",
+      "external_blocker": "Registry or source acquisition could not be completed; not scientific evidence.",
+      "retired_source_admission": "A verified accepted run fails a frozen source-admission gate.",
+      "retired_stage_a": "Source admission passes but one or more frozen Stage-A scientific gates fail.",
+      "passed_stage_a": "Every source and Stage-A gate passes; only a separate outcome plan may be designed."
+    }
+  },
+  "resource_boundary": {
+    "paid_api_calls": 0,
+    "embedding_calls": 0,
+    "coding_agent_calls": 0,
+    "agent_outcomes_opened": 0,
+    "sealed_holdout_opened": 0
+  },
+  "addendum_digest": "f920d1340feb994a8d1a678eb6b19f237cfb2fe34cd3a64670b8e298f230c739"
+}

@@ -1,0 +1,44 @@
+{
+  "schema_version": "barcarolle_prequential_response_assembly_execution_amendment_v1",
+  "study_id": "prequential-response-assembly-2026-07-29",
+  "frozen_at": "2026-07-29T14:25:00Z",
+  "status": "pre_score_primary_replay_numeric_correction",
+  "plan_digest": "f1517fd04a97fc584b8df0f3c3d6be59bd3569a52bbad91694835de15558c84b",
+  "addendum_digest": "8f782ce6421de09064459a13a268689908f88014084dd6e6641d0c7785a0ba2c",
+  "parent_lock_digest": "4ef7adae60f20bc6198b5d65e151630d172b4a6271eb8399681993f876ac692b",
+  "trigger": {
+    "command": "First complete membership materialization run under the parent execution lock.",
+    "terminal_state": "failed_before_any_membership_artifact_or_candidate_score",
+    "horizon": 5,
+    "repository_id": "clap-rs/clap",
+    "origin_id": "clap-rs/clap:origin-013",
+    "history_task_count": 82,
+    "held_out_configuration_index": 25,
+    "algorithm_target": "ALG-016U BOCPD forecast",
+    "solver_reported_objective": 0.019958536261866413,
+    "direct_membership_replay_objective": 0.01995856483329498,
+    "absolute_replay_error": 2.8571428566798174e-08
+  },
+  "diagnosis": "HiGHS returned an integral membership with zero binary integrality error, zero reported MIP gap, and a solver objective computed through auxiliary slack variables. Directly replaying that membership against the response target produced an objective 2.86e-8 higher, consistent with roughly 1e-6 linear-feasibility tolerance divided across 35 coordinates, and exceeded the frozen 1e-8 replay tolerance. No algorithm, forecast, tie priority, frame, baseline, outcome, or result was observed or changed.",
+  "correction": {
+    "primary_replay_tolerance": 1e-07,
+    "primary_objective_for_secondary_program": "The independently recomputed direct objective of the integral membership, after it is within 1e-7 of the solver-reported auxiliary-slack optimum. The 1e-7 value is an acceptance and replay tolerance, not permission for the secondary program to worsen the target; its upper bound uses the direct replay objective without an added semantic relaxation.",
+    "secondary_replay_tolerance": 1e-07,
+    "unchanged": [
+      "all three candidate mechanisms and parameters",
+      "visible Task priority and exact secondary objective",
+      "budget, H5/H10 frames, controls, metrics, aggregation, random and bootstrap protocols",
+      "cached-target and unseen-target information boundaries",
+      "numeric-progress and claim boundaries"
+    ]
+  },
+  "resource_visibility": {
+    "membership_artifacts_written": 0,
+    "candidate_scores_read": 0,
+    "paid_api_calls": 0,
+    "new_agent_outcome_calls": 0,
+    "sealed_holdout_reads": 0
+  },
+  "required_relock": "Bind this amendment, the corrected runner, its directed tests, every prior source binding, and a fresh runtime/frame identity before restarting materialization from the beginning.",
+  "amendment_digest": "20e25fe7b21f2f95732a131082d54f330aafe90d12c1868b16043bac675ee5bd"
+}

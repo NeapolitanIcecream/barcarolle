@@ -1,0 +1,170 @@
+{
+  "schema_version": "barcarolle_swe_bench_full_estimand_audit_plan_v2",
+  "study_id": "swe-bench-full-estimand-and-reliability-audit-2026-07-30-v2",
+  "frozen_at": "2026-07-30T08:25:00Z",
+  "amended_at": "2026-07-30T08:58:08Z",
+  "status": "post_anomaly_outcome_open_exploratory_contract_amended_before_final_interpretation",
+  "contract_history": {
+    "confirmatory_status": "None. The audit is outcome-open and exploratory.",
+    "initial_freeze": {
+      "commit": "14694645",
+      "plan_digest": "6cb3de04a8fcca92494fdbffe07356494fc676c4b4a799f84c31816d2879f477"
+    },
+    "pre_interpretation_amendments": [
+      {
+        "commit": "b90b59ce",
+        "plan_digest": "cda05fd3f7b6a5c2d3e39121da163a2828e6f4681775e74f12eca6f7e7ff552f",
+        "reason": "Declare the SciPy solver dependency used by the already-frozen future-open Oracle diagnostic."
+      },
+      {
+        "commit": "f6da806c",
+        "plan_digest": "4da2e3ab3e145350506cbb64a9eac0836acb4598c36d3287d312ca24f0848f97",
+        "reason": "Retain all eligible repositories in long-horizon lag diagnostics."
+      },
+      {
+        "reason": "Independent adversarial review found that per-Agent order shuffles destroyed same-block cross-Agent dependence. Version 2 uses one shared multivariate block permutation per repository, records matched H40 controls, pins the runtime and complete execution-source manifest, and corrects descriptive labels. This amendment was made after initial outputs were visible and its permutation result is post-hoc."
+      }
+    ]
+  },
+  "research_contract": {
+    "question": "What does the current repository-equal direct-MAE headline measure, and does it demonstrate useful within-repository future Selection beyond fitted Agent-by-repository means and finite future-block variation?",
+    "observable_evidence": [
+      "the fixed Agent-by-repository pass-rate distribution",
+      "always-zero, Full-history, previous-block, and candidate direct MAE on the same rolling frame",
+      "Agent-by-repository paired candidate-minus-Full cells rather than only repository and Agent marginals",
+      "an exact descriptive finite-panel decomposition of realized future-block variation",
+      "future-block stability and order diagnostics at H5, H10, H20, and H40",
+      "lagged versus same-future cross-Agent residual association",
+      "future-open Oracle Agent-by-repository cells omitted by the earlier summary"
+    ],
+    "insufficient_outcomes": [
+      "a low aggregate MAE without prevalence and trivial baselines",
+      "a high random midrank presented as future-predictive structure",
+      "a future-open Oracle presented as forecastability",
+      "repository or Agent marginal directions presented as every Agent-by-repository direction",
+      "an IID Bernoulli approximation presented as identified Task noise",
+      "a diagnostic metric replacing direct future pass-rate MAE"
+    ],
+    "allowed_terminal_states": [
+      "current interpretation survives the audit",
+      "current interpretation requires revision",
+      "bounded inconclusive because temporal signal and finite-block variation are not identifiable on this frame",
+      "input identity or reproduction blocker"
+    ]
+  },
+  "frame": {
+    "minimum_initial_history_tasks": 20,
+    "selection_budget_tasks": 10,
+    "horizons": [
+      5,
+      10,
+      20,
+      40
+    ],
+    "primary_aggregation": "direct absolute error per Agent and Origin; Agents and Origins inside repository; repositories equally",
+    "deployment_unit": "one target Agent and one repository",
+    "h20_h40_role": "reliability and horizon sensitivity only; no existing candidate is reranked on these horizons"
+  },
+  "diagnostics": {
+    "permutation_replicates": 2000,
+    "permutation_seed": 20260730,
+    "permutation_unit": "shuffle complete multivariate Agent outcome blocks with one shared order inside each repository, preserving same-block cross-Agent dependence",
+    "agent_groups": "six source-labeled RAG submissions versus the five remaining checked submissions; post-hoc failure localization only",
+    "variance_components": [
+      "Agent",
+      "repository",
+      "Agent-by-repository",
+      "common repository block",
+      "Agent-by-block residual"
+    ],
+    "horizon_scaling": "fit descriptive within-cell block variance against 1/H on repositories eligible at every horizon",
+    "oracle_role": "recover joint cells and audit macro capacity; do not rank or deploy an Oracle"
+  },
+  "reproduction": {
+    "command": "uv run --python 3.14.0 --with numpy==2.5.1 --with scipy==1.16.3 --with pyarrow==25.0.0 python examples/swe_bench_full_estimand_audit/audit.py run",
+    "required_packages": [
+      "numpy==2.5.1",
+      "scipy==1.16.3",
+      "pyarrow==25.0.0"
+    ],
+    "runtime": {
+      "python": "3.14.0",
+      "numpy": "2.5.1",
+      "scipy": "1.16.3",
+      "pyarrow": "25.0.0"
+    },
+    "determinism": "All permutations use the frozen seed; the output is self-digested."
+  },
+  "bound_artifacts": {
+    "source_plan": {
+      "path": "examples/swe_bench_full_transfer/plan.json",
+      "file_sha256": "d0874de8a4f6404ec8a7652847db0f09f62a2513be1f2f264e858f58f97c9742",
+      "logical_digest_key": "plan_digest",
+      "logical_digest": "1c37db6ebd2b65a4acdb81c4e75aec1fcab54a7db31e84558c7435d5dadc4b32"
+    },
+    "source_implementation": {
+      "path": "examples/swe_bench_full_transfer/study.py",
+      "file_sha256": "631e8bf961263e4904be228feff56b527ac24023309e6bb61c7d894686101077"
+    },
+    "origin_implementation": {
+      "path": "examples/multi_repository_study/public_replay.py",
+      "file_sha256": "1067c2668c0c8d1c43912ff4a9df7bc1f857e31e0ad24eca9f4bd0192481a35f"
+    },
+    "development_plan": {
+      "path": "examples/swe_bench_full_development/plan.json",
+      "file_sha256": "0d731587957aa16d309e356bc8933797444602c6c058cd37bd092c5fdf739622",
+      "logical_digest_key": "plan_digest",
+      "logical_digest": "e226462972c5dee46ae675a7d80dc2662a479afc2a377b9d5c400d1c7e551e17"
+    },
+    "development_summary": {
+      "path": "examples/swe_bench_full_development/evidence/summary.json",
+      "file_sha256": "c030ec3ab333b29f2bb9ab37741d49c2e451903111e90d6da383b82be69afc0c",
+      "logical_digest_key": "summary_digest",
+      "logical_digest": "cefdc2f1678baf34cf274e8954881da95116ae91c797803f76a811ff02c9009b"
+    },
+    "development_result": {
+      "path": "outputs/research/2026-07-30-swe-bench-full-development/result-a.json",
+      "file_sha256": "f8ed37dc1bbc2cf24da98911362b5d5e244e322c30b59c49b0e7c2d371a3431d",
+      "logical_digest_key": "result_digest",
+      "logical_digest": "6f73eb4a5077107cc7182da11d6c0f1ab2ff2f04c886e906ae81675159dffb34"
+    },
+    "diagnostic_plan": {
+      "path": "examples/swe_bench_full_development/diagnostic-plan.json",
+      "file_sha256": "660f1ebc01e1343d7e17746812a1b521671033a6985fabd625ccde4228cb1e42",
+      "logical_digest_key": "diagnostic_plan_digest",
+      "logical_digest": "0d94681518ed5e592f51ef2f1a8024300ef4f42799eecd23b06eebae8b267a56"
+    },
+    "diagnostic_implementation": {
+      "path": "examples/swe_bench_full_development/diagnostic.py",
+      "file_sha256": "4e364ef25c5a07ddfe29741f2bbe997c9b4d0fbc146e31c8151f5b4d7f5147aa"
+    },
+    "diagnostic_summary": {
+      "path": "examples/swe_bench_full_development/evidence/diagnostic-summary.json",
+      "file_sha256": "8fc9f30d2c4bfd0fab2c6f8375652365760799b47101fc9a4dbc36a4c90da9f8",
+      "logical_digest_key": "diagnostic_summary_digest",
+      "logical_digest": "74e08d12d268c9b0a5fd3648cd93e5f26a223b3bbca3d7897c1b6f03de7cd877"
+    },
+    "diagnostic_result": {
+      "path": "outputs/research/2026-07-30-swe-bench-full-development/diagnostic-a.json",
+      "file_sha256": "eb2c9fc3c97d9d581ef95bce374be194d7eed7a6d27ef0e90e9bc1456b95a7df",
+      "logical_digest_key": "diagnostic_result_digest",
+      "logical_digest": "9f4c4a08c97d51f212ac70c42a79dfe039d07d7756a7329cadc3fbb9db65d353"
+    }
+  },
+  "implementation": {
+    "audit_file_sha256": "16251e31390975a5e928694e76f2eabeac6af69d99e801facc2cb52a66e739d1",
+    "execution_source_file_count": 61,
+    "execution_source_manifest_digest": "5699ea378f6e60ea242a99c1c5bd993a207c604d00b82056eec1988fa3a3a95e"
+  },
+  "authority": {
+    "paid_api_calls": 0,
+    "new_agent_outcome_calls": 0,
+    "sealed_swe_bench_verified_agent_reads": 0,
+    "algorithm_changes": 0,
+    "core_schema_changes": 0,
+    "generator_development": false
+  },
+  "source_policy": "Use the already-open pinned SWE-bench Full Tasks and checked Agent outcomes. Primary literature may inform interpretation but cannot replace local direct-MAE evidence.",
+  "claim_boundary": "This adaptive post-anomaly audit can correct interpretation and identify the next discriminating experiment. It cannot confirm a Selector, establish IID sampling noise, or generalize beyond the fixed opened Agent and repository frame.",
+  "plan_digest": "6d1c3237967d859f89352dccec4d4d865b099c6c3f6434084269b967c97f181f"
+}

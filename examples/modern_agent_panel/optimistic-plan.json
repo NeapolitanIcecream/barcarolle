@@ -1,0 +1,133 @@
+{
+  "schema_version": "barcarolle_optimistic_modern_selector_sprint_plan_v1",
+  "study_id": "optimistic-modern-selector-sprint-2026-07-31",
+  "frozen_at": "2026-07-31T04:29:10Z",
+  "mode": "execute",
+  "current_task_statement": "Find and verify a pre-Origin budget-ten Selector whose direct target-Agent future pass-rate MAE is lower than Full eligible repository-local history at both H5 and H10 on the fixed-Harness modern development panel.",
+  "definitions_and_scope": {
+    "deployment_unit": "one target Agent, one repository, one Task Pool, and one Selection",
+    "primary_population": "verified-mini-swe-agent-v2",
+    "minimum_initial_history_tasks": 20,
+    "selection_budget_tasks": 10,
+    "horizons": [
+      5,
+      10
+    ],
+    "aggregation": "average target Agents and Origins inside repository, then weight repositories equally",
+    "primary_metric": "direct absolute error between the selected ten-Task target-Agent pass rate and the next-block target-Agent pass rate",
+    "baseline": "Full eligible repository-local history",
+    "information_invariant": "For every target Agent and Origin, perturbing the target Agent's complete outcome column must not change membership.",
+    "task_order": "created_at then instance_id",
+    "runtime_repository_pooling": false
+  },
+  "required_evidence": {
+    "development_success": [
+      "one frozen candidate has strictly lower direct MAE than Full at H5",
+      "the same frozen candidate has strictly lower direct MAE than Full at H10",
+      "target-column membership invariance passes across rolling updates",
+      "two complete frozen executions are byte-identical",
+      "repository, Agent, Origin, and random-subset directions are reported",
+      "an adversarial audit finds no future leak, target leak, denominator change, aggregation change, or score-to-contract mismatch"
+    ],
+    "claim_boundary": "Success establishes a modern outcome-open development Selector, not prospective or production validity.",
+    "independent_confirmation": "The six unread project-sealed Verified full-system Agents remain a later confirmation boundary and are not required to explore or rank development routes."
+  },
+  "insufficient_outcomes": [
+    "lower Brier loss, response-vector loss, forecast loss, AUC, or another surrogate without lower direct pass-rate MAE",
+    "a future-open Oracle or any current-future input",
+    "membership that reads the target Agent's historical or future outcome column",
+    "improvement at only one horizon",
+    "a special-case repository or Agent improvement presented as the aggregate result",
+    "a high random percentile while still losing to Full",
+    "a result obtained by changing the denominator, repository weights, horizon, budget, or minimum history",
+    "a polished diagnostic, decomposition, framework, or plan without an outcome-facing candidate test",
+    "secondary-panel agreement presented as independent confirmation after its outcomes have informed design"
+  ],
+  "optimistic_premise": "For purposes of search, assume that a Selector satisfying the exact development-success contract exists and can be found. This premise sustains constructive search and is not evidence that any candidate is correct.",
+  "terminal_states": [
+    "verified_development_success",
+    "hard_boundary_checkpoint_with_exact_gap",
+    "specific_external_blocker",
+    "independently_verified_contradiction_of_the_contract"
+  ],
+  "boundaries_and_resources": {
+    "paid_api_calls": 0,
+    "new_agent_runs": 0,
+    "generator_development": false,
+    "core_schema_changes": 0,
+    "sealed_agent_reads_before_development_success": 0,
+    "allowed_compute": "local deterministic analysis and optimization on existing public outcome-open artifacts",
+    "source_policy": "External literature and standard methods may inform mechanisms and falsification. Public exact per-Task outcomes may be used as development data. Do not present borrowed benchmark answers as independent discovery."
+  },
+  "bound_evidence": {
+    "population_plan": {
+      "path": "examples/modern_agent_panel/plan.json",
+      "file_sha256": "e8b5b3cb7bf42fab885aeccf77421b167361cf9e6c341faa20916a77b5323a37",
+      "plan_digest": "9f2a7004480280638dd250e8e956ace9ab14f4b3512862b188458d52e01b9806"
+    },
+    "population_summary": {
+      "path": "examples/modern_agent_panel/evidence/summary.json",
+      "file_sha256": "9ad48b8273ab0f974feb1884eff013c120c8398aa81e2cfe4ae33e04a525dcfa",
+      "summary_digest": "6d84042057cb648c4bd70f76f4eb73c3f3c068c1e0a781c6499fdc49115592b3"
+    },
+    "portability_plan": {
+      "path": "examples/modern_agent_panel/portability-plan.json",
+      "file_sha256": "b690e7a4a60379ef15d46fbec8f42e396b71bc323af6bd396164924cd8149481",
+      "plan_digest": "88288ee7a27249d60a69a1d7038bc95b3078cc20b49af8d6976bd4d16fe75f02"
+    },
+    "portability_summary": {
+      "path": "examples/modern_agent_panel/evidence/portability-summary.json",
+      "file_sha256": "9043bfcfb82e56377afad09d8ed55d5dc283c98f71536160c2bcdc70edf4fa8c",
+      "summary_digest": "101e4c3a5992c7a72416a2b30984ed13ae60ff22abf675270c5aea199336eb96"
+    }
+  },
+  "constructive_portfolio": [
+    {
+      "route_id": "DEC",
+      "thesis": "Separating visible-response forecast error, forecast-to-subset materialization error, and target-transfer error identifies the mechanism that must change.",
+      "role": "diagnostic, not a candidate",
+      "decisive_test": "Quantify all three errors for Full, stationary matching, ALG-015U, and ALG-016U by repository and horizon.",
+      "initial_status": "open"
+    },
+    {
+      "route_id": "DIST",
+      "thesis": "Forecasting and matching the full distribution of other-Agent response patterns preserves target-relevant structure lost by coordinate means.",
+      "role": "candidate family",
+      "decisive_test": "A target-hidden repository-local distributional coreset beats Full directly at both horizons.",
+      "initial_status": "open"
+    },
+    {
+      "route_id": "IRT",
+      "thesis": "A leave-one-Agent-out latent task-difficulty model can forecast a future difficulty distribution and select a target-robust historical coreset.",
+      "role": "candidate family",
+      "decisive_test": "A target-hidden latent-distribution coreset beats Full directly at both horizons.",
+      "initial_status": "open"
+    },
+    {
+      "route_id": "META",
+      "thesis": "Completed prior blocks from visible Agents can train a prequential selection rule against direct pass-rate error without using the current future or target column.",
+      "role": "candidate family",
+      "decisive_test": "A strictly prequential pseudo-target policy beats Full directly at both horizons.",
+      "initial_status": "open"
+    },
+    {
+      "route_id": "OBS",
+      "thesis": "Pre-Origin Task or repository observables may forecast future response-regime composition when outcome-only routes stall.",
+      "role": "reserve candidate family",
+      "decisive_test": "A source-theoretic observable adds direct-MAE value under an explicit ablation.",
+      "initial_status": "reserve"
+    }
+  ],
+  "failure_model": [
+    "current-future outcomes enter forecasting or fitting",
+    "the held-out target outcome column affects memberships indirectly through shared state",
+    "a response surrogate improves while target direct MAE worsens",
+    "repository pooling hides a large reversal",
+    "selection exploits Agent or Task identity memorization rather than a pre-Origin mechanism",
+    "search overfits the opened panel and is mislabeled as independent confirmation",
+    "random-subset rank is mistaken for beating Full",
+    "exact optimization or tie breaking is nondeterministic",
+    "a candidate changes the fixed frame or aggregation"
+  ],
+  "plan_digest": "6e060093791920e79389896125d2a093d88c3a9840bad2dfa435394f9d6f1fcc"
+}

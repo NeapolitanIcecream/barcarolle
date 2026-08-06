@@ -1,0 +1,18 @@
+{
+  "schema_version": "barcarolle_surrogate_gate_audit_amendment_v1",
+  "amendment_id": "SGA-A1",
+  "status": "pre_selection_input_adapter_correction",
+  "parent_plan_digest": "7df62c16defb50132249d5e26ce1f892b8f8403fe684dc156aeb6269b467c181",
+  "parent_commit": "21ce2b8b",
+  "parent_implementation_sha256": "e1a3f44a6db8ca6288a432b94642bb2b0759b64f99055ff0d020f3205c535dae",
+  "trigger": "The first executor invocation stopped before Selection because it requested panel key configuration_metadata while the bound compact panel stores the same rows under configurations.",
+  "code_scope": "Read the bound configurations key, load this amendment, and bind the amended executor digest in result provenance.",
+  "forbidden_scope": "No algorithm, source, Task, Origin, horizon, budget, membership rule, metric, aggregation, control, random protocol, threshold, decision rule, or claim boundary may change.",
+  "evidence_access_before_amendment": {
+    "selection_memberships_materialized": 0,
+    "paid_api_calls": 0,
+    "sealed_holdout_reads": 0
+  },
+  "amended_implementation_sha256": "5dc1118b2617b8547bc75903ae570b268307ade3f2568a02589d645dc5b5d272",
+  "amendment_digest": "9ee6e8d7a360609a6aba182536693d22d3a3ca66f9cdcb9f3d7a4d8568898f49"
+}

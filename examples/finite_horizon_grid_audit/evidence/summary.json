@@ -1,0 +1,271 @@
+{
+  "schema_version": "barcarolle_finite_horizon_grid_audit_evidence_v1",
+  "study_id": "finite-horizon-grid-audit-2026-07-29",
+  "epistemic_status": "post_result_matched_mechanism_characterization_on_opened_development_outcomes",
+  "plan_digest": "8388fc583f7acf68a27c1864b673de91d87e895e2384366461ba87c00f2c4b1d",
+  "execution_amendment_digest": "80dd4596ef3bbff45b859245960fb98bc352432f839e992d6c29703b29bf618c",
+  "execution_lock_digest": "03c2dbfb526b50d4a2b010cdb132ccd6087eca43fa2e20790c330c1c8b8fcaa5",
+  "reproduction": {
+    "membership_digest": "9427c9a0ad57910ad1cb757b04eac60c9ca3f7d05e4553c0025f69bae9052631",
+    "membership_run_1_sha256": "1d770a2051ab45a7263bbb78dc3fdaa5f8bad77524d3c197a04a83c044fe8a47",
+    "membership_run_2_sha256": "1d770a2051ab45a7263bbb78dc3fdaa5f8bad77524d3c197a04a83c044fe8a47",
+    "membership_runs_byte_identical": true,
+    "membership_bytes": 18102822,
+    "result_digest": "f841611418a2d7cb1485f77e0b76270f47aff538071e9c3d32f22bfeeee2e30a",
+    "result_run_1_sha256": "d7d92c6df7552b32a17eb002918279f9a4dc51852d1e36139f4a49b055c6b630",
+    "result_run_2_sha256": "d7d92c6df7552b32a17eb002918279f9a4dc51852d1e36139f4a49b055c6b630",
+    "result_runs_byte_identical": true,
+    "result_bytes": 100347
+  },
+  "matched_frame": {
+    "repository_count": 11,
+    "origin_count": 107,
+    "configuration_count": 36,
+    "rows_per_cell": 3852,
+    "cell_count": 4,
+    "future_prefix_contract": "Every cell uses the standard H10 Origins; H5 is the first five Tasks of the same ten-Task future block."
+  },
+  "metric": {
+    "name": "repository-first future pass-rate MAE",
+    "full_history_baseline": true,
+    "primary_control": "same-budget H-blind nearest historical rate with lower-q ties",
+    "primary_method": "ALG-018C-P plug-in Binomial finite-H median",
+    "sensitivity_method": "ALG-018C Jeffreys Beta-Binomial finite-H median",
+    "contrast": "method minus baseline or control; negative favors method",
+    "random_role": "sampling-landscape diagnostic, not baseline or p-value"
+  },
+  "cells": {
+    "B5_H5": {
+      "budget": 5,
+      "future_count": 5,
+      "full_history_mae": 0.0654330745439794,
+      "plugin": {
+        "mae": 0.05128903283448738,
+        "minus_full": -0.014144041709492019,
+        "minus_h_blind": -0.00024830615739706647,
+        "paired_h_blind_bootstrap_95": [
+          -0.00333663312072403,
+          0.003424788424788425
+        ],
+        "favorable_repositories_vs_full": 10,
+        "favorable_repositories_vs_h_blind": 6,
+        "repository_count": 11,
+        "every_leave_one_repository_out_vs_h_blind_negative": false,
+        "random_midrank": 1.0,
+        "changed_from_h_blind_count": 186,
+        "q_distribution": {
+          "0": 3669,
+          "1": 171,
+          "2": 12
+        }
+      },
+      "jeffreys": {
+        "mae": 0.05142052796598251,
+        "minus_full": -0.014012546577996887,
+        "minus_h_blind": -0.00011681102590193497,
+        "paired_h_blind_bootstrap_95": [
+          -0.0033532292623201718,
+          0.0035659626568717486
+        ]
+      },
+      "h_blind": {
+        "mae": 0.051537338991884445,
+        "minus_full": -0.01389573555209495,
+        "random_midrank": 1.0
+      },
+      "plugin_vs_jeffreys_action_difference_count": 12,
+      "inventory_changed_action_count": 0
+    },
+    "B5_H10": {
+      "budget": 5,
+      "future_count": 10,
+      "full_history_mae": 0.05280696865793433,
+      "plugin": {
+        "mae": 0.05057677098586189,
+        "minus_full": -0.0022301976720724335,
+        "minus_h_blind": 0.0004671944671944673,
+        "paired_h_blind_bootstrap_95": [
+          -0.0011220311220311223,
+          0.0028417508417508423
+        ],
+        "favorable_repositories_vs_full": 6,
+        "favorable_repositories_vs_h_blind": 3,
+        "repository_count": 11,
+        "every_leave_one_repository_out_vs_h_blind_negative": false,
+        "random_midrank": 1.0,
+        "changed_from_h_blind_count": 83,
+        "q_distribution": {
+          "0": 3568,
+          "1": 270,
+          "2": 14
+        }
+      },
+      "jeffreys": {
+        "mae": 0.049972166381257295,
+        "minus_full": -0.002834802276677038,
+        "minus_h_blind": -0.00013741013741013741,
+        "paired_h_blind_bootstrap_95": [
+          -0.0007152607152607154,
+          0.00040404040404040404
+        ]
+      },
+      "h_blind": {
+        "mae": 0.05010957651866743,
+        "minus_full": -0.0026973921392669004,
+        "random_midrank": 1.0
+      },
+      "plugin_vs_jeffreys_action_difference_count": 30,
+      "inventory_changed_action_count": 0
+    },
+    "B10_H5": {
+      "budget": 10,
+      "future_count": 5,
+      "full_history_mae": 0.0654330745439794,
+      "plugin": {
+        "mae": 0.05128903283448738,
+        "minus_full": -0.014144041709492019,
+        "minus_h_blind": -0.010171030534666899,
+        "paired_h_blind_bootstrap_95": [
+          -0.015755263217763223,
+          -0.004737580555762376
+        ],
+        "favorable_repositories_vs_full": 10,
+        "favorable_repositories_vs_h_blind": 10,
+        "repository_count": 11,
+        "every_leave_one_repository_out_vs_h_blind_negative": true,
+        "random_midrank": 1.0,
+        "changed_from_h_blind_count": 1173,
+        "q_distribution": {
+          "0": 3669,
+          "2": 171,
+          "4": 12
+        }
+      },
+      "jeffreys": {
+        "mae": 0.05142052796598251,
+        "minus_full": -0.014012546577996887,
+        "minus_h_blind": -0.010039535403171769,
+        "paired_h_blind_bootstrap_95": [
+          -0.015441540300631213,
+          -0.004710383937656665
+        ]
+      },
+      "h_blind": {
+        "mae": 0.06146006336915428,
+        "minus_full": -0.003973011174825119,
+        "random_midrank": 0.9818
+      },
+      "plugin_vs_jeffreys_action_difference_count": 12,
+      "inventory_changed_action_count": 0
+    },
+    "B10_H10": {
+      "budget": 10,
+      "future_count": 10,
+      "full_history_mae": 0.05280696865793433,
+      "plugin": {
+        "mae": 0.04872756640938459,
+        "minus_full": -0.0040794022485497365,
+        "minus_h_blind": -0.0006841138659320479,
+        "paired_h_blind_bootstrap_95": [
+          -0.0026814546985001533,
+          0.001591004744413834
+        ],
+        "favorable_repositories_vs_full": 9,
+        "favorable_repositories_vs_h_blind": 6,
+        "repository_count": 11,
+        "every_leave_one_repository_out_vs_h_blind_negative": true,
+        "random_midrank": 0.9999,
+        "changed_from_h_blind_count": 493,
+        "q_distribution": {
+          "0": 3058,
+          "1": 708,
+          "2": 52,
+          "3": 27,
+          "4": 6,
+          "5": 1
+        }
+      },
+      "jeffreys": {
+        "mae": 0.048712505894324076,
+        "minus_full": -0.0040944627636102515,
+        "minus_h_blind": -0.0006991743809925629,
+        "paired_h_blind_bootstrap_95": [
+          -0.002204144640508277,
+          0.0008103695637786539
+        ]
+      },
+      "h_blind": {
+        "mae": 0.04941168027531664,
+        "minus_full": -0.003395288382617689,
+        "random_midrank": 0.9997
+      },
+      "plugin_vs_jeffreys_action_difference_count": 36,
+      "inventory_changed_action_count": 0
+    }
+  },
+  "horizon_swap": {
+    "H5_wrong_H10_action_minus_matched": 0.005789450607632427,
+    "H5_favorable_repositories_for_wrong_action": 1,
+    "H10_wrong_H5_action_minus_matched": 0.0018342805615532887,
+    "H10_favorable_repositories_for_wrong_action": 4,
+    "repository_count": 11
+  },
+  "post_score_control_tie_sensitivity": {
+    "role": "diagnostic only; not part of the frozen terminal decision",
+    "control": "preceding select_cached_scalar_indices visible-priority exact tie",
+    "B10_H5_plugin_minus_control": -0.009792242655879023,
+    "B10_H5_bootstrap_95": [
+      -0.015591397389124665,
+      -0.004150761505306962
+    ],
+    "B10_H10_plugin_minus_control": -0.00030532598714416926,
+    "B10_H10_bootstrap_95": [
+      -0.002552800734618917,
+      0.0021610039791857966
+    ],
+    "conclusion": "The frozen grid-dominant interpretation is unchanged."
+  },
+  "direction_classification_correction": {
+    "zero_tolerance": 1e-15,
+    "prior_evidence_access_recorded": true,
+    "changed_fields": [
+      "B5_H5 ALG-018C-P wide favorable repositories: 7 to 6",
+      "B5_H5 ALG-018C wide favorable repositories: 6 to 5",
+      "B5_H5 ALG-018C-P deep favorable repositories: 5 to 4",
+      "B5_H5 ALG-018C deep favorable repositories: 5 to 4"
+    ],
+    "scientific_payload_or_terminal_decision_changed": false
+  },
+  "independent_audit": {
+    "status": "pass",
+    "corrected_membership_replay_mismatches": 0,
+    "corrected_result_replay_mismatches": 0,
+    "directed_tests_passed": 28,
+    "old_to_corrected_scientific_payload_changes": 0,
+    "old_to_corrected_direction_count_changes": 4,
+    "confirmed_terminal_state": "grid_dominant",
+    "confirmed_visible_priority_tie_sensitivity": true
+  },
+  "decision": {
+    "general_support": false,
+    "grid_dominant": true,
+    "terminal_state": "grid_dominant",
+    "canonical_research_baseline": "ALG-018C-P plug-in finite-H median for known-H cached-result studies",
+    "jeffreys_role": "fixed sensitivity only",
+    "production_selector_authorized": false,
+    "sealed_holdout_authorized": false,
+    "unseen_target_claim": false,
+    "task_content_prediction_claim": false,
+    "temporal_regime_claim": false
+  },
+  "provenance_limitation": "The public source has no native Result availability timestamp and does not prove a complete production Agent fingerprint. Same-configuration historical outcomes are assumed cached by each projected cutoff.",
+  "claim_boundary": "Opened, projected-time, retrospective same-configuration cached-result mechanism characterization. Stable incremental improvement over H-blind is confined to B10/H5 on this panel. No prospective, Result-availability, full-Agent-identity, unseen-target, Task-content, temporal-regime, latent-capability, sealed-holdout, certification, or production-default claim.",
+  "resource_use": {
+    "paid_api_calls": 0,
+    "new_agent_outcome_calls": 0,
+    "embedding_api_calls": 0,
+    "sealed_holdout_reads": 0,
+    "core_schema_or_service_changes": 0
+  },
+  "summary_digest": "32c388c8931840a0a9c87b6fd94898858a7c4d0dfbbf25986d227f04216e909a"
+}

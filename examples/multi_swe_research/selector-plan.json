@@ -1,0 +1,345 @@
+{
+  "schema_version": "barcarolle_multi_swe_selector_plan_v1",
+  "study_id": "multi-swe-minimax-semantic-herding-2026-07-28",
+  "frozen_at": "2026-07-28T11:43:04Z",
+  "epistemic_status": "outcome_open_development_with_predeclared_single_candidate",
+  "source": {
+    "contract_digest": "1e104613012a95fc534dba23d4adac1b7d6a6c10e70537c732f16da3e6f83307",
+    "panel_digest": "f2658d12451bdab4108a71cfae5cd5044a5bd312633239c09425378b4b682deb",
+    "task_time_projection_digest": "56eb7dda0d7fd9787b1e77c432572f212726b92abc189df18ab2a4fe6bb815e5",
+    "dataset_revision": "56ff018c04a38e27ada1e9d0a6d5839a51f88f0d",
+    "task_count": 1632,
+    "configuration_count": 36,
+    "outcome_status": "opened during source selection; no result from this study is confirmatory",
+    "time_status": "GitHub pull-request createdAt projection; source-time counterfactual only"
+  },
+  "research_contract": {
+    "target": "Test whether a repository-local semantic coreset robust to stationary history and recent semantic drift predicts future Task cohorts better than full history.",
+    "runtime_boundary": "Selection consumes Tasks from exactly one target repository. Multiple repositories are independent research evaluation units and never form a runtime Task Pool.",
+    "primary_baseline": "all eligible historical Tasks from the target repository",
+    "sampling_calibration": "equal-budget random subsets from the same target-repository history",
+    "primary_outcome_loss": "mean over the complete 3-harness by 12-model configuration panel of absolute selected-history versus future-cohort pass-rate error",
+    "primary_estimand": "configuration mean, then Origin mean within repository, then equal-weight repository mean of candidate-minus-full-history loss",
+    "task_space_diagnostic": "linear-kernel MMD squared between the selected and future mean normalized embedding vectors, contrasted with full history",
+    "claim_boundary": "Passing can nominate one fixed candidate for independent confirmation. It cannot establish strict historical deployability, prospective validity, or a Runner default.",
+    "non_solutions": [
+      "mixing Tasks from several repositories into one Selection",
+      "using Agent outcomes, patches, tests, hints, or future Task text in Selection",
+      "searching another budget, horizon, recent window, embedding, kernel, objective, or swap rule after joining outcomes",
+      "treating task-space similarity as Agent-outcome validity",
+      "opening the six-Agent SWE-bench holdout from a failed or conditional result",
+      "adding an embedding service, trainer registry, multi-repository Runner, or new core Selector family"
+    ],
+    "allowed_terminal_states": [
+      "nominate_alg_012_for_independent_confirmation",
+      "semantic_mechanism_fails_task_space_gate",
+      "semantic_mechanism_fails_outcome_gate",
+      "source_projection_or_runtime_blocker"
+    ]
+  },
+  "task_content_projection": {
+    "source_paths": "the exact 39-path allowlist in the bound Multi-SWE contract",
+    "required_fields": [
+      "instance_id",
+      "resolved_issues[].number",
+      "resolved_issues[].title",
+      "resolved_issues[].body"
+    ],
+    "ordering": "sort resolved_issues by integer number",
+    "serialization": "Issue #<number> newline <title> blank-line <body>; separate issues with newline-newline---newline-newline",
+    "excluded_fields": [
+      "pull-request title and body",
+      "fix_patch",
+      "test_patch",
+      "test results",
+      "hints",
+      "Agent outcomes"
+    ],
+    "source_verification": "Every downloaded source file must match the Git LFS SHA-256 object identity at the bound dataset revision before its projection is admitted.",
+    "artifact_policy": "Raw source files, text projections, and embeddings remain ignored. Commit only small manifests, digests, aggregate results, and membership digests."
+  },
+  "embedding": {
+    "model_id": "sentence-transformers/all-MiniLM-L12-v2",
+    "model_revision": "c004d8e3e901237d8fa7e9fff12774962e391ce5",
+    "sentence_transformers_version": "5.1.2",
+    "device": "cpu",
+    "batch_size": 32,
+    "network_policy": "local_files_only",
+    "normalization": "SentenceTransformer L2 normalization",
+    "reason": "Reuse the previously pinned local ALG-007 representation; do not create a second representation search."
+  },
+  "rolling_origin": {
+    "minimum_initial_history_tasks": 20,
+    "selection_budget_tasks": 10,
+    "primary_future_tasks": 5,
+    "sensitivity_future_tasks": 10,
+    "primary_repository_ids": [
+      "clap-rs/clap",
+      "cli/cli",
+      "elastic/logstash",
+      "facebook/zstd",
+      "fasterxml/jackson-databind",
+      "fmtlib/fmt",
+      "iamkun/dayjs",
+      "mui/material-ui",
+      "nlohmann/json",
+      "ponylang/ponyc",
+      "sveltejs/svelte",
+      "tokio-rs/tokio",
+      "vuejs/core"
+    ],
+    "primary_deep_repository_ids": [
+      "clap-rs/clap",
+      "cli/cli",
+      "iamkun/dayjs",
+      "mui/material-ui",
+      "nlohmann/json",
+      "ponylang/ponyc",
+      "sveltejs/svelte",
+      "vuejs/core"
+    ],
+    "sensitivity_common_repository_ids": [
+      "clap-rs/clap",
+      "cli/cli",
+      "elastic/logstash",
+      "fasterxml/jackson-databind",
+      "fmtlib/fmt",
+      "iamkun/dayjs",
+      "mui/material-ui",
+      "nlohmann/json",
+      "ponylang/ponyc",
+      "sveltejs/svelte",
+      "vuejs/core"
+    ],
+    "sensitivity_deep_repository_ids": [
+      "clap-rs/clap",
+      "cli/cli",
+      "mui/material-ui",
+      "ponylang/ponyc",
+      "sveltejs/svelte"
+    ],
+    "deep_definition": "at least five complete Origins under the corresponding horizon",
+    "ordering": "projected created_at then instance_id"
+  },
+  "lineage_and_language": [
+    {
+      "repository_id": "clap-rs/clap",
+      "repository_cluster_id": "clap-rs/clap",
+      "language": "rust"
+    },
+    {
+      "repository_id": "cli/cli",
+      "repository_cluster_id": "cli/cli",
+      "language": "go"
+    },
+    {
+      "repository_id": "elastic/logstash",
+      "repository_cluster_id": "elastic/logstash",
+      "language": "java"
+    },
+    {
+      "repository_id": "facebook/zstd",
+      "repository_cluster_id": "facebook/zstd",
+      "language": "c"
+    },
+    {
+      "repository_id": "fasterxml/jackson-databind",
+      "repository_cluster_id": "fasterxml/jackson-databind",
+      "language": "java"
+    },
+    {
+      "repository_id": "fmtlib/fmt",
+      "repository_cluster_id": "fmtlib/fmt",
+      "language": "c++"
+    },
+    {
+      "repository_id": "iamkun/dayjs",
+      "repository_cluster_id": "iamkun/dayjs",
+      "language": "javascript"
+    },
+    {
+      "repository_id": "mui/material-ui",
+      "repository_cluster_id": "mui/material-ui",
+      "language": "typescript"
+    },
+    {
+      "repository_id": "nlohmann/json",
+      "repository_cluster_id": "nlohmann/json",
+      "language": "c++"
+    },
+    {
+      "repository_id": "ponylang/ponyc",
+      "repository_cluster_id": "ponylang/ponyc",
+      "language": "c"
+    },
+    {
+      "repository_id": "sveltejs/svelte",
+      "repository_cluster_id": "sveltejs/svelte",
+      "language": "javascript"
+    },
+    {
+      "repository_id": "tokio-rs/tokio",
+      "repository_cluster_id": "tokio-rs/tokio",
+      "language": "rust"
+    },
+    {
+      "repository_id": "vuejs/core",
+      "repository_cluster_id": "vuejs/core",
+      "language": "typescript"
+    }
+  ],
+  "candidate": {
+    "algorithm_id": "ALG-012",
+    "selector_id": "minimax_temporal_semantic_herding",
+    "name": "minimax temporal semantic herding",
+    "information_set": "normalized embeddings of eligible historical issue text from the target repository only",
+    "uncertainty_targets": [
+      "mean embedding of all eligible history",
+      "mean embedding of the latest h historical Tasks, where h equals the frozen future Task horizon"
+    ],
+    "rule": "Starting empty, add the remaining historical Task minimizing the maximum squared Euclidean distance from the new selected mean to the two uncertainty targets.",
+    "tie_break": "earlier projected created_at then instance_id",
+    "weights": "ten selected Tasks with equal weight",
+    "fitting": "none",
+    "swaps": 0,
+    "theory": "For a linear kernel, mean distance is MMD. The minimax target hedges between stationarity and persistence of recent semantic drift without choosing a mixture weight from outcomes."
+  },
+  "controls": [
+    {
+      "selector_id": "full_history",
+      "role": "primary baseline"
+    },
+    {
+      "selector_id": "equal_budget_random",
+      "role": "sampling-landscape calibration"
+    },
+    {
+      "selector_id": "recency",
+      "role": "latest ten historical Tasks"
+    },
+    {
+      "selector_id": "stationary_semantic_herding",
+      "role": "ablation targeting only the full-history embedding mean with the same greedy rule and no swaps"
+    },
+    {
+      "selector_id": "alg_007_centroid_recent_15",
+      "role": "unchanged transfer control using the latest-15 centroid, greedy kernel-mean selection, and at most 20 improving one-for-one swaps"
+    }
+  ],
+  "task_space_gate": {
+    "data_requirements": [
+      "at least 95 percent of all Tasks have nonempty projected issue text",
+      "every eligible repository has at least 80 percent nonempty projected issue text",
+      "all admitted source bytes, Task identities, times, embeddings, and memberships match recorded digests"
+    ],
+    "primary_h5_requirements": [
+      "candidate macro-repository MMD squared is at most 90 percent of full-history macro loss",
+      "at least 10 of 13 repositories have negative candidate-minus-full-history difference",
+      "every leave-one-repository-out macro difference is negative",
+      "deep macro difference is negative",
+      "candidate macro loss is lower than recency, stationary semantic herding, and unchanged ALG-007",
+      "candidate is better than at least 75 percent of 20000 equal-budget random draws",
+      "500-permutation within-repository time-order null has corrected lower-tail rate below 0.10"
+    ],
+    "h10_sensitivity_requirements": [
+      "common-11 macro candidate-minus-full-history difference is negative",
+      "at least 8 of 11 repositories have negative difference",
+      "deep macro difference is negative",
+      "candidate is not below the random median"
+    ],
+    "decision_use": "Failure blocks nomination but not the single predeclared outcome evaluation. Outcome improvement without this gate is unexplained exploratory evidence."
+  },
+  "outcome_gate": {
+    "decision_order": [
+      "data identity and no-leakage checks",
+      "H5 full-history effect and repository directions",
+      "H10 sensitivity",
+      "random calibration",
+      "transfer audits",
+      "unchanged ALG-007 comparison",
+      "temporal null only if all cheaper requirements pass"
+    ],
+    "requirements": [
+      "H5 wide macro difference is at most -0.010",
+      "at least 10 of 13 H5 repositories have negative difference",
+      "every H5 leave-one-repository-out macro difference is negative",
+      "H5 deep macro difference is negative",
+      "H10 common-11 macro difference is negative with at least 8 of 11 repositories negative",
+      "H10 deep macro difference is negative",
+      "H5 is better than at least 75 percent of 20000 equal-budget random draws and H10 is not below the random median",
+      "language-first macro is negative, at least 5 of 7 languages are negative, and no language difference exceeds +0.020",
+      "at least 9 of 12 leave-one-model views are negative",
+      "provider-family-first macro is negative, at least 5 of 7 provider families are negative, and no provider-family difference exceeds +0.020",
+      "all 3 leave-one-harness views are negative",
+      "at least 26 of 36 configuration directions are negative",
+      "H5 macro loss is lower than unchanged ALG-007",
+      "if reached, 2000 within-repository time-order permutations give corrected lower-tail rate below 0.10"
+    ],
+    "uncertainty": "Report repository-cluster paired 95 percent bootstrap interval; a fully negative interval is reserved for later confirmation rather than required for opened-data nomination.",
+    "multiple_comparisons": "One new mechanism, one version, H5 primary, H10 sensitivity, and one unchanged ALG-007 control. No outcome-driven variant can inherit nomination status."
+  },
+  "agent_groups": {
+    "harness_families": [
+      "MSWE-agent",
+      "MagentLess",
+      "MopenHands"
+    ],
+    "provider_families": {
+      "Anthropic": [
+        "Claude-3.5-Sonnet(Oct)",
+        "Claude-3.7-Sonnet"
+      ],
+      "DeepSeek": [
+        "DeepSeek-R1",
+        "DeepSeek-V3"
+      ],
+      "Doubao": [
+        "Doubao-1.5-pro",
+        "Doubao-1.5-thinking"
+      ],
+      "Gemini": [
+        "Gemini-2.5-Pro"
+      ],
+      "Llama": [
+        "Llama-4-Maverick"
+      ],
+      "OpenAI": [
+        "GPT-4o-1120",
+        "OpenAI-o1",
+        "OpenAI-o3-mini-high"
+      ],
+      "Qwen": [
+        "Qwen2.5-72B-Instruct"
+      ]
+    },
+    "transfer_semantics": "Selection is outcome-free, so Agent-group audits reuse the exact frozen memberships and evaluate only the held-out group. Tests must prove candidate materialization accepts no Agent outcomes."
+  },
+  "diagnostics": {
+    "random_draws": 20000,
+    "random_seed": 20260728,
+    "task_space_null_permutations": 500,
+    "outcome_null_permutations": 2000,
+    "null_seed": 20260728,
+    "bootstrap_resamples": 10000,
+    "bootstrap_seed": 20260728,
+    "report": [
+      "repository-first wide and deep summaries",
+      "H5 and H10 common-11 comparison",
+      "per-repository and per-language directions",
+      "model, provider, harness, and configuration directions",
+      "random percentile",
+      "temporal-null rate when reached",
+      "selection overlap with controls",
+      "task-space and outcome loss decomposition"
+    ]
+  },
+  "authority": {
+    "paid_api_calls": 0,
+    "coding_agent_calls": 0,
+    "embedding_api_calls": 0,
+    "allowed_network": "download and verify the exact pinned public dataset source only",
+    "allowed_runtime": "local CPU and the already-cached pinned embedding model",
+    "implementation_scope": "direct Multi-SWE experiment code, tests, ignored raw artifacts, and small committed evidence only"
+  },
+  "selector_plan_digest": "6619ab258039d3f12cf865421faeba7c23248b302f72b06bb6f311b8f65bde05"
+}

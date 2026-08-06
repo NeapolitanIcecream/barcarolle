@@ -1,0 +1,185 @@
+{
+  "schema_version": "barcarolle_prequential_response_assembly_execution_lock_v1",
+  "study_id": "prequential-response-assembly-2026-07-29",
+  "locked_at": "2026-07-29T14:31:47Z",
+  "implementation_commit": "d7da087828886dfd02a09e379b0ebb0f0a1ac801",
+  "plan_digest": "f1517fd04a97fc584b8df0f3c3d6be59bd3569a52bbad91694835de15558c84b",
+  "addendum_digest": "8f782ce6421de09064459a13a268689908f88014084dd6e6641d0c7785a0ba2c",
+  "execution_amendment_digest": "20e25fe7b21f2f95732a131082d54f330aafe90d12c1868b16043bac675ee5bd",
+  "supersedes_lock_digest": "4ef7adae60f20bc6198b5d65e151630d172b4a6271eb8399681993f876ac692b",
+  "runtime": {
+    "python_version": "3.14.0",
+    "python_implementation": "CPython",
+    "platform": "macOS-26.5.2-arm64-arm-64bit-Mach-O",
+    "numpy_version": "2.5.1",
+    "scipy_version": "1.16.3"
+  },
+  "frames": {
+    "5": {
+      "repository_ids": [
+        "clap-rs/clap",
+        "cli/cli",
+        "elastic/logstash",
+        "facebook/zstd",
+        "fasterxml/jackson-databind",
+        "fmtlib/fmt",
+        "iamkun/dayjs",
+        "mui/material-ui",
+        "nlohmann/json",
+        "ponylang/ponyc",
+        "sveltejs/svelte",
+        "tokio-rs/tokio",
+        "vuejs/core"
+      ],
+      "repository_ids_digest": "15cd0f7644a57379e7b5e9650536e641e44f1cc50f33d77ca7f09e9c7235cd2e",
+      "deep_repository_ids": [
+        "clap-rs/clap",
+        "cli/cli",
+        "iamkun/dayjs",
+        "mui/material-ui",
+        "nlohmann/json",
+        "ponylang/ponyc",
+        "sveltejs/svelte",
+        "vuejs/core"
+      ],
+      "deep_repository_ids_digest": "20a00546147bb5c8e79be3df0f78adb45dc53b41cbb6ce2933f6faabe0a063ab",
+      "origin_count": 221,
+      "origin_rows_digest": "62485b007fa81a47bbbf7424cdb0829ad763bbf4079e182aaee147ba6177b158",
+      "full_membership_digest_recomputed": "a1f38fc669f87aa04eab86e42631481b6df1dafda3425cfeaf5729754c554d89",
+      "recency_membership_digest_recomputed": "6cfe9511d3f138f47683b934afc1b53cb6479dcf44e8e362c5ee8489e92f682b",
+      "alg_007_membership_digest_recomputed": "7b888f8c42185b250f62693c59e39a79e34c86e60bf359218bf967f988a20ebe"
+    },
+    "10": {
+      "repository_ids": [
+        "clap-rs/clap",
+        "cli/cli",
+        "elastic/logstash",
+        "fasterxml/jackson-databind",
+        "fmtlib/fmt",
+        "iamkun/dayjs",
+        "mui/material-ui",
+        "nlohmann/json",
+        "ponylang/ponyc",
+        "sveltejs/svelte",
+        "vuejs/core"
+      ],
+      "repository_ids_digest": "e1b0b2cb039c3488a846bb30ed15c0cb58f8b57b9098001640eb49ec5d28b438",
+      "deep_repository_ids": [
+        "clap-rs/clap",
+        "cli/cli",
+        "mui/material-ui",
+        "ponylang/ponyc",
+        "sveltejs/svelte"
+      ],
+      "deep_repository_ids_digest": "c70b1fb2bf00e93099811612e7505c6f4da1f107e296495eaa2f99f556d511f4",
+      "origin_count": 107,
+      "origin_rows_digest": "87a27e440eeac0ec2e5fed01534f724c1a6fedca7a04510ff05c341cfc2112ab",
+      "full_membership_digest_recomputed": "7135c2f1256e26e8703a7fd97abc4de0392456eee4e10f5a5c04555c966eaca0",
+      "recency_membership_digest_recomputed": "0c8108bd2a584ed11242993157ce1b316b1f187d70ecc3a347b4d5f3c3f21030",
+      "alg_007_membership_digest_recomputed": "6d6e30a9f8ebfecb4c2176466c38fa356596a16024c95494a5311927acfc597c"
+    }
+  },
+  "logical_bindings": {
+    "multi_swe_contract_digest": "1e104613012a95fc534dba23d4adac1b7d6a6c10e70537c732f16da3e6f83307",
+    "selector_plan_digest": "6619ab258039d3f12cf865421faeba7c23248b302f72b06bb6f311b8f65bde05",
+    "panel_digest": "f2658d12451bdab4108a71cfae5cd5044a5bd312633239c09425378b4b682deb",
+    "resolved_outcome_digest": "b9a6d0d8e44d747d23789ec23eb4205178f2ae2d4f737c2446a5fcdf5abc116c",
+    "task_time_projection_digest": "56eb7dda0d7fd9787b1e77c432572f212726b92abc189df18ab2a4fe6bb815e5",
+    "alg_007_task_space_logical_digest": "d9916f4c9acdcf615262f92cb771ed0079a696b4605805ef0c82b17f4f4e401d",
+    "active_surrogate_amendment_digests": [
+      "9ee6e8d7a360609a6aba182536693d22d3a3ca66f9cdcb9f3d7a4d8568898f49",
+      "1d25336e247ae6bf8508c846e979b9ff936c62ccff5e39a1be0669d1f911a833"
+    ]
+  },
+  "bound_files": [
+    {
+      "path": "examples/multi_repository_study/public_replay.py",
+      "sha256": "1067c2668c0c8d1c43912ff4a9df7bc1f857e31e0ad24eca9f4bd0192481a35f"
+    },
+    {
+      "path": "examples/multi_swe_research/contract.json",
+      "sha256": "d47813dbe67857523afd8249afec55e81c6bd341c4cd341fee976dbb2ab82953"
+    },
+    {
+      "path": "examples/multi_swe_research/evidence/panel-summary.json",
+      "sha256": "515cc4cc8749a056175853c0ba23d20d26b0b642c48b138890a35493694f6cb0"
+    },
+    {
+      "path": "examples/multi_swe_research/evidence/resolved-outcomes.jsonl",
+      "sha256": "bdcc5b20678fdc44dba5a00c35851caae701d4f1518a3cc1abc6bb6c95eb181d"
+    },
+    {
+      "path": "examples/multi_swe_research/evidence/task-times.jsonl",
+      "sha256": "c4d86e7cbe0ef78462422335c8ea29bcd29691dc1613b339024d1e75f6f8f745"
+    },
+    {
+      "path": "examples/multi_swe_research/selector-plan.json",
+      "sha256": "716145235a6881bd4c31619a9b74eb0aef916ff1d02de7b36bb7eef80197a382"
+    },
+    {
+      "path": "examples/multi_swe_research/semantic_selector.py",
+      "sha256": "1dba2484b9c4b370322e4330b66b816f1a556e9be081be7afe3902d81d3f7b11"
+    },
+    {
+      "path": "examples/prequential_response_assembly/execution-amendment-1.json",
+      "sha256": "16be67892b57f7d7cef3e24baf2b962a23644ca3431c8a0fd4437b01f35f3ad7"
+    },
+    {
+      "path": "examples/prequential_response_assembly/plan-addendum-1.json",
+      "sha256": "60cbd1fe76c06c8c56304b27af64a538bf5cb9ee0429f8741a9f429e71e6aabb"
+    },
+    {
+      "path": "examples/prequential_response_assembly/plan.json",
+      "sha256": "cd80fc59091c4b254fa32c3dcc20bf20bddc030fcd1efbf05188cec2031ea84f"
+    },
+    {
+      "path": "examples/prequential_response_assembly/study.py",
+      "sha256": "4455711d972a7ec5b4d446420f48e489e60274b5f36f90bb4162ccee122b1515"
+    },
+    {
+      "path": "examples/surrogate_gate_audit/plan-amendment-1.json",
+      "sha256": "ea659b591220b1df0fb26cfea8a431ff247fe03cb2cc278aa3a2d98f8d42c78c"
+    },
+    {
+      "path": "examples/surrogate_gate_audit/plan-amendment-2.json",
+      "sha256": "4d4b3b961a9febd2a6443335183aac6c4985c56864110241a42531e1f9579e59"
+    },
+    {
+      "path": "examples/surrogate_gate_audit/plan.json",
+      "sha256": "5d96dee4122df0c698181eeacb4ee8078a6c5fdd161633663747361cf6bf6666"
+    },
+    {
+      "path": "examples/surrogate_gate_audit/study.py",
+      "sha256": "671e593dd81cdcf3ec7560f1fe8d1c4d92f2ac7df8aee564c0e66d57cf08d7f4"
+    },
+    {
+      "path": "outputs/research/2026-07-28-multi-swe-task-space-results.json",
+      "sha256": "e2be890450e525a54cc1a035c28110e4555499b7a8a69ffc4bffc5c66e605ceb"
+    },
+    {
+      "path": "tests/test_prequential_response_assembly.py",
+      "sha256": "059af7a54fc41312c628a663bbd6f916a28aed72abecdfa0764b507a6d426542"
+    }
+  ],
+  "resource_boundary": {
+    "paid_api_calls": 0,
+    "new_agent_outcome_calls": 0,
+    "sealed_holdout_reads": 0
+  },
+  "pre_lock_audit": {
+    "status": "pass",
+    "known_blocker_count": 0,
+    "directed_tests_passed": 16,
+    "static_checks": [
+      "ruff",
+      "pyright",
+      "git diff --check"
+    ],
+    "independent_audits": [
+      "panel and contract",
+      "AdaNormalHedge and information isolation",
+      "BOCPD and exact L1 assembly"
+    ]
+  },
+  "lock_digest": "f4dcec2e0c08cc2e1cf8e862a40b4a7ebc1e741326d3f9d02c462d501a81a91d"
+}

@@ -2,6 +2,15 @@
 
 Date: 2026-07-15
 
+## Scope Clarification
+
+This five-Task H1 fixture is not the earlier Boltons 20-history-to-H10 study.
+Do not use its zero held-out MAE to compare Task Pool prediction regimes. The
+older H10 study reports full-visible-history MAE `0.136111` under scoreable
+rates and `0.137500` under the scheduled denominator. The provenance and the
+Multi-SWE comparison are recorded in
+[`experiments/2026-07-30-multi-swe-failure-region.md`](experiments/2026-07-30-multi-swe-failure-region.md).
+
 ## Outcome
 
 The two-stage Adaptive path completed without retries. All ten paid

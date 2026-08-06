@@ -1,0 +1,108 @@
+{
+  "schema_version": "barcarolle_repository_portfolio_plan_v1",
+  "study_id": "multi-repository-source-audit-2026-07-28",
+  "frozen_at": "2026-07-28T01:32:09Z",
+  "research_contract": {
+    "target": "Determine whether one pinned static task source can supply repository-local Origins for a no-paid-call multi-repository algorithm study.",
+    "required_evidence": [
+      "exact dataset revision and SHA-256",
+      "per-repository Task count and chronological span",
+      "complete non-overlapping Origin capacity under the frozen protocol",
+      "explicit wide/deep membership and exclusions",
+      "current fork-lineage audit"
+    ],
+    "non_solutions": [
+      "counting Tasks from different repositories in one Task Pool",
+      "calling nominal Origin count independent sample size",
+      "treating current GitHub fork metadata as proof of independence",
+      "treating source capacity as certification or Agent-outcome evidence"
+    ],
+    "allowed_terminal_states": [
+      "portfolio_feasible_for_exploratory_replay",
+      "source_has_too_few_repository_local_origins",
+      "dataset_or_lineage_identity_mismatch"
+    ]
+  },
+  "source": {
+    "dataset_repository": "SWE-bench/SWE-bench_Verified",
+    "dataset_revision": "91aa3ed51b709be6457e12d00300a6a596d4c6a3",
+    "dataset_sha256": "43ed5a3d1d98da36472c1ade65ddd2085d7b4ff694fcaf6a023a07c5c1f32f21",
+    "task_count": 500,
+    "source_family": "swe_bench_verified",
+    "harness_repository": "epoch-research/SWE-bench",
+    "harness_revision": "081198488444f4ac0db0713ece85ac75a03255cf"
+  },
+  "origin_protocol": {
+    "minimum_initial_history_tasks": 15,
+    "future_block_tasks": 5,
+    "deep_minimum_origins": 5,
+    "selection_budget_task_checks": 10,
+    "ordering": "created_at_then_instance_id",
+    "initial_history_adjustment": "add the 0-4 Task remainder so every later Task belongs to one complete five-Task block"
+  },
+  "lineage_audit": {
+    "observed_at": "2026-07-28T01:32:09Z",
+    "source": "GitHub REST repository metadata",
+    "claim": "Every dataset repository slug resolved to a public, non-archived, non-fork repository at observation time. This is not historical or statistical-independence proof."
+  },
+  "repository_lineage": {
+    "astropy/astropy": {
+      "repository_cluster_id": "astropy/astropy",
+      "fork": false
+    },
+    "django/django": {
+      "repository_cluster_id": "django/django",
+      "fork": false
+    },
+    "matplotlib/matplotlib": {
+      "repository_cluster_id": "matplotlib/matplotlib",
+      "fork": false
+    },
+    "mwaskom/seaborn": {
+      "repository_cluster_id": "mwaskom/seaborn",
+      "fork": false
+    },
+    "pallets/flask": {
+      "repository_cluster_id": "pallets/flask",
+      "fork": false
+    },
+    "psf/requests": {
+      "repository_cluster_id": "psf/requests",
+      "fork": false
+    },
+    "pydata/xarray": {
+      "repository_cluster_id": "pydata/xarray",
+      "fork": false
+    },
+    "pylint-dev/pylint": {
+      "repository_cluster_id": "pylint-dev/pylint",
+      "fork": false
+    },
+    "pytest-dev/pytest": {
+      "repository_cluster_id": "pytest-dev/pytest",
+      "fork": false
+    },
+    "scikit-learn/scikit-learn": {
+      "repository_cluster_id": "scikit-learn/scikit-learn",
+      "fork": false
+    },
+    "sphinx-doc/sphinx": {
+      "repository_cluster_id": "sphinx-doc/sphinx",
+      "fork": false
+    },
+    "sympy/sympy": {
+      "repository_cluster_id": "sympy/sympy",
+      "fork": false
+    }
+  },
+  "authority": {
+    "paid_api_calls": 0,
+    "coding_agent_calls": 0,
+    "allowed_network_reads": [
+      "GitHub repository metadata",
+      "pinned official SWE-bench experiment metadata"
+    ],
+    "raw_data_policy": "Pinned parquet and external files remain ignored; commit only sanitized manifests, summaries, and digests."
+  },
+  "portfolio_plan_digest": "b67c1d1c3cbd7dac9182c50b86b06f943692516778bac14ed90a228ce4f22b17"
+}

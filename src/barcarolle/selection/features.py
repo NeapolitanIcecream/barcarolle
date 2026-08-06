@@ -86,6 +86,10 @@ class FeatureConfig:
             }
         )
 
+    @property
+    def requires_pre_origin_results(self) -> bool:
+        return "pre_origin_result" in self.allowed_leakage_classes
+
     def leakage_policy(self, max_observed_at: str) -> LeakagePolicy:
         return LeakagePolicy(self.allowed_leakage_classes, max_observed_at)
 
@@ -534,7 +538,8 @@ def _ensure_results_match_origin_scope(
     allowed_agent_ids: set[str] | None,
     task_pool: TaskPoolRecord | None = None,
 ) -> None:
-    _ensure_results_pre_origin(results, origin.as_of_cutoff)
+    if origin.eligibility_mode == "strict_prospective":
+        _ensure_results_pre_origin(results, origin.as_of_cutoff)
     allowed_refs = {
         (ref.task_id, ref.check_id) for ref in origin.history_task_check_refs
     }

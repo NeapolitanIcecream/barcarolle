@@ -1,0 +1,23 @@
+{
+  "schema_version": "barcarolle_multi_swe_embedding_manifest_v1",
+  "selector_plan_digest": "6619ab258039d3f12cf865421faeba7c23248b302f72b06bb6f311b8f65bde05",
+  "content_manifest_digest": "9b47e946daf2e982e49e552f9a6976315787ae45b3923edda4a5aff9b53e78cb",
+  "task_text_digest": "c40c8b3f6c200020a1e961a54fe7d70392c8e3a7933687a2b4714654601b21cb",
+  "embedding_artifact_digest": "cc6f791d2770f1e265240e73e47ccd517ed6bae26b1ed3abc78d17cad14e8a23",
+  "vector_values_digest": "f703b0a5161e0d1bfabcee4fcc05e972257ebd56180eeeb89780877e0b1506d1",
+  "task_count": 1632,
+  "dimensions": 384,
+  "model": {
+    "device": "cpu",
+    "model_id": "sentence-transformers/all-MiniLM-L12-v2",
+    "model_revision": "c004d8e3e901237d8fa7e9fff12774962e391ce5",
+    "normalization": "SentenceTransformer L2 normalization",
+    "sentence_transformers_version": "5.1.2"
+  },
+  "artifact_policy": "Raw vectors remain ignored; this manifest binds their values and the complete local artifact.",
+  "resource_use": {
+    "embedding_api_calls": 0,
+    "paid_api_calls": 0
+  },
+  "embedding_manifest_digest": "458a9375af9a079126b2a64b0ed115387d5602aad4b0c6439572d0b9a5a40f0d"
+}

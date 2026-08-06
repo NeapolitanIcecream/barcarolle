@@ -1,0 +1,157 @@
+{
+  "schema_version": "barcarolle_external_benchmark_inventory_plan_v1",
+  "study_id": "external-benchmark-origin-supply-2026-07-28",
+  "frozen_at": "2026-07-28T10:20:36Z",
+  "research_contract": {
+    "target": "Determine which pinned authoritative public benchmarks can add repository-local, time-ordered rolling-Origin supply and reusable public Agent outcomes without paid calls.",
+    "required_evidence": [
+      "exact upstream repository revision and data-file identity",
+      "actual Task and repository counts from projected source rows",
+      "repository-local non-overlapping Origin capacity under frozen protocols",
+      "timestamp, schema, license, verifier, lineage, overlap, and public-result coverage limits",
+      "a source-by-source adopt, defer, confirmation-only, or reject decision"
+    ],
+    "non_solutions": [
+      "ranking a source by headline Task count",
+      "combining repositories into one runtime Task Pool",
+      "counting repository names as independent evidence without a lineage audit",
+      "treating source capacity as certification or Agent-outcome evidence",
+      "treating sparse leaderboard scores as a complete Agent-by-Task matrix",
+      "developing a Generator or making a paid Agent call"
+    ],
+    "allowed_terminal_states": [
+      "one_or_more_sources_ready_for_pinned_import",
+      "task_supply_available_but_agent_outcomes_or_certification_deferred",
+      "no_candidate_improves_effective_origin_supply",
+      "specific_external_source_blocker"
+    ]
+  },
+  "origin_protocols": [
+    {
+      "protocol_id": "legacy-h5",
+      "minimum_initial_history_tasks": 15,
+      "future_block_tasks": 5,
+      "deep_minimum_origins": 5
+    },
+    {
+      "protocol_id": "research-h3",
+      "minimum_initial_history_tasks": 20,
+      "future_block_tasks": 3,
+      "deep_minimum_origins": 5
+    },
+    {
+      "protocol_id": "research-h5",
+      "minimum_initial_history_tasks": 20,
+      "future_block_tasks": 5,
+      "deep_minimum_origins": 5
+    },
+    {
+      "protocol_id": "research-h10",
+      "minimum_initial_history_tasks": 20,
+      "future_block_tasks": 10,
+      "deep_minimum_origins": 5
+    }
+  ],
+  "executable_sources": [
+    {
+      "source_id": "swe_bench_verified_reference",
+      "role": "reference_only",
+      "dataset_repository": "SWE-bench/SWE-bench_Verified",
+      "dataset_revision": "91aa3ed51b709be6457e12d00300a6a596d4c6a3",
+      "data_path": "data/test-00000-of-00001.parquet",
+      "data_sha256": "43ed5a3d1d98da36472c1ade65ddd2085d7b4ff694fcaf6a023a07c5c1f32f21",
+      "data_size_bytes": 2090470,
+      "format": "parquet",
+      "repo_field": "repo",
+      "instance_field": "instance_id",
+      "base_commit_field": "base_commit",
+      "created_at_field": "created_at",
+      "language_constant": "Python",
+      "naive_timestamp_policy": "reject"
+    },
+    {
+      "source_id": "swe_bench_full_test",
+      "role": "candidate",
+      "dataset_repository": "SWE-bench/SWE-bench",
+      "dataset_revision": "7074ef12ea2a6f70a228943c1336553333c22786",
+      "data_path": "data/test-00000-of-00001.parquet",
+      "data_sha256": "0996c4bd66e647ecef89d3ef57e527dcc0ea4e8369ac6f740cdd570734188df2",
+      "data_size_bytes": 12066326,
+      "format": "parquet",
+      "repo_field": "repo",
+      "instance_field": "instance_id",
+      "base_commit_field": "base_commit",
+      "created_at_field": "created_at",
+      "language_constant": "Python",
+      "naive_timestamp_policy": "reject"
+    },
+    {
+      "source_id": "swe_polybench_full",
+      "role": "candidate",
+      "dataset_repository": "AmazonScience/SWE-PolyBench",
+      "dataset_revision": "d56445f9940eae4e9d2974ec66820c2f1d7754e6",
+      "data_path": "test.csv",
+      "data_sha256": "17ad661b20e9af1e2067fbbc2e2658a21137d56693570d1d07f966d8bc0408b7",
+      "data_size_bytes": 100439596,
+      "projection_repository": "AmazonScience/SWE-PolyBench",
+      "projection_revision": "de2980959852c0d1bc532841f8e74cc5b30f24ed",
+      "projection_path": "default/test/0000.parquet",
+      "projection_sha256": "d2d5f7969318ff34ee2427bfeddddd7ffc14539ef3bd7af5346a4f9500cc688d",
+      "projection_size_bytes": 26127906,
+      "format": "parquet_projection",
+      "repo_field": "repo",
+      "instance_field": "instance_id",
+      "base_commit_field": "base_commit",
+      "created_at_field": "created_at",
+      "language_field": "language",
+      "naive_timestamp_policy": "reject"
+    },
+    {
+      "source_id": "swe_rebench_v2",
+      "role": "candidate",
+      "dataset_repository": "nebius/SWE-rebench-V2",
+      "dataset_revision": "475dd5e8703bb5fb22dd3c60b5d038b019eba1e0",
+      "data_path": "data/train-00000-of-00001.parquet",
+      "data_sha256": "0e0bf9355f892ad74ae98d4e1c404f39fd6654a8e351ee3e6ab162e4a64cd3ad",
+      "data_size_bytes": 428839266,
+      "format": "parquet",
+      "repo_field": "repo",
+      "instance_field": "instance_id",
+      "base_commit_field": "base_commit",
+      "created_at_field": "created_at",
+      "language_field": "language",
+      "naive_timestamp_policy": "assume_utc_for_capacity_only"
+    }
+  ],
+  "descriptor_only_sources": [
+    {
+      "source_id": "multi_swe_bench",
+      "dataset_repository": "ByteDance-Seed/Multi-SWE-bench",
+      "dataset_revision": "56ff018c04a38e27ada1e9d0a6d5839a51f88f0d",
+      "reason": "The official revision is split across repository-specific JSONL files, some hundreds of megabytes each, and has no successful compact datasets-server projection. Audit official manifests, results, and per-repository counts without pretending headline totals are executable Origin evidence."
+    },
+    {
+      "source_id": "swe_bench_multilingual",
+      "reason": "Use the official per-repository table as a sparse cross-language confirmation source; do not treat it as training supply under the frozen minimum history."
+    },
+    {
+      "source_id": "swe_bench_live",
+      "reason": "Use the official release manifests as a freshness confirmation source; audit accumulated repository depth before any future training use."
+    }
+  ],
+  "source_policy": {
+    "authoritative_sources": "Official benchmark repositories, datasets, papers, and experiment repositories only.",
+    "raw_artifacts": "External datasets and repositories remain under ignored outputs. Commit only the frozen plan, code, sanitized aggregate results, source identities, and report.",
+    "timestamp_semantics": "Task created_at is used only for source-time-cutoff-safe counterfactual capacity. It is not evidence that Agent Results existed at the historical cutoff.",
+    "runtime_invariant": "Every Task Pool, Origin, and Selection remains repository-local. Cross-repository aggregation is offline research only."
+  },
+  "authority": {
+    "paid_api_calls": 0,
+    "coding_agent_calls": 0,
+    "embedding_calls": 0,
+    "network_reads": "Allowed for pinned public source and result metadata.",
+    "generator_development": false,
+    "core_runtime_changes": false
+  },
+  "inventory_plan_digest": "e7034cb18b288af73f29c73f8d0479cc9f9e3587aa5019baeb60cff20788f906"
+}

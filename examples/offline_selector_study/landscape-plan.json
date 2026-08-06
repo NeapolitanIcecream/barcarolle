@@ -1,0 +1,86 @@
+{
+  "schema_version": "barcarolle_selection_landscape_plan_v1",
+  "study_id": "selection-landscape-development-2026-07-27",
+  "frozen_at": "2026-07-27T07:18:00Z",
+  "epistemic_status": "post_outcome_development",
+  "research_contract": {
+    "target": "Measure whether a ten-Task Selection improves future-pass-rate fidelity over the complete eligible historical benchmark, locate each Selector inside the exact equal-budget random selection space, and separate representability, search density, and pre-origin learnability.",
+    "primary_baseline": "all eligible historical Task and Check refs without Selection",
+    "primary_loss": "macro-Origin future_pass_rate_mae",
+    "minimum_practical_improvement": 0.02,
+    "primary_support_rule": "Selector minus full-history mean loss is at most -0.02 and its paired 95% Origin-block interval is wholly below zero.",
+    "development_scope": "The previously inspected 75-Task SymPy counterfactual replay is a development source only. No result from this study is confirmatory or promotes a Runner default.",
+    "non_solutions": [
+      "beating one random seed without beating the full-history baseline",
+      "using the hindsight oracle or best-of-m random search as a deployable algorithm",
+      "turning repeated resampling of the same twelve Origins into new evidence",
+      "selecting one favorable post-outcome hyperparameter as a validated rule",
+      "calling a low oracle loss proof of pre-origin learnability"
+    ],
+    "allowed_terminal_outcomes": [
+      "development_candidate_identified",
+      "selection_landscape_measured_but_no_candidate_improves_full_history",
+      "task_pool_support_is_insufficient",
+      "invalid_or_insufficient_evidence"
+    ]
+  },
+  "design": {
+    "source_study_plan_digest": "419829f3a2b4b832812e6000a364bf9fe1af3c9497950f5275125f60a8acb20a",
+    "origin_count": 12,
+    "initial_history_task_count": 15,
+    "future_block_task_count": 5,
+    "selection_budget": 10,
+    "agent_count": 2,
+    "random_reference": "exact uniform distribution over all feasible ten-Task history subsets, computed from the four joint binary Agent-outcome categories",
+    "elite_fractions": [
+      0.01,
+      0.05,
+      0.1
+    ],
+    "best_of_random_draw_counts": [
+      1,
+      5,
+      10,
+      50,
+      100,
+      1000
+    ],
+    "null_resamples": 10000,
+    "null_seed": 20260727
+  },
+  "approach_registry": [
+    {
+      "family": "exact_selection_landscape",
+      "thesis": "A full random loss distribution and elite frontier distinguish a dense good region from a lucky hindsight oracle.",
+      "decisive_test": "The exact probability mass normalizes to one and independently agrees with exhaustive enumeration on small fixtures."
+    },
+    {
+      "family": "outcome_forecast_matching",
+      "thesis": "Pre-origin reference-Agent outcomes contain a temporally forecastable future performance vector that a ten-Task subset can match.",
+      "decisive_test": "Fixed recent, exponential, or linear forecasts reduce macro-Origin MAE by at least 0.02 versus coverage without opening future outcomes."
+    },
+    {
+      "family": "semantic_coreset",
+      "thesis": "Task-text embedding distributions contain temporal topic signal that facility-location or centroid coresets can use without Agent outcomes.",
+      "decisive_test": "A fixed semantic rule reduces macro-Origin MAE by at least 0.02 versus coverage and remains directionally favorable on the last eight Origins."
+    },
+    {
+      "family": "difficulty_information",
+      "thesis": "Tasks with intermediate historical reference-panel pass rates preserve future Agent gaps or rankings better than full-history or coverage.",
+      "decisive_test": "The fixed filter improves pairwise-gap MAE or recommendation regret without materially worsening future-pass-rate MAE."
+    },
+    {
+      "family": "support_and_null_audit",
+      "thesis": "Support or system bias, search sparsity, and accidental time alignment can be measured separately.",
+      "decisive_test": "Report the continuous support lower bound, discrete oracle multiplicity, elite mass, and outcome-permutation controls without treating them as deployable evidence."
+    }
+  ],
+  "resources": {
+    "new_coding_agent_calls": 0,
+    "embedding_calls_allowed": true,
+    "embedding_model": "text-embedding-3-small",
+    "embedding_input": "the 75 frozen TaskRecord.task_text values",
+    "raw_embedding_policy": "ignored artifact only; commit model, usage, input and response digests, dimensions, and sanitized aggregate results"
+  },
+  "landscape_plan_digest": "3337a3536f8be3a57cdf37d694ee5c23f4007c7d6266185674a82ba76cc8d606"
+}

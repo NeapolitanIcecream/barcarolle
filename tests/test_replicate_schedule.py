@@ -50,14 +50,17 @@ from examples.experiment_ledger import (  # noqa: E402
 )
 from examples.pylint_swe_bench_verified.replicate_campaign import (  # noqa: E402
     ReplicateCampaignContext,
+    continue_replicate_campaign_after_retained_agent_invalid,
     initialize_replicate_campaign_ledger,
     preflight_replicate_campaign,
+    reauthorize_stopped_replicate_campaign_call,
     run_next_replicate_campaign_cell,
 )
 from examples.pylint_swe_bench_verified import replicate_campaign_cli  # noqa: E402
 from examples.pylint_swe_bench_verified.replicate_schedule import (  # noqa: E402
     ReplicateSchedule,
     build_replicate_schedule,
+    build_single_agent_canary_schedule,
     find_next_missing_replicate_schedule_cell,
     resolve_replicate_schedule_cells,
     validate_replicate_schedule,
@@ -65,6 +68,39 @@ from examples.pylint_swe_bench_verified.replicate_schedule import (  # noqa: E40
 
 
 CAMPAIGN_ID = "pylint-replicates-2026-08"
+
+
+def test_single_agent_canary_schedule_is_one_exact_replayable_cell() -> None:
+    task_pool, tasks, checks, agents, runtime = _inputs()
+    task_id = tasks[3].task_id
+    canary_agent = (agents[0],)
+
+    schedule = build_single_agent_canary_schedule(
+        task_pool,
+        tasks,
+        checks,
+        canary_agent,
+        runtime,
+        campaign_id=CAMPAIGN_ID,
+        seed=20260725,
+        task_id=task_id,
+    )
+
+    assert schedule.schema_version == "single_agent_canary_schedule_v1"
+    assert schedule.replicate_count == 1
+    assert schedule.replicated_task_ids == ()
+    assert len(schedule.runtime_configs) == 1
+    assert len(schedule.cells) == 1
+    assert schedule.cells[0].task_id == task_id
+    assert schedule.cells[0].agent_id == canary_agent[0].agent_id
+    assert validate_replicate_schedule(
+        schedule,
+        task_pool,
+        tasks,
+        checks,
+        canary_agent,
+        runtime,
+    ).ok
 
 
 def test_replicate_schedule_is_deterministic_stratified_and_paired() -> None:
@@ -677,6 +713,162 @@ def test_replicate_campaign_stops_after_result_exceeds_per_call_limit(
     assert executed == [0]
 
 
+def test_replicate_campaign_reauthorizes_exact_cost_stop_without_rerun(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    context = _campaign_context(tmp_path)
+    initialize_replicate_campaign_ledger(
+        context,
+        approved_at="2026-07-22T00:00:00Z",
+        endpoint_digest="endpoint-digest",
+        maximum_estimated_cost_usd=0.01,
+        maximum_estimated_cost_per_call_usd=0.0005,
+        pricing_sources=("https://example.test/pricing",),
+        accounting_basis="test price schedule",
+        scope="paired replicate test campaign",
+    )
+    _stub_campaign_preflight(monkeypatch)
+    executed = _stub_successful_campaign_run(monkeypatch, context)
+
+    with pytest.raises(RuntimeError, match="exceeds the per-call cost limit"):
+        run_next_replicate_campaign_cell(context)
+
+    ledger = reauthorize_stopped_replicate_campaign_call(
+        context,
+        source_amendment_digest="study-amendment-digest",
+        approved_at="2026-07-22T00:00:02Z",
+        reason="cost-only operational amendment",
+        new_maximum_estimated_cost_per_call_usd=0.002,
+    )
+    event_count = len(load_ledger_events(ledger_events_path(context.ledger_path)))
+    repeated = reauthorize_stopped_replicate_campaign_call(
+        context,
+        source_amendment_digest="study-amendment-digest",
+        approved_at="2026-07-22T00:00:02Z",
+        reason="cost-only operational amendment",
+        new_maximum_estimated_cost_per_call_usd=0.002,
+    )
+    next_cell = preflight_replicate_campaign(context)
+
+    assert next_cell is not None
+    assert next_cell.schedule_cell.sequence_index == 1
+    assert executed == [0]
+    assert len(load_ledger_events(ledger_events_path(context.ledger_path))) == event_count
+    assert repeated["campaign_authority_digest"] == ledger["campaign_authority_digest"]
+    amendment = ledger["authority_amendment"]
+    calls = ledger["calls"]
+    limits = ledger["limits"]
+    assert isinstance(amendment, dict)
+    assert isinstance(calls, list)
+    assert isinstance(limits, dict)
+    assert amendment["source_amendment_digest"] == "study-amendment-digest"
+    assert amendment["old_maximum_estimated_cost_per_call_usd"] == pytest.approx(
+        0.0005
+    )
+    assert amendment["new_maximum_estimated_cost_per_call_usd"] == pytest.approx(
+        0.002
+    )
+    assert limits["maximum_estimated_cost_per_call_usd"] == pytest.approx(0.002)
+    assert calls[0]["state"] == "completed"
+    assert calls[0]["stop_reason"] == "RuntimeError"
+    assert calls[0]["reauthorized_after_stop"] == {
+        "authority_amendment_digest": amendment["authority_amendment_digest"],
+        "reauthorized_at": "2026-07-22T00:00:02Z",
+    }
+
+
+def test_replicate_campaign_retains_one_agent_availability_failure_without_retry(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    context = _campaign_context(tmp_path)
+    _initialize_campaign_ledger(context)
+    _stub_campaign_preflight(monkeypatch)
+    executed: list[int] = []
+
+    def invalid_run(
+        task,
+        check,
+        agent,
+        workspace_config,
+        runtime_config,
+        run_context,
+        artifact_config,
+    ):
+        del workspace_config, run_context, artifact_config
+        cell = next(
+            candidate
+            for candidate in context.schedule.cells
+            if candidate.task_id == task.task_id
+            and candidate.check_id == check.check_id
+            and candidate.agent_id == agent.agent_id
+            and candidate.runtime_config_id == runtime_config.runtime_config_id
+        )
+        executed.append(cell.sequence_index)
+        return WorkspaceRunResult(
+            replace(
+                _workspace_run_for_schedule_cell(cell, task, check, agent),
+                terminal_status="error",
+                check_outcome="invalid",
+                invalid_owner=None,
+                failure_label="agent_failed",
+                usage={},
+            )
+        )
+
+    monkeypatch.setattr(
+        "examples.pylint_swe_bench_verified.replicate_campaign."
+        "run_agent_on_task_with_artifacts",
+        invalid_run,
+    )
+    with pytest.raises(RuntimeError, match="not scoreable"):
+        run_next_replicate_campaign_cell(context)
+
+    ledger = continue_replicate_campaign_after_retained_agent_invalid(
+        context,
+        source_amendment_digest="continuation-study-amendment",
+        approved_at="2026-07-22T00:00:02Z",
+        reason="retain one provider availability failure",
+    )
+    event_count = len(load_ledger_events(ledger_events_path(context.ledger_path)))
+    repeated = continue_replicate_campaign_after_retained_agent_invalid(
+        context,
+        source_amendment_digest="continuation-study-amendment",
+        approved_at="2026-07-22T00:00:02Z",
+        reason="retain one provider availability failure",
+    )
+    next_cell = preflight_replicate_campaign(context)
+
+    assert next_cell is not None
+    assert next_cell.schedule_cell.sequence_index == 1
+    assert executed == [0]
+    assert len(load_ledger_events(ledger_events_path(context.ledger_path))) == event_count
+    assert repeated["campaign_authority_digest"] == ledger["campaign_authority_digest"]
+    continuation = ledger["continuation_amendment"]
+    calls = ledger["calls"]
+    assert isinstance(continuation, dict)
+    assert isinstance(calls, list)
+    assert continuation["source_amendment_digest"] == (
+        "continuation-study-amendment"
+    )
+    assert calls[0]["state"] == "completed"
+    assert calls[0]["scoreable_state"] == "agent_invalid"
+    assert calls[0]["reauthorized_after_stop"] == {
+        "authority_amendment_digest": continuation[
+            "continuation_amendment_digest"
+        ],
+        "reauthorized_at": "2026-07-22T00:00:02Z",
+    }
+    with pytest.raises(RuntimeError, match="different continuation"):
+        continue_replicate_campaign_after_retained_agent_invalid(
+            context,
+            source_amendment_digest="another-amendment",
+            approved_at="2026-07-22T00:00:03Z",
+            reason="must not allow a second retained invalid",
+        )
+
+
 def test_replicate_campaign_rejects_authority_drift_before_result_store_access(
     tmp_path: Path,
 ) -> None:
@@ -886,6 +1078,14 @@ def test_replicate_campaign_does_not_retry_a_failed_paid_cell(
         run_next_replicate_campaign_cell(context)
     with pytest.raises(RuntimeError, match="stopped paid cell"):
         run_next_replicate_campaign_cell(context)
+    with pytest.raises(RuntimeError, match="exact cost Result"):
+        reauthorize_stopped_replicate_campaign_call(
+            context,
+            source_amendment_digest="study-amendment-digest",
+            approved_at="2026-07-22T00:00:02Z",
+            reason="must not convert a harness failure",
+            new_maximum_estimated_cost_per_call_usd=2.0,
+        )
 
     assert attempts == 1
 
@@ -964,7 +1164,17 @@ def test_replicate_campaign_cli_loads_frozen_execution_inputs(
                         f"BARCAROLLE_CODEX_MODEL={agent.requested_model_id}",
                         f"BARCAROLLE_CODEX_REASONING_EFFORT={effort}",
                         "BARCAROLLE_CODEX_HOME="
-                        + str((campaign_dir / f"codex-home-{effort}").resolve()),
+                        + str(
+                            (
+                                campaign_dir
+                                / (
+                                    "codex-home-"
+                                    + canonical_digest({"agent_id": agent.agent_id})[
+                                        :16
+                                    ]
+                                )
+                            ).resolve()
+                        ),
                         str(replicate_campaign_cli.HARNESS),
                     )
                 }

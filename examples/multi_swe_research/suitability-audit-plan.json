@@ -1,0 +1,160 @@
+{
+  "schema_version": "barcarolle_multi_swe_suitability_audit_plan_v1",
+  "study_id": "multi-swe-candidate-free-null-headroom-audit-2026-07-30",
+  "frozen_at": "2026-07-30T03:20:39Z",
+  "amended_at": "2026-07-30T03:40:36Z",
+  "epistemic_status": "opened_outcome_candidate_free_descriptive_audit",
+  "amendment_history": [
+    {
+      "amendment_id": "AUD-NULL-001",
+      "superseded_plan_digest": "7650eece7cd20bfa170307db6ff50fcf8d558b4926f29d4f1154d0ad6c852621",
+      "reason": "The first implementation sampled a nonzero offset independently in every repository. That restricted product space cannot support the planned circular-shift randomization p-value because valid combinations with one or more zero repository offsets were excluded.",
+      "change": "Sample every repository offset uniformly from zero through repository_task_count minus one. Keep the observed arrangement in the product group and retain the conservative plus-one Monte Carlo p-value.",
+      "effect_on_first_diagnostic": "Independent inclusive-zero recomputation changed H5 from 0.11044 to about 0.11144 and H10 from 0.15942 to about 0.17041; neither decision direction changed. The first restricted-nonzero runs are invalid diagnostics and cannot become evidence."
+    }
+  ],
+  "research_contract": {
+    "question": "Does the current Multi-SWE panel contain budget-ten selection headroom and candidate-independent evidence that the real Task chronology is more predictive of future pass rate than a prevalence-only estimator?",
+    "reason_for_source": "This is the most complete currently normalized multi-repository panel with a fixed full denominator, 36 joint Agent-configuration outcome vectors, certified budget-ten hindsight, and two already-frozen non-overlapping future-block frames. It is a bounded pilot, not a claim that this source defines the practical workload.",
+    "runtime_boundary": "Runtime remains one repository, one Task Pool, and one Selection. Repositories are independent offline evidence units and are never mixed into a runtime Task Pool.",
+    "primary_baseline": "full eligible history from the same target repository",
+    "primary_metric": "future pass-rate mean absolute error over the complete 36-configuration panel",
+    "primary_estimand": "configuration mean inside Origin, Origin mean inside repository, then equal-weight repository mean",
+    "claim_separation": {
+      "selection_claim": "A budgeted Selection improves future pass-rate MAE relative to full eligible history and is located against equal-budget random sampling.",
+      "nontrivial_prediction_claim": "The same method also beats a trivial estimator admitted by its information contract.",
+      "joint_nomination": "A strong predictive nomination needs both claims, but failure of the nontrivial-prediction claim does not erase separately labeled Selection/compression evidence."
+    },
+    "non_solutions": [
+      "nominating or tuning a Selector",
+      "choosing a source because an opened candidate score is favorable",
+      "averaging unlike sources or horizons into one score",
+      "treating a target-Agent climatology as admissible for an unseen-target Selector",
+      "calling projected Task time strict-prospective Result availability",
+      "attributing sparse outcomes to Task difficulty without cell-level terminal-state evidence",
+      "opening a sealed Agent or making a paid call"
+    ],
+    "allowed_terminal_states": [
+      "unseen_estimator_full_dominated",
+      "capacity_without_detected_history_persistence",
+      "history_persistence_detected_on_counterfactual_panel",
+      "resolution_or_contract_limited"
+    ]
+  },
+  "source": {
+    "repository_revision_before_freeze": "65845dbb600af2d6a61bdf5cbdb54d2bddc2504d",
+    "contract_digest": "1e104613012a95fc534dba23d4adac1b7d6a6c10e70537c732f16da3e6f83307",
+    "selector_plan_digest": "6619ab258039d3f12cf865421faeba7c23248b302f72b06bb6f311b8f65bde05",
+    "panel_digest": "f2658d12451bdab4108a71cfae5cd5044a5bd312633239c09425378b4b682deb",
+    "resolved_outcome_digest": "b9a6d0d8e44d747d23789ec23eb4205178f2ae2d4f737c2446a5fcdf5abc116c",
+    "task_time_projection_digest": "56eb7dda0d7fd9787b1e77c432572f212726b92abc189df18ab2a4fe6bb815e5",
+    "outcome_results_digest": "7b314e1239981c38574960e15f8117ba33c350dbb61fb1e9c0d52eb96e013e36",
+    "hindsight_plan_digest": "47f1c375f6d16c72c8c0b7f5f1f2dd3f5c6dc3b4e9392d99a52cfede63de4b13",
+    "hindsight_results_digest": "7ccd3153720ce12c98c1781df2fbf654b65ceacad93eb8916c1843baf86cdb4f",
+    "task_universe_file_sha256": "2b91923b027e447a1b3d8317950bfba22a58dd7d4e28b44ae8f05d290cf69c21",
+    "task_times_file_sha256": "c4d86e7cbe0ef78462422335c8ea29bcd29691dc1613b339024d1e75f6f8f745",
+    "resolved_outcomes_file_sha256": "bdcc5b20678fdc44dba5a00c35851caae701d4f1518a3cc1abc6bb6c95eb181d",
+    "outcome_results_file_sha256": "f62dcdb64d60befb0da1ab1b50d33f953fd54435e0c7a3d4476359f3ecbc77ce",
+    "hindsight_results_file_sha256": "0c2508ee601d9cf710a3ab1a4623bf1a68f1dd869877d6f81dc7e24269fc7927",
+    "task_count": 1632,
+    "configuration_count": 36,
+    "task_time_status": "GitHub pull-request createdAt projection; source-time counterfactual only",
+    "result_availability_status": "not historically attested",
+    "normalization_limit": "Observed result bytes are bound, but the asserted experiments checkout revision is not independently verified by the current normalizer."
+  },
+  "frame": {
+    "minimum_initial_history_tasks": 20,
+    "selection_budget_tasks": 10,
+    "origin_alignment": "end-aligned complete non-overlapping future blocks using build_repository_origins",
+    "ordering": "projected created_at then instance_id",
+    "horizons": [
+      {
+        "future_tasks": 5,
+        "repository_count": 13,
+        "origin_count": 221
+      },
+      {
+        "future_tasks": 10,
+        "repository_count": 11,
+        "origin_count": 107
+      }
+    ],
+    "horizon_interpretation": "H5 and H10 use different eligible repository and Origin frames. Report them separately; a sign change is a cross-frame robustness result, not a causal horizon effect.",
+    "secondary_aggregation": "pooled Origin mean, labeled separately from the equal-repository primary"
+  },
+  "controls": {
+    "unseen_target_estimator_lane": {
+      "always_zero": "predict pass rate zero for every configuration and Origin",
+      "always_one": "predict pass rate one for every configuration and Origin",
+      "full_history": "use each target configuration's pass rate over every eligible historical Task; this is the primary no-Selection evidence row, not a budget-ten Selector",
+      "equal_budget_random": "reuse the frozen 20,000-draw PCG64 budget-ten distribution from the bound outcome result",
+      "discrete_hindsight": "reuse the solver-certified exact budget-ten response-pattern oracle from the bound hindsight result"
+    },
+    "cached_target_diagnostic_lane": {
+      "expanding_median_climatology": "for each repository and target configuration, predict the median of all earlier complete future-block pass rates; at the first Origin, fall back to that Origin's full-history pass rate",
+      "claim_limit": "This lane requires target-configuration outcomes before the cutoff. It cannot be a gate for an unseen-target Selector."
+    }
+  },
+  "headroom": {
+    "selection_headroom": "MAE_full_history - MAE_discrete_hindsight",
+    "selection_capture": "(MAE_full_history - MAE_candidate) / selection_headroom; not computed because this audit has no candidate",
+    "trivial_separation": "MAE_strongest_unseen_trivial - MAE_full_history",
+    "trivial_relative_headroom": "MAE_strongest_unseen_trivial - MAE_discrete_hindsight",
+    "undefined_rule": "Do not report a ratio when its denominator is nonpositive or when rows differ in Task, Check, Agent, Origin, denominator, weighting, budget, or oracle contract."
+  },
+  "temporal_null": {
+    "statistic": "equal-repository mean full-history MAE minus always-zero MAE; lower is more favorable to history persistence",
+    "construction": "For every draw and repository, choose one independent circular offset uniformly from zero through repository_task_count minus one and shift the complete ordered 36-dimensional Task response rows together. Preserve Task times, Origin membership, repository prevalence, joint Agent response vectors, and response-sequence adjacency up to the circular boundary.",
+    "draws": 2000,
+    "seed": 20260730,
+    "generator": "For each horizon initialize Python random.Random(seed + future_tasks); for each draw and sorted repository call randrange(repository_task_count) once.",
+    "p_value": "(1 + number of null statistics at most observed) / (draws + 1)",
+    "alpha": 0.05,
+    "claim": "A small value detects alignment of aggregate history persistence with the observed Task chronology. Failure to detect does not prove that every pre-Origin Task feature is useless."
+  },
+  "uncertainty": {
+    "repository_bootstrap_resamples": 10000,
+    "repository_bootstrap_seed": 20260730,
+    "bootstrap_generator": "For each horizon initialize Python random.Random(repository_bootstrap_seed + future_tasks); sample repository rows with replacement using randrange.",
+    "interval": "percentile 95 percent interval over equal-weight repository rows",
+    "quantile_rule": "linear interpolation at index probability times (count minus one)",
+    "leave_one_repository_out": true,
+    "report_per_repository": true,
+    "report_per_configuration": true,
+    "design_resolution": "report interval width and half-width; no universal useful-effect margin is inferred from opened outcomes"
+  },
+  "decision_rule": {
+    "unseen_estimator_full_dominated": "under the unseen-target estimator diagnostic, the strongest constant has MAE no greater than full history; this blocks a nontrivial-prediction interpretation but does not by itself erase a candidate-versus-full Selection result",
+    "capacity_present": "the exact budget-ten hindsight MAE is lower than both full history and the strongest unseen-target constant",
+    "history_persistence_detected": "full history beats always zero, the repository-bootstrap interval for full-minus-zero is wholly below zero, every leave-one-repository-out value is negative, and the temporal-null p-value is at most 0.05",
+    "development_panel_rule": "The panel status remains descriptive_only. This audit cannot nominate a practical development panel because workload relevance, native Result availability, and deployment useful-effect margin are not supplied by the opened source.",
+    "cross_source_rule": "Only if this pilot separates metric support, capacity, temporal signal, and resolution may the same direct audit be applied to another source. Each source retains its own row and contract."
+  },
+  "compatibility_preflight": {
+    "ready_replay": [
+      "SWE-bench Verified 3-Agent H5",
+      "SWE-bench Verified opened 11-Agent H5",
+      "SymPy user-configured counterfactual H5",
+      "Multi-SWE H5 and H10"
+    ],
+    "adapter_required": [
+      "Boltons historical single 20-to-10 split",
+      "Boltons five-Task H1 mechanism check"
+    ],
+    "source_only": [
+      "SWE-bench Full Task/time capacity"
+    ],
+    "normalization_gated": [
+      "SWE-bench Full pass-rate MAE: exact result allowlist, source-specific Check identity, result blob manifest, normalizer, and panel digest are absent"
+    ],
+    "policy": "Do not average rows, silently drop a failed source, reuse Verified Results by instance ID for Full, or inspect sealed Agents."
+  },
+  "authority": {
+    "paid_api_calls": 0,
+    "sealed_swe_bench_holdout_agents_opened": 0,
+    "new_public_outcome_panels_opened": 0,
+    "generator_development": false,
+    "implementation_scope": "one direct Multi-SWE experiment module, focused tests, ignored raw results, a compact self-digested summary, and claim-boundary documentation"
+  },
+  "suitability_audit_plan_digest": "c4f2d34be4fc454c434a9c711c56f40a7902ddaeee1052d2ea25bfb67d05a08d"
+}

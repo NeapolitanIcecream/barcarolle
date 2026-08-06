@@ -159,10 +159,12 @@ def _rule_mixture_order(
     }
     for index, ref in enumerate(refs):
         recency = (index + 1) / max(1, len(refs))
-        score = (
-            expert_weights.get("recency", 0.0) * recency
-            + expert_weights.get("random", 0.0) * random_scores[ref]
-            + expert_weights.get("coverage", 0.0) * coverage_scores[ref]
+        score = fsum(
+            (
+                expert_weights.get("coverage", 0.0) * coverage_scores[ref],
+                expert_weights.get("random", 0.0) * random_scores[ref],
+                expert_weights.get("recency", 0.0) * recency,
+            )
         ) / total_weight
         scored.append((score, ref))
     return tuple(

@@ -2142,14 +2142,20 @@ def test_select_benchmark_loads_only_allowed_pre_origin_results_and_appends_sele
         (agent,),
         datetime(2026, 1, 5, tzinfo=UTC),
         SelectionBudget(1),
-        _selector(),
+        build_rule_selector(
+            "recency",
+            allowed_feature_classes=(
+                "task_metadata",
+                "pre_origin_result",
+            ),
+        ),
         RollingOriginPolicy(
             "origin_time",
             "strict_prospective",
             "allow_cluster_overlap",
             False,
         ),
-        FeatureConfig(("task_count",)),
+        FeatureConfig(("pre_origin_result_count",)),
         ResultStore(tmp_path / "results.jsonl"),
     )
     resumed = select_benchmark(
@@ -2157,14 +2163,20 @@ def test_select_benchmark_loads_only_allowed_pre_origin_results_and_appends_sele
         (agent,),
         datetime(2026, 1, 5, tzinfo=UTC),
         SelectionBudget(1),
-        _selector(),
+        build_rule_selector(
+            "recency",
+            allowed_feature_classes=(
+                "task_metadata",
+                "pre_origin_result",
+            ),
+        ),
         RollingOriginPolicy(
             "origin_time",
             "strict_prospective",
             "allow_cluster_overlap",
             False,
         ),
-        FeatureConfig(("task_count",)),
+        FeatureConfig(("pre_origin_result_count",)),
         ResultStore(tmp_path / "results.jsonl"),
     )
     logged = load_jsonl_records(tmp_path / "selections.jsonl", BenchmarkSelectionRecord)
@@ -3219,6 +3231,188 @@ def test_evaluate_selectors_freezes_all_selections_then_executes_union_once(
     assert len(executed_cells) == 3
 
 
+def test_evaluate_selectors_uses_late_observed_history_result_in_counterfactual_replay(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    history_task = _task(
+        "history-task",
+        "history-check",
+        available_at="2026-01-02T00:00:00Z",
+    )
+    future_task = _task(
+        "future-task",
+        "future-check",
+        available_at="2026-01-07T00:00:00Z",
+    )
+    tasks = (history_task, future_task)
+    checks = tuple(
+        _check(
+            task.check_ids[0],
+            task.task_id,
+            available_at=task.task_material_available_at,
+        )
+        for task in tasks
+    )
+    task_pool = _task_pool_with_refs(tmp_path, tasks, checks)
+    agent = _agent()
+    workspace_config = _workspace_config()
+    runtime_config = _runtime_config()
+    scoring_config = _scoring_config()
+    store = ResultStore(tmp_path / "results.jsonl")
+    history_result = _result(
+        history_task,
+        checks[0],
+        agent,
+        workspace_config,
+        runtime_config,
+        scoring_config,
+    )
+    assert parse_utc_timestamp(history_result.result_available_at) > parse_utc_timestamp(
+        "2026-01-05T00:00:00Z"
+    )
+    store_result(history_result, store)
+    executed_task_ids: list[str] = []
+
+    def fake_run(task, check, selected_agent, workspace, runtime, run_context):
+        executed_task_ids.append(task.task_id)
+        return _workspace_run(task, check, selected_agent)
+
+    monkeypatch.setattr(
+        runner_module.workspace_module,
+        "run_agent_on_task",
+        fake_run,
+    )
+
+    evaluate_selectors(
+        (
+            build_rule_selector(
+                "recency",
+                allowed_feature_classes=(
+                    "task_metadata",
+                    "pre_origin_result",
+                ),
+            ),
+        ),
+        task_pool,
+        (agent,),
+        TimeRange("2026-01-01T00:00:00Z", "2026-01-10T00:00:00Z"),
+        SelectorEvaluationConfig(
+            origin_times=("2026-01-05T00:00:00Z",),
+            budget=SelectionBudget(1),
+        ),
+        RollingOriginPolicy(
+            "origin_time",
+            "counterfactual_replay",
+            "allow_cluster_overlap",
+            True,
+        ),
+        FeatureConfig(("pre_origin_result_count",)),
+        store,
+        workspace_config,
+        runtime_config,
+        scoring_config,
+        ResultCacheConfig(),
+        ResultJoinConfig(),
+        WorkspaceRunContext(),
+    )
+
+    (selector_input,) = load_jsonl_records(
+        tmp_path / "selector-inputs.jsonl",
+        SelectorInput,
+    )
+    assert selector_input.pre_origin_result_ids == (history_result.result_id,)
+    assert executed_task_ids == [future_task.task_id]
+
+
+def test_evaluate_selectors_reuses_frozen_input_after_lazy_counterfactual_runs(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    first_task = _task(
+        "first-task",
+        "first-check",
+        available_at="2026-01-02T00:00:00Z",
+    )
+    selected_task = _task(
+        "selected-task",
+        "selected-check",
+        available_at="2026-01-03T00:00:00Z",
+    )
+    future_task = _task(
+        "future-task",
+        "future-check",
+        available_at="2026-01-07T00:00:00Z",
+    )
+    tasks = (first_task, selected_task, future_task)
+    checks = tuple(
+        _check(
+            task.check_ids[0],
+            task.task_id,
+            available_at=task.task_material_available_at,
+        )
+        for task in tasks
+    )
+    task_pool = _task_pool_with_refs(tmp_path, tasks, checks)
+    executed_task_ids: list[str] = []
+
+    def fake_run(task, check, agent, workspace, runtime, run_context):
+        executed_task_ids.append(task.task_id)
+        return _workspace_run(task, check, agent)
+
+    monkeypatch.setattr(
+        runner_module.workspace_module,
+        "run_agent_on_task",
+        fake_run,
+    )
+    arguments = (
+        (
+            build_rule_selector(
+                "recency",
+                allowed_feature_classes=(
+                    "task_metadata",
+                    "pre_origin_result",
+                ),
+            ),
+        ),
+        task_pool,
+        (_agent(),),
+        TimeRange("2026-01-01T00:00:00Z", "2026-01-10T00:00:00Z"),
+        SelectorEvaluationConfig(
+            origin_times=("2026-01-05T00:00:00Z",),
+            budget=SelectionBudget(1),
+        ),
+        RollingOriginPolicy(
+            "origin_time",
+            "counterfactual_replay",
+            "allow_cluster_overlap",
+            True,
+        ),
+        FeatureConfig(("pre_origin_result_count",)),
+        ResultStore(tmp_path / "results.jsonl"),
+        _workspace_config(),
+        _runtime_config(),
+        _scoring_config(),
+        ResultCacheConfig(),
+        ResultJoinConfig(),
+        WorkspaceRunContext(),
+    )
+
+    first_run = evaluate_selectors(*arguments)
+    (frozen_input,) = load_jsonl_records(
+        tmp_path / "selector-inputs.jsonl",
+        SelectorInput,
+    )
+    resumed = evaluate_selectors(*arguments)
+
+    assert frozen_input.pre_origin_result_ids == ()
+    assert resumed == first_run
+    assert len(
+        load_jsonl_records(tmp_path / "selector-inputs.jsonl", SelectorInput)
+    ) == 1
+    assert executed_task_ids == [selected_task.task_id, future_task.task_id]
+
+
 def test_evaluation_cell_set_plan_duplicates_fail_before_store_read(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
@@ -4107,9 +4301,10 @@ def test_evaluate_selector_assigns_each_future_task_to_one_origin(
     def track_selection_snapshot(store, query):
         if (
             query.agent_ids == ("agent",)
-            and query.result_available_after == "2026-01-01T00:00:00Z"
-            and query.task_ids == ()
-            and query.check_ids == ()
+            and query.result_available_after is None
+            and query.result_available_before is None
+            and query.task_ids == task_pool.task_ids
+            and query.check_ids == task_pool.check_ids
         ):
             selection_snapshot_queries.append(query)
         return original_load_results(store, query)
@@ -4120,7 +4315,13 @@ def test_evaluate_selector_assigns_each_future_task_to_one_origin(
         track_selection_snapshot,
     )
     selections, cell_sets, matrices, metrics = evaluate_selector(
-        _selector(),
+        build_rule_selector(
+            "recency",
+            allowed_feature_classes=(
+                "task_metadata",
+                "pre_origin_result",
+            ),
+        ),
         task_pool,
         (_agent(),),
         TimeRange("2026-01-01T00:00:00Z", "2026-01-10T00:00:00Z"),
@@ -4134,7 +4335,7 @@ def test_evaluate_selector_assigns_each_future_task_to_one_origin(
             "allow_cluster_overlap",
             True,
         ),
-        FeatureConfig(("task_count",)),
+        FeatureConfig(("pre_origin_result_count",)),
         result_store,
         _workspace_config(),
         _runtime_config(),
@@ -4145,10 +4346,7 @@ def test_evaluate_selector_assigns_each_future_task_to_one_origin(
     )
 
     assert len(selection_snapshot_queries) == 1
-    assert (
-        selection_snapshot_queries[0].result_available_before
-        == "2026-01-07T00:00:00.000000Z"
-    )
+    assert selection_snapshot_queries[0].result_available_before is None
     assert tuple(cell_set.future_task_check_refs for cell_set in cell_sets) == (
         (
             TaskCheckRef("first-future-task", "first-future-check"),
@@ -4376,9 +4574,34 @@ def test_evaluate_selector_assigns_each_future_task_to_one_origin(
         agents=(_agent(),),
         results=stored_results,
     )
-    assert any(
+    assert not any(
         f"includes post-origin Result {post_origin_result.result_id}" in error
         for error in post_origin_result_section.unsupported_claims
+    )
+    strict_post_origin_input = replace(
+        post_origin_input,
+        eligibility_mode="strict_prospective",
+    )
+    strict_post_origin_section = runner_module.reporting_module.build_selector_report(
+        selections,
+        cell_sets,
+        matrices,
+        metrics,
+        origins=origins,
+        feature_snapshots=snapshots,
+        selector_inputs=tuple(
+            strict_post_origin_input
+            if selector_input.selector_input_id == provenance_input.selector_input_id
+            else selector_input
+            for selector_input in selector_inputs
+        ),
+        selectors=selectors,
+        agents=(_agent(),),
+        results=stored_results,
+    )
+    assert any(
+        f"includes post-origin Result {post_origin_result.result_id}" in error
+        for error in strict_post_origin_section.unsupported_claims
     )
 
     disallowed_selector = replace(selectors[0], allowed_feature_classes=())
@@ -4395,7 +4618,7 @@ def test_evaluate_selector_assigns_each_future_task_to_one_origin(
         results=stored_results,
     )
     assert any(
-        "uses classes not allowed by Selector: task_metadata" in error
+        "uses classes not allowed by Selector: pre_origin_result" in error
         for error in disallowed_feature_section.unsupported_claims
     )
 
@@ -4653,7 +4876,7 @@ def test_evaluate_selector_rejects_repeated_future_cluster_across_disjoint_origi
         )
 
 
-def test_evaluate_selector_does_not_open_post_origin_results_before_freeze(
+def test_evaluate_selector_freezes_counterfactual_result_snapshot_before_selection(
     tmp_path: Path, monkeypatch
 ) -> None:
     selected_task = _task(
@@ -4762,7 +4985,7 @@ def test_evaluate_selector_does_not_open_post_origin_results_before_freeze(
                 "allow_cluster_overlap",
                 True,
             ),
-            FeatureConfig(("task_count",)),
+            FeatureConfig(("pre_origin_result_count",)),
             ResultStore(tmp_path / "results.jsonl"),
             _workspace_config(),
             _runtime_config(),
@@ -4775,13 +4998,13 @@ def test_evaluate_selector_does_not_open_post_origin_results_before_freeze(
     assert freeze_called
     assert pre_freeze_queries
     assert all(
-        query.result_available_before <= "2026-01-05T00:00:00.500000Z"
+        query.result_available_before is None
+        and query.result_available_after is None
+        and query.task_ids == task_pool.task_ids
+        and query.check_ids == task_pool.check_ids
         for query in pre_freeze_queries
     )
     assert len(pre_freeze_queries) == 1
-    assert pre_freeze_queries[0].task_ids == ()
-    assert pre_freeze_queries[0].check_ids == ()
-    assert pre_freeze_queries[0].result_available_after == "2026-01-01T00:00:00Z"
     assert captured_selector_inputs[0].budget_digest == canonical_digest(
         {"max_task_checks": 7}
     )

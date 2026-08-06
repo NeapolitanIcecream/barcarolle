@@ -1,0 +1,19 @@
+{
+  "schema_version": "barcarolle_selection_landscape_amendment_v1",
+  "amendment_id": "selection-landscape-terminal-state-correction-2026-07-27",
+  "frozen_at": "2026-07-27T07:52:18Z",
+  "epistemic_status": "post_outcome_evidence_label_correction",
+  "study_id": "selection-landscape-development-2026-07-27",
+  "previous_landscape_plan_digest": "3337a3536f8be3a57cdf37d694ee5c23f4007c7d6266185674a82ba76cc8d606",
+  "correction": {
+    "superseded_terminal_state": "selection_landscape_measured_but_no_candidate_improves_full_history",
+    "corrected_terminal_state": "selection_landscape_measured_but_no_candidate_clears_promotion_gate",
+    "reason": "The best fixed candidate has macro-Origin MAE 0.183333 versus 0.193290 for full history, so it improves the point loss by 0.009956. It does not clear the frozen 0.02 practical margin or the paired interval gate. The old label incorrectly denied any point improvement.",
+    "scope": "Correct the terminal evidence label only. Do not change the plan, inputs, candidates, metrics, thresholds, results, or promotion decision."
+  },
+  "authority": {
+    "new_coding_agent_calls": 0,
+    "new_embedding_calls": 0
+  },
+  "landscape_amendment_digest": "c407f0eeb9b7338a99e992ea1786d902a4b1f307cf33f1b10ce99ad4a6413a84"
+}

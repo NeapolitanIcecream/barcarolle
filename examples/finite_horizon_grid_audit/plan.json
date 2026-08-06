@@ -1,0 +1,126 @@
+{
+  "schema_version": "barcarolle_finite_horizon_grid_audit_plan_v1",
+  "study_id": "finite-horizon-grid-audit-2026-07-29",
+  "frozen_at": "2026-07-29T16:25:54Z",
+  "epistemic_status": "post_result_matched_mechanism_characterization_on_opened_development_outcomes",
+  "trigger": {
+    "observation": "ALG-018C strongly improves H5 but only marginally improves H10 over the H-blind cached-target control.",
+    "independent_audit": "Two independent audits found zero arithmetic or implementation mismatches and identified B=10,H=5 grid parity as the leading explanation.",
+    "question": "Does finite-horizon absolute-loss calibration help outside the B=10,H=5 parity cell when budget and future count are crossed on identical Origins?",
+    "claim_limit": "All source outcomes and the triggering H5/H10 results are opened. This audit can characterize mechanism only; it cannot independently confirm or nominate a Selector."
+  },
+  "research_contract": {
+    "primary_outcome": "Repository-first future pass-rate MAE for the exact cached target configuration.",
+    "primary_control": "For each budget B, the feasible q/B nearest to historical s/n, with lower-q ties.",
+    "primary_method": "ALG-018C-P plug-in Binomial finite-horizon predictive median on the feasible q/B grid.",
+    "fixed_sensitivity": "ALG-018C Jeffreys Beta-Binomial finite-horizon predictive median.",
+    "matched_frame": "The standard non-overlapping H10 frame: 107 Origins in 11 repositories. H5 uses the first five Tasks of the same Origin's ten-Task future block.",
+    "minimum_initial_history_tasks": 20,
+    "budgets": [
+      5,
+      10
+    ],
+    "future_counts": [
+      5,
+      10
+    ],
+    "required_cells": [
+      "B5_H5",
+      "B5_H10",
+      "B10_H5",
+      "B10_H10"
+    ],
+    "required_reports": [
+      "plugin, Jeffreys, H-blind, and full-history repository-first MAE in every cell",
+      "paired plugin-minus-H-blind and Jeffreys-minus-H-blind repository bootstraps and repository directions",
+      "leave-one-repository-out direction for every primary contrast",
+      "equal-budget random calibration for plugin and H-blind methods",
+      "q distributions, changed-action counts, inventory clamps, and plugin-versus-Jeffreys action differences",
+      "B10 horizon-swap diagnostic: score the H5 action on H10 and the H10 action on H5",
+      "two byte-identical materialization and score executions"
+    ],
+    "insufficient_outcomes": [
+      "a pooled-cell result that hides cell-specific direction",
+      "a gain versus full history without comparison to the same-budget H-blind control",
+      "a random midrank used as a p-value or replacement baseline",
+      "a claim about unseen Agents, Task content, temporal regimes, latent capability, prospective behavior, or production readiness"
+    ]
+  },
+  "information_contract": {
+    "name": "retrospective_cached_exact_configuration_counterfactual",
+    "allowed_inputs": [
+      "target-repository Task identities and projected Task times at or before the Origin cutoff",
+      "complete binary official outcomes for the same public model/harness configuration on eligible history",
+      "predeclared future Task count H and Selection budget B"
+    ],
+    "source_limitation": "The Multi-SWE projection has no Result availability timestamp and does not prove the full production Agent fingerprint. The study assumes the same-configuration history was cached by cutoff.",
+    "forbidden_inputs": [
+      "future Task identity, content, attribute, patch, or outcome during action construction",
+      "another configuration substituted for missing history",
+      "partial same-configuration history",
+      "sealed Agent outcomes"
+    ]
+  },
+  "methods": {
+    "h_blind_control": {
+      "action": "Choose feasible integer q minimizing abs(q*n-B*s), then lower q.",
+      "membership": "Choose q newest projected-time successes and B-q newest projected-time failures."
+    },
+    "ALG-018C-P": {
+      "action": "With K distributed Binomial(H,s/n), choose feasible q minimizing exact sum_k w_k*abs(H*q-B*k), then distance to s/n, then lower q.",
+      "role": "canonical KISS grid-aware method for this audit"
+    },
+    "ALG-018C": {
+      "action": "With K distributed Beta-Binomial(H,s+1/2,n-s+1/2), choose feasible q minimizing the same exact absolute loss, then distance to the Jeffreys predictive mean, then lower q.",
+      "role": "fixed sensitivity; cannot replace the primary method from observed cells"
+    }
+  },
+  "frozen_interpretation": {
+    "general_support": "Both equal-grid cells B5_H5 and B10_H10 have plugin-minus-H-blind repository-bootstrap upper bounds below zero.",
+    "grid_dominant": "B10_H5 has a plugin-minus-H-blind repository-bootstrap upper bound below zero, its absolute aggregate contrast exceeds twice every other cell, and general_support is false.",
+    "mixed": "Neither general_support nor grid_dominant is true.",
+    "horizon_swap": "Diagnostic only. It tests whether using the wrong declared H loses to the matched-H action; it cannot promote a method."
+  },
+  "statistical_protocol": {
+    "repository_bootstrap": {
+      "resamples": 10000,
+      "seed_by_cell": {
+        "B5_H5": 20260750,
+        "B5_H10": 20260751,
+        "B10_H5": 20260752,
+        "B10_H10": 20260753
+      },
+      "generator": "NumPy PCG64",
+      "unit": "paired repository-level method-minus-H-blind difference"
+    },
+    "random": {
+      "draws": 20000,
+      "seed_by_cell": {
+        "B5_H5": 20260850,
+        "B5_H10": 20260851,
+        "B10_H5": 20260852,
+        "B10_H10": 20260853
+      },
+      "generator": "NumPy PCG64 random-key uniform subsets",
+      "coupling": "One subset per Origin and draw shared across all 36 configurations."
+    },
+    "multiple_comparisons": "The four cells and both fixed methods are reported together. No cell is a confirmatory claim."
+  },
+  "source_bindings": {
+    "parent_plan_digest": "6602a349d5c108fef96fb9e15d405bf268619b0fdd2721500f6a5c62ad9264b7",
+    "parent_execution_lock_digest": "10e2832290b92f40c120b8a6e3a7e9a946ec778ee71bb4bf08f6fa697858be4b",
+    "parent_result_digest": "77c6ae2c893197ecf3c1361433994a41538558142e069d64483ef5e49052afb2",
+    "parent_result_raw_sha256": "63662482080394eb94c6ce2ec416cbaa88172b037b466abfccaea29fcf9ae045",
+    "resolved_outcome_digest": "b9a6d0d8e44d747d23789ec23eb4205178f2ae2d4f737c2446a5fcdf5abc116c",
+    "task_time_projection_digest": "56eb7dda0d7fd9787b1e77c432572f212726b92abc189df18ab2a4fe6bb815e5"
+  },
+  "resource_boundary": {
+    "paid_api_calls": 0,
+    "new_agent_outcome_calls": 0,
+    "embedding_api_calls": 0,
+    "sealed_holdout_reads": 0,
+    "core_schema_or_service_changes": 0
+  },
+  "claim_boundary": "Opened, projected-time, retrospective same-configuration cached-result mechanism characterization. No prospective, Result-availability, full-Agent-identity, unseen-target, Task-content, temporal-regime, latent-capability, sealed-holdout, certification, or production-default claim.",
+  "plan_digest": "8388fc583f7acf68a27c1864b673de91d87e895e2384366461ba87c00f2c4b1d"
+}

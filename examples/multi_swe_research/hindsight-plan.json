@@ -1,0 +1,99 @@
+{
+  "schema_version": "barcarolle_multi_swe_hindsight_plan_v1",
+  "study_id": "multi-swe-budget-ten-hindsight-support-2026-07-28",
+  "epistemic_status": "post_result_descriptive_support_diagnostic",
+  "motivation": {
+    "observed_before_registration": "ALG-012 beat most equal-budget random subsets but failed full-history, task-space, H10, deep, harness, and language gates.",
+    "question": "Can any ten historical Tasks represent the future 36-configuration pass-rate vector, or is budget ten structurally inadequate for this estimand?",
+    "claim_boundary": "Future outcomes are deliberately exposed to measure representational headroom. This diagnostic cannot nominate, train, tune, or confirm a Selector."
+  },
+  "source": {
+    "selector_plan_digest": "6619ab258039d3f12cf865421faeba7c23248b302f72b06bb6f311b8f65bde05",
+    "content_manifest_digest": "9b47e946daf2e982e49e552f9a6976315787ae45b3923edda4a5aff9b53e78cb",
+    "panel_digest": "f2658d12451bdab4108a71cfae5cd5044a5bd312633239c09425378b4b682deb",
+    "task_space_results_digest": "d9916f4c9acdcf615262f92cb771ed0079a696b4605805ef0c82b17f4f4e401d",
+    "outcome_results_digest": "7b314e1239981c38574960e15f8117ba33c350dbb61fb1e9c0d52eb96e013e36",
+    "task_count": 1632,
+    "configuration_count": 36,
+    "outcome_status": "opened Multi-SWE development outcomes",
+    "time_status": "GitHub pull-request createdAt projection; source-time-safe counterfactual only"
+  },
+  "protocol": {
+    "minimum_initial_history_tasks": 20,
+    "selection_budget_tasks": 10,
+    "horizons": [
+      {
+        "future_tasks": 5,
+        "origin_count": 221,
+        "repository_count": 13,
+        "deep_repository_count": 8
+      },
+      {
+        "future_tasks": 10,
+        "origin_count": 107,
+        "repository_count": 11,
+        "deep_repository_count": 5
+      }
+    ],
+    "origin_membership": "Reuse the exact frozen H5/H10 repositories and Origins bound by the task-space artifact.",
+    "aggregation": "Mean within Origin, then repository, then equally across repositories; report wide and frozen deep cohorts.",
+    "loss": "Mean absolute difference across the 36 configuration pass rates.",
+    "primary_baseline": "full eligible history",
+    "controls": [
+      "frozen ALG-012",
+      "unchanged ALG-007",
+      "recency",
+      "stationary semantic herding",
+      "the already-recorded 20000-draw equal-budget random distribution"
+    ]
+  },
+  "diagnostic": {
+    "diagnostic_id": "exact_hindsight_response_milp",
+    "algorithm": [
+      "For each Origin, group eligible historical Tasks by their exact 36-bit public outcome vector.",
+      "Create one bounded nonnegative integer count variable per observed vector and 36 nonnegative absolute-deviation variables.",
+      "Require the selected counts to sum to ten and not exceed historical multiplicities.",
+      "Minimize the equally weighted absolute difference between the selected response rates and the observed future response rates.",
+      "Recover the earliest projected Tasks within each selected response-vector group only for audit identity; Task identity does not affect the optimum."
+    ],
+    "solver": {
+      "package": "scipy",
+      "version": "1.16.3",
+      "entrypoint": "scipy.optimize.milp",
+      "backend": "HiGHS",
+      "presolve": true,
+      "mip_rel_gap": 0.0,
+      "time_limit_seconds": null,
+      "accepted_status": "success true and status zero for every Origin"
+    },
+    "verification": [
+      "Recompute every selected subset loss from Task identities.",
+      "Require recomputed and solver objectives to agree within 1e-8.",
+      "Require exact budget, history membership, and response-vector multiplicity.",
+      "Abort the capacity decision if any Origin lacks a solver-certified optimum."
+    ]
+  },
+  "decision_rule": {
+    "capacity_supported": [
+      "all 328 H5/H10 Origin solves are certified optimal",
+      "H5 macro-repository difference is at most -0.01",
+      "at least 10 of 13 H5 repositories are favorable",
+      "H5 deep difference is negative",
+      "H10 common-11 difference is negative",
+      "at least 8 of 11 H10 repositories are favorable",
+      "H10 deep difference is negative"
+    ],
+    "capacity_not_demonstrated": "Any uncertified Origin or nonnegative H5 wide difference prevents a capacity claim.",
+    "otherwise": "Report mixed or limited capacity without attributing the failure solely to budget or prediction.",
+    "downstream": "A capacity-supported result locates the current bottleneck at pre-Origin identification on this opened panel. It does not choose the next predictive mechanism."
+  },
+  "authority": {
+    "paid_api_calls": 0,
+    "embedding_api_calls": 0,
+    "coding_agent_calls": 0,
+    "sealed_swe_bench_holdout_agents_opened": 0,
+    "allowed_runtime": "local CPU and pinned open development artifacts only",
+    "raw_artifact_policy": "Keep per-Origin solutions ignored; commit one compact self-digested summary and report."
+  },
+  "hindsight_plan_digest": "47f1c375f6d16c72c8c0b7f5f1f2dd3f5c6dc3b4e9392d99a52cfede63de4b13"
+}

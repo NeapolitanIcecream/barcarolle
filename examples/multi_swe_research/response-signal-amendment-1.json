@@ -1,0 +1,20 @@
+{
+  "schema_version": "barcarolle_multi_swe_response_signal_amendment_v1",
+  "study_id": "multi-swe-response-contrast-signal-2026-07-28",
+  "amendment_id": "response-signal-amendment-1",
+  "frozen_at": "2026-07-28T13:04:17Z",
+  "response_signal_plan_digest": "6e3374c6a2d1ce866ad614198ae1911fdec2fc13a58d5cf32cd94ee66e1b249c",
+  "status": "pre_run_measurement_unit_correction",
+  "reason": "The frozen text compared absolute mean squared errors in a standardized response-contrast space and the original normalized embedding space. Those losses have different units and dimensions, so the direct comparison is not meaningful.",
+  "replacement": {
+    "replaced_requirement": "H5 RCP forecast loss is lower than latest-h RCP and raw-embedding OLS controls",
+    "new_requirements": [
+      "H5 RCP forecast loss is lower than latest-h RCP loss in the same response-contrast space",
+      "H5 RCP forecast-to-full-history loss ratio is lower than the raw-embedding OLS forecast-to-full-history loss ratio computed in the raw embedding space"
+    ],
+    "aggregation": "Compute each loss repository-first. Divide macro forecast loss by the matching macro full-history loss only after repository-level losses have been averaged equally.",
+    "zero_denominator": "A zero macro full-history loss makes this control unavailable and the Stage B gate fail."
+  },
+  "unchanged": "Source identities, candidate representation, target-history OLS forecast, H5/H10 cohorts, all other gates, nulls, thresholds, outcome boundary, and zero-paid resource boundary remain unchanged.",
+  "amendment_digest": "4ad6eab1f0ffe75405debf63e8e07a8ce43230d3249f21f0c65afa6b81ec0d76"
+}

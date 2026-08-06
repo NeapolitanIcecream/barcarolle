@@ -1,0 +1,36 @@
+{
+  "schema_version": "barcarolle_offline_selector_study_amendment_v1",
+  "amendment_id": "offline-selector-study-2026-07-27-amendment-1",
+  "base_study_plan_digest": "419829f3a2b4b832812e6000a364bf9fe1af3c9497950f5275125f60a8acb20a",
+  "approved_at": "2026-07-27T01:48:04Z",
+  "timing": "Frozen before reading per-Task outcomes or computing any Selector loss.",
+  "trigger": {
+    "finding": "All 75 certified Check records have check_material_available_at=2026-07-25T14:00:00Z, while the predeclared chronological Task arrivals span 2016-09-15 through 2023-02-05.",
+    "contract_effect": "A valid historical counterfactual RollingOrigin treats every pre-2026 Task/Check as label-censored. The 2026 Results cannot be backdated into those origins.",
+    "prohibited_workaround": "Do not rewrite Task, Check, Origin, Feature, Result, or Task Pool timestamps and do not persist projected rows as core rolling-origin evidence."
+  },
+  "amended_execution": {
+    "core_contract_replay": "Run and retain the maturity audit as a decisive falsification of the planned core evidence path.",
+    "historical_task_order_diagnostic": "Continue the frozen 15-history plus twelve five-Task-block analysis using only historical task_material_available_at for cohort order. Compute selection and outcome metrics in an experiment-local diagnostic namespace, not as RollingOriginRecord, BenchmarkSelectionRecord, MetricRecord, or ResultMatrix evidence.",
+    "unchanged_protocol": [
+      "source bindings",
+      "Task ordering and block sizes",
+      "selection budget",
+      "Selector parameters and seeds",
+      "primary contrast and practical threshold",
+      "repeat-noise, dependency, headroom, and power analyses",
+      "zero paid and zero network calls"
+    ]
+  },
+  "claim_boundary": {
+    "primary_terminal_state": "invalid_or_insufficient_evidence for a core counterfactual or prospective rolling-origin claim",
+    "diagnostic_terminal_states": [
+      "historical_order_signal_present",
+      "historical_order_signal_inconclusive",
+      "historical_order_signal_absent"
+    ],
+    "allowed_use": "Algorithm triage, failure analysis, infrastructure-gap identification, and prospective campaign sizing.",
+    "forbidden_use": "Claiming that Barcarolle has established lower future-task prediction error under valid rolling-origin deployment."
+  },
+  "amendment_digest": "8852015d8a72ea70236035bfab46e15d84d2af0556de0e769ebb86ac9eb366b2"
+}

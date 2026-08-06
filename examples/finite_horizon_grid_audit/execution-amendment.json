@@ -1,0 +1,48 @@
+{
+  "schema_version": "barcarolle_finite_horizon_grid_audit_execution_amendment_v1",
+  "study_id": "finite-horizon-grid-audit-2026-07-29",
+  "amended_at": "2026-07-29T16:50:15Z",
+  "plan_digest": "8388fc583f7acf68a27c1864b673de91d87e895e2384366461ba87c00f2c4b1d",
+  "superseded_execution_lock_digest": "2cc985ba3b423149d564f98ad2f109165f04254e2c6936cdb77866a0a51d1427",
+  "prior_evidence_access": {
+    "membership_digest": "dfdd056b3bd60e8d1eea7c7d0390e07d49c3fdae566d2586f0255dd14df0cb9b",
+    "membership_raw_sha256": "8a35e609c4637b76678875499c670db11e7fb60bd0785c6931b9eddd99eb530d",
+    "result_digest": "f3d83ab6723958f22071997e3c5a01e49cadf2cda0d7401aa120432ecac43393",
+    "result_raw_sha256": "1de86a26f93d3c101bfeb6a874cf806f93bf687c193fae29525bcb2174789313",
+    "terminal_state": "grid_dominant"
+  },
+  "observed_issue": {
+    "field": "B5_H5 favorable_repository_count",
+    "cause": "A mathematically zero repository contrast was represented as approximately -6.17e-20 and classified by a strict floating-point less-than-zero comparison.",
+    "affected_reports": [
+      "ALG-018C-P B5_H5 wide favorable repository count",
+      "ALG-018C B5_H5 wide favorable repository count",
+      "ALG-018C-P B5_H5 deep favorable repository count",
+      "ALG-018C B5_H5 deep favorable repository count"
+    ],
+    "unaffected": [
+      "memberships and actions",
+      "candidate, control, and full-history MAE",
+      "paired repository bootstrap intervals",
+      "leave-one-repository-out differences and directions",
+      "random calibration",
+      "q and inventory diagnostics",
+      "horizon-swap results",
+      "frozen grid_dominant terminal decision"
+    ]
+  },
+  "authorized_correction": {
+    "direction_zero_tolerance": 1e-15,
+    "favorable_definition": "repository difference < -direction_zero_tolerance",
+    "leave_one_repository_out_negative_definition": "LOO difference < -direction_zero_tolerance",
+    "scope": "Direction classification and directed regression tests only. Do not change any plan, action, membership, loss, aggregation, bootstrap, random, interpretation threshold, or claim."
+  },
+  "resource_boundary": {
+    "paid_api_calls": 0,
+    "new_agent_outcome_calls": 0,
+    "embedding_api_calls": 0,
+    "sealed_holdout_reads": 0,
+    "core_schema_or_service_changes": 0
+  },
+  "amendment_digest": "80dd4596ef3bbff45b859245960fb98bc352432f839e992d6c29703b29bf618c"
+}

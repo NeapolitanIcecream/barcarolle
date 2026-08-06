@@ -95,6 +95,7 @@ def _fold_ledger_events(
     calls: list[dict[str, object]] = []
     by_id: dict[str, dict[str, object]] = {}
     completed: set[str] = set()
+    reauthorized: set[str] = set()
     for event in events:
         event_type = event.get("event_type")
         call_id = event.get("call_id")
@@ -118,6 +119,49 @@ def _fold_ledger_events(
                 }
             )
             completed.add(call_id)
+        elif event_type == "reauthorization":
+            if call_id in reauthorized:
+                raise RuntimeError(
+                    "resource ledger has a duplicate reauthorization"
+                )
+            call = by_id.get(call_id)
+            if (
+                call is None
+                or call_id not in completed
+                or call.get("state") != "stopped"
+            ):
+                raise RuntimeError(
+                    "resource ledger reauthorization requires a stopped completion"
+                )
+            expected_fields = {
+                "event_type",
+                "call_id",
+                "authority_amendment_digest",
+                "reauthorized_at",
+            }
+            if set(event) != expected_fields:
+                raise RuntimeError(
+                    "resource ledger reauthorization fields are invalid"
+                )
+            authority_amendment_digest = event.get(
+                "authority_amendment_digest"
+            )
+            reauthorized_at = event.get("reauthorized_at")
+            if (
+                not isinstance(authority_amendment_digest, str)
+                or not authority_amendment_digest
+                or not isinstance(reauthorized_at, str)
+                or not reauthorized_at
+            ):
+                raise RuntimeError(
+                    "resource ledger reauthorization evidence is invalid"
+                )
+            call["state"] = "completed"
+            call["reauthorized_after_stop"] = {
+                "authority_amendment_digest": authority_amendment_digest,
+                "reauthorized_at": reauthorized_at,
+            }
+            reauthorized.add(call_id)
         else:
             raise RuntimeError("resource ledger event_type is invalid")
     return calls

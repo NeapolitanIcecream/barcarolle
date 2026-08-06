@@ -1,0 +1,87 @@
+{
+  "schema_version": "barcarolle_offline_selector_study_amendment_v3",
+  "base_study_plan_digest": "419829f3a2b4b832812e6000a364bf9fe1af3c9497950f5275125f60a8acb20a",
+  "previous_amendment_digest": "a02aa001ac67189379439bae7dca50929c8afe75846dae8e5bd703b67a4e46f9",
+  "frozen_at": "2026-07-27T08:00:00Z",
+  "authority": {
+    "new_paid_calls": 0,
+    "network_calls": 0,
+    "allowed_compute": "local CPU and already-persisted artifacts only",
+    "user_authorized_inputs": "Task time and other algorithm-visible Task attributes may be supplied by a user or adapter and must affect replay after being frozen with explicit provenance."
+  },
+  "correction": {
+    "finding": "The v1 SWE-bench static adapter assigns source observed_at to every Check, while the Records contract says certification time is not historical material availability and counterfactual replay reconstructs historical availability.",
+    "effect_on_previous_terminal_state": "The zero-mature-Origin result establishes an adapter/input-semantics limitation, not that the paid outcomes are intrinsically unusable for counterfactual replay.",
+    "preserved_boundary": "No projected scenario is strict-prospective evidence, and no source-attested historical Check time is claimed without a source binding."
+  },
+  "frozen_replay_scenarios": {
+    "observed_at_floor": {
+      "check_material_available_at": "retain the published 2026 Check timestamps",
+      "role": "negative control that must remain fully censored at historical Origins"
+    },
+    "label_at_task_arrival": {
+      "check_material_available_at": "set each Check availability equal to its bound Task task_material_available_at in a new immutable scenario view",
+      "role": "user-configured counterfactual scenario and primary public-pipeline replay"
+    }
+  },
+  "counterfactual_result_visibility": {
+    "rule": "For counterfactual replay, a persisted Result may enter a Selector input when its exact Task/Check ref is in the Origin's mature history and its Agent and cache identity match, irrespective of the physical 2026 Result observation time.",
+    "future_leakage_guard": "Future Task/Check refs remain outside the Origin history; every Selection is frozen before its future outcome matrix is opened.",
+    "strict_prospective_rule": "Strict prospective inputs continue to reject Results observed after the Origin cutoff.",
+    "identity_rule": "The exact Result IDs and digests in each visible view remain frozen in SelectorInput and FeatureSnapshot provenance."
+  },
+  "implementation_contract": {
+    "task_candidate_import": "Canonical user imports retain explicit task_material_available_at, check_material_available_at, dependency_cluster_id, and sampling_stratum without platform replacement.",
+    "static_adapter": "The SWE-bench static adapter accepts an explicit Check-availability basis and binds it into Generator behavior identity; its historical observed_at behavior remains an explicit option.",
+    "selection": "Counterfactual Result visibility is distinguished by existing eligibility_mode; no new workflow engine, plugin registry, Feature Store, or mutable Result is introduced.",
+    "records": "Published source Task Pools and managed Results remain byte-identical; experiments create new scenario evidence rather than editing them."
+  },
+  "required_evidence": [
+    "A public regression test proves strict prospective rejects a post-cutoff Result while counterfactual replay accepts the same exact history-bound Result.",
+    "A public adapter test proves the configured Check-availability basis changes candidate Check time and Generator behavior identity while retaining observation provenance.",
+    "The observed-at negative control remains censored.",
+    "The label-at-task-arrival scenario produces twelve nonempty public RollingOrigins and public deterministic Selections.",
+    "Public Selection membership and future_pass_rate_mae are compared against the frozen transparent diagnostic for every primary Selector and Origin.",
+    "Any disagreement is retained and diagnosed rather than tuned away."
+  ],
+  "insufficient_outcomes": [
+    "Changing only the experiment-local diagnostic without exercising public Selection APIs.",
+    "Overwriting the published Task Pool, Check records, Results, or prior study artifacts.",
+    "Treating user-configured or synthetic time as source-attested history.",
+    "Using post-origin Task refs or future outcomes during Selection.",
+    "Adding generic extension machinery without a concrete exercised contract."
+  ],
+  "allowed_terminal_outcomes": [
+    "public_counterfactual_replay_equivalent",
+    "public_counterfactual_replay_changes_algorithm_results",
+    "counterexample_requires_contract_revision",
+    "bounded_inconclusive_due_to_specific_local_artifact_blocker"
+  ],
+  "approach_registry": [
+    {
+      "approach": "eligibility_mode_visibility",
+      "thesis": "Counterfactual replay should gate persisted outcomes by mature history membership, while strict prospective continues to gate by physical Result time.",
+      "decisive_test": "One exact Result after the cutoff is accepted only in counterfactual mode and remains provenance-bound.",
+      "status": "frozen"
+    },
+    {
+      "approach": "projected_result_records",
+      "thesis": "Alternative Result evidence records could carry projected effective times without changing execution identity.",
+      "decisive_test": "Adopt only if eligibility_mode cannot preserve replay, provenance, and leakage constraints directly.",
+      "status": "reserve"
+    },
+    {
+      "approach": "scenario_task_pool",
+      "thesis": "A new immutable Task Pool scenario can vary algorithm-visible metadata while preserving execution identity and source lineage.",
+      "decisive_test": "The public replay validates the scenario bundle and reuses exact existing Result cache identities without Agent calls.",
+      "status": "frozen"
+    },
+    {
+      "approach": "full_recertification",
+      "thesis": "Rebuild and recertify the 75 Tasks under new metadata.",
+      "decisive_test": "Use only if execution-relevant identity changes or scenario lineage cannot be validated without rerunning Checks.",
+      "status": "reserve"
+    }
+  ],
+  "amendment_digest": "5777fb7b285d3d913edd302d7973bf4b55a6faab526e13a260844b0c321552a0"
+}

@@ -1,0 +1,231 @@
+{
+  "schema_version": "barcarolle_offline_selector_study_plan_v1",
+  "study_id": "offline-selector-study-2026-07-27",
+  "frozen_at": "2026-07-27T01:44:47Z",
+  "authority": {
+    "new_paid_calls": 0,
+    "network_calls": 0,
+    "allowed_compute": "local CPU and already-persisted artifacts only",
+    "stop_if_source_binding_fails": true
+  },
+  "research_contract": {
+    "target": "Determine whether pre-existing Barcarolle Task-selection rules produce a ten-Task benchmark whose two-Agent pass rates predict the next five chronological Tasks better than predeclared baselines.",
+    "operational_definition": "Closeness is lower future_pass_rate_mae: the mean across the two frozen Agents of the absolute difference between selected-history and future-cohort pass rate.",
+    "population": "The fixed 75-Task certified SymPy SWE-bench Verified source slice and its historical task_material_available_at ordering.",
+    "primary_claim_scope": "Retrospective counterfactual replay conditional on this source slice, the two frozen Agent identities, base replicate zero, duration strata, and the frozen protocol.",
+    "excluded_claims": [
+      "strict prospective performance",
+      "generalization to another repository, Generator, harness, model, or endpoint period",
+      "semantic similarity to a target developer population",
+      "a universal best Selector or tuned production default"
+    ],
+    "allowed_terminal_outcomes": [
+      "supported_retrospective_improvement",
+      "directionally_positive_but_inconclusive",
+      "not_supported",
+      "invalid_or_insufficient_evidence"
+    ],
+    "insufficient_evidence_conditions": [
+      "fewer than eight complete non-overlapping future blocks",
+      "a source digest or core record binding does not replay",
+      "any primary Selection uses a post-origin feature or outcome",
+      "future Result evidence differs between Selectors at the same Origin",
+      "the core metric and independent recomputation disagree"
+    ]
+  },
+  "source_bindings": {
+    "task_pool_id": "task_pool_ea9cba235c3276c23d9fd5a0c276a9f318b2b4604d3c6f1fa71c08c752f12d4e",
+    "task_pool_digest": "54652016fb508d250e61d151d0e56243d191f3a90e2d7177335291ac02372fe6",
+    "task_pool_manifest_sha256": "b28a8ee50e275ec31961761db2bbd0e06f647a8adb8b45392fb6208191a0d4c",
+    "agent_records_sha256": "f63ee47c831e8eaefdd2a9114fe20b46f9db24416badf77813e835629f0b6851",
+    "replicate_schedule_sha256": "a1e4cb02eef4cc304ba0adc9d8246b37146c9d85473dfdea764678c54d8c90a1",
+    "result_records_sha256": "bb23577aee61fd3df4359be4385980a7ddcb2dc7f8e7cf6596d1617ea2fc4155",
+    "agents": [
+      "gpt-5.6-terra-high",
+      "gpt-5.4-mini-high"
+    ],
+    "primary_replicate_index": 0
+  },
+  "rolling_origin": {
+    "eligibility_mode": "counterfactual_replay",
+    "ordering": [
+      "task_material_available_at",
+      "task_id"
+    ],
+    "initial_history_task_count": 15,
+    "future_block_task_count": 5,
+    "origin_count": 12,
+    "selection_budget_task_checks": 10,
+    "future_blocks_overlap": false,
+    "dependency_policy": "Allow realistic patch-path cluster recurrence in the primary replay; report overlap and run a first-task-per-cluster sensitivity.",
+    "fixed_selector_origins": [
+      1,
+      12
+    ],
+    "adaptive_outer_origins": [
+      5,
+      12
+    ]
+  },
+  "primary_selectors": {
+    "coverage": {
+      "family": "coverage",
+      "groups": "sampling_stratum"
+    },
+    "random_seed_5": {
+      "family": "random",
+      "seed": 5
+    },
+    "recency": {
+      "family": "recency"
+    },
+    "stratified_unweighted": {
+      "family": "stratified_forecast",
+      "alpha": 1.0,
+      "trailing_ref_count": 15,
+      "seed": 5,
+      "weight_cap": null
+    },
+    "stratified_weighted": {
+      "family": "stratified_forecast",
+      "alpha": 1.0,
+      "trailing_ref_count": 15,
+      "seed": 5,
+      "weight_cap": 3.0
+    },
+    "rank_mixture_equal": {
+      "family": "rule_mixture",
+      "expert_weights": {
+        "coverage": 0.3333333333333333,
+        "random": 0.3333333333333333,
+        "recency": 0.3333333333333333
+      },
+      "random_seed": 5
+    }
+  },
+  "adaptive_rules": {
+    "raw_mean_choice": {
+      "candidate_set": "coverage, random_seed_5, recency, stratified_unweighted, stratified_weighted",
+      "fallback": "coverage",
+      "minimum_prior_origins": 4
+    },
+    "ALG-001": {
+      "candidate_set": "coverage, random_seed_5, recency, stratified_unweighted, stratified_weighted",
+      "fallback": "coverage",
+      "prior_strength": 2.0,
+      "minimum_prior_origins": 4,
+      "improvement_margin": 0.0,
+      "uncertainty_multiplier": 1.0
+    },
+    "ALG-003": {
+      "grid": "ten coverage/random/recency thirds-simplex points",
+      "random_seed": 5,
+      "minimum_prior_origins": 4,
+      "fallback": "equal weights"
+    },
+    "ALG-004": {
+      "candidate_set": "coverage, random_seed_5, recency, stratified_unweighted, stratified_weighted",
+      "fallback": "coverage",
+      "half_life_origins": 2.0,
+      "safe_switch": "ALG-001 defaults"
+    }
+  },
+  "predeclared_contrasts": {
+    "primary": {
+      "selector_a": "stratified_weighted",
+      "selector_b": "coverage",
+      "difference": "selector_a_mae_minus_selector_b_mae",
+      "origins": 12,
+      "minimum_practical_improvement": 0.02,
+      "supported_rule": "Mean difference is at most -0.02 and the paired 95% origin-block bootstrap upper bound is below zero.",
+      "inconclusive_rule": "Mean difference is negative but either practical or interval criterion is not met.",
+      "not_supported_rule": "Mean difference is zero or positive."
+    },
+    "adaptive_secondary": {
+      "selector_a": "ALG-001",
+      "selector_b": "coverage",
+      "difference": "selector_a_mae_minus_selector_b_mae",
+      "outer_origins": 8,
+      "role": "supporting, not a substitute for the primary contrast"
+    }
+  },
+  "sensitivity_analyses": {
+    "random_seed_bank": [
+      5,
+      17,
+      29,
+      43,
+      71
+    ],
+    "stratified_seed_bank": [
+      5,
+      17,
+      29,
+      43,
+      71
+    ],
+    "stratified_parameter_grid": {
+      "alpha": [
+        0.5,
+        1.0,
+        2.0
+      ],
+      "trailing_ref_count": [
+        10,
+        15,
+        25
+      ],
+      "weight_cap": [
+        null,
+        2.0,
+        3.0,
+        4.0
+      ],
+      "interpretation": "exploratory stability only; no best grid point becomes a confirmatory or production default"
+    },
+    "rank_mixture_seed_bank": [
+      5,
+      17,
+      29
+    ],
+    "repeat_noise_views": {
+      "resamples": 5000,
+      "seed": 20260727,
+      "method": "For each Agent by replicated Task, draw one available scoreable persisted replicate; keep base replicate zero for non-replicated Tasks."
+    },
+    "dependency": "Repeat the transparent fixed-rule analysis on the earliest Task in each dependency cluster, using 14 initial Tasks and eight non-overlapping five-Task future blocks.",
+    "agent_specific": [
+      "gpt-5.6-terra-high",
+      "gpt-5.4-mini-high"
+    ]
+  },
+  "diagnostics": {
+    "hindsight_registered_selector_oracle": true,
+    "hindsight_outcome_subset_oracle": "Enumerate feasible counts of the four joint Agent outcome categories for a ten-Task history subset.",
+    "composition": "Report forecast/future total-variation error, cap activation, maximum weight, and effective sample size.",
+    "power_and_budget": {
+      "target_two_sided_alpha": 0.05,
+      "target_power": 0.8,
+      "target_mae_half_width": 0.02,
+      "use_existing_exact_per_call_costs": true
+    }
+  },
+  "approach_registry": [
+    {
+      "approach": "core_contract_replay",
+      "decisive_test": "Selections replay through public Selection APIs and metrics through the ordinary ResultMatrix/evaluate_selection path.",
+      "status": "planned"
+    },
+    {
+      "approach": "transparent_independent_recalculation",
+      "decisive_test": "A direct task/outcome implementation exactly matches every core primary MAE and selection membership.",
+      "status": "planned"
+    },
+    {
+      "approach": "adversarial_noise_headroom_and_power",
+      "decisive_test": "Quantify repeat sensitivity, dependency sensitivity, hindsight headroom, and the prospective evidence scale needed to resolve the observed effect.",
+      "status": "planned"
+    }
+  ],
+  "study_plan_digest": "419829f3a2b4b832812e6000a364bf9fe1af3c9497950f5275125f60a8acb20a"
+}

@@ -1,0 +1,261 @@
+{
+  "schema_version": "barcarolle_prequential_response_assembly_plan_v1",
+  "study_id": "prequential-response-assembly-2026-07-29",
+  "frozen_at": "2026-07-29T08:20:00Z",
+  "epistemic_status": "prospective_with_respect_to_new_memberships_and_scores_on_opened_development_outcomes",
+  "research_contract": {
+    "target": "Within the fixed Multi-SWE development panel, find whether a cutoff-safe response forecast followed by budget-ten response assembly can lower repository-first future pass-rate MAE.",
+    "working_definition_of_current_task_pool": "The outcome-open Multi-SWE source projection bound by examples/multi_swe_research/contract.json: 1,632 Tasks and 36 complete public Agent configurations. It is research evidence, not a certified runnable Task Pool.",
+    "primary_outcome": "For every target Agent configuration and rolling Origin, absolute selected-history pass rate minus future-cohort pass rate; average configurations and Origins within repository, then repositories equally.",
+    "primary_baseline": "All eligible target-repository history.",
+    "primary_frame": "Standard non-overlapping H5 frame: 221 Origins in 13 repositories.",
+    "sensitivity_frame": "Standard non-overlapping H10 frame: 107 Origins in 11 repositories. H10 is not an independent replication.",
+    "numeric_progress": "On its own information-contract lane and the same standard frame, H5 candidate-minus-full is below ALG-007's -0.0022539773355357935 and H10 candidate-minus-full is at most zero.",
+    "development_nomination": "H5 difference at most -0.010, at least 10/13 repositories favorable, every leave-one-repository-out aggregate favorable, deep aggregate favorable, repository bootstrap upper bound below zero, and random midrank at least 0.90; H10 difference below zero, at least 8/11 repositories favorable, and deep aggregate favorable.",
+    "required_evidence": [
+      "direct standard-frame H5 and H10 pass-rate MAE for every frozen candidate",
+      "full-history, ordinary-recency, exact-full-target response assembly, and unchanged ALG-007 controls",
+      "repository-first wide and deep aggregates, favorable repositories, leave-one-repository-out directions, Agent/model/harness directions, and repository bootstrap",
+      "equal-budget random calibration",
+      "continuous forecast error and forecast-to-selection materialization error as non-gating diagnostics",
+      "two byte-identical executions, membership digests, result digest, and independent adversarial audit"
+    ],
+    "insufficient_outcomes": [
+      "forecast MAE, Brier loss, AUC, embedding loss, response-vector loss, or materialization loss presented as final pass-rate MAE",
+      "a pooled Task, Origin, or Agent average that lets long repositories dominate",
+      "a favorable random percentile without beating full history",
+      "a cached-target result used to support an unseen-target claim",
+      "target-Agent outcomes entering an unseen-target membership pipeline",
+      "future Task attributes or outcomes entering any membership pipeline",
+      "hindsight-oracle memberships or a post-score algorithm or parameter rescue",
+      "a development-panel result claimed as independent confirmation or a Runner default"
+    ],
+    "allowed_terminal_states": [
+      "numeric_progress",
+      "development_nomination",
+      "bounded_inconclusive",
+      "mechanism_refuted",
+      "source_identity_or_executor_blocker"
+    ]
+  },
+  "fixed_facts": {
+    "task_count": 1632,
+    "repository_count": 39,
+    "configuration_count": 36,
+    "positive_outcome_cells": 2913,
+    "h5_origin_count": 221,
+    "h5_repository_count": 13,
+    "h10_origin_count": 107,
+    "h10_repository_count": 11,
+    "minimum_initial_history_tasks": 20,
+    "selection_budget_tasks": 10,
+    "ordering": "projected GitHub pull-request createdAt, then instance_id",
+    "time_status": "counterfactual source-time projection, not native Task arrival time",
+    "standard_h5_full_history_mae": 0.0673476429292014,
+    "standard_h10_full_history_mae": 0.05280696865793433,
+    "standard_h5_alg_007_difference": -0.0022539773355357935,
+    "standard_h10_alg_007_difference": 0.0021567802149054546,
+    "standard_h5_random_mean_difference": 0.0018151655544445986,
+    "standard_h10_random_mean_difference": 0.005061928689413022,
+    "exact_hindsight_h5_difference": -0.03263868522024368,
+    "exact_hindsight_h10_difference": -0.025616170421681548
+  },
+  "hypotheses": [
+    "Full history is biased after a response regime change; cutoff-safe adaptive forecasts may reduce that temporal bias.",
+    "A continuous future response forecast and a budget-ten materializer are separate error sources and should be measured separately.",
+    "Other Agent response vectors may transfer enough information to assemble a useful benchmark for an unseen target Agent.",
+    "Cached target-Agent Results define a stronger but narrower information contract and may support a different adaptive Selector."
+  ],
+  "information_contracts": {
+    "cached_target": {
+      "claim": "Selection for an Agent with imported or cached Results on all eligible history Tasks.",
+      "allowed_inputs": [
+        "target-repository historical Task identities and projected times",
+        "the target Agent's outcomes on eligible history Tasks",
+        "earlier complete rolling-Origin outcomes whose future block ended before the current cutoff"
+      ],
+      "forbidden_inputs": [
+        "current or later future-cohort outcomes",
+        "future Task content, patches, or retrospective attributes",
+        "sealed Agent outcomes"
+      ]
+    },
+    "unseen_target": {
+      "claim": "Selection for a new Agent before lazy execution.",
+      "allowed_inputs": [
+        "target-repository historical Task identities and projected times",
+        "the other 35 public reference Agents' outcomes on eligible history Tasks",
+        "earlier complete rolling-Origin outcomes whose future block ended before the current cutoff"
+      ],
+      "forbidden_inputs": [
+        "the target Agent's outcome column anywhere in forecast or materialization",
+        "current or later future-cohort outcomes",
+        "future Task content, patches, or retrospective attributes",
+        "sealed Agent outcomes"
+      ]
+    }
+  },
+  "portfolio": [
+    {
+      "algorithm_id": "ALG-015C",
+      "short_name": "cached_prequential_expert_assembly",
+      "information_contract": "cached_target",
+      "mechanism": "For each target Agent and repository, combine four cutoff-safe scalar pass-rate experts with AdaNormalHedge: full history, latest H, latest 2H, and clipped one-block linear drift. Update expert regrets only after an earlier non-overlapping future block is complete. Select ten history Tasks whose cached target-Agent success count is closest to the continuous forecast; ties prefer newer projected time then instance_id.",
+      "cold_start": "Uniform expert mixture with zero regret and zero absolute regret.",
+      "parameters": {
+        "experts": [
+          "full_history",
+          "latest_H",
+          "latest_2H",
+          "clipped_latest_H_plus_latest_H_minus_previous_H"
+        ],
+        "prior": "uniform",
+        "learning_rate": "none",
+        "tie_rule": "minimum absolute scalar error, then newest projected time and instance_id"
+      }
+    },
+    {
+      "algorithm_id": "ALG-015U",
+      "short_name": "unseen_prequential_expert_response_assembly",
+      "information_contract": "unseen_target",
+      "mechanism": "For each target Agent held out completely, run the same four AdaNormalHedge experts independently on each of the other 35 response coordinates. Assemble exactly ten target-repository history Tasks to minimize L1 distance between their 35-dimensional response mean and the forecast.",
+      "cold_start": "Uniform expert mixture with zero regret and zero absolute regret.",
+      "parameters": {
+        "experts": [
+          "full_history",
+          "latest_H",
+          "latest_2H",
+          "clipped_latest_H_plus_latest_H_minus_previous_H"
+        ],
+        "prior": "uniform",
+        "learning_rate": "none",
+        "materializer": "response-pattern-compressed exact L1 mixed-integer program"
+      }
+    },
+    {
+      "algorithm_id": "ALG-016U",
+      "short_name": "unseen_shared_change_point_response_assembly",
+      "information_contract": "unseen_target",
+      "mechanism": "For each target Agent held out completely, use a shared-run-length Bayesian online change-point posterior over the other 35 Beta-Bernoulli response streams. The base prior has mass ten and the Jeffreys-smoothed local full-history mean. Forecast H steps while allowing reversion to the local anchor, then use the same exact L1 materializer.",
+      "parameters": {
+        "hazard": "1 / (4H)",
+        "base_prior_mass": 10,
+        "base_prior_mean": "(successes + 0.5) / (history_tasks + 1)",
+        "posterior": "full run-length mixture, not MAP",
+        "materializer": "response-pattern-compressed exact L1 mixed-integer program"
+      },
+      "ablations": [
+        "posterior forecast with full-history target materialization",
+        "MAP run-length forecast",
+        "deterministic greedy plus one-swap materializer"
+      ]
+    },
+    {
+      "algorithm_id": "ALG-017U",
+      "short_name": "repository_held_out_shared_LAD_drift",
+      "information_contract": "unseen_target",
+      "mechanism": "Fit one bounded no-intercept LAD drift model from non-target repositories whose training future blocks ended before cutoff. Predict response-coordinate change from recent-5 minus full, recent-10 minus full, and recent-5 minus previous-5, then use the same exact L1 materializer.",
+      "parameters": {
+        "coefficient_l1_bound": 2,
+        "weighting": "repositories equal, Origins within repository equal, reference Agents within Origin equal",
+        "fallback": "zero coefficients when no eligible training Origins",
+        "target_repository": "excluded from fit",
+        "target_agent": "excluded from fit and materialization"
+      },
+      "execution_priority": "Only after ALG-015C, ALG-015U, and ALG-016U unless wall-clock projection leaves at least ninety minutes."
+    }
+  ],
+  "shared_materializer": {
+    "objective": "Minimize mean absolute response-coordinate error between an unweighted budget-ten subset and the continuous forecast.",
+    "compression": "Group history Tasks by identical visible binary response pattern and optimize bounded integer pattern counts.",
+    "solver": {
+      "library": "scipy.optimize.milp",
+      "scipy_version": "1.16.3",
+      "numpy_version": "2.5.1",
+      "presolve": true,
+      "mip_rel_gap": 0.0
+    },
+    "determinism": "Sort response patterns lexicographically, use deterministic HiGHS execution, and choose newest projected Tasks within a selected pattern. Two complete executions must produce identical bytes.",
+    "fallback": "No silent fallback. If exact execution projects beyond the sprint boundary, freeze and bind a deterministic greedy-plus-one-swap amendment before reading candidate scores."
+  },
+  "controls": [
+    "full history",
+    "ordinary latest-ten recency",
+    "exact response assembly targeting full-history response rates",
+    "unchanged ALG-007 centroid_recent_15",
+    "equal-budget random landscape",
+    "continuous forecast without materialization"
+  ],
+  "rolling_origin": {
+    "minimum_initial_history_tasks": 20,
+    "selection_budget_tasks": 10,
+    "horizons": [
+      5,
+      10
+    ],
+    "future_blocks": "complete, non-overlapping, and source-time ordered",
+    "cross_repository_eligibility": "A training Origin's complete future block must end no later than the target Origin cutoff.",
+    "aggregation": "Target configurations and Origins within repository, then repositories equally."
+  },
+  "random_protocol": {
+    "draws": 20000,
+    "generator": "NumPy PCG64 random-key uniform subsets",
+    "numpy_version": "2.5.1",
+    "h5_seed": 20260833,
+    "h10_seed": 20260838,
+    "coupling": "One equal-budget subset per Origin and draw, shared across all 36 target configurations."
+  },
+  "failure_model": [
+    "opened-panel winner's curse from comparing four frozen candidates",
+    "target-Agent leakage in an unseen-target membership",
+    "future or cross-calendar leakage",
+    "repository pooling that overweights long histories",
+    "forecast improvement lost during budget-ten quantization",
+    "response-vector fit that does not transfer to the held-out Agent",
+    "shared change-point overconfidence caused by correlated Agent responses",
+    "sparse positives and few completed Origins causing unstable adaptation",
+    "H5-only gain that reverses at H10",
+    "projected PR time standing in for native Task and Result availability"
+  ],
+  "source_policy": {
+    "literature": "Primary papers may motivate mechanisms and failure models; no source is used to search for an exact Barcarolle solution.",
+    "opened_outcomes": "May be read only after this finite portfolio and metric contract are frozen.",
+    "hindsight": "Existing hindsight aggregate may establish capacity; its memberships are forbidden as algorithm input.",
+    "sealed_holdout": "Must remain unopened."
+  },
+  "source_bindings": {
+    "multi_swe_contract_digest": "1e104613012a95fc534dba23d4adac1b7d6a6c10e70537c732f16da3e6f83307",
+    "selector_plan_digest": "6619ab258039d3f12cf865421faeba7c23248b302f72b06bb6f311b8f65bde05",
+    "panel_digest": "f2658d12451bdab4108a71cfae5cd5044a5bd312633239c09425378b4b682deb",
+    "resolved_outcome_digest": "b9a6d0d8e44d747d23789ec23eb4205178f2ae2d4f737c2446a5fcdf5abc116c",
+    "surrogate_gate_plan_digest": "7df62c16defb50132249d5e26ce1f892b8f8403fe684dc156aeb6269b467c181"
+  },
+  "literature": [
+    {
+      "mechanism": "parameter-free online expert aggregation",
+      "source": "Luo and Schapire, Achieving All with No Parameters: AdaNormalHedge, COLT 2015",
+      "url": "https://proceedings.mlr.press/v40/Luo15.html"
+    },
+    {
+      "mechanism": "Bayesian online change-point detection",
+      "source": "Adams and MacKay, Bayesian Online Changepoint Detection, 2007",
+      "url": "https://arxiv.org/abs/0710.3742"
+    },
+    {
+      "mechanism": "balanced finite-population sampling",
+      "source": "Deville and Tille, Efficient Balanced Sampling: The Cube Method, Biometrika 2004",
+      "url": "https://doc.rero.ch/record/296198/files/914893.pdf"
+    }
+  ],
+  "resource_boundary": {
+    "wall_clock_hours": 6,
+    "paid_api_calls": 0,
+    "new_agent_outcome_calls": 0,
+    "embedding_api_calls": 0,
+    "sealed_holdout_reads": 0,
+    "allowed_compute": "local CPU using already-open public outcomes and ignored bound artifacts",
+    "core_schema_or_service_changes": 0
+  },
+  "claim_boundary": "Outcome-open, time-projected Multi-SWE development evidence only. Cached-target and unseen-target lanes are separate. No result can establish prospective validity, certify a Task Pool, authorize sealed-holdout access, or create a production Selector default.",
+  "plan_digest": "f1517fd04a97fc584b8df0f3c3d6be59bd3569a52bbad91694835de15558c84b"
+}

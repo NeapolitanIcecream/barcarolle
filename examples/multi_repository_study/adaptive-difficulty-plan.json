@@ -1,0 +1,111 @@
+{
+  "schema_version": "barcarolle_adaptive_difficulty_selector_plan_v1",
+  "study_id": "adaptive-difficulty-selector-2026-07-28",
+  "frozen_at": "2026-07-28T04:22:46Z",
+  "epistemic_status": "opened_development_outcome_fixed_mechanism",
+  "source": {
+    "agent_panel_extension_plan_digest": "52f1f3c1dc6159f2c6f17c7b530fe4aab962728c43049d80284690608aad98f6",
+    "agent_invariant_plan_digest": "fccca3c600c56b4a504eb70eacce23dfa9180e1fa427a1d20b1b98046d80f76a",
+    "agent_invariant_execution_amendment_digest": "bdd86f978da51e9a3e385f99303506352550dc76093ace6d01f70423a5c9daa8",
+    "agent_invariant_results_digest": "9c3b7553af82042596f719154f0a8e7ee07c0d2a9ea59d12b0729db09d0698df",
+    "development_agent_count": 11,
+    "sealed_holdout_agent_count": 6
+  },
+  "research_contract": {
+    "question": "Can an Origin-local prequential model choice retain difficulty Markov gains when regime dynamics are predictive and fall back to a stationary difficulty model otherwise?",
+    "motivation": "The fixed difficulty Markov beats 97.78% of random Selections and passes its temporal null, but helps only three of seven repositories and harms all three deep repositories.",
+    "candidate": "adaptive_prequential_difficulty_match",
+    "non_solutions": [
+      "choosing a history-length or forecast-distance threshold from observed future losses",
+      "training a learned gate from the sparse cross-repository Origin labels",
+      "searching priors, state bins, horizons, budgets, or scoring windows",
+      "using future states or held-out Agent outcomes in model choice",
+      "opening the sealed Agent holdout before every gate passes"
+    ],
+    "allowed_terminal_states": [
+      "open_sealed_agent_holdout_for_adaptive_candidate",
+      "retire_adaptive_candidate_and_close_current_pool_algorithm_search",
+      "identity_or_schema_blocker"
+    ]
+  },
+  "shared_contract": {
+    "task_difficulty_states": "Reuse the frozen five equal-width reference-Agent solve-rate states.",
+    "rolling_origin": "Reuse 15 minimum history Tasks, five future Tasks, ten selected Tasks, and repository-local Selection.",
+    "calendar_availability": "Reuse the strict cross-repository created_at cutoff at the final target-history Task.",
+    "markov": "Reuse the five-state repository-equal transition prior, symmetric total mass one per row, local prior strength five, and five-step forecast.",
+    "history_match_control": "Reuse the exact previously frozen three-Agent history_match memberships.",
+    "full_history": "Primary no-selection baseline."
+  },
+  "fixed_algorithms": [
+    {
+      "selector_id": "stationary_difficulty_match",
+      "role": "fallback ablation",
+      "forecast": "posterior categorical state distribution over the complete local history",
+      "symmetric_dirichlet_total_mass": 1.0,
+      "symmetric_dirichlet_cell_mass": 0.2
+    },
+    {
+      "selector_id": "adaptive_prequential_difficulty_match",
+      "role": "holdout-eligible candidate",
+      "model_choice": "Score Markov and stationary one-step predictive probabilities over every local history transition. Choose the lower mean negative log likelihood; exact ties choose stationary.",
+      "markov_prequential_rule": "Start local transition counts at zero with the frozen cutoff-aware global transition matrix as prior strength five; predict each next state before updating its transition count.",
+      "stationary_prequential_rule": "Start with symmetric categorical cell mass 0.2; predict each next state from all preceding local states before updating the state count.",
+      "forecast_after_choice": "Use the frozen five-step Markov forecast when Markov wins; otherwise use the stationary posterior distribution for every future step.",
+      "selection": "Reuse exact ten-Task state-histogram matching and within-state recency."
+    }
+  ],
+  "diagnostics": {
+    "aggregation": {
+      "origins": "equal within repository",
+      "repositories": "equal",
+      "bootstrap_resamples": 10000,
+      "bootstrap_seed": 20260728
+    },
+    "random_calibration": {
+      "draws": 20000,
+      "seed": 20260805
+    },
+    "temporal_null": {
+      "permutations": 500,
+      "seed": 20260804,
+      "rule": "shuffle complete eleven-Agent response vectors within repository and rematerialize model choice, forecasts, and Selections"
+    },
+    "agent_transfer": {
+      "rule": "For each development Agent, construct states, choose a model, forecast, and select with the other ten Agents; evaluate only the omitted Agent.",
+      "required_favorable_agent_count": 8
+    },
+    "required_outputs": [
+      "primary wide and deep repository summaries",
+      "model-choice counts by repository and Origin depth",
+      "random percentile",
+      "temporal-null rate",
+      "leave-one-Agent macro and direction count",
+      "selection, source, plan, and result digests"
+    ]
+  },
+  "holdout_open_gate": {
+    "requirements": {
+      "wide_macro_repository_difference_at_most": -0.01,
+      "minimum_wide_favorable_repositories": 5,
+      "every_wide_leave_one_repository_out_negative": true,
+      "deep_macro_repository_difference_negative": true,
+      "minimum_random_percentile": 0.75,
+      "wide_difference_below_history_match": true,
+      "wide_difference_below_fixed_markov": true,
+      "wide_difference_below_stationary_ablation": true,
+      "temporal_null_as_good_or_better_rate_below": 0.1,
+      "leave_one_agent_wide_macro_difference_negative": true,
+      "minimum_favorable_leave_one_agent_count": 8
+    },
+    "priority": "All requirements must hold; strict below boundaries fail on equality.",
+    "production_promotion_allowed": false
+  },
+  "current_pool_stop_rule": "If the adaptive candidate fails, do not invent another gate on these opened outcomes. Preserve the six-Agent holdout and require either a mechanism derived independently of these results or more calendar-eligible repository-local Origins.",
+  "authority": {
+    "paid_api_calls": 0,
+    "coding_agent_calls": 0,
+    "embedding_calls": 0,
+    "holdout_result_blob_reads": 0
+  },
+  "adaptive_difficulty_plan_digest": "3e9a1264b77a6d06e42232b313ec513f03d10f3c12c6a6e1cd3a5411326c9801"
+}

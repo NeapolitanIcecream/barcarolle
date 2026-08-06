@@ -100,7 +100,7 @@ from examples.pylint_swe_bench_verified.dependency_evidence import (  # noqa: E4
 HERE = Path(__file__).resolve().parent
 HARNESS = (HERE.parent / "harnesses/codex-cli/run-agent.zsh").resolve()
 EXTRACT_SOURCE = (HERE / "extract_source.py").resolve()
-CHECK = (HERE / "check.py").resolve()
+CHECK = (HERE.parent / "swe_bench_static/check.py").resolve()
 TASK_SOURCES = (HERE / "task_sources.json").resolve()
 DEFAULT_OUTPUT_DIR = Path(
     "outputs/user-journeys/2026-07-17-swe-bench-verified-pylint-pilot-default-retries"
@@ -372,9 +372,7 @@ def build_context(paths: PilotPaths, ledger_path: Path | None = None) -> PilotCo
     try:
         bundle = open_task_pool_bundle(paths.output_dir / TASK_POOL_MANIFEST_REF)
     except ValueError as exc:
-        raise RuntimeError(
-            f"prepared Task Pool bundle is invalid: {exc}"
-        ) from exc
+        raise RuntimeError(f"prepared Task Pool bundle is invalid: {exc}") from exc
     task_pool = bundle.task_pool
     tasks = bundle.tasks
     checks_tuple = bundle.checks
@@ -1328,13 +1326,16 @@ def _dependency_evidence_from_adapter(
     adapter_evidence: Mapping[str, Any],
     certification_evidence: Sequence[Mapping[str, Any]],
 ) -> PylintDependencyEvidence:
-    if set(adapter_evidence) != {
-        "schema_version",
-        "dependency_evidence",
-        "certification_status_by_candidate_id",
-    } or adapter_evidence.get(
-        "schema_version"
-    ) != PYLINT_ADAPTER_EVIDENCE_SCHEMA_VERSION:
+    if (
+        set(adapter_evidence)
+        != {
+            "schema_version",
+            "dependency_evidence",
+            "certification_status_by_candidate_id",
+        }
+        or adapter_evidence.get("schema_version")
+        != PYLINT_ADAPTER_EVIDENCE_SCHEMA_VERSION
+    ):
         raise RuntimeError("Pylint adapter evidence schema is invalid")
     dependency_value = adapter_evidence.get("dependency_evidence")
     if not isinstance(dependency_value, Mapping):
@@ -1370,9 +1371,7 @@ def _generation_input_snapshot_digest(paths: PilotPaths) -> str:
         {
             "repository_id": REPOSITORY_ID,
             "dataset_sha256": _file_sha256(paths.dataset),
-            "supplemental_dataset_sha256": _file_sha256(
-                paths.supplemental_dataset
-            ),
+            "supplemental_dataset_sha256": _file_sha256(paths.supplemental_dataset),
             "task_sources_sha256": _file_sha256(TASK_SOURCES),
         }
     )
@@ -1384,9 +1383,7 @@ def _pylint_generator_behavior() -> Mapping[str, Any]:
             "pilot_sha256": _file_sha256(Path(__file__).resolve()),
             "extract_source_sha256": _file_sha256(EXTRACT_SOURCE),
             "check_sha256": _file_sha256(CHECK),
-            "dependency_evidence_sha256": _file_sha256(
-                HERE / "dependency_evidence.py"
-            ),
+            "dependency_evidence_sha256": _file_sha256(HERE / "dependency_evidence.py"),
         }
     )
     return {
@@ -1419,19 +1416,16 @@ def _bind_dependency_generation_provenance(
     validation = validate_dependency_evidence(dependency_evidence)
     if not validation.ok:
         raise ValueError(
-            "Pylint dependency evidence is invalid: "
-            + "; ".join(validation.errors)
+            "Pylint dependency evidence is invalid: " + "; ".join(validation.errors)
         )
-    if (
-        len(certification_status_by_candidate_id)
-        != len(dependency_evidence.patch_footprints)
-        or any(
-            not isinstance(candidate_id, str)
-            or not candidate_id
-            or set(status) != {"base_check", "reference_patch_check"}
-            or not all(isinstance(item, Mapping) for item in status.values())
-            for candidate_id, status in certification_status_by_candidate_id.items()
-        )
+    if len(certification_status_by_candidate_id) != len(
+        dependency_evidence.patch_footprints
+    ) or any(
+        not isinstance(candidate_id, str)
+        or not candidate_id
+        or set(status) != {"base_check", "reference_patch_check"}
+        or not all(isinstance(item, Mapping) for item in status.values())
+        for candidate_id, status in certification_status_by_candidate_id.items()
     ):
         raise ValueError("Pylint certification status sidecar is invalid")
     adapter_evidence = canonical_data(
@@ -1481,9 +1475,7 @@ def _bind_dependency_generation_provenance(
         "task_records_digest": task_pool.task_records_digest,
         "check_records_digest": task_pool.check_records_digest,
         "source_event_records_digest": task_pool.source_event_records_digest,
-        "certification_evidence_digest": (
-            task_pool.certification_evidence_digest
-        ),
+        "certification_evidence_digest": (task_pool.certification_evidence_digest),
     }
     manifest = record_with_digest(
         GenerationProvenanceManifest(

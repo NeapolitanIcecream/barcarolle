@@ -1,0 +1,59 @@
+{
+  "schema_version": "barcarolle_swe_bench_full_transfer_evidence_boundary_amendment_v1",
+  "recorded_at": "2026-07-30T05:04:39Z",
+  "study_id": "swe-bench-full-suitability-and-alg-016u-transfer-2026-07-30",
+  "parent_plan_digest": "1c37db6ebd2b65a4acdb81c4e75aec1fcab54a7db31e84558c7435d5dadc4b32",
+  "suitability_result_digest": "2f66df63186a6113255ced65e155cce8350aeb9b01eb4c187619e456fccbddf8",
+  "summary_digest": "b01b8bedc82f5311663a658cbf09ae226fd4895cf2c2171513ae1b68543d60d1",
+  "reason": "The frozen contract conflated an unread exact Verified Result blob with an entirely unseen Agent identity. The Full panel exposed per-Task outcomes for three Agent identities on a denominator containing every Verified instance ID.",
+  "overlap": {
+    "verified_task_count": 500,
+    "verified_tasks_present_in_full": 500,
+    "same_agent_identity_count": 3,
+    "identities": [
+      {
+        "agent_id": "rag-gpt35-20231010",
+        "submission": "20231010_rag_gpt35",
+        "full_result_blob_sha": "4dc566c28dc7399f7a6f61d0d5acdc64a8b6dd2a",
+        "verified_result_blob_sha": "4dacc602de835f6a72132c70cb10d495c16b6743"
+      },
+      {
+        "agent_id": "rag-swellama7b-20231010",
+        "submission": "20231010_rag_swellama7b",
+        "full_result_blob_sha": "e753087e232a9cecaef3a7b5106688b477eb3a42",
+        "verified_result_blob_sha": "08107accb8e1f89a598c350a30211188026c1338"
+      },
+      {
+        "agent_id": "sweagent-gpt4o-20240728",
+        "submission": "20240728_sweagent_gpt4o",
+        "full_result_blob_sha": "a8764721de59312d0c17510e13aa66c4a58cc32a",
+        "verified_result_blob_sha": "4f76fa60571f92930c3d8cf452137ab85b5d36b3"
+      }
+    ]
+  },
+  "corrected_claim_boundary": {
+    "exact_verified_result_blob_reads": 0,
+    "verified_result_blobs_remaining_byte_sealed": 6,
+    "agent_identities_remaining_clean_for_unseen_agent_confirmation": [
+      "sweagent-gpt4-20240402",
+      "sweagent-devstral-20250725",
+      "openhands-kimi-k2-20250716"
+    ],
+    "contaminated_agent_identities_must_not_support": "A pure unseen-Agent transfer claim on SWE-bench Verified.",
+    "contaminated_agent_identities_may_support": "A separately frozen source/Check-specific transfer claim that does not assert unseen-Agent evidence.",
+    "future_action": "Before opening any Verified holdout, freeze either a claim restricted to the three still-unseen Agent identities or a replacement panel. Do not choose a subset after seeing its outcomes."
+  },
+  "decision_effect": {
+    "current_suitability_decision_changed": false,
+    "gate_rerun_authorized": false,
+    "algorithm_execution_authorized": false,
+    "reason": "The overlap does not affect the candidate-free Full controls or the already-failed chronology gate. Post-result Agent deletion and rerun would violate the frozen plan."
+  },
+  "resource_use": {
+    "paid_api_calls": 0,
+    "new_agent_outcome_calls": 0,
+    "exact_verified_result_blob_reads": 0,
+    "generator_development": false
+  },
+  "amendment_digest": "fd7d78def30fd8ca1a6bfe85c641e29dc9bd642b2396ce7dc97fdcb92dd20812"
+}

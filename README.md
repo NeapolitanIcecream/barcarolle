@@ -158,8 +158,12 @@ The tests in `tests/` are executable examples of the current contracts.
 - `tests/`: executable examples and regression tests.
 - `examples/minimal/`: offline demo with deterministic fixture Agents.
 - `examples/harnesses/codex-cli/`: optional Codex CLI harness example.
-- `docs/research-improvement-backlog.md`: living research findings, priorities,
-  validation criteria, and deferred algorithm ideas.
+- `examples/multi_repository_study/`: offline, repository-first selector
+  research that leaves product execution single-repository.
+- `docs/research-improvement-backlog.md`: current research decisions, evidence
+  limits, active plan, and the link to the frozen prior ledger.
+- `docs/experiments/2026-07-28-multi-repository-public-study.md`: completed
+  zero-paid-call selector screen and the entry gate for another paid study.
 - `docs/design/evidence-storage-and-recovery.md`: artifact roots, Task Pool
   publication, exact Result reuse, pricing views, and interruption recovery.
 - `docs/design/`: detailed behavior and data-contract reference.

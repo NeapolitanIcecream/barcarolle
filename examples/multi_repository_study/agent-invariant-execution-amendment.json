@@ -1,0 +1,29 @@
+{
+  "schema_version": "barcarolle_agent_invariant_execution_amendment_v1",
+  "study_id": "agent-invariant-difficulty-selector-2026-07-28",
+  "recorded_at": "2026-07-28T04:06:49Z",
+  "epistemic_status": "post_open_pre_result_execution_amendment",
+  "agent_invariant_plan_digest": "fccca3c600c56b4a504eb70eacce23dfa9180e1fa427a1d20b1b98046d80f76a",
+  "blocker": {
+    "observed": "Before any candidate metric was produced, exact history_match subset enumeration expanded combinatorially when the response vector grew from three to eleven Agents.",
+    "scope": "The blocker affects a prior compression control, not difficulty_persistence_match or difficulty_markov_match.",
+    "evidence": "The first full command was interrupted after more than six minutes while materializing the first history_match memberships; no result artifact was written."
+  },
+  "resolution": {
+    "primary_history_match": "Rematerialize the previously frozen history_match control from the three Agents listed in existing_opened_development_panel, then evaluate those memberships on all eleven development Agents.",
+    "leave_one_agent_history_match": "When the evaluated Agent belongs to the original three-Agent panel, rematerialize history_match from the other two original Agents; otherwise retain all three original Agents.",
+    "temporal_null": "Materialize only difficulty_markov_match because it is the sole null-tested candidate. Do not recompute history_match or the persistence ablation inside a Markov null permutation.",
+    "candidate_changes": "none",
+    "random_draw_changes": "none",
+    "seed_changes": "none",
+    "gate_changes": "none"
+  },
+  "claim_boundary": "history_match remains the exact prior three-Agent compression control rather than a newly optimized eleven-Agent comparator. Full history remains the primary no-selection baseline.",
+  "authority": {
+    "paid_api_calls": 0,
+    "coding_agent_calls": 0,
+    "holdout_result_blob_reads": 0,
+    "candidate_result_metrics_observed_before_amendment": 0
+  },
+  "agent_invariant_execution_amendment_digest": "bdd86f978da51e9a3e385f99303506352550dc76093ace6d01f70423a5c9daa8"
+}

@@ -1,0 +1,157 @@
+{
+  "schema_version": "barcarolle_consensus_rate_selector_plan_v1",
+  "study_id": "consensus-rate-selector-development-2026-07-31",
+  "frozen_at": "2026-07-31T04:55:49Z",
+  "epistemic_status": "outcome_open_candidate_frozen_after_bounded_multi_route_search_and_audit_clarification",
+  "research_contract": {
+    "target": "Verify one pre-Origin budget-ten Selector whose direct target-Agent future pass-rate MAE is lower than Full eligible repository-local history at both H5 and H10 on the fixed-Harness modern development panel.",
+    "parent_plan": "examples/modern_agent_panel/optimistic-plan.json",
+    "parent_plan_digest": "6e060093791920e79389896125d2a093d88c3a9840bad2dfa435394f9d6f1fcc",
+    "terminal_success": "The unchanged frozen candidate is strictly better than Full at both H5 and H10, passes target-column and time audits, reproduces byte-identically, and reports repository, Agent, Origin, and random directions. Random is a calibration diagnostic, not an additional success gate.",
+    "claim_boundary": "Passing establishes an outcome-open modern development candidate only. It does not establish prospective validity, production readiness, or independent unseen-population confirmation."
+  },
+  "search_provenance": {
+    "opened_primary_outcomes_used_for_design": true,
+    "candidate_was_identified_after_scores_were_read": true,
+    "local_meta_expert_family_size": 72,
+    "local_distinct_membership_trajectories": 68,
+    "local_dual_horizon_winner_count": 11,
+    "selected_expert_local_rank": {
+      "5": 1,
+      "10": 2
+    },
+    "expert_family": "nine historical pooled-rate forecasts by four disagreement weights by two deterministic within-count tie modes",
+    "selected_expert": "full pooled-rate forecast, lexicographic minimum disagreement, recent-first within equal response-count groups",
+    "selected_because": "It was the strongest unchanged fixed expert at H5 and also improved H10; it is simpler and had lower direct MAE than the prequential meta policy at both horizons.",
+    "global_search_disclosure": {
+      "routes_actually_run": [
+        "forecast-materialization-transfer decomposition",
+        "histogram and nearest-analog response distribution matching",
+        "RBF MMD and future-open capacity checks",
+        "hashed and MiniLM Task-semantic matching",
+        "Rasch/IRT and linear/MAE/max/meta variants",
+        "strict prequential expert aggregation",
+        "fixed-expert audit"
+      ],
+      "candidate_count_interpretation": "The 72 experts are one local META family, not the global multiplicity. Other route grids overlap and produce different objects, so no false single independent-trial count is asserted.",
+      "selection_bias": "All primary outcomes were open during this bounded multi-route search. Formal reruns establish reproducibility, not independent confirmation."
+    },
+    "secondary_panel_scores_seen_before_freeze": false,
+    "sealed_agent_outcomes_seen_before_freeze": false
+  },
+  "candidate": {
+    "selector_id": "consensus_rate_match",
+    "runtime_unit": "one target Agent, one repository, one Task Pool, and one Selection",
+    "reference_panel": "Exclude the target identity before every aggregation. Within one Selection, use a complete rectangular binary result matrix with the same m >= 2 admitted reference Agents for every eligible historical Task. Development leave-one-target-out uses m=12. If a new target is absent from the reference panel, the same rule is executable, but leave-one-out establishes information exclusion only; it does not establish validity under reference-panel cardinality, Harness, or Agent-population shift.",
+    "history_order": "created_at then instance_id",
+    "forecast": "The pooled binary pass rate over every eligible historical Task and every reference Agent.",
+    "task_statistic": "For each historical Task, the integer count c of passing reference Agents out of m reference Agents.",
+    "primary_objective": "For n eligible historical Tasks, let C_H=sum_H(c). Among ten-distinct-Task subsets S, minimize the exact integer |n*sum_S(c)-10*C_H|. This is equivalent to matching sum_S(c)/(10*m) to C_H/(n*m) without floating-point rounding.",
+    "secondary_objective": "Lexicographically minimize sum(c*(m-c)) among primary-objective ties. This prefers reference-panel consensus without trading away the pooled-rate match.",
+    "tertiary_ties": [
+      "for each fixed response-count composition, materialize the most recent Tasks in every equal-c group",
+      "if different compositions still tie on the primary and secondary objectives, minimize global_recent_key=(-i_max,-i_second_max,...,-i_min) over canonical history positions i",
+      "canonical history position follows created_at then instance_id"
+    ],
+    "complete_sort_key": "(|n*sum_S(c)-10*C_H|, sum_S(c*(m-c)), global_recent_key)",
+    "solver": "Exact dynamic programming over response-count compositions followed by deterministic membership materialization.",
+    "horizon_parameter": "The same Selector is used unchanged at H5 and H10; horizon only determines rolling Origin boundaries and does not alter the objective.",
+    "repository_pooling": false
+  },
+  "information_contract": {
+    "reference_matrix_admission": [
+      "binary outcomes only",
+      "complete rectangular Task-by-reference-Agent matrix",
+      "at least two reference Agents",
+      "fixed reference identities and denominator m within a Selection",
+      "reject missing outcomes rather than impute them"
+    ],
+    "membership_may_read": [
+      "current repository-local eligible Task identities and created_at order",
+      "historical binary outcomes of admitted reference Agents"
+    ],
+    "membership_must_not_read": [
+      "the target Agent outcome column at any time",
+      "current or later future-block outcomes",
+      "future Task text or metadata",
+      "another repository at runtime",
+      "secondary-panel outcomes during primary materialization",
+      "the six project-sealed Agent outcome blobs"
+    ],
+    "required_perturbation": "Flipping the target Agent complete outcome column must leave every membership unchanged."
+  },
+  "frame": {
+    "primary_lane": "verified-mini-swe-agent-v2",
+    "minimum_initial_history_tasks": 20,
+    "selection_budget_tasks": 10,
+    "horizons": [
+      5,
+      10
+    ],
+    "aggregation": "Average target Agents and Origins inside each repository, then weight repositories equally.",
+    "baseline": "Full eligible repository-local history",
+    "primary_metric": "Direct absolute error between selected target-Agent pass rate and next-block target-Agent pass rate."
+  },
+  "required_reporting": {
+    "directions": [
+      "repository",
+      "target Agent",
+      "Origin",
+      "uniform random-ten calibration"
+    ],
+    "sensitivity": [
+      "leave one repository out",
+      "Origin-weighted alternative aggregation",
+      "repositories with more than one Origin"
+    ],
+    "ablations": [
+      "pooled-rate match without the consensus secondary objective",
+      "consensus-first objective without pooled-rate preservation"
+    ],
+    "diagnostics": [
+      "selected-to-full pooled-rate error",
+      "selected disagreement versus full-history disagreement",
+      "reference-to-target transfer error"
+    ],
+    "estimand_definitions": {
+      "primary_repository_equal_mae": "For each repository, average target-Agent-by-Origin absolute errors; then average repository means equally.",
+      "repository_direction": "Compare candidate and Full within each repository after averaging all target-Agent-by-Origin cells in that repository.",
+      "agent_direction": "For each target Agent, average its Origin losses within each repository and then average repositories equally before comparing candidate and Full.",
+      "origin_direction": "For each repository-Origin, average losses across target Agents before comparing candidate and Full.",
+      "leave_one_repository_out": "Remove one repository row and recompute the equal-repository macro over the remainder.",
+      "origin_weighted": "Average repository-Origin rows equally after each row has averaged target Agents; repositories therefore receive weight proportional to Origin count.",
+      "direction_ties": "Use exact computed equality; no tolerance is applied."
+    },
+    "random_definition": "For each draw and each repository-Origin, sample one uniform ten-Task subset without replacement and share that membership across target Agents. Aggregate target Agents and Origins within repository, then repositories equally. Use NumPy Generator(PCG64(seed)); report the distribution against Full and the frozen candidate.",
+    "ablation_definitions": {
+      "rate_only": "Minimize (|n*sum_S(c)-10*C_H|, global_recent_key), omitting disagreement entirely.",
+      "consensus_first": "Choose ten Tasks by ascending (c*(m-c), -history_position), omitting pooled-rate preservation."
+    },
+    "diagnostic_normalization": "Per-Task disagreement is c*(m-c)/m^2 before averaging, so panels with different m use the same [0,0.25] scale."
+  },
+  "reproduction": {
+    "complete_runs": 2,
+    "byte_identical_results_required": true,
+    "python_version": "3.14.0",
+    "numpy": "2.5.1",
+    "pyarrow": "25.0.0",
+    "random_draws": 20000,
+    "random_seeds": {
+      "5": 20260736,
+      "10": 20260741
+    }
+  },
+  "confirmation": {
+    "secondary_opened_diagnostic": "After implementation and primary evidence are bound, replay unchanged on the already-open three-Agent SWE-bench Full lane. This is a transfer diagnostic, not independent confirmation.",
+    "six_project_sealed_agents": "Remain unread in this study. Their legacy population no longer matches the modern fixed-Harness target population and they are not required by the parent development-success contract.",
+    "paid_calls": "Not authorized or needed."
+  },
+  "authority": {
+    "paid_api_calls": 0,
+    "new_agent_runs": 0,
+    "sealed_verified_full_system_agents_opened": 0,
+    "generator_development": false,
+    "core_schema_changes": 0
+  },
+  "plan_digest": "4298d371d83bcd954932a34692ef2692384ce35e0e42989ff02093409a04fb6e"
+}

@@ -1,0 +1,270 @@
+{
+  "schema_version": "barcarolle_model_agent_study_results_v1",
+  "status": "complete",
+  "campaign_id": "model-main-sympy-2026-07-25",
+  "claim_boundary": "Retrospective, source-conditional evidence for the frozen SymPy SWE-bench Verified Task Pool, Codex CLI harness, Agent configurations, and endpoint period. This is neither a universal model rank nor prospective Selector evidence.",
+  "frozen_identity": {
+    "study_plan_digest": "445398963a6e703953f4a4f5c758034b8d4f377b3a0a575197b4d3282191834f",
+    "amendment_digests": [
+      "4ad5965c73c995de346a4644a7f2167f7b4ed67a90298c2b1e8af204126aea3e",
+      "affeef281bd2b907dec67090cfd6cbff4c8a19b8b401a16691e62505147b4f49",
+      "560808c453035d98f6ad28175c2729c638c2f0c24dcc5007a1cdc63be24d3fab",
+      "33bf7681c6822e0a4aa12c714fc67de1b3df8bc263492b46313d20eec70026d4",
+      "199848ad7d5bea8afab7f53ae082055800736fd4b748777a8032f17d47c1f307"
+    ],
+    "endpoint_digest": "359ee82d1d341a8d28f3ea8f10f7cc5a5a4e95eac63a449a26eda9d0f8163ac6",
+    "schedule_digest": "be9507012c54b6bc7185fa1117c22ab79175d5b342e5c5e874cf594e1278cbae",
+    "task_pool_id": "task_pool_ea9cba235c3276c23d9fd5a0c276a9f318b2b4604d3c6f1fa71c08c752f12d4e",
+    "task_pool_digest": "54652016fb508d250e61d151d0e56243d191f3a90e2d7177335291ac02372fe6"
+  },
+  "population": {
+    "repository_id": "sympy/sympy",
+    "source_family": "swe_bench_verified",
+    "task_count": 75,
+    "dependency_cluster_count": 54,
+    "main_cell_count": 238,
+    "base_cell_count": 150,
+    "repeat_cell_count": 88,
+    "replicated_task_count": 22,
+    "scoreable_result_count": 237,
+    "agent_invalid_result_count": 1
+  },
+  "calibration": {
+    "agents": [
+      {
+        "agent_key": "gpt-5.6-terra-high",
+        "base_pass_count": 5,
+        "base_task_count": 10,
+        "exact_gateway_cost_usd": 2.491162
+      },
+      {
+        "agent_key": "gpt-5.6-sol-high",
+        "base_pass_count": 5,
+        "base_task_count": 10,
+        "exact_gateway_cost_usd": 6.01313
+      },
+      {
+        "agent_key": "gpt-5.4-mini-high",
+        "base_pass_count": 4,
+        "base_task_count": 10,
+        "exact_gateway_cost_usd": 6.277766
+      }
+    ],
+    "repeat_pair_count": 6,
+    "repeat_flip_count": 0,
+    "protocol_incompatible_with_fixed_codex_responses_harness": [
+      "deepseek-v4-pro",
+      "gemini-3.1-pro-preview-thinking",
+      "claude-sonnet-4-6-thinking"
+    ],
+    "protocol_failure_interpretation": "Harness/proxy compatibility evidence only; no coding-capability rank is inferred."
+  },
+  "base_comparison": {
+    "left_agent_key": "gpt-5.6-terra-high",
+    "right_agent_key": "gpt-5.4-mini-high",
+    "left_pass_count": 53,
+    "right_pass_count": 46,
+    "paired_task_count": 75,
+    "both_pass_count": 43,
+    "left_only_pass_count": 10,
+    "right_only_pass_count": 3,
+    "both_fail_count": 19,
+    "left_minus_right_pass_rate": 0.09333333333333334,
+    "mcnemar_exact_two_sided_p": 0.09228515625,
+    "dependency_cluster_bootstrap_95_interval": {
+      "method": "percentile_cluster_bootstrap",
+      "iterations": 20000,
+      "seed": 20260826,
+      "lower": 0.0,
+      "upper": 0.18181818181818182
+    },
+    "theoretical_oracle_union_pass_count": 56,
+    "interpretation": "The evidence leans toward Terra under the frozen source, but does not support a conventional p<0.05 superiority claim. The oracle union is retrospective and is not a deployable Selector."
+  },
+  "repeatability": {
+    "scheduled_agent_task_cluster_count": 44,
+    "censored_agent_task_cluster_count": 1,
+    "censored_execution_count": 1,
+    "pairwise_comparison_count": 130,
+    "pairwise_disagreement_count": 18,
+    "observed_flip_rate": 0.13846153846153847,
+    "agent_task_cluster_bootstrap_95_interval": {
+      "method": "percentile_cluster_bootstrap",
+      "iterations": 20000,
+      "seed": 20260936,
+      "lower": 0.06153846153846154,
+      "upper": 0.21875
+    },
+    "by_agent": [
+      {
+        "agent_key": "gpt-5.6-terra-high",
+        "pairwise_comparison_count": 64,
+        "pairwise_disagreement_count": 8,
+        "observed_flip_rate": 0.125,
+        "agent_task_clusters_with_any_flip": 4,
+        "censored_execution_count": 1
+      },
+      {
+        "agent_key": "gpt-5.4-mini-high",
+        "pairwise_comparison_count": 66,
+        "pairwise_disagreement_count": 10,
+        "observed_flip_rate": 0.15151515151515152,
+        "agent_task_clusters_with_any_flip": 5,
+        "censored_execution_count": 0
+      }
+    ],
+    "predeclared_decision": "retain_repeats_in_experiment_layer",
+    "reason": "The 95% interval crosses neither the <=5% upper-bound gate for single-run stability nor the >=10% lower-bound gate for mandatory replicate-aware comparisons."
+  },
+  "operations": [
+    {
+      "agent_key": "gpt-5.6-terra-high",
+      "call_count": 119,
+      "scoreable_result_count": 118,
+      "end_to_end_success_count": 87,
+      "end_to_end_success_rate": 0.7310924369747899,
+      "exact_gateway_cost_usd": 25.036084,
+      "exact_cost_per_end_to_end_success_usd": 0.2877710804597701,
+      "base_exact_gateway_cost_usd": 15.296536,
+      "base_exact_cost_per_pass_usd": 0.2886138867924528,
+      "per_call_exact_cost_usd": {
+        "median": 0.15619,
+        "p90_nearest_rank": 0.334442,
+        "maximum": 2.297372
+      },
+      "per_call_conservative_estimated_cost_maximum_usd": 6.2371345,
+      "workspace_seconds": {
+        "median": 99.30116416700184,
+        "p90_nearest_rank": 187.67154066695366,
+        "total": 13560.079257746576
+      },
+      "tokens": {
+        "input": 47674642,
+        "output": 626349,
+        "cached_input_fraction": 0.8792252283719298
+      }
+    },
+    {
+      "agent_key": "gpt-5.4-mini-high",
+      "call_count": 119,
+      "scoreable_result_count": 119,
+      "end_to_end_success_count": 73,
+      "end_to_end_success_rate": 0.6134453781512605,
+      "exact_gateway_cost_usd": 71.41420600000001,
+      "exact_cost_per_end_to_end_success_usd": 0.978276794520548,
+      "base_exact_gateway_cost_usd": 45.480916,
+      "base_exact_cost_per_pass_usd": 0.9887155652173913,
+      "per_call_exact_cost_usd": {
+        "median": 0.461486,
+        "p90_nearest_rank": 1.002772,
+        "maximum": 4.544812
+      },
+      "per_call_conservative_estimated_cost_maximum_usd": 6.9552700000000005,
+      "workspace_seconds": {
+        "median": 122.91706962499302,
+        "p90_nearest_rank": 240.10425724997185,
+        "total": 16888.69703104638
+      },
+      "tokens": {
+        "input": 120488906,
+        "output": 1658003,
+        "cached_input_fraction": 0.9389499810048902
+      }
+    }
+  ],
+  "budget": {
+    "authorized_cap_usd": 300.0,
+    "benchmark_model_call_count": 291,
+    "scoreable_call_count": 287,
+    "agent_invalid_call_count": 4,
+    "main_exact_attributed_cost_usd": 96.45029,
+    "main_conservative_ledger_cost_usd": 183.33699299999995,
+    "whole_study_exact_attributed_cost_usd": 114.406752,
+    "whole_study_global_balance_movement_usd": 117.795124,
+    "whole_study_unattributed_global_movement_usd": 3.388372,
+    "whole_study_conservative_estimated_cost_usd": 216.113623398635,
+    "remaining_against_global_balance_movement_usd": 182.204876,
+    "remaining_against_conservative_estimates_usd": 83.886376601365,
+    "stop_reason": "All frozen cells completed. No outcome-driven expansion was authorized; spending to exhaustion was explicitly insufficient evidence."
+  },
+  "decision": {
+    "default_agent_for_this_source_and_harness": "gpt-5.6-terra-high",
+    "challenger_agent_for_future_prospective_selector_research": "gpt-5.4-mini-high",
+    "run_both_by_default": false,
+    "run_both_reason": "The retrospective union adds three passes over Terra while requiring both complete base executions; no prospective routing policy identifies those tasks.",
+    "retired_for_this_source": [
+      "gpt-5.6-sol-high"
+    ],
+    "core_result_or_controller_schema_change": false,
+    "mandatory_replicate_aware_policy": false,
+    "additional_paid_calls_authorized": 0
+  },
+  "audit": {
+    "task_pool_validation": {
+      "status": "passed",
+      "task_count": 75,
+      "check_count": 75,
+      "certification_evidence_count": 75,
+      "source_event_count": 75
+    },
+    "main_sequence_coverage": {
+      "minimum": 0,
+      "maximum": 237,
+      "unique_count": 238,
+      "missing_count": 0
+    },
+    "main_identity": {
+      "unique_call_id_count": 238,
+      "unique_result_id_count": 238,
+      "agent_manifest_digest_count_per_agent": 1,
+      "runtime_config_digest_count": 3,
+      "retry_count": 0,
+      "replacement_cell_count": 0,
+      "recovered_after_interruption_count": 0
+    },
+    "main_campaign_events": {
+      "reservation_count": 238,
+      "completion_count": 238,
+      "reauthorization_count": 2
+    },
+    "whole_study_accounting_disposition": {
+      "result_usage_matched_receipt_count": 287,
+      "availability_failure_time_model_receipt_count": 1,
+      "zero_usage_zero_log_protocol_failure_count": 3
+    },
+    "main_artifacts": {
+      "manifest_count": 238,
+      "artifact_ref_count": 870,
+      "final_diff_count": 238,
+      "agent_stdout_count": 238,
+      "agent_stderr_count": 238,
+      "solver_workspace_summary_count": 78,
+      "verifier_workspace_summary_count": 78,
+      "missing_ref_count": 0,
+      "digest_mismatch_count": 0,
+      "path_escape_count": 0,
+      "public_diff_stdout_stderr_scan_count": 714,
+      "hidden_check_or_reference_patch_path_hit_count": 0
+    },
+    "missingness": "One declared Terra distributor availability failure occurred at frozen sequence 42, a repeat-2 cell. It is censored from hidden-outcome estimates and counted as unsuccessful in end-to-end sensitivity. It was not retried, replaced, relabeled, or omitted.",
+    "dependence": "Primary uncertainty resamples 54 dependency clusters; repeatability uncertainty resamples 44 Agent-by-Task clusters.",
+    "multiplicity": "One predeclared paired main comparison is interpreted. Calibration and protocol canaries are selection and compatibility evidence, not additional confirmatory superiority tests.",
+    "statistical_recalculation": "Base outcomes, McNemar p-value, both bootstrap intervals, repeat disagreements, costs, token totals, and latency quantiles were independently recalculated from schedule, Result, Task Pool, resource-ledger, and artifact records.",
+    "oracle_isolation": "The solver/fresh-verifier contract remained fixed. Manifest refs and digests validated, and retained public diff/stdout/stderr artifacts contained no hidden-check or reference-patch path markers."
+  },
+  "source_artifact_sha256": {
+    "study_plan_json": "6b6731d3667e17fc77736e6231dc85d7f4a6883a8897f376ff30187cc112c008",
+    "study_amendment_1_json": "71a94849898a6266f1e5542caaa890e9cd503c40b682e60fcf67fae76509e064",
+    "study_amendment_2_json": "7f60dda46837cf70869a2ea6fce406423e0f1c337eaeddb07fa7992c4d26b3e9",
+    "study_amendment_3_json": "4a080a677b9b05aa4b483ddec1819027e2f4cd4d7a30a5220d2748fef56ed253",
+    "study_amendment_4_json": "a57c74f132dbb947926a869d4e96f75845843ba8bd38033850a9ab55f9c91df9",
+    "study_amendment_5_json": "a512160f303277feec26c6e007b9e7627e8a413818534f61e507193b84d4f1df",
+    "calibration_summary_json": "9c1e9c818d13b3bff2bd5c5fe2cd06ccd01f219e8674d807547e242e45908ccd",
+    "main_summary_json": "cb678ad00b8f37dfe94bd28644b280b7f293801cd3edf5d0fbcf80233671a4ac",
+    "resource_ledger_json": "b1ac24628f43d74a56ca753448cc0deba4536f40e6eaac76d08512a1a07c395f",
+    "main_campaign_ledger_json": "7ed00ab55921bd695aab5d6b26b0feba27b39a43c372f24649319c3360605e61",
+    "main_campaign_events_jsonl": "bed9b9aaac0306bb23dd68e21c0ba0c8d63089432dd3eb29213eaa0458ba2bdd",
+    "main_schedule_jsonl": "a1e4cb02eef4cc304ba0adc9d8246b37146c9d85473dfdea764678c54d8c90a1",
+    "task_pool_manifest_jsonl": "b28a8ee50e275ec31961761db2bbd0e06f647a8aadb8b45392fb6208191a0d4c"
+  }
+}

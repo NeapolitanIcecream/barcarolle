@@ -2878,9 +2878,12 @@ def _resolved_pre_origin_results(
             errors.append(
                 f"selector input {selector_input.selector_input_id} includes Result outside origin history"
             )
-        if _timestamp_is_after(
-            result.result_available_at,
-            selector_input.origin_as_of_cutoff or "",
+        if (
+            selector_input.eligibility_mode == "strict_prospective"
+            and _timestamp_is_after(
+                result.result_available_at,
+                selector_input.origin_as_of_cutoff or "",
+            )
         ):
             errors.append(
                 f"selector input {selector_input.selector_input_id} includes post-origin Result {result_id}"

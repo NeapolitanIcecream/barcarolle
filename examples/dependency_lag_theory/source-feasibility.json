@@ -1,0 +1,98 @@
+{
+  "schema_version": "barcarolle_dependency_lag_source_feasibility_v1",
+  "study_id": "registry-dated-dependency-lag-source-feasibility-2026-07-29",
+  "purpose": "outcome_free_design_feasibility",
+  "evidence_class": "registry_retrospective_projected_counterfactual_exploration",
+  "source": {
+    "source_id": "swe_rebench_v2",
+    "dataset_revision": "475dd5e8703bb5fb22dd3c60b5d038b019eba1e0",
+    "parquet_sha256": "0e0bf9355f892ad74ae98d4e1c404f39fd6654a8e351ee3e6ab162e4a64cd3ad",
+    "task_source_identity_digest": "aac42fd29824cc56626b76e0040ca6e50847395d45f96303207e5c2b6b46cb2d",
+    "parent_plan_digest": "0fe42fc13b0112c281669cddca45d6f95467bb307f76c25a3ba058b2c6b51c69",
+    "parent_result_digest": "d0666c4e70f4195eb4c81fa1d143a947cbcf8e3fe718136193f82459d0e3ff94"
+  },
+  "origin_frame": {
+    "repository_count": 9,
+    "task_count": 1420,
+    "origin_count": 119,
+    "origin_schedule_sha256": "604b83ce57481dccca377a5f107043b910a9b9075ac312e4e4a4e1a0a5278640",
+    "admission_observation": "Every frozen Origin had a root package.json and a committed package-lock.json, npm-shrinkwrap.json, pnpm-lock.yaml, or yarn.lock. Exact direct-resolution parsing remains a frozen-study admission check.",
+    "repositories": [
+      {
+        "repository_id": "FHIR/sushi",
+        "task_count": 189,
+        "origin_count": 16
+      },
+      {
+        "repository_id": "JoshuaKGoldberg/create-typescript-app",
+        "task_count": 127,
+        "origin_count": 10
+      },
+      {
+        "repository_id": "Sage/carbon",
+        "task_count": 87,
+        "origin_count": 6
+      },
+      {
+        "repository_id": "obsidian-tasks-group/obsidian-tasks",
+        "task_count": 78,
+        "origin_count": 5
+      },
+      {
+        "repository_id": "platers/obsidian-linter",
+        "task_count": 143,
+        "origin_count": 12
+      },
+      {
+        "repository_id": "statamic/cms",
+        "task_count": 189,
+        "origin_count": 16
+      },
+      {
+        "repository_id": "sveltejs/kit",
+        "task_count": 117,
+        "origin_count": 9
+      },
+      {
+        "repository_id": "swc-project/swc",
+        "task_count": 410,
+        "origin_count": 39
+      },
+      {
+        "repository_id": "typescript-eslint/tslint-to-eslint-config",
+        "task_count": 80,
+        "origin_count": 6
+      }
+    ]
+  },
+  "scoring_label_feasibility": {
+    "label": "reference fix patch touches root package.json, package-lock.json, npm-shrinkwrap.json, pnpm-lock.yaml, or yarn.lock",
+    "selection_use": "prohibited; scoring only",
+    "root_node_dependency_touch_task_count": 103,
+    "h5_positive_origin_count": 27,
+    "h10_positive_origin_count": 40,
+    "h5_positive_repository_count": 8,
+    "h10_positive_repository_count": 8,
+    "label_projection_sha256": "82df5a28491394c0b120aa5ad7521da05ce716db6978cd39feca41b19c28f753"
+  },
+  "bounded_registry_check": {
+    "observation_date_utc": "2026-07-29",
+    "registry": "https://registry.npmjs.org/",
+    "frame": "five repositories with package-lock.json or npm-shrinkwrap.json at their first and last frozen Origins",
+    "sampling": "four common exact direct dependencies per repository, ordered by SHA-256(repository_id NUL package_name)",
+    "sampled_package_count": 20,
+    "successful_packument_request_count": 20,
+    "lag_category_change_count": 9,
+    "repositories_with_lag_category_change": 4,
+    "repository_count": 5,
+    "classification_projection_sha256": "20ae8bf1be7bc6e8daa338b1c9ab87bc7ff2c13b22607472a9f544b15ee2897a",
+    "raw_response_retention": "none",
+    "claim_limit": "Shows bounded current-source availability and temporal variation only. It does not prove the bytes or metadata were visible at the historical Origin."
+  },
+  "resource_use": {
+    "agent_outcomes_opened": 0,
+    "sealed_holdout_opened": 0,
+    "paid_api_calls": 0,
+    "llm_calls": 0
+  }
+}

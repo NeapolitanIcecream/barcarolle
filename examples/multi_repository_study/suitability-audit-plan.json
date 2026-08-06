@@ -1,0 +1,167 @@
+{
+  "schema_version": "barcarolle_verified_suitability_audit_plan_v1",
+  "study_id": "verified-opened-eleven-agent-suitability-audit-2026-07-30",
+  "frozen_at": "2026-07-30T03:45:42Z",
+  "epistemic_status": "opened_public_outcome_candidate_free_counterfactual",
+  "research_contract": {
+    "question": "Does the already-opened SWE-bench Verified eleven-Agent development panel contain budget-ten selection headroom and candidate-independent evidence that repository-local history predicts future pass rate better than an unseen-target constant estimator?",
+    "reason_for_source": "This is the only ready normalized source that changes both Task source and Agent panel after the Multi-SWE pilot without a paid call or a sealed-outcome open. It is a bounded source-transfer check, not an atlas.",
+    "runtime_boundary": "Runtime remains one repository, one Task Pool, and one Selection. The seven repositories are independent offline evidence units and are never combined into a runtime Task Pool.",
+    "primary_metric": "future pass-rate mean absolute error over the fixed eleven-Agent panel",
+    "primary_estimand": "Agent mean inside Origin, Origin mean inside repository, then equal-weight repository mean",
+    "primary_comparison": "full eligible repository-local history minus always-zero MAE",
+    "claim_boundary": "The public outcomes and projected created_at ordering support an exploratory source-time counterfactual only. They cannot establish native Result availability, production workload relevance, a useful deployment margin, or a Selector.",
+    "non_solutions": [
+      "opening any of the six project-sealed holdout Agents",
+      "running the three-Agent or SymPy panels after this row merely to search for a favorable source",
+      "tuning or nominating a Selector from this candidate-free audit",
+      "choosing a different horizon, Origin construction, aggregation, or null after reading the result",
+      "averaging this source with Multi-SWE",
+      "treating a cached-target climatology as admissible for an unseen-target Selector",
+      "making a paid call or developing a Generator"
+    ],
+    "allowed_terminal_states": [
+      "unseen_estimator_full_dominated",
+      "capacity_without_detected_history_persistence",
+      "history_persistence_detected_on_counterfactual_panel",
+      "resolution_or_contract_limited",
+      "input_identity_or_normalization_blocker"
+    ]
+  },
+  "source": {
+    "dataset_path": "outputs/user-journeys/2026-07-17-swe-bench-verified-pylint-pilot/source/swe-bench-verified-test-91aa3ed.parquet",
+    "dataset_repository": "SWE-bench/SWE-bench_Verified",
+    "dataset_revision": "91aa3ed51b709be6457e12d00300a6a596d4c6a3",
+    "dataset_sha256": "43ed5a3d1d98da36472c1ade65ddd2085d7b4ff694fcaf6a023a07c5c1f32f21",
+    "task_count": 500,
+    "task_time": "created_at",
+    "check_maturity": "projected_to_task_arrival",
+    "evidence_mode": "counterfactual_replay",
+    "result_directory": "outputs/research/2026-07-28-public-multi-repository/official-results",
+    "normalization": "resolved is pass; every other Task in the exact 500-Task denominator is fail"
+  },
+  "bound_manifests": {
+    "public_panel_plan": {
+      "path": "examples/multi_repository_study/public-panel-plan.json",
+      "file_sha256": "b52d83822347d430b0af15e566ebd398953336bbd12dba6bd862b8c767cbf3e0",
+      "logical_digest": "0658aa938b34f0f80f6933b8a03f1517b323661eab55031925bd017163759c03"
+    },
+    "portfolio": {
+      "path": "examples/multi_repository_study/portfolio.json",
+      "file_sha256": "b19e57b9475db89ce67dcdfd8dccf38724c534ed0b51ba0240d5a0cc616cd7bb",
+      "logical_digest": "da6372edeae90e1d4a857d61e885ec89632a244c295177752d4cde8e11fb68b1"
+    },
+    "agent_panel_extension_plan": {
+      "path": "examples/multi_repository_study/agent-panel-extension-plan.json",
+      "file_sha256": "7577c791c6f513fd1e1bbfd9e6645bea85cb217ba2f6313015606a27ee34b4dd",
+      "logical_digest": "52f1f3c1dc6159f2c6f17c7b530fe4aab962728c43049d80284690608aad98f6"
+    },
+    "agent_panel_schema_amendment": {
+      "path": "examples/multi_repository_study/agent-panel-schema-amendment.json",
+      "file_sha256": "2f6d11f86c33a46007082adaea3eeaf53c0c293541ba7c23d082bb2768833a45",
+      "logical_digest": "7a53f1a46c271a1c86bf0ef01f8f313ad305fdf72d5a1f3149bb797ae82afe4b"
+    },
+    "multi_swe_pilot_summary": {
+      "path": "examples/multi_swe_research/evidence/suitability-audit-summary.json",
+      "logical_digest": "6928409f03153a793c09b4e01cb3db05058593cbb35a12b5a90a107dd1ad85fe"
+    }
+  },
+  "agent_panel": {
+    "definition": "the three agent_panel entries in the bound public plan plus the eight development_allocation entries in the bound extension plan",
+    "opened_agent_count": 11,
+    "sealed_holdout_agent_count": 6,
+    "sealed_holdout_policy": "The holdout_allocation entries and their result blobs remain unopened and are not inputs to this audit.",
+    "result_identity": "Every opened result file must match the Git blob SHA frozen in its source manifest before normalization."
+  },
+  "frame": {
+    "repository_ids": [
+      "astropy/astropy",
+      "django/django",
+      "matplotlib/matplotlib",
+      "pydata/xarray",
+      "scikit-learn/scikit-learn",
+      "sphinx-doc/sphinx",
+      "sympy/sympy"
+    ],
+    "repository_count": 7,
+    "expected_origin_count": 68,
+    "minimum_initial_history_tasks": 15,
+    "future_tasks": 5,
+    "selection_budget_tasks": 10,
+    "origin_alignment": "end-aligned complete non-overlapping future blocks using build_repository_origins",
+    "ordering": "created_at then instance_id",
+    "primary_aggregation": "equal repository",
+    "secondary_aggregation": "pooled Origin mean, labeled separately"
+  },
+  "controls": {
+    "unseen_target_estimator_lane": {
+      "always_zero": "predict pass rate zero for every Agent and Origin",
+      "always_one": "predict pass rate one for every Agent and Origin",
+      "full_history": "use each target Agent's pass rate over every eligible historical Task; this is the primary no-Selection baseline",
+      "equal_budget_random": "independently sample ten history Tasks uniformly without replacement at every Origin for 20000 draws",
+      "discrete_hindsight": "solve the exact budget-ten response-pattern subset against opened future outcomes at every Origin"
+    },
+    "cached_target_diagnostic_lane": {
+      "expanding_median_climatology": "for each repository and Agent, predict the median of all earlier complete future-block pass rates; at the first Origin, fall back to that Origin's full-history pass rate",
+      "claim_limit": "This lane requires target-Agent outcomes before the cutoff. It is reported separately and is not a gate for unseen-target prediction."
+    }
+  },
+  "random_calibration": {
+    "draws": 20000,
+    "seed": 20260730,
+    "generator": "examples.multi_repository_study.public_replay.random_calibration with sorted repository IDs",
+    "reported_value": "equal-repository mean random-subset MAE and its distribution relative to full history"
+  },
+  "hindsight": {
+    "solver": "scipy.optimize.milp via solve_exact_hindsight_subset",
+    "scipy_version": "1.16.3",
+    "budget_tasks": 10,
+    "optimality": "require a successful exact integer solution at every Origin",
+    "interpretation": "This is a dense capacity diagnostic after future outcomes open, not an executable Selector."
+  },
+  "uncertainty": {
+    "repository_bootstrap_resamples": 10000,
+    "repository_bootstrap_seed": 20260730,
+    "bootstrap_generator": "Python random.Random(seed), sample seven repository rows with replacement using randrange",
+    "interval": "percentile 95 percent interval for equal-repository full-minus-zero",
+    "quantile_rule": "linear interpolation at index probability times count minus one",
+    "leave_one_repository_out": true,
+    "report_per_repository": true,
+    "report_per_agent": true,
+    "useful_effect_margin": null
+  },
+  "temporal_null": {
+    "statistic": "equal-repository mean full-history MAE minus always-zero MAE; lower is more favorable to history persistence",
+    "construction": "For every draw and repository, choose one independent circular offset uniformly from zero through repository_task_count minus one and shift the complete ordered eleven-dimensional Task response rows together. Preserve Task times, Origin membership, repository prevalence, joint Agent response vectors, and response-sequence adjacency up to the circular boundary.",
+    "draws": 2000,
+    "seed": 20260730,
+    "generator": "Initialize Python random.Random(seed); for each draw and sorted repository call randrange(repository_task_count) once.",
+    "p_value": "(1 + number of null statistics at most observed) / (draws + 1)",
+    "alpha": 0.05,
+    "claim": "A small value detects alignment of aggregate history persistence with the observed Task chronology. Failure to detect does not prove that every pre-Origin Task feature is useless."
+  },
+  "decision_rules": {
+    "capacity_present": "exact budget-ten hindsight MAE is below full-history MAE",
+    "history_persistence_detected": "capacity is present, full-minus-zero is negative, the repository-bootstrap upper endpoint is negative, every leave-one-repository-out full-minus-zero value is negative, and the temporal-null one-sided probability is at most 0.05",
+    "pass_route": "Freeze this opened panel as an exploratory counterfactual development boundary and begin Stage C theory-driven algorithm research without touching the six sealed Agents.",
+    "fail_or_unresolved_route": "Stop the suitability-atlas expansion. Do not run the three-Agent or SymPy row; the next data action is either SWE-bench Full normalization or acquisition of a workload-matched source.",
+    "selector_nomination": "not allowed",
+    "production_claim": "not allowed"
+  },
+  "reproduction": {
+    "python_version": "3.14.0",
+    "numpy_version": "2.5.1",
+    "scipy_version": "1.16.3",
+    "pyarrow_version": "25.0.0",
+    "required_runs": 2,
+    "comparison": "canonical JSON must be byte-identical"
+  },
+  "authority": {
+    "paid_api_calls": 0,
+    "sealed_swe_bench_holdout_agents_opened": 0,
+    "new_public_outcome_panels_opened": 0,
+    "generator_development": false,
+    "implementation_scope": "one direct SWE-bench Verified experiment module reusing existing loaders and statistical helpers, focused tests, ignored raw results, a compact self-digested summary, and claim-boundary documentation"
+  },
+  "suitability_audit_plan_digest": "59525b1a8168b909a4499f4658e10f5c4208e2fc5d659785d0ee42d44f63f550"
+}

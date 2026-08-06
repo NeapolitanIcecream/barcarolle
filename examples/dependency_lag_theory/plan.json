@@ -1,0 +1,199 @@
+{
+  "schema_version": "barcarolle_dependency_lag_theory_plan_v1",
+  "study_id": "registry-dated-dependency-lag-theory-2026-07-29",
+  "status": "frozen_design_no_runner",
+  "research_question": "Does a repository's pre-Origin direct npm dependency-lag regime identify historical Tasks whose next-H Task mix, and later Agent pass-rate distribution, is closer to the future cohort than full eligible history?",
+  "epistemic_mode": "registry_retrospective_projected_counterfactual_development",
+  "candidate": {
+    "algorithm_id": "THY-003",
+    "name": "Registry-Dated Dependency-Lag Nearest Regime",
+    "runtime_scope": "one repository, one local Task Pool, one Selection",
+    "selection_budget": 10,
+    "forecast_thesis": "The direct dependency-lag state visible at the Origin persists over a short future TimeRange and mediates the incidence and verification difficulty of compatibility, update, and toolchain Tasks.",
+    "outcome_independence": "No Agent Result, future Task identity, future patch, future label, advisory, CI status, current dist-tag, deprecation flag, or post-Origin package release enters the candidate."
+  },
+  "information_set": {
+    "repository_snapshot": "latest first-parent commit whose committer time is at or before the cutoff",
+    "manifest": "root package.json from the repository snapshot",
+    "direct_scopes": {
+      "production": [
+        "dependencies"
+      ],
+      "development": [
+        "devDependencies"
+      ],
+      "duplicate_rule": "A package declared in both scopes is production."
+    },
+    "lockfiles_in_precedence_order": [
+      "npm-shrinkwrap.json",
+      "package-lock.json",
+      "pnpm-lock.yaml",
+      "yarn.lock"
+    ],
+    "lock_rule": "Resolve only an exact direct package version recorded by the first present supported lockfile. Workspace, file, Git, URL, alias, range-only, prerelease, and non-SemVer resolutions are unknown.",
+    "registry_source": "full npm packument fetched from https://registry.npmjs.org/ with query time, HTTP status, URL, response bytes, and SHA-256 retained under ignored raw artifacts",
+    "registry_time_field": "time[exact_version]",
+    "historical_filter": "Use only stable strict x.y.z versions whose publication timestamp is at or before the state cutoff. Ignore dist-tags, deprecation, advisory, download, maintainer, and modified fields.",
+    "mutation_boundary": "A packument fetched after an Origin is registry-retrospective even after publication-time filtering. Unpublish, correction, or absent historical bytes prevent a strict-historical claim.",
+    "forbidden": [
+      "package versions published after the state cutoff",
+      "current latest or other dist-tags",
+      "later advisory text or severity",
+      "future repository commits",
+      "future Task identity, material, patch, label, or Result"
+    ]
+  },
+  "state_projection": {
+    "lag_categories": [
+      "current",
+      "patch_lag",
+      "minor_lag",
+      "major_lag",
+      "unknown"
+    ],
+    "latest_definition": "Numerically greatest stable strict x.y.z version published at or before the state cutoff.",
+    "classification": {
+      "current": "locked version equals latest",
+      "patch_lag": "locked is lower, with equal major and minor",
+      "minor_lag": "locked is lower, with equal major and lower minor",
+      "major_lag": "locked is lower in major",
+      "unknown": "no exact locked stable version, no timestamped eligible latest, locked version absent by cutoff, or locked version is numerically greater than latest"
+    },
+    "vector": "Ten joint proportions: production then development crossed with the five lag categories, each count divided by the total distinct declared package count.",
+    "empty_state": "An Origin snapshot with no distinct production or development dependency is inadmissible. A historical Task snapshot without a supported manifest and lockfile receives a declared missing-state marker whose distance to an admitted Origin is one; the Task remains eligible and its missingness is reported.",
+    "distance": "One half of L1 distance between the two ten-component vectors, yielding a value in [0,1].",
+    "historical_task_state": "Compute state at the Task's declared material time from the latest first-parent repository snapshot at or before that time and registry versions published by then; use the declared missing-state marker when that snapshot has no supported state.",
+    "origin_state": "Compute state at the Origin cutoff from the frozen Origin snapshot and registry versions published by then."
+  },
+  "selection": {
+    "eligible_tasks": "All target-repository historical Tasks eligible at the Origin under the frozen source contract.",
+    "ranking": "Ascending state distance from each historical Task state to the Origin state.",
+    "tie_break": "Ascending SHA-256(study_id NUL repository_id NUL origin_id NUL task_id).",
+    "membership": "First ten ranked historical Tasks.",
+    "insufficient_history": "Inadmissible; every evaluated Origin has at least twenty eligible historical Tasks.",
+    "runtime_future_window": "An explicit future TimeRange. H5 and H10 are research-only Task-count controls."
+  },
+  "source": {
+    "source_id": "swe_rebench_v2",
+    "dataset_revision": "475dd5e8703bb5fb22dd3c60b5d038b019eba1e0",
+    "parquet": "outputs/research/2026-07-28-external-benchmark-inventory/sources/swe_rebench_v2.parquet",
+    "parquet_sha256": "0e0bf9355f892ad74ae98d4e1c404f39fd6654a8e351ee3e6ab162e4a64cd3ad",
+    "task_source_identity_digest": "aac42fd29824cc56626b76e0040ca6e50847395d45f96303207e5c2b6b46cb2d",
+    "parent_plan_digest": "0fe42fc13b0112c281669cddca45d6f95467bb307f76c25a3ba058b2c6b51c69",
+    "parent_result_digest": "d0666c4e70f4195eb4c81fa1d143a947cbcf8e3fe718136193f82459d0e3ff94",
+    "task_time_field": "created_at, with timezone-naive values declared UTC",
+    "task_label": "Reference fix patch touches root package.json, package-lock.json, npm-shrinkwrap.json, pnpm-lock.yaml, or yarn.lock; label is scoring-only and never a Selection input.",
+    "origin_schedule_sha256": "604b83ce57481dccca377a5f107043b910a9b9075ac312e4e4a4e1a0a5278640",
+    "wide_repositories": [
+      "FHIR/sushi",
+      "JoshuaKGoldberg/create-typescript-app",
+      "Sage/carbon",
+      "obsidian-tasks-group/obsidian-tasks",
+      "platers/obsidian-linter",
+      "statamic/cms",
+      "sveltejs/kit",
+      "swc-project/swc",
+      "typescript-eslint/tslint-to-eslint-config"
+    ],
+    "deep_definition": "The fixed wide-frame repositories with at least ten frozen Origins before candidate execution.",
+    "deep_repositories": [
+      "FHIR/sushi",
+      "JoshuaKGoldberg/create-typescript-app",
+      "platers/obsidian-linter",
+      "statamic/cms",
+      "swc-project/swc"
+    ],
+    "no_replacement_rule": "Any fixed repository admission failure fails complete source admission; no repository may be replaced or dropped after candidate execution."
+  },
+  "rolling_origin": {
+    "minimum_initial_history_tasks": 20,
+    "future_block_tasks": 10,
+    "primary_future_tasks": 5,
+    "sensitivity_future_tasks": 10,
+    "block_policy": "Complete non-overlapping ten-Task blocks; H5 is the first five Tasks in the same H10 block.",
+    "ordering": "Declared source Task time then stable task_id.",
+    "origin_count": 119,
+    "report_calendar_spans": "For each horizon report every Origin span and repository mean, median, minimum, and maximum from Origin cutoff through the final future Task."
+  },
+  "outcome_free_falsification": {
+    "primary_label": "binary root Node dependency-touch scoring label",
+    "primary_loss": "mean future-Task Brier loss",
+    "continuous_forecast": "For each historical Task use weight max(0, 1 - state_distance); predict the weighted historical positive-label rate, falling back to the unweighted full-history rate only if total weight is zero.",
+    "materialized_forecast": "Unweighted positive-label rate of the ten selected historical Tasks.",
+    "controls": {
+      "task_full_history": "Unweighted rate over every eligible historical Task.",
+      "task_trailing_h": "Unweighted rate over the most recent H eligible historical Tasks.",
+      "lock_only": "Repeat the candidate after mapping every exact resolved dependency to current and retaining unknown, thereby removing registry release timing.",
+      "origin_state_circular_shift": "Within each repository circularly shift complete Origin state vectors by a nonzero offset; null states are diagnostic only and never enter accepted Selection."
+    },
+    "ablations": {
+      "observable_quality": "True registry-dated state versus lock_only and circularly shifted state.",
+      "forecast_quality": "Continuous regime forecast versus task_full_history and task_trailing_h.",
+      "subset_materialization": "Budget-ten materialized forecast versus the continuous regime forecast."
+    },
+    "aggregation": "Tasks to Origin, Origins equally within repository, repositories equally; never flatten Origins across repositories.",
+    "uncertainty": "Deterministic 20000-draw repository bootstrap, seed 20260729, plus every leave-one-repository-out macro contrast.",
+    "temporal_null": "Deterministic 20000 joint draws, seed 20260729; each repository independently receives a uniformly chosen nonzero circular shift. Report the fraction whose H5 macro contrast is at least as favorable as the true candidate.",
+    "source_admission_gate": [
+      "All nine wide repositories and all 119 Origins load with the exact frozen identities.",
+      "Every Origin has a supported root manifest and lockfile. Historical missing-state Tasks remain eligible with distance one and their counts are reported.",
+      "At least 70 percent of distinct declared direct dependencies over the complete frame resolve to an exact stable version with an eligible publication timestamp.",
+      "At least six of nine repositories contain at least three distinct Origin state vectors.",
+      "Every raw registry response is retained, digested, and reload-verified; two executions from those frozen responses are byte-identical."
+    ],
+    "decision_gate": [
+      "Complete source admission passes with no repository replacement.",
+      "At H5, both continuous and materialized candidate-minus-full-history macro Brier contrasts are negative, their paired 95 percent repository bootstrap upper bounds are below zero, and at least six of nine repositories are favorable.",
+      "At H10, both continuous and materialized candidate-minus-full-history macro contrasts are negative and at least six of nine repositories are favorable.",
+      "The deep-frame continuous and materialized contrasts are negative at H5 and H10.",
+      "Every H5 leave-one-repository-out materialized contrast is negative.",
+      "The materialized candidate is no worse than 0.005 Brier above the continuous forecast at either horizon.",
+      "The materialized candidate has lower macro Brier loss than task_trailing_h and lock_only at H5 and H10.",
+      "The true H5 materialized contrast has temporal-null as-good-or-better rate below 0.10."
+    ],
+    "minimum_effect": "No nonzero practical-effect claim is made from the diagnostic Brier scale. Every directional, interval, breadth, horizon, ablation, null, and reproduction gate must pass exactly; failure retires THY-003 on this frame without parameter or repository search.",
+    "decision": "Passing authorizes only a separately frozen Agent-outcome development plan if its source admission condition is also met. Failure retires THY-003 on this frame."
+  },
+  "agent_outcome_contract": {
+    "estimand": "For an Agent configuration whose future Results are unopened when Selection freezes, absolute error between its pass rate on the ten selected historical Tasks and its pass rate on the next-H future Tasks; compare repository-first mean MAE with full eligible history.",
+    "primary_baseline": "All eligible target-repository historical Tasks.",
+    "random_calibration": "Twenty thousand equal-budget random ten-Task Selections per Origin with deterministic seed 20260729; random is calibration, not the primary baseline.",
+    "horizons": "H5 primary and H10 sensitivity, with realized calendar spans.",
+    "wide_and_deep": "The outcome development frame must cover the exact nine wide and five deep repositories frozen in this plan. A different later source is replication evidence and requires its own outcome-blind repository-count justification.",
+    "aggregation": "Agent configurations within Origin, Origins within repository, then repositories equally; primary uncertainty is a paired 95 percent repository-cluster bootstrap with leave-one-cluster-out sensitivity.",
+    "minimum_effect_and_direction": "Candidate-minus-full-history macro-repository MAE must be at most -0.02 at H5, with the 95 percent interval wholly below zero, at least six of nine wide repositories favorable, at least four of five deep repositories favorable, every leave-one-cluster-out contrast negative, and H10 negative.",
+    "random_requirement": "Candidate H5 MAE must be at least as good as the 95th percentile of equal-budget random advantage.",
+    "transfer_checks": [
+      "Each held-out Agent configuration direction is reported; at least two thirds are favorable and every leave-one-Agent macro contrast is negative.",
+      "Model, harness, and provider subgroups are each negative when at least two independent configurations support the subgroup.",
+      "JavaScript and TypeScript repository subgroups are each negative.",
+      "npm, pnpm, and Yarn package-manager subgroups are reported and must not reverse when at least three independent repositories support the subgroup.",
+      "H5 temporal-null as-good-or-better rate is below 0.10."
+    ],
+    "replication": "A passing opened development replay is panel-conditional only. The same fixed algorithm must meet the effect, interval, horizon, and breadth directions on a later independent npm source or strict prospective collection before any predictive-validity claim.",
+    "falsification": "Any failed minimum effect, interval, repository breadth, H10, deep, leave-one-cluster-out, random, transfer, temporal-null, identity, or reproduction gate retires the route without threshold, state, distance, budget, horizon, package-manager, repository, or Agent search."
+  },
+  "authorization_boundaries": {
+    "opened_outcome_replay": "Permitted only if every outcome-free gate passes in two byte-identical executions, an independent adversarial audit finds no information-set or identity drift, and a separate precommitted plan binds the exact implementation commit, raw registry response digests, source, the exact nine wide and five deep repositories frozen here, Origin schedule, Agent configuration digests, budget, H5/H10, calendar spans, controls, 20000-draw random protocol, MAE gates, and stop conditions. No current opened panel is asserted to satisfy this source frame.",
+    "independent_source": "Permitted after the outcome-free gate passes; its repository frame and source protocol must be frozen before reading candidate performance on that source.",
+    "sealed_holdout": "The six sealed SWE-bench Agents remain unread. Their Python-heavy repository frame cannot confirm this npm-specific mechanism and they must not be opened for THY-003.",
+    "prospective": "Required for a strict claim: persist registry response bytes before each live Origin, freeze Selection before future Task material exists, and observe the complete declared TimeRange through maturity.",
+    "paid_campaign": "Permitted only after the outcome-free gate and a frozen qualifying outcome source pass, with explicit user authority and benchmark calls proven to use OPENAI_BASE_URL and OPENAI_API_KEY."
+  },
+  "forbidden_post_freeze_changes": [
+    "adding advisories, CI, dist-tags, deprecation, transitive dependencies, peer dependencies, optional dependencies, prereleases, or non-SemVer versions",
+    "changing the state vector, distance, continuous weights, tie-break, budget, horizons, initial history, label, controls, seeds, gates, or repository lists",
+    "dropping unknown dependencies, admission failures, sparse repositories, unfavorable Origins, or package-manager strata",
+    "using future Task identities, patches, scoring labels, outcomes, or post-Origin package events in Selection",
+    "opening existing Agent outcomes after any outcome-free gate fails",
+    "presenting current-registry reconstruction as strict historical or prospective evidence"
+  ],
+  "resource_budget": {
+    "paid_api_calls": 0,
+    "embedding_calls": 0,
+    "coding_agent_calls": 0,
+    "agent_outcomes_opened": 0,
+    "sealed_holdout_opened": 0
+  },
+  "plan_digest": "0126c44a4b3c4878637fef969fdf29a5ff5477fa487c967710667c3154853d5d"
+}

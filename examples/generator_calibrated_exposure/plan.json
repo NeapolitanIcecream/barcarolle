@@ -1,0 +1,485 @@
+{
+  "schema_version": "barcarolle_generator_calibrated_exposure_plan_v1",
+  "study_id": "generator-calibrated-module-exposure-2026-07-29",
+  "research_question": "Does a repository-local estimate of Generator Task yield per Git touch, applied to current Git pressure, predict the next generated Task-module mix better than full Task history and either component alone?",
+  "epistemic_mode": "outcome_free_generator_conditional_counterfactual_development",
+  "implementation": [
+    {
+      "path": "examples/generator_calibrated_exposure/study.py",
+      "sha256": "8321893ba0aa61d53b32eff38d031b51227b9b05213ff1ef97a5a06bff14e237"
+    },
+    {
+      "path": "examples/pre_origin_task_mix/study.py",
+      "sha256": "0cc2c5a99c455655ba57ca0068213497a0bea7789f8ab57497b7277deb7cf927"
+    }
+  ],
+  "candidate": {
+    "algorithm_id": "THY-002",
+    "name": "Generator-Calibrated Module Exposure",
+    "mechanism_hypothesis": "On the explicitly projected source timeline, a fixed Generator and admission policy induce a stable module-specific association between eligible Git change exposure and generated Task mass.",
+    "historical_task_mass": "one unit per admitted historical Task split uniformly across its retrospective eligible reference-patch modules",
+    "historical_exposure": "one unit per reachable non-root non-merge commit split uniformly across eligible touched modules, from the repository's first selected source Task time through the Origin cutoff",
+    "recent_exposure": "the identical commit-touch exposure with a fixed exponential age kernel",
+    "git_walk_policy": "walk the complete reachable non-merge DAG with git rev-list --since-as-filter so an old-timestamp ancestor cannot hide a deeper in-window commit; apply the observation-start and cutoff filters again after projection",
+    "recent_half_life_days": 365.25,
+    "prior": "fixed empirical Task-per-touch rate shrinkage with repository-global mean and exactly one-half Task of regularization mass",
+    "prior_task_shape": 0.5,
+    "formula": "rho=sum(T)/sum(E); beta=0.5/rho; q_m=(T_m+0.5)/(E_m+beta); p_m=G_m*q_m/sum_j(G_j*q_j)",
+    "statistical_interpretation": "The dimensional form is motivated by Gamma-Poisson rate shrinkage, but fractional multi-module Task and commit mass are not literal Poisson counts and q_m is not claimed as an exact conjugate posterior.",
+    "projected_timeline_boundary": "Task time is the source created_at projection while Git exposure uses commit time; reference-patch attributes may mature later. The study tests a projected-timeline association, not a native event-time causal thinning process.",
+    "positive_task_zero_exposure_rule": "retain the fixed finite shrinkage estimate and report Task mass on modules with zero observed historical Git exposure; do not hard-fail or silently drop such modules",
+    "no_recent_exposure_rule": "G_m=0 contributes exactly zero candidate mass; no epsilon or additive recent-exposure smoothing",
+    "zero_total_rule": "a repository-Origin with zero historical or recent eligible exposure is a data admission failure, not a fallback forecast"
+  },
+  "module_projection": {
+    "path_rule": "first two parent-directory components; use the available prefix when shorter",
+    "path_input_rule": "Git --name-only paths are already repository-relative and retain real top-level a/ or b/ directories; reference-patch diff headers remove exactly one side prefix before applying path_rule",
+    "git_path_transport": "read git show --name-only with NUL delimiters so whitespace, non-ASCII names, and Git quotePath behavior cannot alter module identity",
+    "depth": 2,
+    "root_label": "ROOT",
+    "unseen_label": "OTHER",
+    "excluded_components": [
+      ".git",
+      ".github",
+      ".idea",
+      ".vscode",
+      "__pycache__",
+      "__snapshots__",
+      "benchmark",
+      "benchmarks",
+      "build",
+      "dist",
+      "doc",
+      "docs",
+      "example",
+      "examples",
+      "fixture",
+      "fixtures",
+      "generated",
+      "node_modules",
+      "snapshot",
+      "snapshots",
+      "target",
+      "test",
+      "tests",
+      "testing",
+      "third_party",
+      "vendor",
+      "vendored"
+    ],
+    "excluded_file_names": [
+      "Cargo.lock",
+      "Gemfile.lock",
+      "Pipfile.lock",
+      "composer.lock",
+      "package-lock.json",
+      "pnpm-lock.yaml",
+      "poetry.lock",
+      "uv.lock",
+      "yarn.lock"
+    ],
+    "task_label_rule": "unique eligible paths in the source reference fix patch, split uniformly; no eligible path maps to OTHER",
+    "origin_vocabulary": "ROOT, OTHER, cutoff-safe historical Task modules, and reachable eligible Git modules",
+    "future_unseen_rule": "a future patch module absent from the Origin vocabulary maps to OTHER"
+  },
+  "rolling_origin": {
+    "minimum_initial_history_tasks": 20,
+    "future_block_tasks": 10,
+    "primary_future_tasks": 5,
+    "sensitivity_future_tasks": 10,
+    "remainder_policy": "leading remainder is absorbed into the initial history so every retained future cohort is a complete non-overlapping H10 block",
+    "block_policy": "H5 is the first five Tasks in the same H10 block",
+    "ordering": "declared source Task time then canonical Task identity",
+    "task_time_projection": "every timezone-naive SWE-rebench V2 created_at value is explicitly assumed UTC for counterfactual development",
+    "origin_snapshot": "latest first-parent commit on the frozen default-branch history whose committer time is at or before the Origin cutoff",
+    "future_dated_ancestor_policy": "clamp structurally reachable negative clock age to zero and report the count"
+  },
+  "source": {
+    "source_id": "swe_rebench_v2",
+    "role": "new_generator_family_outcome_free_development",
+    "dataset_repository": "nebius/SWE-rebench-V2",
+    "dataset_revision": "475dd5e8703bb5fb22dd3c60b5d038b019eba1e0",
+    "parquet": "outputs/research/2026-07-28-external-benchmark-inventory/sources/swe_rebench_v2.parquet",
+    "parquet_sha256": "0e0bf9355f892ad74ae98d4e1c404f39fd6654a8e351ee3e6ab162e4a64cd3ad",
+    "parquet_size_bytes": 428839266,
+    "frame_rule": "canonical repositories whose pinned source aliases contain at least 75 rows before exact canonical-PR deduplication; include all passing repositories, with no top-N choice or replacement",
+    "selected_source_row_count": 5448,
+    "frame_minimum_source_rows": 75,
+    "source_alias_count": 41,
+    "canonical_task_count": 5365,
+    "canonical_repository_count": 40,
+    "canonical_task_identity": "when meta.pr_url is present and its case-insensitive owner/repository agrees with either the source alias or resolved canonical repository, canonical repository plus decimal PR number; otherwise the source instance_id",
+    "duplicate_rule": "canonical duplicates must agree on base commit, created_at, language, and patch; retain complete source-ID lineage and one canonical Task",
+    "base_commit_policy": "record exact per-Task Git commit-object presence as a diagnostic lineage digest; absence does not reject a Task because this counterfactual Task-mix study uses source time plus reference-patch modules and never checks out a Task base",
+    "timestamp_policy": "assume_utc_for_counterfactual_development_only",
+    "head_retrieved_at": "2026-07-29T02:50:21Z",
+    "head_policy": "head_ref records freeze-time provenance; head_commit is the authoritative replay object and later live movement of the named branch does not invalidate the frozen study",
+    "repositories": [
+      {
+        "repository_id": "FHIR/sushi",
+        "source_aliases": ["FHIR/sushi"],
+        "remote_url": "https://github.com/FHIR/sushi.git",
+        "head_ref": "refs/heads/master",
+        "head_commit": "a6168a02bb17e0893aeeca5e1ec9d126076396c4",
+        "expected_task_count": 189
+      },
+      {
+        "repository_id": "HypothesisWorks/hypothesis",
+        "source_aliases": ["HypothesisWorks/hypothesis"],
+        "remote_url": "https://github.com/HypothesisWorks/hypothesis.git",
+        "head_ref": "refs/heads/master",
+        "head_commit": "793e92df4baa95a10f7f7f63751d88517fbd4bfb",
+        "expected_task_count": 114
+      },
+      {
+        "repository_id": "JoshuaKGoldberg/create-typescript-app",
+        "source_aliases": ["JoshuaKGoldberg/create-typescript-app"],
+        "remote_url": "https://github.com/JoshuaKGoldberg/create-typescript-app.git",
+        "head_ref": "refs/heads/main",
+        "head_commit": "1a1355799f8b0d7ad9953b597da136c10ec8110c",
+        "expected_task_count": 127
+      },
+      {
+        "repository_id": "OpenMDAO/OpenMDAO",
+        "source_aliases": ["OpenMDAO/OpenMDAO"],
+        "remote_url": "https://github.com/OpenMDAO/OpenMDAO.git",
+        "head_ref": "refs/heads/master",
+        "head_commit": "74c7bbf1f0273b645f78fe1291e1af5bd25dbf33",
+        "expected_task_count": 75
+      },
+      {
+        "repository_id": "PennyLaneAI/pennylane",
+        "source_aliases": ["PennyLaneAI/pennylane"],
+        "remote_url": "https://github.com/PennyLaneAI/pennylane.git",
+        "head_ref": "refs/heads/main",
+        "head_commit": "7d1edf7910524740c16bb62121b8b5d3b74c17d4",
+        "expected_task_count": 135
+      },
+      {
+        "repository_id": "Qiskit/qiskit",
+        "source_aliases": ["Qiskit/qiskit-terra"],
+        "remote_url": "https://github.com/Qiskit/qiskit.git",
+        "head_ref": "refs/heads/main",
+        "head_commit": "e8a3f1473db29cace2b8b391cb3f335e74294ead",
+        "expected_task_count": 84
+      },
+      {
+        "repository_id": "Sage/carbon",
+        "source_aliases": ["Sage/carbon"],
+        "remote_url": "https://github.com/Sage/carbon.git",
+        "head_ref": "refs/heads/master",
+        "head_commit": "b22011e2c10011ce700532a30c5ec71ed1539d82",
+        "expected_task_count": 87
+      },
+      {
+        "repository_id": "aio-libs/aiohttp",
+        "source_aliases": ["aio-libs/aiohttp"],
+        "remote_url": "https://github.com/aio-libs/aiohttp.git",
+        "head_ref": "refs/heads/master",
+        "head_commit": "c3f07fcf858bc1ac328345d717c2fa7e22b31801",
+        "expected_task_count": 128
+      },
+      {
+        "repository_id": "argoproj/argo-workflows",
+        "source_aliases": ["argoproj/argo"],
+        "remote_url": "https://github.com/argoproj/argo-workflows.git",
+        "head_ref": "refs/heads/main",
+        "head_commit": "d98d7b7d73d1b24dd7258153453ea612dbb70092",
+        "expected_task_count": 89
+      },
+      {
+        "repository_id": "aws-cloudformation/cfn-lint",
+        "source_aliases": ["aws-cloudformation/cfn-lint"],
+        "remote_url": "https://github.com/aws-cloudformation/cfn-lint.git",
+        "head_ref": "refs/heads/main",
+        "head_commit": "5faa41ecbe7785e26271fee5f9f6601abef45829",
+        "expected_task_count": 135
+      },
+      {
+        "repository_id": "clap-rs/clap",
+        "source_aliases": ["clap-rs/clap"],
+        "remote_url": "https://github.com/clap-rs/clap.git",
+        "head_ref": "refs/heads/master",
+        "head_commit": "f8ac8c5f1b3554657b557ba2d21279930434b401",
+        "expected_task_count": 82
+      },
+      {
+        "repository_id": "detekt/detekt",
+        "source_aliases": ["detekt/detekt"],
+        "remote_url": "https://github.com/detekt/detekt.git",
+        "head_ref": "refs/heads/main",
+        "head_commit": "1ac699e3ec23047210f1069a63e5f12b49cba740",
+        "expected_task_count": 88
+      },
+      {
+        "repository_id": "eslint/eslint",
+        "source_aliases": ["eslint/eslint"],
+        "remote_url": "https://github.com/eslint/eslint.git",
+        "head_ref": "refs/heads/main",
+        "head_commit": "151ba3f5834a0909e8b9b1736f4889ac694c0104",
+        "expected_task_count": 196
+      },
+      {
+        "repository_id": "getmoto/moto",
+        "source_aliases": ["getmoto/moto"],
+        "remote_url": "https://github.com/getmoto/moto.git",
+        "head_ref": "refs/heads/master",
+        "head_commit": "fd49aaef161503d941aa490d6f5c90f4e226ac25",
+        "expected_task_count": 249
+      },
+      {
+        "repository_id": "gleam-lang/gleam",
+        "source_aliases": ["gleam-lang/gleam"],
+        "remote_url": "https://github.com/gleam-lang/gleam.git",
+        "head_ref": "refs/heads/main",
+        "head_commit": "5acc2b20e096cefcfe84009b2a123ca6cffa2b24",
+        "expected_task_count": 95
+      },
+      {
+        "repository_id": "helm/helm",
+        "source_aliases": ["helm/helm"],
+        "remote_url": "https://github.com/helm/helm.git",
+        "head_ref": "refs/heads/main",
+        "head_commit": "a8ab76e86f11e2ece5a3d0262313140e21db249b",
+        "expected_task_count": 139
+      },
+      {
+        "repository_id": "joernio/joern",
+        "source_aliases": ["joernio/joern"],
+        "remote_url": "https://github.com/joernio/joern.git",
+        "head_ref": "refs/heads/master",
+        "head_commit": "8072a41d64ee31092f48902a6826126a66a9da59",
+        "expected_task_count": 83
+      },
+      {
+        "repository_id": "jump-dev/JuMP.jl",
+        "source_aliases": ["jump-dev/JuMP.jl"],
+        "remote_url": "https://github.com/jump-dev/JuMP.jl.git",
+        "head_ref": "refs/heads/master",
+        "head_commit": "844a2f5548655ec154ce21d68e8e19e47e98b011",
+        "expected_task_count": 83
+      },
+      {
+        "repository_id": "kestra-io/kestra",
+        "source_aliases": ["kestra-io/kestra"],
+        "remote_url": "https://github.com/kestra-io/kestra.git",
+        "head_ref": "refs/heads/develop",
+        "head_commit": "38efc82b43a6d3b2425b55e27d6c4210cb98dfde",
+        "expected_task_count": 132
+      },
+      {
+        "repository_id": "kubermatic/kubermatic",
+        "source_aliases": ["kubermatic/kubermatic"],
+        "remote_url": "https://github.com/kubermatic/kubermatic.git",
+        "head_ref": "refs/heads/main",
+        "head_commit": "9ce79461513391eb98c425a45e8dd2a9883b2a0a",
+        "expected_task_count": 87
+      },
+      {
+        "repository_id": "mgechev/revive",
+        "source_aliases": ["mgechev/revive"],
+        "remote_url": "https://github.com/mgechev/revive.git",
+        "head_ref": "refs/heads/master",
+        "head_commit": "0ac11a611ddf9e0b62489a51feb8a65fb865949f",
+        "expected_task_count": 93
+      },
+      {
+        "repository_id": "microsoft/kiota",
+        "source_aliases": ["microsoft/kiota"],
+        "remote_url": "https://github.com/microsoft/kiota.git",
+        "head_ref": "refs/heads/main",
+        "head_commit": "b9e61265f8394a6c5d0358e89e037873375b017a",
+        "expected_task_count": 123
+      },
+      {
+        "repository_id": "obsidian-tasks-group/obsidian-tasks",
+        "source_aliases": ["obsidian-tasks-group/obsidian-tasks"],
+        "remote_url": "https://github.com/obsidian-tasks-group/obsidian-tasks.git",
+        "head_ref": "refs/heads/main",
+        "head_commit": "2082f657abfc6388c6d1b841e36d4022286a8211",
+        "expected_task_count": 78
+      },
+      {
+        "repository_id": "pandas-dev/pandas",
+        "source_aliases": ["pandas-dev/pandas"],
+        "remote_url": "https://github.com/pandas-dev/pandas.git",
+        "head_ref": "refs/heads/main",
+        "head_commit": "86cbc18b7d3df8ca4280fe2ab4133c02b837f3d5",
+        "expected_task_count": 207
+      },
+      {
+        "repository_id": "phpactor/phpactor",
+        "source_aliases": ["phpactor/phpactor"],
+        "remote_url": "https://github.com/phpactor/phpactor.git",
+        "head_ref": "refs/heads/master",
+        "head_commit": "721f3fb87d1a1a101140d9c0d52fb4ab024bb5fd",
+        "expected_task_count": 77
+      },
+      {
+        "repository_id": "platers/obsidian-linter",
+        "source_aliases": ["platers/obsidian-linter"],
+        "remote_url": "https://github.com/platers/obsidian-linter.git",
+        "head_ref": "refs/heads/master",
+        "head_commit": "9cec25fcfd5289076afddc3c58e72b7e57436bf2",
+        "expected_task_count": 143
+      },
+      {
+        "repository_id": "pybamm-team/PyBaMM",
+        "source_aliases": ["pybamm-team/PyBaMM"],
+        "remote_url": "https://github.com/pybamm-team/PyBaMM.git",
+        "head_ref": "refs/heads/main",
+        "head_commit": "51ba8432fc57f2117bd5b21b1ec006a2bee57749",
+        "expected_task_count": 95
+      },
+      {
+        "repository_id": "pyccel/pyccel",
+        "source_aliases": ["pyccel/pyccel"],
+        "remote_url": "https://github.com/pyccel/pyccel.git",
+        "head_ref": "refs/heads/devel",
+        "head_commit": "a6fd376e7965ff2abb843cab0ed20c17e397d53f",
+        "expected_task_count": 76
+      },
+      {
+        "repository_id": "rust-lang/rust-analyzer",
+        "source_aliases": ["rust-analyzer/rust-analyzer"],
+        "remote_url": "https://github.com/rust-lang/rust-analyzer.git",
+        "head_ref": "refs/heads/master",
+        "head_commit": "bec66814323579659ffd77c909b3d963af118ece",
+        "expected_task_count": 94
+      },
+      {
+        "repository_id": "saveourtool/diktat",
+        "source_aliases": ["analysis-dev/diktat", "cqfn/diKTat"],
+        "remote_url": "https://github.com/saveourtool/diktat.git",
+        "head_ref": "refs/heads/master",
+        "head_commit": "cd77a0b839e11f6d384b58cb5ff6fdf4e4228f61",
+        "expected_task_count": 175
+      },
+      {
+        "repository_id": "scala-steward-org/scala-steward",
+        "source_aliases": ["scala-steward-org/scala-steward"],
+        "remote_url": "https://github.com/scala-steward-org/scala-steward.git",
+        "head_ref": "refs/heads/main",
+        "head_commit": "836a4345921c5663ce2a27dfc6e7a66878db5c14",
+        "expected_task_count": 81
+      },
+      {
+        "repository_id": "scalameta/scalameta",
+        "source_aliases": ["scalameta/scalameta"],
+        "remote_url": "https://github.com/scalameta/scalameta.git",
+        "head_ref": "refs/heads/main",
+        "head_commit": "256d830d8a710ae1fded9e779a518b49a0996206",
+        "expected_task_count": 103
+      },
+      {
+        "repository_id": "serverless/serverless",
+        "source_aliases": ["serverless/serverless"],
+        "remote_url": "https://github.com/serverless/serverless.git",
+        "head_ref": "refs/heads/main",
+        "head_commit": "0fc9cd15e3edcd719451343f695f986e4995ead3",
+        "expected_task_count": 272
+      },
+      {
+        "repository_id": "statamic/cms",
+        "source_aliases": ["statamic/cms"],
+        "remote_url": "https://github.com/statamic/cms.git",
+        "head_ref": "refs/heads/6.x",
+        "head_commit": "c2e5197ebfc5ca8574635ab4df70e9b2baf7e749",
+        "expected_task_count": 189
+      },
+      {
+        "repository_id": "sveltejs/kit",
+        "source_aliases": ["sveltejs/kit"],
+        "remote_url": "https://github.com/sveltejs/kit.git",
+        "head_ref": "refs/heads/version-3",
+        "head_commit": "40efca1b4afd6f0b6329bed652025b99edc8978c",
+        "expected_task_count": 117
+      },
+      {
+        "repository_id": "swc-project/swc",
+        "source_aliases": ["swc-project/swc"],
+        "remote_url": "https://github.com/swc-project/swc.git",
+        "head_ref": "refs/heads/main",
+        "head_commit": "eb38433c37a347c3efa19f4fe907e49f3b128d72",
+        "expected_task_count": 410
+      },
+      {
+        "repository_id": "typescript-eslint/tslint-to-eslint-config",
+        "source_aliases": ["typescript-eslint/tslint-to-eslint-config"],
+        "remote_url": "https://github.com/typescript-eslint/tslint-to-eslint-config.git",
+        "head_ref": "refs/heads/main",
+        "head_commit": "03751ec2525cb5b7e000543809be37ca9bd9aee7",
+        "expected_task_count": 80
+      },
+      {
+        "repository_id": "vaskoz/dailycodingproblem-go",
+        "source_aliases": ["vaskoz/dailycodingproblem-go"],
+        "remote_url": "https://github.com/vaskoz/dailycodingproblem-go.git",
+        "head_ref": "refs/heads/master",
+        "head_commit": "36687a4f01b602ec7f22a6ae530024d76e3da6bf",
+        "expected_task_count": 355
+      },
+      {
+        "repository_id": "vuejs/eslint-plugin-vue",
+        "source_aliases": ["vuejs/eslint-plugin-vue"],
+        "remote_url": "https://github.com/vuejs/eslint-plugin-vue.git",
+        "head_ref": "refs/heads/master",
+        "head_commit": "97985f6f7024001769834df9b0a8f858ac299679",
+        "expected_task_count": 79
+      },
+      {
+        "repository_id": "zeek/zeek",
+        "source_aliases": ["zeek/zeek"],
+        "remote_url": "https://github.com/zeek/zeek.git",
+        "head_ref": "refs/heads/master",
+        "head_commit": "59973fb3882faf9d71d65a20a2c128d49e6df8ea",
+        "expected_task_count": 121
+      }
+    ]
+  },
+  "predictors": [
+    "candidate",
+    "task_full_history",
+    "git_recent_touch",
+    "yield_only",
+    "task_trailing_h",
+    "uniform"
+  ],
+  "metrics": {
+    "primary": "future Task-module multiclass Brier score with fractional mass for multi-module Tasks",
+    "reason": "The fixed mechanism permits structural zero recent exposure; Brier is a proper score that does not require an outcome-chosen epsilon.",
+    "descriptive": "total variation and Origin-to-final-Task calendar span",
+    "aggregation": "Tasks to Origin, Origins to canonical repository, repositories equally",
+    "uncertainty": "deterministic 20000-draw canonical-repository bootstrap",
+    "bootstrap_seed": 20260729
+  },
+  "decision_gate": {
+    "complete_source_admission": "all 40 canonical repositories produce complete H5/H10 evidence; no failed repository is replaced or silently removed",
+    "row_integrity": "derive each repository's exact numbered Origin set from expected_task_count and rolling_origin; reject unknown repositories, missing or extra Origins within every observed repository, horizons outside H5/H10, duplicate repository-Origin-horizon rows, and any Origin missing its paired H5 or H10 row before aggregation",
+    "h5": "candidate minus full Task history, git_recent_touch, and yield_only are each negative with repository-bootstrap upper bounds below zero; the full-history contrast also has at least 24/40 favorable repositories",
+    "h10": "the identical three bootstrap contrasts and 24/40 full-history favorable condition hold",
+    "pass": "both H5 and H10 gates pass",
+    "failure": "retire THY-002 without changing prior shape, half-life, module map, frame threshold, repository membership, timestamp policy, metric, horizon, or gate"
+  },
+  "outcome_boundary": {
+    "agent_results": "prohibited in this study even if Task-mix gates pass",
+    "sealed_holdout": "prohibited",
+    "paid_calls": "prohibited",
+    "claim": "A pass supports only generator-conditional counterfactual Task-mix prediction on a new automated Generator family. It would require a separately frozen Selection and Agent-outcome study."
+  },
+  "result_verification": "require exact study identity, plan digest, zero-valued paid/embedding/Agent-outcome/sealed-holdout counters, source and repository manifest digests plus plan identities, a complete admitted-or-failed repository partition, unique complete Origin rows, replayed repository summaries, and replayed decision",
+  "forbidden_post_replay_changes": [
+    "searching another prior strength, half-life, exposure window, module depth, exclusion list, Task-count threshold, repository subset, metric, or horizon",
+    "dropping repositories, Origins, OTHER, zero-yield modules, or future Tasks after patch projection",
+    "using future patches, future Task counts, Agent outcomes, or source metadata enrichment as candidate inputs",
+    "promoting origin-weighted, language-subgroup, calendar-subgroup, or total-variation results after the repository-first Brier gate fails"
+  ],
+  "resource_budget": {
+    "paid_api_calls": 0,
+    "embedding_calls": 0,
+    "agent_outcomes_opened": 0,
+    "sealed_holdout_opened": 0,
+    "repository_prepare_concurrency": 4
+  },
+  "plan_digest": "0fe42fc13b0112c281669cddca45d6f95467bb307f76c25a3ba058b2c6b51c69"
+}
