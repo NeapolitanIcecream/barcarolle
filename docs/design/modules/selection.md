@@ -1,6 +1,6 @@
 # Module Design: Selection
 
-Status: current behavior and planned boundaries, 2026-07-27.
+Status: current implemented Selection behavior, 2026-08-30.
 
 ## Responsibility
 
@@ -10,7 +10,10 @@ selections, and choose among evaluated Selectors from paired historical MAE.
 Model-based methods remain planned; the current fitting boundary is concrete
 and algorithm-specific rather than a training platform.
 
-Selection is the core research module.
+Selection is one implemented evaluator mechanism. It is not the boundary of the
+research program: task generation, statistical outcome models, evaluator
+feedback policies, and adversarial stress testing may operate before, after, or
+alongside it.
 
 ## Inputs
 
@@ -55,9 +58,12 @@ output, and effect only; it does not prescribe implementation.
 
 - Implemented and executable: random, recency, coverage, stratified-forecast,
   and rule-mixture selection.
-- Implemented evaluation metrics: future pass-rate MAE, future coverage, future
-  invalid rate, pairwise gap MAE, pairwise rank agreement, and recommendation
-  regret.
+- Implemented static evaluation metrics: future pass-rate MAE, future coverage,
+  future invalid rate, pairwise pass-rate-difference MAE, pairwise rank
+  agreement, and recommendation regret. The research program makes pass-rate
+  MAE and pass-rate-difference MAE the two primary metrics; the current fitter
+  and summary APIs still optimize and summarize
+  only the first.
 - Implemented mean-MAE selector choice: `choose_selector_from_metrics` validates
   internally complete, paired rolling-origin Metric/future-matrix inputs and
   chooses the rule Selector with the lowest mean MAE. It uses a rule Selector
@@ -613,7 +619,7 @@ Output:
 Effect:
 
 - Computes future pass-rate MAE, future coverage, future invalid rate, pairwise
-  gap MAE, pairwise rank agreement, and recommendation regret by comparing
+  pass-rate-difference MAE, pairwise rank agreement, and recommendation regret by comparing
   selected-benchmark estimates against future-holdout outcomes.
 - Pairwise rank agreement is the fraction of Agent pairs whose selected and
   future signed ordering agrees, including tie state. With fewer than two Agents
@@ -800,9 +806,13 @@ Effect:
   publishes the summary only after it also validates and recomputes the full
   selected/future matrix provenance chain.
 
-## Selector Development Order
+## Current Selector-Lane Development Order
 
-Development order, with the first five steps implemented offline:
+This list records the current module's historical development order. It is not
+the project roadmap; current cross-method priorities are in
+[`../../research-program.md`](../../research-program.md).
+
+Within the Selection lane, the first five steps are implemented offline:
 
 1. random, recency, and coverage baselines;
 2. strong baseline envelope;
@@ -810,9 +820,11 @@ Development order, with the first five steps implemented offline:
 4. calibrated constrained weighting;
 5. future-stratum matching;
 6. outcome-aware selectors only under explicit available-before-origin rules;
-7. pairwise and hierarchical models only when data volume supports them;
+7. direct pass-rate-difference objectives and hierarchical outcome models with
+   predeclared agent-pair populations;
 8. stronger learned or drift-aware adaptive control after selectors have enough
-   prior-origin evidence; mean-MAE Selector choice remains the baseline.
+   prior-origin evidence; pass-rate-only mean-MAE choice remains an implementation
+   baseline, not the scientific target.
 
 ## Design Consistency Check
 
@@ -822,7 +834,10 @@ Development order, with the first five steps implemented offline:
 - Rolling-origin leakage controls are represented in function inputs, not only
   prose.
 - Feature provenance is recorded before selector input is built.
-- Primary metric is future pass-rate MAE.
+- Research objectives are future pass-rate MAE and pairwise
+  pass-rate-difference MAE. Current fitting and aggregate summary remain
+  pass-rate-only limitations disclosed
+  in `docs/implementation-status.md`.
 - Aggregate MAE weighting, pairing, seed-bank, and interval rules match
   `docs/statistical-protocol.md`.
 - Learned selectors start with data-efficient methods.

@@ -1,6 +1,6 @@
 # Module Design: Task Pool
 
-Status: current behavior and deferred concrete adapters, 2026-07-27.
+Status: current behavior and task-generation boundary, 2026-08-30.
 
 ## Responsibility
 
@@ -11,6 +11,15 @@ read-only and binds optional Generator/source-frame provenance without running
 Generator code.
 
 Task Pool does not run Agents and does not select benchmarks.
+
+Task Pool certification establishes that a candidate has the declared
+executable base-fail/patched-pass behavior. It does not establish that a
+generated Task represents future real-world work, preserves Agent-pair
+pass-rate differences, or remains valid under repeated optimization. Those are
+task-generator and evaluator research
+claims measured outside this module. The current runtime accepts prepared
+packages from external task generators; no built-in forecast-based task
+generator is implemented yet.
 
 ## Inputs
 
@@ -49,7 +58,7 @@ population representativeness.
 Input sources:
 
 - user config;
-- built-in generators;
+- future concrete adapters or built-in task generators;
 - user imports;
 - Workspace for checkout and replay during task validation;
 - Verification for check execution during task validation.
@@ -359,7 +368,7 @@ Effect:
 - Rejects a bad candidate transition. Missing repository or Check bindings,
   verifier-workspace failures, check-launch failures, and unexpected
   verification failures are run-setup errors because they prevent comparable
-  candidate evaluation; they stop certification instead of shrinking the
+  assessment of task candidates; they stop certification instead of shrinking the
   pool.
 
 ### certification_evidence_records

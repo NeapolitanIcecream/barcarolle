@@ -316,8 +316,10 @@ Effect:
   reused binding cannot trigger an unrelated pending Agent call.
 - `origin_id` is produced by `build_rolling_origin`; it is not an input config
   value.
-- MAE is the primary prediction metric. Supporting metrics remain available for
-  diagnosis and later algorithm decisions.
+- Static scoring emits pass-rate MAE and pairwise pass-rate-difference MAE as the
+  two research objectives. The current fitted-Selector and report-summary paths
+  still consume only pass-rate MAE; rank, recommendation regret, coverage, and
+  invalid rate remain supporting diagnostics.
 
 `evaluate_selector` remains a thin single-Selector wrapper over this entry
 point; it has no separate execution behavior.
@@ -380,6 +382,42 @@ Output:
 
 - `report.md`;
 - `report.json`.
+
+Example config, with paths resolved relative to the config file:
+
+```json
+{
+  "task_pool": "records/task_pool.jsonl",
+  "future_task_pools": "records/future-task-pools.jsonl",
+  "agents": "records/agents.jsonl",
+  "selectors": "records/selectors.jsonl",
+  "origins": "records/origins.jsonl",
+  "feature_snapshots": "records/feature-snapshots.jsonl",
+  "selector_inputs": "records/selector-inputs.jsonl",
+  "selections": "records/selections.jsonl",
+  "results": "records/results.jsonl",
+  "evaluation_cell_sets": "records/evaluation_cell_sets.jsonl",
+  "result_matrices": "records/result_matrices.jsonl",
+  "metrics": "records/metrics.jsonl",
+  "artifact_root": ".",
+  "output_dir": "report"
+}
+```
+
+The task-pool file contains one `TaskPoolRecord`. The optional
+`future_task_pools` file may contain zero or more later snapshots for
+strict-prospective cell sets. Only `task_pool` and `output_dir` are required;
+omit any other record file when that evidence is absent. Included record files
+contain zero or more records of the type named by the key. Task Pool artifact
+refs resolve under `artifact_root`, which defaults to the config-file directory.
+
+Bundle-internal consistency is unsupported when referenced `TaskRecord`,
+`SourceEventRecord`, `CheckRecord`, or certification-evidence files are missing
+or fail digest validation; this claim does not imply source or population
+coverage. A supported Selector-performance claim additionally requires the
+Selector, Origin, FeatureSnapshot, SelectorInput, Agent, Result, Selection,
+cell-set, matrix, and metric evidence shown above. Omitting evidence produces an
+explicit unsupported claim rather than inferred provenance.
 
 Effect:
 

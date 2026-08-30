@@ -1,6 +1,6 @@
 # Design Consistency Check
 
-Status: current, 2026-07-23.
+Status: current implementation consistency check, 2026-08-30.
 
 ## Vocabulary
 
@@ -16,20 +16,71 @@ The design uses the active core terms:
 - `Benchmark Selection`
 - `Agent Results`
 
-These terms are the module and record vocabulary used across the package.
+These terms are the implemented module and record vocabulary used across the
+package. Research prose additionally uses evaluator, task generator, agent
+version, evaluator feedback policy, optimization round, and meta-evaluation as
+ordinary domain terms. They are not implemented core records or modules.
+
+The first principle is to provide reliable evaluation methods for
+self-evolving agents. Repository-level coding agents are the first concrete
+domain. In public prose, a self-evolving agent means an agent that retains
+behavior-changing model, harness, prompt, memory, skill, tool, or other
+persistent-state updates across tasks. Subject evolution is the core context;
+evaluator coevolution is an optional method.
 
 ## System Boundary
 
-Barcarolle is a target-repository benchmark compiler. It does not become an
-Agent harness, public leaderboard, tuning framework, or general workflow
-runtime.
+Barcarolle develops reliable evaluation methods for self-evolving agents. It
+does not become an agent harness, public leaderboard, or general workflow
+runtime. The external agent optimizer remains outside its execution ownership,
+while its version, parent links, behavior-changing persistent state, candidate
+archive, budget, and evaluator feedback must enter Barcarolle's evidence
+boundary for repeated-optimization claims.
 
-The tested Agent owns its model, harness, prompts, tools, retrieval, edit loop,
-retry policy, public-test policy, and runtime budget. Barcarolle owns task
-validation, fresh solver/verifier workspace separation, hidden-oracle verification,
-normalized result storage, rolling-origin selection, and report traceability.
-The built-in Workspace path assumes a cooperative Agent and does not claim
-host-level resource isolation.
+The tested agent owns its model, harness, prompts, memory, skills, tools,
+retrieval, edit loop, retry policy, public-test policy, persistent state, and
+runtime budget. The current Barcarolle runtime owns task validation, fresh
+solver/verifier workspace separation, hidden-check verification, normalized
+result storage, rolling-origin selection, and report traceability. The built-in
+Workspace path assumes a cooperative agent and does not claim host-level
+resource isolation.
+
+## Research Information Boundaries
+
+The design keeps three research flows distinct:
+
+1. agent optimization receives only the declared evaluator feedback and emits
+   versioned agent candidates, lineage, persistent-state changes, and budget
+   evidence;
+2. optional evaluator updating receives only permitted development evidence,
+   consumed prospective cohorts, and red-team evidence and follows a frozen
+   update rule;
+3. independent prospective evaluation freezes the complete evaluation method,
+   applicable agent and evaluator versions, budget, and predictions before
+   opening future real-world tasks and outcomes from an independent outcome
+   authority.
+
+Prospective evidence does not enter either of the first two flows until the
+corresponding scoring decision is complete. Once an opened cohort affects agent
+optimization, evaluator updating, attack design, threshold choice, or method
+selection, it becomes development evidence and cannot remain an independent
+test.
+
+Reports keep four evaluation and method-selection stages separate and apply
+them in order:
+
+- evidence validity is a hard prerequisite;
+- absolute error limits require both primary errors, coverage, and uncertainty to
+  meet predeclared deployment requirements;
+- degradation under optimization measures both errors relative to the same evaluation
+  policy's `b=0` baseline;
+- method comparison chooses among methods under matched conditions.
+
+A reliability claim must pass the first two stages and the third when it covers
+evaluator-guided optimization. The fourth stage cannot repair an earlier
+failure.
+Neither a stable but inaccurate method nor a method that only beats an
+inaccurate comparator supports a reliability claim.
 
 ## Asset Decoupling
 
@@ -79,7 +130,8 @@ The Selection module keeps these constraints:
   supply reads and against the validated selection-time Task/Check records
   before future-pool reads or Agent execution;
 - learned-Selector training that holds the ordered full AgentRecord identity
-  fixed across Origins, validates the common Task Pool/Origin/Snapshot records,
+  fixed across `RollingOrigin` records, validates the common `Task Pool`,
+  `RollingOrigin`, and `FeatureSnapshot` records,
   and binds every pre-origin and outcome Result cache projection to the frozen
   Agent/Task/Check records;
 - one Records-owned ResultCell binding contract across Result Store, Runner,
@@ -88,9 +140,11 @@ The Selection module keeps these constraints:
   agent-invalid Result evidence can justify exclusions, and the complete Matrix
   must replay under one declared join/denominator policy, including abstention
   and scoreability;
-- mean-MAE Selector choice over complete, comparable metrics from earlier
-  rolling origins; the choice does not reinterpret whether a recorded MAE is
-  available.
+- current pass-rate-mean-MAE Selector choice over complete, comparable metrics from
+  earlier rolling origins; this is an implementation limitation, not the
+  research metric hierarchy. Pass-rate-difference MAE must become an equally
+  prominent claim and
+  fitting input before the static two-objective path is complete.
 
 ## Cache And Scoring Boundary
 
@@ -108,6 +162,12 @@ future-holdout matrix, metric config, join policy, and denominator policy.
 Frozen selector inputs, selections, cell sets, matrices, and metrics reference
 Result records by ID and digest. Evidence-bearing records are append-only.
 
+The current static metric chain does not implement complete reliability-claim evidence
+or an agent-optimization trajectory. New closed-loop evidence must bind agent
+lineage and persistent state, optimizer and feedback identity, budget
+checkpoints, evaluator versions, prospective-cohort status, and outcome
+authority without weakening the existing exact Result and Matrix bindings.
+
 Rolling-origin evaluation freezes `Task + Check` refs before future outcomes
 are opened. Historical `known_at` uses only source, task-material, and
 check-material availability. Certification evidence is stored separately and
@@ -117,10 +177,18 @@ does not move that historical availability time.
 
 Reports summarize existing evidence. They do not create new evidence, inspect
 hidden oracle material, or reinterpret missing, invalid, excluded, or abstained
-cells after scoring. Selector-performance claims require the exact Agent,
-Result, origin, snapshot, input, selection, cell-set, matrix, and metric
+cells after scoring. Selector-performance claims require the exact `Agent`,
+`Result`, `RollingOrigin`, `FeatureSnapshot`, `SelectorInput`,
+`BenchmarkSelection`, `EvaluationCellSet`, `ResultMatrix`, and `Metric`
 bindings; reports use mode-specific claim names so counterfactual replay is not
 presented as prospective evidence.
+
+For self-evolving-agent claims, reports must additionally distinguish evidence
+validity, absolute error limits, degradation under optimization, and method
+comparison, and must state the tested lineage, optimizer, feedback, budget,
+threat model, prospective cohort, coverage, uncertainty, and reference
+standard. An integrity violation invalidates the capability result rather than
+becoming an ordinary low score.
 
 ## Paid Execution Boundary
 

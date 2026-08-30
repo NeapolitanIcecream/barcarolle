@@ -1,11 +1,18 @@
 # Module Design: Reporting
 
-Status: current, 2026-07-27.
+Status: current static reporting behavior, 2026-08-30.
 
 ## Responsibility
 
-Create claim-safe reports from existing records. Reporting does not create new
+Create evidence-backed reports from existing records. Reporting does not create new
 evidence and does not run experiments.
+
+The current Selector-performance summary is pass-rate-MAE-centric even though
+Selection computes `pairwise_gap_mae`. The active research contract requires
+equally prominent, evidence-backed summaries for both losses and, later, error
+curves by optimization budget with agent-version and evaluator-feedback
+evidence. Those additions are not yet
+implemented and must not be implied by a static report.
 
 ## Inputs
 

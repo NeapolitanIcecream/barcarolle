@@ -1,9 +1,17 @@
 # Real Target Walkthrough
 
 This walkthrough shows the path from `examples/minimal` to a production-shaped
-run against a target repository. Barcarolle stays harness-neutral: your Agent
+run against a target repository. Barcarolle stays harness-neutral: your agent
 harness can be a shell command, a script, or another tool that edits a real
 worktree.
+
+This walkthrough covers the current static `Task Pool` and `Selection` modules.
+It does not implement the active research program's built-in task generation,
+parent links between agent versions, evaluator-feedback records, error curves by
+optimization budget, adversarial stress testing of evaluators and metrics, or
+agent–evaluator coevolution. See
+[`research-program.md`](research-program.md) for that target and
+[`implementation-status.md`](implementation-status.md) for the gap.
 
 ## 1. Bind Repository Identity To A Local Checkout
 
@@ -13,7 +21,7 @@ runtime input and must not become record identity.
 
 The solver workspace starts at the task base commit. Barcarolle writes
 `.barcarolle/solver-visible-task.json` and `.barcarolle/TASK.md` in that
-workspace so the Agent harness can read the task without verifier-only
+workspace so the agent harness can read the task without verifier-only
 material.
 
 ## 2. Prepare Candidates And Check Inputs
@@ -110,7 +118,7 @@ verify their canonical digests. Runner is the shorter path.
 
 ## 5. Bind The Agent Harness
 
-Bind each Agent harness command to its `AgentRecord`:
+Bind each agent harness command to its `AgentRecord`:
 
 ```python
 from barcarolle.workspace import bind_agent_harness
@@ -119,12 +127,12 @@ bind_agent_harness(agent, ("./run-agent.sh",))
 ```
 
 The binder validates the command argv. When results will be reused, change the
-Agent identity whenever the harness or its behavior-changing configuration
+agent identity whenever the harness or its behavior-changing configuration
 changes. The harness adapter decides how to compute that identity.
 
 Record the requested model name separately from the immutable snapshot returned
 by a provider. If the adapter cannot prove a snapshot, leave it null and bind
-the Agent to one declared campaign ID and execution window. Paid preflight
+the agent to one declared campaign ID and execution window. Paid preflight
 rejects missing cells outside that window; cached evidence remains readable.
 
 For a concrete Codex CLI shell example, see
@@ -206,7 +214,7 @@ result = run_agent_on_task_with_artifacts(
 The returned artifact refs are relative to `output_root`. Final diffs and
 stdout/stderr stay separate from normalized `ResultRecord` data. Verifier
 workspace summaries are marked private because verifier workspaces may contain
-hidden check material. Invalid artifact modes fail before Agent execution. If
+hidden check material. Invalid artifact modes fail before agent execution. If
 artifact I/O fails after execution, the call emits a runtime warning and still
 returns the completed run with `artifacts=None` so paid evidence can be stored.
 
@@ -214,12 +222,12 @@ returns the completed run with `artifacts=None` so paid evidence can be stored.
 
 Use `barcarolle.result_store` to compute cache identity, build a `ResultRecord`,
 and append it to a `ResultStore`. Preserve raw usage so pricing and derived cost
-can be recomputed without rerunning a paid Agent result. Unknown cost remains
+can be recomputed without rerunning a paid agent result. Unknown cost remains
 unknown rather than becoming zero.
 
 When the exact execution is requested under a new price table, Runner appends
 a repriced Result from retained usage and binds evaluation cells to that view.
-It does not rerun the Agent or count the pricing view as another execution.
+It does not rerun the agent or count the pricing view as another execution.
 
 ## 9. Build Rolling-Origin Selection
 
