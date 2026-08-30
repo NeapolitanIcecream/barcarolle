@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="1152pt" height="648pt" viewBox="0 0 1152 648" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-08-13T16:29:13.040100</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.11.1, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 648
+L 1152 648
+L 1152 0
+L 0 0
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 597.6 336.24
+L 1047.6 336.24
+Q 1056.24 336.24 1056.24 327.6
+L 1056.24 136.8
+Q 1056.24 128.16 1047.6 128.16
+L 597.6 128.16
+Q 588.96 128.16 588.96 136.8
+L 588.96 327.6
+Q 588.96 336.24 597.6 336.24
+z
+" clip-path="url(#pe2e2893cdd)" style="fill: #eaf2ff; opacity: 0.7"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 1031.602588 543.6
+Q 1042.200283 543.6 1051.23273 543.6
+" clip-path="url(#pe2e2893cdd)" style="fill: none; stroke: #172033; stroke-width: 1.4; stroke-linecap: round"/>
+    <path d="M 1046.03273 541
+L 1051.23273 543.6
+L 1046.03273 546.2
+z
+" clip-path="url(#pe2e2893cdd)" style="fill: #172033; stroke: #172033; stroke-width: 1.4; stroke-linecap: round"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 126 152.797412
+Q 126 142.199717 126 133.16727
+" clip-path="url(#pe2e2893cdd)" style="fill: none; stroke: #172033; stroke-width: 1.4; stroke-linecap: round"/>
+    <path d="M 123.4 138.36727
+L 126 133.16727
+L 128.6 138.36727
+z
+" clip-path="url(#pe2e2893cdd)" style="fill: #172033; stroke: #172033; stroke-width: 1.4; stroke-linecap: round"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 524.00295 182.17894
+Q 674.28197 183.600019 821.877827 184.995724
+" clip-path="url(#pe2e2893cdd)" style="fill: none; stroke: #2463d4; stroke-width: 2.4; stroke-linecap: round"/>
+    <path d="M 815.508372 181.73535
+L 821.877827 184.995724
+L 815.447855 188.135064
+z
+" clip-path="url(#pe2e2893cdd)" style="fill: #2463d4; stroke: #2463d4; stroke-width: 2.4; stroke-linecap: round"/>
+   </g>
+   <g id="line2d_1">
+    <path d="M 46.8 87.84
+L 1105.2 87.84
+" clip-path="url(#pe2e2893cdd)" style="fill: none; stroke: #dde3ea; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_2">
+    <path d="M 126 543.6
+L 1054.8 543.6
+" clip-path="url(#pe2e2893cdd)" style="fill: none; stroke: #172033; stroke-width: 1.4; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_3">
+    <path d="M 126 543.6
+L 126 129.6
+" clip-path="url(#pe2e2893cdd)" style="fill: none; stroke: #172033; stroke-width: 1.4; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_4">
+    <path d="M 590.4 543.6
+L 590.4 129.6
+" clip-path="url(#pe2e2893cdd)" style="fill: none; stroke-dasharray: 3.7,1.6; stroke-dashoffset: 0; stroke: #dde3ea"/>
+   </g>
+   <g id="line2d_5">
+    <path d="M 126 334.8
+L 1054.8 334.8
+" clip-path="url(#pe2e2893cdd)" style="fill: none; stroke-dasharray: 3.7,1.6; stroke-dashoffset: 0; stroke: #dde3ea"/>
+   </g>
+   <g id="line2d_6">
+    <path d="M 46.8 596.16
+L 1105.2 596.16
+" clip-path="url(#pe2e2893cdd)" style="fill: none; stroke: #dde3ea; stroke-linecap: square"/>
+   </g>
+   <g id="text_1">
+    <g id="patch_6">
+     <path d="M 34.943594 48.88
+L 58.656406 48.88
+Q 60.996406 48.88 60.996406 46.54
+L 60.996406 28.34
+Q 60.996406 26 58.656406 26
+L 34.943594 26
+Q 32.603594 26 32.603594 28.34
+L 32.603594 46.54
+Q 32.603594 48.88 34.943594 48.88
+z
+" style="fill: #eaf2ff; stroke: #2463d4; stroke-width: 1.2; stroke-linejoin: miter"/>
+    </g>
+    <text style="font-weight: 600; font-size: 13px; font-family: 'Hiragino Sans GB'; text-anchor: middle; fill: #2463d4" x="46.8" y="42.38" transform="rotate(-0 46.8 42.38)">02</text>
+   </g>
+   <g id="text_2">
+    <text style="font-weight: 600; font-size: 23px; font-family: 'Hiragino Sans GB'; text-anchor: start; fill: #172033" x="84.96" y="40.42" transform="rotate(-0 84.96 40.42)">领域地图：Barcarolle 要补哪个空位</text>
+   </g>
+   <g id="text_3">
+    <text style="font-weight: 300; font-size: 12.5px; font-family: 'Hiragino Sans GB'; text-anchor: start; fill: #5b6472" x="84.96" y="66.24" transform="rotate(-0 84.96 66.24)">这张图回答：相关工作覆盖了哪些区域，Barcarolle 的研究起点和目标分别在哪里？</text>
+   </g>
+   <g id="text_4">
+    <g id="patch_7">
+     <path d="M 977.699688 46.12
+L 1107.84 46.12
+Q 1109.82 46.12 1109.82 44.14
+L 1109.82 27.86
+Q 1109.82 25.88 1107.84 25.88
+L 977.699688 25.88
+Q 975.719688 25.88 975.719688 27.86
+L 975.719688 44.14
+Q 975.719688 46.12 977.699688 46.12
+z
+" style="fill: #ffffff; stroke: #6b7280; stroke-width: 1.4; stroke-linejoin: miter"/>
+    </g>
+    <text style="font-weight: 600; font-size: 11px; font-family: 'Hiragino Sans GB'; text-anchor: end; fill: #6b7280" x="1105.2" y="40.18" transform="rotate(-0 1105.2 40.18)">相关工作事实 + 位置归纳</text>
+   </g>
+   <g id="text_5">
+    <text style="font-weight: 300; font-size: 11px; font-family: 'Hiragino Sans GB'; text-anchor: end; fill: #2463d4" x="1033.2" y="154.08" transform="rotate(-0 1033.2 154.08)">待补的空位</text>
+   </g>
+   <g id="text_6">
+    <text style="font-weight: 300; font-size: 11.5px; font-family: 'Hiragino Sans GB'; text-anchor: start; fill: #5b6472" x="126" y="572.4" transform="rotate(-0 126 572.4)">旁观测量</text>
+   </g>
+   <g id="text_7">
+    <text style="font-weight: 300; font-size: 11.5px; font-family: 'Hiragino Sans GB'; text-anchor: end; fill: #5b6472" x="1054.8" y="572.4" transform="rotate(-0 1054.8 572.4)">进入连续优化闭环</text>
+   </g>
+   <g id="text_8">
+    <text style="font-weight: 300; font-size: 11.5px; font-family: 'Hiragino Sans GB'; fill: #5b6472" transform="translate(56.21 543.6) rotate(-90)">固定题或生成题</text>
+   </g>
+   <g id="text_9">
+    <text style="font-weight: 300; font-size: 11.5px; font-family: 'Hiragino Sans GB'; fill: #5b6472" transform="translate(56.21 221.6) rotate(-90)">后来真实工作对账</text>
+   </g>
+   <g id="patch_8">
+    <path d="M 179.28 505.44
+L 313.92 505.44
+Q 325.44 505.44 325.44 493.92
+L 325.44 445.68
+Q 325.44 434.16 313.92 434.16
+L 179.28 434.16
+Q 167.76 434.16 167.76 445.68
+L 167.76 493.92
+Q 167.76 505.44 179.28 505.44
+z
+" clip-path="url(#pe2e2893cdd)" style="fill: #eef1f4; stroke: #6b7280; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_9">
+    <path d="M 348.48 444.24
+L 519.12 444.24
+Q 530.64 444.24 530.64 432.72
+L 530.64 377.28
+Q 530.64 365.76 519.12 365.76
+L 348.48 365.76
+Q 336.96 365.76 336.96 377.28
+L 336.96 432.72
+Q 336.96 444.24 348.48 444.24
+z
+" clip-path="url(#pe2e2893cdd)" style="fill: #eef1f4; stroke: #6b7280; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_10">
+    <path d="M 352.08 329.04
+L 493.92 329.04
+Q 505.44 329.04 505.44 317.52
+L 505.44 265.68
+Q 505.44 254.16 493.92 254.16
+L 352.08 254.16
+Q 340.56 254.16 340.56 265.68
+L 340.56 317.52
+Q 340.56 329.04 352.08 329.04
+z
+" clip-path="url(#pe2e2893cdd)" style="fill: #eef1f4; stroke: #6b7280; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_11">
+    <path d="M 668.88 501.84
+L 810.72 501.84
+Q 822.24 501.84 822.24 490.32
+L 822.24 442.08
+Q 822.24 430.56 810.72 430.56
+L 668.88 430.56
+Q 657.36 430.56 657.36 442.08
+L 657.36 490.32
+Q 657.36 501.84 668.88 501.84
+z
+" clip-path="url(#pe2e2893cdd)" style="fill: #eef1f4; stroke: #6b7280; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_12">
+    <path d="M 748.08 361.44
+L 900.72 361.44
+Q 912.24 361.44 912.24 349.92
+L 912.24 294.48
+Q 912.24 282.96 900.72 282.96
+L 748.08 282.96
+Q 736.56 282.96 736.56 294.48
+L 736.56 349.92
+Q 736.56 361.44 748.08 361.44
+z
+" clip-path="url(#pe2e2893cdd)" style="fill: #eef1f4; stroke: #6b7280; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_13">
+    <path d="M 308.88 217.44
+L 508.32 217.44
+Q 519.84 217.44 519.84 205.92
+L 519.84 157.68
+Q 519.84 146.16 508.32 146.16
+L 308.88 146.16
+Q 297.36 146.16 297.36 157.68
+L 297.36 205.92
+Q 297.36 217.44 308.88 217.44
+z
+" clip-path="url(#pe2e2893cdd)" style="fill: #eaf2ff; stroke: #2463d4; stroke-width: 1.7; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_14">
+    <path d="M 841.68 228.24
+L 1023.12 228.24
+Q 1034.64 228.24 1034.64 216.72
+L 1034.64 154.08
+Q 1034.64 142.56 1023.12 142.56
+L 841.68 142.56
+Q 830.16 142.56 830.16 154.08
+L 830.16 216.72
+Q 830.16 228.24 841.68 228.24
+z
+" clip-path="url(#pe2e2893cdd)" style="fill: #2463d4; stroke: #174a9c; stroke-width: 1.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="text_10">
+    <text style="font-weight: 300; font-size: 10.5px; font-family: 'Hiragino Sans GB'; text-anchor: middle; fill: #2463d4" x="673.2" y="167.76" transform="rotate(-0 673.2 167.76)">研究推进方向</text>
+   </g>
+   <g id="text_11">
+    <text style="font-weight: 300; font-size: 10.5px; font-family: 'Hiragino Sans GB'; text-anchor: start; fill: #6b7280" x="46.8" y="626.059336" transform="rotate(-0 46.8 626.059336)">相关工作的能力描述来自对话引用；二维位置是战略归纳，不是定量排名</text>
+   </g>
+   <g id="text_12">
+    <text style="font-weight: 300; font-size: 10.5px; font-family: 'Hiragino Sans GB'; text-anchor: end; fill: #5b6472" x="1105.2" y="626.07" transform="rotate(-0 1105.2 626.07)">对应原始对话：第 2、8、9 轮</text>
+   </g>
+   <g id="text_13">
+    <text style="font-weight: 600; font-size: 12px; font-family: 'Hiragino Sans GB'; text-anchor: middle; fill: #172033" x="246.6" y="464.850563" transform="rotate(-0 246.6 464.850563)">SWE-bench</text>
+   </g>
+   <g id="text_14">
+    <text style="font-weight: 300; font-size: 9.5px; font-family: 'Hiragino Sans GB'; text-anchor: middle; fill: #5b6472" x="246.6" y="489.170203" transform="rotate(-0 246.6 489.170203)">固定任务</text>
+   </g>
+   <g id="text_15">
+    <text style="font-weight: 600; font-size: 10.8px; font-family: 'Hiragino Sans GB'; text-anchor: middle; fill: #172033" x="433.8" y="397.623938" transform="rotate(-0 433.8 397.623938)">SWE-Interact / Together</text>
+   </g>
+   <g id="text_16">
+    <text style="font-weight: 300; font-size: 9.4px; font-family: 'Hiragino Sans GB'; text-anchor: middle; fill: #5b6472" x="433.8" y="426.001859" transform="rotate(-0 433.8 426.001859)">交互与重放</text>
+   </g>
+   <g id="text_17">
+    <text style="font-weight: 600; font-size: 11.8px; font-family: 'Hiragino Sans GB'; text-anchor: middle; fill: #172033" x="423" y="286.069453" transform="rotate(-0 423 286.069453)">SWE-Future</text>
+   </g>
+   <g id="text_18">
+    <text style="font-weight: 300; font-size: 9.4px; font-family: 'Hiragino Sans GB'; text-anchor: middle; fill: #5b6472" x="423" y="311.765047" transform="rotate(-0 423 311.765047)">未来需求方向</text>
+   </g>
+   <g id="text_19">
+    <text style="font-weight: 600; font-size: 11.8px; font-family: 'Hiragino Sans GB'; text-anchor: middle; fill: #172033" x="739.8" y="460.406453" transform="rotate(-0 739.8 460.406453)">ADAS / DGM</text>
+   </g>
+   <g id="text_20">
+    <text style="font-weight: 300; font-size: 9.4px; font-family: 'Hiragino Sans GB'; text-anchor: middle; fill: #5b6472" x="739.8" y="485.508406" transform="rotate(-0 739.8 485.508406)">自动提出版本</text>
+   </g>
+   <g id="text_21">
+    <text style="font-weight: 600; font-size: 12px; font-family: 'Hiragino Sans GB'; text-anchor: middle; fill: #172033" x="824.4" y="315.942563" transform="rotate(-0 824.4 315.942563)">RQGM</text>
+   </g>
+   <g id="text_22">
+    <text style="font-weight: 300; font-size: 9.4px; font-family: 'Hiragino Sans GB'; text-anchor: middle; fill: #5b6472" x="824.4" y="343.216547" transform="rotate(-0 824.4 343.216547)">可变评估 + 固定锚</text>
+   </g>
+   <g id="text_23">
+    <text style="font-weight: 600; font-size: 12px; font-family: 'Hiragino Sans GB'; text-anchor: middle; fill: #174a9c" x="408.6" y="176.801813" transform="rotate(-0 408.6 176.801813)">Barcarolle 研究起点</text>
+   </g>
+   <g id="text_24">
+    <text style="font-weight: 300; font-size: 9.3px; font-family: 'Hiragino Sans GB'; text-anchor: middle; fill: #174a9c" x="408.6" y="200.479664" transform="rotate(-0 408.6 200.479664)">固定 Agent，对账后来任务</text>
+   </g>
+   <g id="text_25">
+    <text style="font-weight: 600; font-size: 11.8px; font-family: 'Hiragino Sans GB'; text-anchor: middle; fill: #ffffff" x="932.4" y="178.309516" transform="rotate(-0 932.4 178.309516)">Barcarolle 研究目标</text>
+   </g>
+   <g id="text_26">
+    <text style="font-weight: 300; font-size: 9.2px; font-family: 'Hiragino Sans GB'; text-anchor: middle; fill: #ffffff" x="932.4" y="207.796969" transform="rotate(-0 932.4 207.796969)">连续优化后，仍对账后来任务</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="pe2e2893cdd">
+   <rect x="0" y="0" width="1152" height="648"/>
+  </clipPath>
+ </defs>
+</svg>

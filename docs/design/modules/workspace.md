@@ -16,6 +16,10 @@ supplied by an execution adapter when the deployment requires them.
 The built-in path makes no adversarial containment or resource-isolation
 claim.
 
+A hardened adapter is optional for cooperative runs. It is mandatory evidence
+in any experiment whose declared threat model deliberately includes
+test/scorer/grader/host attacks or mutually untrusted same-host jobs.
+
 ## Inputs
 
 - `TaskRecord`;

@@ -1,0 +1,516 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="1152pt" height="648pt" viewBox="0 0 1152 648" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-08-13T16:29:13.229804</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.11.1, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 648
+L 1152 648
+L 1152 0
+L 0 0
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 212.958369 311.04
+Q 224.997882 311.04 235.136737 311.04
+" clip-path="url(#pa05f56bd69)" style="fill: none; stroke: #2463d4; stroke-width: 1.7; stroke-linecap: round"/>
+    <path d="M 229.936737 308.44
+L 235.136737 311.04
+L 229.936737 313.64
+z
+" clip-path="url(#pa05f56bd69)" style="fill: #2463d4; stroke: #2463d4; stroke-width: 1.7; stroke-linecap: round"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 424.148906 309.203328
+Q 446.399842 257.400367 468.033032 207.035596
+" clip-path="url(#pa05f56bd69)" style="fill: none; stroke: #2463d4; stroke-width: 1.4; stroke-linecap: round"/>
+    <path d="M 463.591836 210.787366
+L 468.033032 207.035596
+L 468.36973 212.839615
+z
+" clip-path="url(#pa05f56bd69)" style="fill: #2463d4; stroke: #2463d4; stroke-width: 1.4; stroke-linecap: round"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 425.297813 311.524453
+Q 446.397638 316.79941 465.97895 321.694738
+" clip-path="url(#pa05f56bd69)" style="fill: none; stroke: #2463d4; stroke-width: 1.4; stroke-linecap: round"/>
+    <path d="M 461.564802 317.911182
+L 465.97895 321.694738
+L 460.303617 322.955923
+z
+" clip-path="url(#pa05f56bd69)" style="fill: #2463d4; stroke: #2463d4; stroke-width: 1.4; stroke-linecap: round"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 424.027969 312.929099
+Q 446.400684 376.201934 468.2516 437.999057
+" clip-path="url(#pa05f56bd69)" style="fill: none; stroke: #2463d4; stroke-width: 1.4; stroke-linecap: round"/>
+    <path d="M 468.969377 432.229759
+L 468.2516 437.999057
+L 464.066828 433.963257
+z
+" clip-path="url(#pa05f56bd69)" style="fill: #2463d4; stroke: #2463d4; stroke-width: 1.4; stroke-linecap: round"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 622.249409 205.550837
+Q 647.999429 257.398851 673.152677 308.045256
+" clip-path="url(#pa05f56bd69)" style="fill: none; stroke: #6b7280; stroke-width: 1.2; stroke-linecap: round"/>
+    <path d="M 673.168306 302.2315
+L 673.152677 308.045256
+L 668.51105 304.5445
+z
+" clip-path="url(#pa05f56bd69)" style="fill: #6b7280; stroke: #6b7280; stroke-width: 1.2; stroke-linecap: round"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 623.314424 322.137422
+Q 647.998254 316.800377 671.370746 311.746866
+" clip-path="url(#pa05f56bd69)" style="fill: none; stroke: #6b7280; stroke-width: 1.2; stroke-linecap: round"/>
+    <path d="M 665.738727 310.304519
+L 671.370746 311.746866
+L 666.837658 315.387073
+z
+" clip-path="url(#pa05f56bd69)" style="fill: #6b7280; stroke: #6b7280; stroke-width: 1.2; stroke-linecap: round"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 622.116079 439.510671
+Q 647.998953 376.202561 673.374105 314.136311
+" clip-path="url(#pa05f56bd69)" style="fill: none; stroke: #6b7280; stroke-width: 1.2; stroke-linecap: round"/>
+    <path d="M 668.999616 317.965651
+L 673.374105 314.136311
+L 673.812883 319.933506
+z
+" clip-path="url(#pa05f56bd69)" style="fill: #6b7280; stroke: #6b7280; stroke-width: 1.2; stroke-linecap: round"/>
+   </g>
+   <g id="patch_9">
+    <path d="M 842.959028 311.04
+Q 862.198855 311.04 879.538025 311.04
+" clip-path="url(#pa05f56bd69)" style="fill: none; stroke: #d96a1d; stroke-width: 1.7; stroke-linecap: round"/>
+    <path d="M 874.338025 308.44
+L 879.538025 311.04
+L 874.338025 313.64
+z
+" clip-path="url(#pa05f56bd69)" style="fill: #d96a1d; stroke: #d96a1d; stroke-width: 1.7; stroke-linecap: round"/>
+   </g>
+   <g id="patch_10">
+    <path d="M 972 247.837412
+Q 972 232.200034 972 218.463315
+" clip-path="url(#pa05f56bd69)" style="fill: none; stroke: #2463d4; stroke-width: 1.7; stroke-linecap: round"/>
+    <path d="M 969.4 223.663315
+L 972 218.463315
+L 974.6 223.663315
+z
+" clip-path="url(#pa05f56bd69)" style="fill: #2463d4; stroke: #2463d4; stroke-width: 1.7; stroke-linecap: round"/>
+   </g>
+   <g id="patch_11">
+    <path d="M 972 374.958589
+Q 972 405.000854 972 433.142461
+" clip-path="url(#pa05f56bd69)" style="fill: none; stroke: #d96a1d; stroke-width: 1.7; stroke-linecap: round"/>
+    <path d="M 974.6 427.942461
+L 972 433.142461
+L 969.4 427.942461
+z
+" clip-path="url(#pa05f56bd69)" style="fill: #d96a1d; stroke: #d96a1d; stroke-width: 1.7; stroke-linecap: round"/>
+   </g>
+   <g id="patch_12">
+    <path d="M 425.359688 531.36
+Q 446.400342 531.36 465.540339 531.36
+" clip-path="url(#pa05f56bd69)" style="fill: none; stroke: #15845b; stroke-width: 1.7; stroke-linecap: round"/>
+    <path d="M 460.340339 528.76
+L 465.540339 531.36
+L 460.340339 533.96
+z
+" clip-path="url(#pa05f56bd69)" style="fill: #15845b; stroke: #15845b; stroke-width: 1.7; stroke-linecap: round"/>
+   </g>
+   <g id="patch_13">
+    <path d="M 666.559687 531.36
+Q 687.600342 531.36 706.740339 531.36
+" clip-path="url(#pa05f56bd69)" style="fill: none; stroke: #15845b; stroke-width: 1.7; stroke-linecap: round"/>
+    <path d="M 701.540339 528.76
+L 706.740339 531.36
+L 701.540339 533.96
+z
+" clip-path="url(#pa05f56bd69)" style="fill: #15845b; stroke: #15845b; stroke-width: 1.7; stroke-linecap: round"/>
+   </g>
+   <g id="patch_14">
+    <path d="M 804.898682 493.322294
+Q 615.23185 327.353134 367.239442 361.653605
+" clip-path="url(#pa05f56bd69)" style="fill: none; stroke-dasharray: 5.55,2.4; stroke-dashoffset: 0; stroke: #15845b; stroke-width: 1.5; stroke-linecap: round"/>
+    <path d="M 372.746627 363.516644
+L 367.239442 361.653605
+L 372.034184 358.36568
+z
+" clip-path="url(#pa05f56bd69)" style="fill: #15845b; stroke-dasharray: 5.55,2.4; stroke-dashoffset: 0; stroke: #15845b; stroke-width: 1.5; stroke-linecap: round"/>
+   </g>
+   <g id="line2d_1">
+    <path d="M 46.8 87.84
+L 1105.2 87.84
+" clip-path="url(#pa05f56bd69)" style="fill: none; stroke: #dde3ea; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_2">
+    <path d="M 46.8 596.16
+L 1105.2 596.16
+" clip-path="url(#pa05f56bd69)" style="fill: none; stroke: #dde3ea; stroke-linecap: square"/>
+   </g>
+   <g id="text_1">
+    <g id="patch_15">
+     <path d="M 34.943594 48.88
+L 58.656406 48.88
+Q 60.996406 48.88 60.996406 46.54
+L 60.996406 28.34
+Q 60.996406 26 58.656406 26
+L 34.943594 26
+Q 32.603594 26 32.603594 28.34
+L 32.603594 46.54
+Q 32.603594 48.88 34.943594 48.88
+z
+" style="fill: #eaf2ff; stroke: #2463d4; stroke-width: 1.2; stroke-linejoin: miter"/>
+    </g>
+    <text style="font-weight: 600; font-size: 13px; font-family: 'Hiragino Sans GB'; text-anchor: middle; fill: #2463d4" x="46.8" y="42.38" transform="rotate(-0 46.8 42.38)">04</text>
+   </g>
+   <g id="text_2">
+    <text style="font-weight: 600; font-size: 23px; font-family: 'Hiragino Sans GB'; text-anchor: start; fill: #172033" x="84.96" y="40.42" transform="rotate(-0 84.96 40.42)">任务生成最难的一步：从需求方向到具体题，谁说了算</text>
+   </g>
+   <g id="text_3">
+    <text style="font-weight: 300; font-size: 12.5px; font-family: 'Hiragino Sans GB'; text-anchor: start; fill: #5b6472" x="84.96" y="66.24" transform="rotate(-0 84.96 66.24)">这张图回答：怎样避免任务生成模块用自己的成题偏好定义评测结论？</text>
+   </g>
+   <g id="text_4">
+    <g id="patch_16">
+     <path d="M 1047.56 46.12
+L 1107.84 46.12
+Q 1109.82 46.12 1109.82 44.14
+L 1109.82 27.86
+Q 1109.82 25.88 1107.84 25.88
+L 1047.56 25.88
+Q 1045.58 25.88 1045.58 27.86
+L 1045.58 44.14
+Q 1045.58 46.12 1047.56 46.12
+z
+" style="fill: #ffffff; stroke: #2463d4; stroke-width: 1.4; stroke-linejoin: miter"/>
+    </g>
+    <text style="font-weight: 600; font-size: 11px; font-family: 'Hiragino Sans GB'; text-anchor: end; fill: #2463d4" x="1105.2" y="40.18" transform="rotate(-0 1105.2 40.18)">拟研究方法</text>
+   </g>
+   <g id="patch_17">
+    <path d="M 56.88 361.44
+L 198.72 361.44
+Q 210.24 361.44 210.24 349.92
+L 210.24 272.88
+Q 210.24 261.36 198.72 261.36
+L 56.88 261.36
+Q 45.36 261.36 45.36 272.88
+L 45.36 349.92
+Q 45.36 361.44 56.88 361.44
+z
+" clip-path="url(#pa05f56bd69)" style="fill: #eef1f4; stroke: #6b7280; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_18">
+    <path d="M 251.28 361.44
+L 411.12 361.44
+Q 422.64 361.44 422.64 349.92
+L 422.64 272.88
+Q 422.64 261.36 411.12 261.36
+L 251.28 261.36
+Q 239.76 261.36 239.76 272.88
+L 239.76 349.92
+Q 239.76 361.44 251.28 361.44
+z
+" clip-path="url(#pa05f56bd69)" style="fill: #eaf2ff; stroke: #2463d4; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_19">
+    <path d="M 481.68 242.64
+L 609.12 242.64
+Q 620.64 242.64 620.64 231.12
+L 620.64 175.68
+Q 620.64 164.16 609.12 164.16
+L 481.68 164.16
+Q 470.16 164.16 470.16 175.68
+L 470.16 231.12
+Q 470.16 242.64 481.68 242.64
+z
+" clip-path="url(#pa05f56bd69)" style="fill: #ffffff; stroke: #2463d4; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_20">
+    <path d="M 481.68 361.44
+L 609.12 361.44
+Q 620.64 361.44 620.64 349.92
+L 620.64 294.48
+Q 620.64 282.96 609.12 282.96
+L 481.68 282.96
+Q 470.16 282.96 470.16 294.48
+L 470.16 349.92
+Q 470.16 361.44 481.68 361.44
+z
+" clip-path="url(#pa05f56bd69)" style="fill: #ffffff; stroke: #2463d4; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_21">
+    <path d="M 481.68 480.24
+L 609.12 480.24
+Q 620.64 480.24 620.64 468.72
+L 620.64 413.28
+Q 620.64 401.76 609.12 401.76
+L 481.68 401.76
+Q 470.16 401.76 470.16 413.28
+L 470.16 468.72
+Q 470.16 480.24 481.68 480.24
+z
+" clip-path="url(#pa05f56bd69)" style="fill: #ffffff; stroke: #2463d4; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_22">
+    <path d="M 686.88 379.44
+L 828.72 379.44
+Q 840.24 379.44 840.24 367.92
+L 840.24 254.88
+Q 840.24 243.36 828.72 243.36
+L 686.88 243.36
+Q 675.36 243.36 675.36 254.88
+L 675.36 367.92
+Q 675.36 379.44 686.88 379.44
+z
+" clip-path="url(#pa05f56bd69)" style="fill: #eef1f4; stroke: #6b7280; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_23">
+    <path d="M 895.68 372.24
+L 1048.32 372.24
+Q 1059.84 372.24 1059.84 360.72
+L 1059.84 262.08
+Q 1059.84 250.56 1048.32 250.56
+L 895.68 250.56
+Q 884.16 250.56 884.16 262.08
+L 884.16 360.72
+Q 884.16 372.24 895.68 372.24
+z
+" clip-path="url(#pa05f56bd69)" style="fill: #fff0e5; stroke: #d96a1d; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_24">
+    <path d="M 906.48 213.84
+L 1037.52 213.84
+Q 1049.04 213.84 1049.04 202.32
+L 1049.04 161.28
+Q 1049.04 149.76 1037.52 149.76
+L 906.48 149.76
+Q 894.96 149.76 894.96 161.28
+L 894.96 202.32
+Q 894.96 213.84 906.48 213.84
+z
+" clip-path="url(#pa05f56bd69)" style="fill: #eaf2ff; stroke: #2463d4; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_25">
+    <path d="M 906.48 501.84
+L 1037.52 501.84
+Q 1049.04 501.84 1049.04 490.32
+L 1049.04 449.28
+Q 1049.04 437.76 1037.52 437.76
+L 906.48 437.76
+Q 894.96 437.76 894.96 449.28
+L 894.96 490.32
+Q 894.96 501.84 906.48 501.84
+z
+" clip-path="url(#pa05f56bd69)" style="fill: #fff0e5; stroke: #d96a1d; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_26">
+    <path d="M 251.28 566.64
+L 411.12 566.64
+Q 422.64 566.64 422.64 555.12
+L 422.64 506.88
+Q 422.64 495.36 411.12 495.36
+L 251.28 495.36
+Q 239.76 495.36 239.76 506.88
+L 239.76 555.12
+Q 239.76 566.64 251.28 566.64
+z
+" clip-path="url(#pa05f56bd69)" style="fill: #e7f6ef; stroke: #15845b; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_27">
+    <path d="M 481.68 566.64
+L 652.32 566.64
+Q 663.84 566.64 663.84 555.12
+L 663.84 506.88
+Q 663.84 495.36 652.32 495.36
+L 481.68 495.36
+Q 470.16 495.36 470.16 506.88
+L 470.16 555.12
+Q 470.16 566.64 481.68 566.64
+z
+" clip-path="url(#pa05f56bd69)" style="fill: #e7f6ef; stroke: #15845b; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_28">
+    <path d="M 722.88 566.64
+L 893.52 566.64
+Q 905.04 566.64 905.04 555.12
+L 905.04 506.88
+Q 905.04 495.36 893.52 495.36
+L 722.88 495.36
+Q 711.36 495.36 711.36 506.88
+L 711.36 555.12
+Q 711.36 566.64 722.88 566.64
+z
+" clip-path="url(#pa05f56bd69)" style="fill: #e7f6ef; stroke: #15845b; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="text_5">
+    <text style="font-weight: 300; font-size: 10.5px; font-family: 'Hiragino Sans GB'; text-anchor: start; fill: #2463d4" x="46.8" y="626.07" transform="rotate(-0 46.8 626.07)">拟研究方法：任务生成模块不能自证正确，后来真实任务始终是外部校准锚</text>
+   </g>
+   <g id="text_6">
+    <text style="font-weight: 300; font-size: 10.5px; font-family: 'Hiragino Sans GB'; text-anchor: end; fill: #5b6472" x="1105.2" y="626.07" transform="rotate(-0 1105.2 626.07)">对应原始对话：第 8、9、10、11 轮</text>
+   </g>
+   <g id="text_7">
+    <text style="font-weight: 600; font-size: 12px; font-family: 'Hiragino Sans GB'; text-anchor: middle; fill: #172033" x="127.8" y="302.262" transform="rotate(-0 127.8 302.262)">历史与项目状态</text>
+   </g>
+   <g id="text_8">
+    <text style="font-weight: 300; font-size: 9.2px; font-family: 'Hiragino Sans GB'; text-anchor: middle; fill: #5b6472" x="127.8" y="336.7" transform="rotate(-0 127.8 336.7)">不看当前 Agent 的弱点</text>
+   </g>
+   <g id="text_9">
+    <text style="font-weight: 600; font-size: 12px; font-family: 'Hiragino Sans GB'; text-anchor: middle; fill: #174a9c" x="331.2" y="302.292" transform="rotate(-0 331.2 302.292)">预测需求方向</text>
+   </g>
+   <g id="text_10">
+    <text style="font-weight: 300; font-size: 9.5px; font-family: 'Hiragino Sans GB'; text-anchor: middle; fill: #174a9c" x="331.2" y="337.385297" transform="rotate(-0 331.2 337.385297)">支持新的序列化类型</text>
+   </g>
+   <g id="text_11">
+    <text style="font-weight: 600; font-size: 10.8px; font-family: 'Hiragino Sans GB'; text-anchor: middle; fill: #172033" x="545.4" y="196.909875" transform="rotate(-0 545.4 196.909875)">具体任务 A</text>
+   </g>
+   <g id="text_12">
+    <text style="font-weight: 300; font-size: 9px; font-family: 'Hiragino Sans GB'; text-anchor: middle; fill: #5b6472" x="545.4" y="224.198859" transform="rotate(-0 545.4 224.198859)">类型不同</text>
+   </g>
+   <g id="text_13">
+    <text style="font-weight: 600; font-size: 10.8px; font-family: 'Hiragino Sans GB'; text-anchor: middle; fill: #172033" x="545.4" y="315.709875" transform="rotate(-0 545.4 315.709875)">具体任务 B</text>
+   </g>
+   <g id="text_14">
+    <text style="font-weight: 300; font-size: 9px; font-family: 'Hiragino Sans GB'; text-anchor: middle; fill: #5b6472" x="545.4" y="342.958781" transform="rotate(-0 545.4 342.958781)">接口不同</text>
+   </g>
+   <g id="text_15">
+    <text style="font-weight: 600; font-size: 10.8px; font-family: 'Hiragino Sans GB'; text-anchor: middle; fill: #172033" x="545.4" y="434.509875" transform="rotate(-0 545.4 434.509875)">具体任务 C</text>
+   </g>
+   <g id="text_16">
+    <text style="font-weight: 300; font-size: 9px; font-family: 'Hiragino Sans GB'; text-anchor: middle; fill: #5b6472" x="545.4" y="461.848781" transform="rotate(-0 545.4 461.848781)">边界条件不同</text>
+   </g>
+   <g id="text_17">
+    <text style="font-weight: 600; font-size: 11.5px; font-family: 'Hiragino Sans GB'; text-anchor: middle; fill: #172033" x="757.8" y="296.4895" transform="rotate(-0 757.8 296.4895)">同一组多样化 Agent</text>
+   </g>
+   <g id="text_18">
+    <text style="font-weight: 300; font-size: 9.2px; font-family: 'Hiragino Sans GB'; text-anchor: middle; fill: #5b6472" x="757.8" y="345.555" transform="rotate(-0 757.8 345.555)">运行 A、B、C 三种成题</text>
+   </g>
+   <g id="text_19">
+    <text style="font-weight: 600; font-size: 12px; font-family: 'Hiragino Sans GB'; text-anchor: middle; fill: #d96a1d" x="972" y="299.333625" transform="rotate(-0 972 299.333625)">相对表现稳定？</text>
+   </g>
+   <g id="text_20">
+    <text style="font-weight: 300; font-size: 9.2px; font-family: 'Hiragino Sans GB'; text-anchor: middle; fill: #5b6472" x="972" y="342.243" transform="rotate(-0 972 342.243)">A、B、C 是否得出近似排序</text>
+   </g>
+   <g id="text_21">
+    <text style="font-weight: 600; font-size: 11px; font-family: 'Hiragino Sans GB'; text-anchor: middle; fill: #174a9c" x="972" y="185.968828" transform="rotate(-0 972 185.968828)">进入候选评测</text>
+   </g>
+   <g id="text_22">
+    <text style="font-weight: 600; font-size: 10.8px; font-family: 'Hiragino Sans GB'; text-anchor: middle; fill: #d96a1d" x="972" y="473.936063" transform="rotate(-0 972 473.936063)">降权或暂不使用</text>
+   </g>
+   <g id="text_23">
+    <text style="font-weight: 600; font-size: 11.5px; font-family: 'Hiragino Sans GB'; text-anchor: middle; fill: #15845b" x="331.2" y="535.41043" transform="rotate(-0 331.2 535.41043)">后来真实任务</text>
+   </g>
+   <g id="text_24">
+    <text style="font-weight: 600; font-size: 11px; font-family: 'Hiragino Sans GB'; text-anchor: middle; fill: #15845b" x="567" y="534.536328" transform="rotate(-0 567 534.536328)">比较 Agent 相对表现</text>
+   </g>
+   <g id="text_25">
+    <text style="font-weight: 600; font-size: 10.8px; font-family: 'Hiragino Sans GB'; text-anchor: middle; fill: #15845b" x="808.2" y="535.120031" transform="rotate(-0 808.2 535.120031)">校准方向与成题方法</text>
+   </g>
+   <g id="text_26">
+    <g id="patch_29">
+     <path d="M 1055.54 241.07
+L 1068.46 241.07
+Q 1069.79 241.07 1069.79 239.74
+L 1069.79 226.82
+Q 1069.79 225.49 1068.46 225.49
+L 1055.54 225.49
+Q 1054.21 225.49 1054.21 226.82
+L 1054.21 239.74
+Q 1054.21 241.07 1055.54 241.07
+z
+" style="fill: #eaf2ff"/>
+    </g>
+    <text style="font-weight: 600; font-size: 9.5px; font-family: 'Hiragino Sans GB'; text-anchor: middle; fill: #2463d4" x="1062" y="236.89" transform="rotate(-0 1062 236.89)">是</text>
+   </g>
+   <g id="text_27">
+    <g id="patch_30">
+     <path d="M 1055.54 414.59
+L 1068.46 414.59
+Q 1069.79 414.59 1069.79 413.26
+L 1069.79 400.34
+Q 1069.79 399.01 1068.46 399.01
+L 1055.54 399.01
+Q 1054.21 399.01 1054.21 400.34
+L 1054.21 413.26
+Q 1054.21 414.59 1055.54 414.59
+z
+" style="fill: #fff0e5"/>
+    </g>
+    <text style="font-weight: 600; font-size: 9.5px; font-family: 'Hiragino Sans GB'; text-anchor: middle; fill: #d96a1d" x="1062" y="410.41" transform="rotate(-0 1062 410.41)">否</text>
+   </g>
+   <g id="text_28">
+    <g id="patch_31">
+     <path d="M 305.74 407.39
+L 356.66 407.39
+Q 357.99 407.39 357.99 406.06
+L 357.99 393.14
+Q 357.99 391.81 356.66 391.81
+L 305.74 391.81
+Q 304.41 391.81 304.41 393.14
+L 304.41 406.06
+Q 304.41 407.39 305.74 407.39
+z
+" style="fill: #eaf2ff"/>
+    </g>
+    <text style="font-weight: 600; font-size: 9.5px; font-family: 'Hiragino Sans GB'; text-anchor: middle; fill: #174a9c" x="331.2" y="403.21" transform="rotate(-0 331.2 403.21)">方向是否对</text>
+   </g>
+   <g id="text_29">
+    <g id="patch_32">
+     <path d="M 515.55 144.59
+L 575.97 144.59
+Q 577.3 144.59 577.3 143.26
+L 577.3 130.34
+Q 577.3 129.01 575.97 129.01
+L 515.55 129.01
+Q 514.22 129.01 514.22 130.34
+L 514.22 143.26
+Q 514.22 144.59 515.55 144.59
+z
+" style="fill: #eaf2ff"/>
+    </g>
+    <text style="font-weight: 600; font-size: 9.5px; font-family: 'Hiragino Sans GB'; text-anchor: middle; fill: #174a9c" x="545.76" y="140.41" transform="rotate(-0 545.76 140.41)">成题是否走偏</text>
+   </g>
+   <g id="text_30">
+    <g id="patch_33">
+     <path d="M 526.79 587.39
+L 625.21 587.39
+Q 626.54 587.39 626.54 586.06
+L 626.54 573.14
+Q 626.54 571.81 625.21 571.81
+L 526.79 571.81
+Q 525.46 571.81 525.46 573.14
+L 525.46 586.06
+Q 525.46 587.39 526.79 587.39
+z
+" style="fill: #e7f6ef"/>
+    </g>
+    <text style="font-weight: 600; font-size: 9.5px; font-family: 'Hiragino Sans GB'; text-anchor: middle; fill: #15845b" x="576" y="583.21" transform="rotate(-0 576 583.21)">相对表现能否对上未来</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="pa05f56bd69">
+   <rect x="0" y="0" width="1152" height="648"/>
+  </clipPath>
+ </defs>
+</svg>

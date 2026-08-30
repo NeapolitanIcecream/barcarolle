@@ -1,27 +1,37 @@
 # Evidence Storage, Identity, And Recovery
 
-Status: current enforced behavior, 2026-07-24.
+Status: current enforced behavior for static workflows, 2026-08-30.
 
-This document defines where Barcarolle evidence lives, which identity controls
-reuse, and what recovery is allowed after an interrupted write. It does not add
-an Evidence module, a cross-module transaction, or a general artifact service.
-Each existing module remains responsible for its records.
+This document defines where the current static Barcarolle evidence lives, which
+identity controls reuse, and what recovery is allowed after an interrupted
+write. It does not add an Evidence module, a cross-module transaction, or a
+general artifact service. Each existing module remains responsible for its
+records.
 
 ## Evidence Classes
 
 | Evidence | Owner | Storage rule | Recovery rule |
 | --- | --- | --- | --- |
 | Task Pool bundle | Task Pool and Runner | Immutable directory published under an explicit artifact root | Validate the complete target; ignore unpublished staging directories |
-| Prepared-candidate package | External Generator or user | Immutable manifest plus candidate, exclusion, material, and optional provenance/frame sidecars | Read and validate without modification; rebuild or republish a corrected package |
+| Prepared-candidate package | External task generator or user | Immutable manifest plus candidate, exclusion, material, and optional provenance/frame sidecars | Read and validate without modification; rebuild or republish a corrected package |
 | Agent Results | Result Store | Locked append-only canonical JSONL | Fail on an unterminated tail; repair only through `recover_result_store_tail` |
 | External Result source and import receipt | External producer and Runner | Read-only source manifest/JSONL; separate immutable local decision receipt | Exact receipt replay is idempotent; correct a source by publishing a new manifest |
-| Selector, Origin, Snapshot, Input, Selection, cell-set, matrix, and metric records | Runner and Selection | Single-writer append-only canonical JSONL with stable semantic IDs | Fail closed on invalid input; the current runtime has no automatic tail repair for these logs |
+| `Selector`, `RollingOrigin`, `FeatureSnapshot`, `SelectorInput`, `BenchmarkSelection`, `EvaluationCellSet`, `ResultMatrix`, and `Metric` records | Runner and Selection | Single-writer append-only canonical JSONL with stable semantic IDs | Fail closed on invalid input; the current runtime has no automatic tail repair for these logs |
 | Workspace run artifacts | Workspace | Optional files with relative refs and content digests | Best effort; artifact failure does not replace a completed normalized run |
 | Reports | Reporting | Derived Markdown and JSON | Rebuild from validated source records |
 | Migration output | One-off migration script | New current-schema file; source is unchanged | Validate the new file and rebuild downstream bindings |
 
-The complete evidence for an experiment is the validated set of these records
-and refs. It is not one atomically published directory.
+For the current static workflows, the validated set of these records and refs
+is the complete implemented evidence chain. It is not one atomically published
+directory.
+
+A reliability claim about a self-evolving agent additionally needs evidence
+that the current runtime does not yet implement: exact persistent agent
+snapshots and transitions; the complete agent lineage and agent optimizer;
+the frozen evaluation method, evaluator versions, and evaluator-update rule;
+feedback, query, round, epoch, and optimization-budget records; and the sealed
+prospective-cohort lifecycle, independent reference standard, and results of the
+applicable evaluation and method-selection stages.
 
 ## Explicit Roots And Paths
 
@@ -64,7 +74,7 @@ must pass them rather than depend on the process working directory.
 
 Runner derives the bundle directory from the exact accepted Tasks, Checks,
 sanitized certification evidence, SourceEvents, optional generation
-provenance, Generator behavior/source protocol, certification config, canonical
+provenance, task-generator behavior/source protocol, certification config, canonical
 source window, creation time, and optional declared pool identity. It
 then:
 
@@ -271,9 +281,10 @@ Invalid or incomplete input therefore fails closed. Do not silently truncate a
 companion log or copy Result Store's recovery rule to it.
 
 This is sufficient for the current serial Runner because pre-execution
-Selector, Origin, Snapshot, Input, Selection, and cell-set records return from
-their durable append before missing paid cells begin. Result matrices, metrics,
-and reports can be reconstructed from their frozen inputs and durable Results.
+`Selector`, `RollingOrigin`, `FeatureSnapshot`, `SelectorInput`,
+`BenchmarkSelection`, and `EvaluationCellSet` records return from their durable
+append before missing paid cells begin. Result matrices, metrics, and reports
+can be reconstructed from their frozen inputs and durable Results.
 Reopen this boundary before supporting multiple writers or if a real
 companion-log interruption demonstrates a need for automated recovery.
 

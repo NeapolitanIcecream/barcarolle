@@ -1,232 +1,324 @@
-# Research Ledger
+# Research Improvement Backlog
 
-Last reviewed: 2026-07-31.
+Last reviewed: 2026-08-30.
 
-Status: the first modern-panel outcome-open candidate beats Full at H5 and H10
-under the frozen repository-equal estimand, but reverses under Origin weighting
-and fails opened cross-system transfer. Reference-to-target population shift is
-the next research question.
+Status: active. The current objectives and experiment design are in
+[`research-program.md`](research-program.md); the supporting evidence is in
+[`literature-review.md`](literature-review.md).
 
-`PROCESS.md` is the short handoff. The legacy-panel research record is
-preserved in
-[`research-improvement-backlog-2026-07-31-legacy-panel.md`](research-improvement-backlog-2026-07-31-legacy-panel.md).
-Do not amend archived evidence.
+The earlier task-selection-only ledger is preserved in dated experiment
+reports, especially
+[`experiments/2026-08-05-research-phase-summary.md`](experiments/2026-08-05-research-phase-summary.md),
+and in Git history. Its results remain valid under their original protocols;
+its roadmap and metric priority have been superseded.
 
-## Goal
+## First Principle
 
-For one target Agent and one repository, select ten historical Tasks whose
-target-Agent pass rate is closer than Full history to the Agent's pass rate on
-the next Tasks.
+Barcarolle exists to provide reliable evaluation methods for self-evolving
+agents. Repository-level coding agents are the first concrete domain. The
+evaluation object includes a frozen agent snapshot, each parent-to-child
+transition, and the complete agent lineage produced by a declared agent
+optimizer, feedback policy, task stream, budget path, state policy, and seed.
 
-Direct future pass-rate MAE is primary. H5 and H10 are reported separately.
-Full history is the no-Selection baseline. Uniform random ten-Task subsets
-calibrate the sampling space. Future-open Oracles measure capacity and are not
-Selectors.
+The three numerical objectives below are the primary empirical objectives for
+this mission. Evaluation and method selection proceed through four stages: evidence
+validity; decision-derived absolute error limits with adequate uncertainty and
+coverage; bounded degradation under evaluator-guided optimization; and only
+then method comparison. A reliability claim must pass the first two stages and
+the third when it covers evaluator-guided optimization. Agent–evaluator
+coevolution is one candidate method; evaluating a self-evolving agent does not
+require the evaluator itself to evolve.
 
-The deployment unit remains one Agent and one repository. Multiple repositories
-are offline evidence units; Barcarolle does not combine their Tasks at runtime.
+## Active Objectives
 
-## Methodology Correction
+Barcarolle optimizes:
 
-The earlier development population was dominated by six 2023–2024 RAG
-submissions and other early Agent systems. Its low outcome prevalence compressed
-direct MAE and rewarded near-zero prediction. Algorithms optimized on that
-population are historical candidates, not evidence about current Agents.
+1. minimize pass-rate mean absolute error (MAE) on future real-world tasks;
+2. minimize pass-rate-difference MAE between agents on those tasks;
+3. minimize the increase in both errors as the predeclared budget for repeated
+   evaluator-guided optimization grows.
 
-Agent identity now includes model, Harness and version, inference policy,
-attempt count, and other material runtime settings. Parameter count or model
-name alone does not define a comparable Agent.
+The first two are separate primary metrics. Objective 3 measures how much each
+complete evaluation method degrades from its no-optimization baseline (`b=0`).
+At the later method-comparison stage, give pass-rate-difference MAE decision
+priority only when the method's pass-rate MAE is no more than a predeclared
+margin worse than a named comparator at every budget. Absolute error limits,
+within-method degradation limits, and comparator-relative margins answer
+different questions and must not be substituted for one another.
 
-The primary research population must use exact public per-Task outcomes. An
-aggregate leaderboard score is insufficient for rolling-Origin research.
+Evidence may now include agent pairs, stateful sequences of candidate agent
+versions, full lineage graphs, evaluator versions, evaluator feedback, and
+optimization budgets. Task budget, forecast horizon, pair population, state
+reset or persistence, task order, feedback policy, and evaluator-update rule
+remain experiment choices that must be fixed before outcomes are examined.
 
-## Active Data
+## Method Scope
 
-### Primary: fixed Harness
+Candidate methods include:
 
-Thirteen model configurations use the same mini-SWE-agent v2.0.0 Harness on all
-500 SWE-bench Verified Tasks:
+- task sampling and weighting;
+- statistical outcome models, including IRT, matrix, hierarchical, calibrated,
+  and direct paired-outcome models;
+- forecasting future task categories and generating executable task instances;
+- joint allocation across real and generated tasks;
+- coverage checks, abstention, and fallback policies;
+- evaluator feedback policies, query accounting, and evaluator updating;
+- stateful task streams, common-ancestor branching, and complete lineage
+  evaluation;
+- deployment-like context audits and separately scoped capability elicitation;
+- adversarial stress tests of tasks, checks, scorers, feedback, metrics, and
+  agent variants;
+- evaluator portfolios and agent–evaluator coevolution.
 
-- pooled pass rate `0.713077`; Agent range `0.562–0.768`;
-- five repositories on the common minimum-history-20 frame;
-- 61 H5 Origins and 30 H10 Origins;
-- 151 distinct response patterns, no duplicate Agent vectors, and mean pairwise
-  disagreement `0.148154`.
+No method may use only its own generated tasks to select itself and then call
+that score future predictive validity. Final evidence comes from future
+real-world tasks that were kept unavailable during agent optimization,
+evaluator update, attack design, threshold choice, and final method selection.
 
-This is the active outcome-open algorithm-development population. It isolates
-model differences better than arbitrary full-system submissions, but its Tasks
-end in 2023 and may be memorized or otherwise unrepresentative of a current
-workload.
+## What The Current Code Can Reuse
 
-### Secondary: complete systems
+- `pairwise_gap_mae` already computes the requested aggregate numerical error
+  for predicted pass-rate differences over common agent outcomes. The field
+  name is historical; public prose should use “pass-rate-difference MAE.”
+- Task and check validation, hidden-check verification, exact static
+  agent/result identity, rolling-origin chronology, and fixed result matrices
+  remain useful for every method family. Persistent state and version-lineage
+  identity are not yet represented.
+- The prepared-package generator boundary can import generated tasks before a
+  built-in task generator exists.
+- Existing public per-task agent outcomes can support the first static and
+  fixed-archive optimization studies without paid calls.
 
-Three modern SWE-bench Full submissions provide 2,294-Task vectors:
+## Missing Experiment Contracts
 
-- SWE-agent 1.0 with Claude 3.7 Sonnet;
-- Salesforce SAGE with Claude Sonnet 4.5 and GPT-5, two-plus attempts;
-- Sonar Foundation Agent with Claude Opus 4.5.
+| Missing capability | Evidence required before calling it implemented |
+| --- | --- |
+| Direct training for agent differences | A trainer or allocator optimizes paired pass-rate-difference loss and is replayed on held-out time splits and agents. |
+| Equal reporting of both primary metrics | Cross-time summaries expose pass-rate and pass-rate-difference MAE with the same provenance, completeness, and recomputation checks. |
+| Evaluation and method-selection stages | Independent reference standard, two decision-derived absolute error limits, uncertainty, critical strata, coverage, integrity, degradation limits under optimization, and comparator rule are frozen and replayable. |
+| Operational behavior versus capability | The study declares which target it estimates. Changes to persistent agent configuration or generation, tool, or runtime policy create a child version; task inputs and temporary cues allowed by a frozen policy are separate run contexts. |
+| Stateful agent snapshots | All behavior-affecting model, harness, persistent prompt and configuration, memory, skill, tool, retrieval, generation, runtime, and persistent-state inputs are versioned, with an exact reset, continuation, or fork policy. |
+| Complete agent lineage | Primary and merge parents, other provenance edges, update artifacts, changed components, evidence exposure, optimizer, mutation, round, budget, selection status, and rollback are recorded and replayable. |
+| Evaluator feedback and queries | Evaluator version, query count, feedback channel and detail, task disclosure, and epoch are recorded. |
+| Repeated optimization | The same ancestor, agent optimizer, task order, state policy, budget, and common future cohort are replayed across evaluator conditions with future outcomes kept independent until search ends. |
+| Cross-version comparability | Evaluator updating uses overlap, bridge tasks or agents, measurement-invariance diagnostics, or direct prospective calibration; a rising score alone is not treated as agent improvement. |
+| Evaluation-context audit | Paired evaluation-cue and deployment-like conditions estimate behavior and pair-difference effects; awareness scores alone are not accepted as behavior evidence. |
+| Predictive validity of generated tasks | Category forecasts, executable task creation, consistency across independent generation pipelines, and prediction of future real-world agent outcomes are measured separately. |
+| Meta-evaluation | Attacks, evaluator candidates, temporal validation data, selection rules, and held-out attack families are separated so no dataset selects itself. |
+| Adversarial isolation | The execution adapter prevents the declared agent from reading or modifying private checks, scorers, monitors, or host state. |
 
-Their pooled pass rate is `0.435629`, with Agent range `0.338274–0.526155`.
-The frame has ten repositories, 408 H5 Origins, and 201 H10 Origins. This lane
-tests transfer to heterogeneous realistic systems. Two submissions are not
-officially checked, and the lane is not an apples-to-apples model comparison.
+## Candidate Methods And Decision Rules
 
-The six project-sealed Verified full-system holdout Agents remain unread.
+| Method | State | Decision rule |
+| --- | --- | --- |
+| Full eligible history | active baseline | Keep as the no-compression baseline, not as the definition of the project. |
+| Equal-budget random and recent tasks | active baselines | Retain for budget and recency calibration. |
+| `consensus_rate_match` | fixed historical baseline | Re-score for pass-rate differences; never tune again on the same five-repository pass-rate result. |
+| IRT or mid-difficulty subset | active comparator | Retain only if later time splits and held-out agent/harness tests support both primary metrics. |
+| Comparison-aware task allocation | active comparator | Directly target information about deployment-relevant agent differences on common tasks. |
+| Hierarchical outcome model | active comparator | Require calibration, residual audits, sample-size checks, and cold-start/harness-shift tests. |
+| Outcome model using coding-task features | active comparator | Separate model and harness effects; test on later task sets and unseen model–harness combinations. |
+| Forecast-based task generation | active design | Require multiple independent task-instantiation pipelines and prediction of future real-world outcomes. |
+| Adversarial task generation | active stress-test method | Do not mix raw adversarial pass rates into the target distribution of future real-world tasks without calibration. |
+| Evaluator feedback policy | active protocol | Compare aggregate, rounded or thresholded, per-task, and trace feedback at equal search budget. |
+| Controlled agent variants | active low-cost stress test | Hold out exploit families; measure false positives and improvement in both primary errors. |
+| Adversarial stress testing | active hypothesis | Retain attacks that transfer to unseen attacks or future real-world tasks, not attacks that merely lower a score. |
+| Evaluator portfolios | active comparator | Test selection directly against the portfolio to reveal correlated blind spots. |
+| Agent–evaluator coevolution | optional live arm after protocol readiness | Compare with a fixed evaluator and equal-data update-only baseline after lineage, feedback, integrity, and prospective-cohort contracts are replayable. A winning static method is not a prerequisite. |
+| Coverage checks and abstention | supporting method | Report risk–coverage and the unconditional fallback; do not hide difficult cases. |
+| Common-ancestor lineage branching | active experimental design | Fork identical ancestor and repository state across evaluation methods; retain random exploration so descendant evidence is not available only for evaluator-favored parents. |
+| Deployment-like replay and capability elicitation | active diagnostic | Estimate context effects separately from a predeclared elicitation ladder; never relabel a modified agent as the original version. |
 
-## Current Measurements
+## Previous-Phase Evidence
 
-| Fixed mini-SWE-agent v2 panel | H5 | H10 |
-| --- | ---: | ---: |
-| Always-one MAE | `0.319161` | `0.322769` |
-| Full-history MAE | `0.179527` | `0.129700` |
-| Mean random-ten MAE | `0.196332` | `0.155752` |
-| Random as good as Full | `9.630%` | `6.495%` |
-| Reference-future Oracle MAE | `0.120285` | `0.105282` |
-| Target-future Oracle MAE | `0.014755` | `0.013846` |
+The previously analyzed mini-SWE-agent v2 development panel contained thirteen
+model configurations across 500 SWE-bench Verified tasks. Under its fixed,
+repository-equal pass-rate-MAE protocol, `consensus_rate_match` beat full
+history by `0.006140` at H5 and `0.013774` at H10, where H5/H10 means the next 5
+or 10 tasks after a time cutoff.
 
-The reference Oracle hides each target Agent and selects against the other
-twelve Agents' future response rates. It is favorable in all five repositories
-at both horizons, for all thirteen target Agents at H5 and ten of thirteen at
-H10. This establishes shared same-future response structure, not a pre-Origin
-forecast.
+The same evidence prevents a broad claim:
 
-| Modern Full-system panel | H5 | H10 |
-| --- | ---: | ---: |
-| Best fixed-constant MAE | `0.398542` | `0.401729` |
-| Full-history MAE | `0.191961` | `0.150453` |
-| Mean random-ten MAE | `0.217781` | `0.183394` |
-| Reference-future Oracle MAE | `0.155680` | `0.133069` |
-| Target-future Oracle MAE | `0.002175` | `0.003542` |
+- weighting time cutoffs instead of repositories reversed the differences to
+  `+0.004284` and `+0.001864`;
+- internal leave-one-out prediction for three modern full systems lost by
+  `+0.014960` and `+0.024006`;
+- thirteen reference systems predicting those three systems on common Verified
+  tasks lost by `+0.017513` and `+0.007707`.
 
-The two complete executions are byte-identical. Evidence:
+These results are useful baselines and evidence of population shift. They do
+not show how the method performs on pass-rate-difference MAE or under repeated
+optimization.
 
-- [`experiments/2026-07-31-modern-agent-panel-refresh.md`](experiments/2026-07-31-modern-agent-panel-refresh.md);
-- `examples/modern_agent_panel/plan.json`;
-- `examples/modern_agent_panel/evidence/summary.json`.
-
-### Unchanged Selector portability
-
-| Fixed mini-SWE-agent v2 | H5 MAE | H5 − Full | H10 MAE | H10 − Full |
-| --- | ---: | ---: | ---: | ---: |
-| Full history | `0.179527` | — | `0.129700` | — |
-| Ordinary recency | `0.189049` | `+0.009522` | `0.165575` | `+0.035875` |
-| Stationary response match | `0.185976` | `+0.006449` | `0.142967` | `+0.013267` |
-| ALG-015U | `0.192261` | `+0.012734` | `0.154308` | `+0.024607` |
-| ALG-016U | `0.181064` | `+0.001537` | `0.140908` | `+0.011208` |
-
-All four methods are also worse than Full at both horizons on the modern
-three-system Full panel. No method clears the frozen retention rule.
-
-ALG-016U is closest on the primary panel, but its direction is not stable: it
-helps 7/13 Agents and only 2/5 repositories at H5, then 4/13 Agents and 2/5
-repositories at H10. It is retired unchanged, not retained as an incumbent.
-
-Random rank does not rescue a method that loses to Full. For example,
-stationary response matching at secondary H5 beats `98.785%` of random subsets
-while its MAE remains `0.011283` worse than Full.
-
-Two complete executions are byte-identical. Evidence:
-
-- [`experiments/2026-07-31-modern-agent-selector-portability.md`](experiments/2026-07-31-modern-agent-selector-portability.md);
-- `examples/modern_agent_panel/portability-plan.json`;
-- `examples/modern_agent_panel/evidence/portability-summary.json`.
-
-### Consensus-rate development candidate
-
-`consensus_rate_match` matches the selected Tasks' pooled reference-Agent pass
-rate to Full history, then breaks exact matches toward low reference-Agent
-disagreement. It excludes the target Agent before aggregation and uses the same
-rule at H5 and H10.
-
-| Fixed mini-SWE-agent v2 | H5 | H10 |
-| --- | ---: | ---: |
-| Full-history MAE | `0.179527` | `0.129700` |
-| Candidate MAE | `0.173387` | `0.115927` |
-| Candidate − Full | `-0.006140` | `-0.013774` |
-| Favorable repositories | 3/5 | 4/5 |
-| Favorable Agents | 10/13 | 11/13 |
-| Favorable Origins | 23/61 | 13/30 |
-| Origin-weighted candidate − Full | `+0.004284` | `+0.001864` |
-
-Every repository leave-one-out result stays favorable. Both component
-ablations lose to Full. Two complete primary runs are byte-identical and all
-target/future information audits pass.
-
-The result remains outcome-open development evidence. The candidate was chosen
-after a bounded multi-route search; the local META family alone had 72 experts
-and 68 distinct trajectories. It must not be treated as an independent
-discovery.
-
-Opened transfer diagnostics fail:
-
-| Transfer diagnostic candidate − Full | H5 | H10 |
-| --- | ---: | ---: |
-| Three Full systems, internal LOO | `+0.014960` | `+0.024006` |
-| Thirteen primary references → three external targets on common Verified Tasks | `+0.017513` | `+0.007707` |
-
-This is consistent with reference-target non-exchangeability or Harness shift.
-It does not erase the repository-equal primary result; it prevents promotion to
-a general or production Selector.
-
-Evidence:
+Evidence sources:
 
 - [`experiments/2026-07-31-consensus-rate-selector.md`](experiments/2026-07-31-consensus-rate-selector.md);
-- `examples/modern_agent_panel/consensus-rate-plan.json`;
-- `examples/modern_agent_panel/evidence/consensus-rate-summary.json`;
-- `examples/modern_agent_panel/evidence/consensus-rate-transfer-diagnostic.json`.
+- `../examples/modern_agent_panel/evidence/consensus-rate-summary.json`;
+- `../examples/modern_agent_panel/evidence/consensus-rate-transfer-diagnostic.json`.
 
-## Active Approach Registry
+## Immediate Work Packages
 
-| Route | State | Reopening or exit condition |
-| --- | --- | --- |
-| Fixed mini-SWE-agent v2 public panel | active primary development | Replace only for a newer exact same-Harness cohort or an independent confirmation boundary |
-| Modern Full complete-system panel | opened secondary diagnostic | It has now informed the portability decision; do not call it independent confirmation for a new method |
-| Legacy Full eleven-Agent panel | archived stress/failure region | Use only to study historical or low-prevalence behavior |
-| Ordinary recency, stationary match, ALG-015U, ALG-016U | retired unchanged | Reopen only under a new causal mechanism or independent evidence, not parameter tuning |
-| Full history | active no-Selection baseline | Every Selector must still beat it directly; random rank is diagnostic only |
-| Forecast/materialization/transfer decomposition | completed | Transfer dominated; exact materialization was not the limiting error |
-| Distributional, MMD, semantic, and IRT routes | closed for this opened panel | Reopen only under a new mechanism or evidence boundary |
-| `consensus_rate_match` | outcome-open development candidate | Retain as the primary-panel incumbent; do not deploy or tune on the same five-repository score |
-| Reference-to-target population shift | next | Map cold-start support and freeze one robust or abstaining mechanism |
-| Warm-start target calibration | research option | Use only cached target outcomes; do not assume they exist in cold start |
-| Self-hosted recent open 7B | deferred | Reopen when exact public outcomes appear or public data no longer answers the next question |
-| Six sealed Verified full-system Agents | unread but population-mismatched | Do not call them clean modern confirmation; open only for a prespecified question they can answer |
-| New paid Agent outcomes | not needed yet | Reconsider only after existing outcomes identify a candidate and a compatible confirmation population |
+WP0 establishes the common evidence contract. WP1 through WP4 are then
+parallel evidence tracks, not an ordering of preferred methods. WP5 starts only
+after lineage, feedback, budget, and prospective-cohort replay are reproducible;
+it does not require a winning static method.
 
-## Next Cycle
+### WP0: Evaluation Contract And Controlled Failures
 
-Stop optimizing the same primary repository-equal score. Use the paid-free
-public outcomes to answer the transfer question:
+- declare operational behavior or capability elicitation as the target;
+- define the independent future-task source, reference standard, label audit,
+  and one-use cohort lifecycle;
+- predeclare absolute error limits, uncertainty decisions, critical strata,
+  coverage, abstention, integrity invalidation, degradation limits under
+  optimization, and the separate method-comparison rule;
+- define exact agent state, editable components, reset/continuation/fork
+  policy, task order, update rule, and lineage provenance;
+- build controlled ordinary, hidden-capability, score-targeting, test-access,
+  scorer-tampering, benign-update, and regression fixtures;
+- verify that known integrity failures invalidate the capability claim and do
+  not become ordinary pass/fail cells.
 
-1. map candidate and Full error against reference-panel cardinality, held-out
-   target ability, model family, and Harness change;
-2. distinguish cold start, where no target outcomes exist, from warm start,
-   where the Result Store already contains target outcomes on historical
-   Tasks;
-3. define a support or abstention rule for cold-start targets that are not
-   represented by the reference panel;
-4. freeze one robust cold-start mechanism or one explicitly warm-start
-   mechanism before scoring it;
-5. seek an independent same-Harness target boundary before any production
-   nomination.
+Exit evidence: a completely offline, replayable study in which the protocol
+correctly distinguishes known valid outcomes, ordinary task failures,
+abstention, hidden-capability false negatives, and integrity violations.
 
-Importance weighting or AIPW is a literature-backed lead, not an automatic
-engineering change. A weighted estimator would change the semantics of the
-reported benchmark score and must first be reconciled with the raw pass-rate
-contract.
+### WP1: Static Replay With Both Metrics
 
-The public fixed-Harness panel and modern Full panel are both opened development
-or diagnostic data. The six sealed Agents remain unread, but their legacy
-population is not a clean answer to the modern target-shift question.
+- add evidence-backed pass-rate-difference summaries beside pass-rate
+  summaries;
+- define agent-pair populations and paired uncertainty;
+- replay existing panels with full, recent, random, historical baseline, IRT,
+  models using coding-task features, marginal and direct paired-outcome models,
+  plus comparison-aware allocation methods;
+- separate results with no prior agent outcomes (cold start), with prior outcomes
+  (warm start), with the same harness, and across harnesses.
 
-No paid call, Generator development, generic source framework, trainer,
-scheduler, or core-schema change is needed for this cycle.
+Exit evidence: a table showing whether method conclusions change when
+pass-rate-difference MAE receives equal status, with no new paid calls.
 
-## Engineering Triggers
+### WP2: Stateful Agent Lineages And Optimization Budgets
 
-- Optimize checkout only when checkout plus cleanup exceeds 5% of measured
-  campaign time.
-- Add Agent parallelism only for a measured campaign need, with exact
-  attribution and one Result writer.
-- Add source-specific certification only for a concrete runnable campaign.
-- Structural audit scores alone do not justify splitting modules.
+- define the minimum experiment records for evaluator version, exact persistent
+  agent state, primary and merge parents, other provenance edges, update
+  artifact, changed components, agent optimizer, evaluator feedback, query
+  count, selection status, rollback, and optimization round;
+- preserve every candidate and branch, not only the evaluator-selected winner;
+- replay best-of-`N` selection for increasing, predeclared `N` over fixed
+  agent lineages;
+- retain a randomized exploration floor so descendant outcomes are not
+  observed only for evaluator-favored parents;
+- record feedback information, task order, state policy, and cumulative
+  exposure, not only query count;
+- create a version-by-future-task-block matrix and report pass-to-fail,
+  fail-to-pass, forward-transfer, backward-transfer, and retention diagnostics
+  without replacing the two primary MAEs.
+
+Exit evidence: reproducible curves for both errors over a fixed candidate
+lineage, plus replay of every transition and selection decision.
+
+### WP3: Predictive Validity Of Generated Tasks
+
+- predeclare the demand-forecasting method independently of failures of the
+  target agent;
+- use at least two independent task-instantiation pipelines per category;
+- validate executable transitions and hidden checks;
+- audit generated checks with coverage and mutation testing plus independent
+  semantic review;
+- measure consistency of agent pass rates and differences across pipelines;
+- calibrate generated outcomes only on earlier temporal data;
+- evaluate on a separate temporal set of future real-world tasks.
+
+Exit evidence: separate results for category forecasting, executable task
+quality, cross-pipeline consistency, and prediction of future agent outcomes.
+Executability alone is insufficient.
+
+### WP4: Adversarial Stress Testing Of Evaluators And Metrics
+
+- define attacks on task generation, task sampling and weighting, public tests,
+  private checks, workspaces, scorers, aggregation, feedback, monitors, and
+  reports;
+- start with controlled agent variants containing known benign or exploit
+  behaviors;
+- run paired overt-evaluation, cue-reduced, and deployment-like contexts and
+  estimate both individual and agent-pair context effects;
+- run a predeclared capability-elicitation ladder against agents with known
+  hidden coding capabilities; treat persistent configuration or policy changes
+  as agent-version transitions and temporary cues within a frozen policy as run
+  contexts;
+- maintain an archive covering different attack mechanisms instead of
+  optimizing attack success alone;
+- hold out complete exploit and agent-lineage families;
+- give a protocol-aware red team the evaluator, monitor, thresholds, feedback,
+  and update rules rather than testing only unaware attacks;
+- test metric perturbations on near-tie agent pairs;
+- log workspace patches and file access to detect evaluator tampering and test
+  leakage;
+- compare candidate runs with benign reference runs while holding out complete
+  exploit families;
+- strengthen checks with coverage and mutation guidance, but report original
+  and strengthened outcomes separately;
+- test a known performance ceiling where tasks admit several equivalent valid
+  outputs;
+- test whether malicious or misleading memory, skill, tool, and generated-data
+  artifacts propagate across descendants and fresh sessions;
+- do not select an evaluator without independent temporal validation and
+  acceptable performance on both primary metrics.
+
+Exit evidence: attacks predict evaluator error on unseen attack families or
+future real-world tasks. Attack success by itself is insufficient.
+
+### WP5: Controlled Repeated-Optimization Experiment
+
+- keep one evaluator fixed within each epoch;
+- fork the same initial agent and repository state, then hold the agent
+  optimizer, task order, state policy, candidate or compute budget, repository
+  time cutoffs, future task blocks, and randomization contract fixed across
+  conditions;
+- compare a fixed evaluator, a periodically updated evaluator, an evaluator
+  updated after adversarial stress testing, and optional agent–evaluator
+  coevolution;
+- evaluate budget checkpoints on the same future cohort or with concurrent
+  randomized controls so time drift is not mislabeled as Goodhart degradation;
+- open temporal validation outcomes only after the epoch's agent search ends;
+- freeze the evaluator-update algorithm, update schedule, selection rule, and
+  data-access policy prospectively; the resulting evaluator artifact may change
+  only at those declared boundaries;
+- retire every opened validation or test set from future independent-test use.
+
+Exit evidence: bounded error curves by optimization budget for both metrics,
+not a universal claim of resistance to Goodhart effects.
+
+## Stop And Selection Rules
+
+- Do not keep optimizing any method on the previously analyzed five-repository
+  pass-rate result.
+- Do not call an evaluation method reliable unless both primary errors satisfy
+  their predeclared absolute limits with the declared uncertainty, coverage,
+  integrity, and critical-stratum rules.
+- Do not prioritize pass-rate-difference MAE unless pass-rate MAE stays within
+  its predeclared margin of the named comparator at every predeclared
+  evaluation budget.
+- Separately reject methods whose primary errors exceed their predeclared
+  within-method degradation limits from the no-optimization baseline (`b=0`).
+- Do not use a scalar score to hide failure of either primary metric.
+- Do not count abstained cases as successes; report coverage and fallback
+  outcomes.
+- Do not call adversarial tasks representative of future work without temporal
+  calibration.
+- Do not reuse data as independent test evidence after its outcomes influence
+  evaluator generation, attacks, selection, or tuning.
+- Do not start a paid repeated evaluator-guided optimization campaign until the
+  WP0 contract, lineage and feedback records, fixed-lineage replay, execution
+  isolation, and a cost/power pilot are complete. A frozen comparator is
+  required; a winner from the static methods is not.
+
+## Current Claim Boundary
+
+Implemented evidence supports an auditable static benchmark boundary and
+static calculation of the two requested errors. It does not yet support a
+method trained for pass-rate-difference MAE, a validated generated-task
+distribution, persistent-state or lineage evaluation, complete
+reliability-claim evidence, enforced separation of operational behavior and
+elicited capability, robustness under repeated optimization, adversarial stress
+testing of evaluators and metrics, agent–evaluator coevolution, or resistance to
+Goodhart effects.

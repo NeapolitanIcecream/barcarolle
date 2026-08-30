@@ -1,15 +1,62 @@
 # Barcarolle Data Flow
 
-Status: current, 2026-07-24.
+Status: current implementation flow, 2026-08-30.
 
 ## Overview
 
-The system is organized around durable records. `Task Pool`, `Benchmark
-Selection`, and `Agent Results` are independent assets that can be joined by
-stable identifiers.
+Barcarolle's first principle is to provide reliable evaluation methods for
+self-evolving agents, with repository-level coding agents as the first concrete
+domain. A self-evolving agent retains behavior-changing model, harness, prompt,
+memory, skill, tool, or other persistent-state updates across tasks.
+
+The research architecture has three information flows. Subject evolution is
+the core context; evaluator updating is optional:
+
+```text
+1. agent optimization
+
+   frozen evaluation method M
+   evaluator version E(k) --permitted feedback--> agent optimizer
+   agent optimizer --agent candidates + lineage + budget log--> agent archive
+
+2. optional evaluator update
+
+   development evidence + consumed prospective cohorts + red-team evidence
+   --frozen evaluator-update rule U--> evaluator version E(k+1)
+
+3. independent prospective evidence
+
+   freeze method M + agent/evaluator-version/budget checkpoints and predictions
+   + open sealed future real-world tasks through an independent reference standard
+   -> evidence validity
+   -> absolute error limits for both primary errors
+   -> degradation under optimization from b=0
+   -> method comparison
+   -> bounded claim or unresolved result
+```
+
+The prospective tasks and outcomes remain unavailable to both agent
+optimization and evaluator updating until the applicable predictions and
+protocol are frozen. After an opened cohort affects either process, it becomes
+development evidence and a new sealed cohort is required for an independent
+test.
+
+The three primary empirical objectives are pass-rate MAE,
+pass-rate-difference MAE, and retention of both as the evaluator-guided
+optimization budget grows. They are necessary but not sufficient: evidence
+validity is a hard gate, absolute error limits are distinct from change relative
+to `b=0`, and method comparison cannot establish that either method is
+accurate enough.
+
+The current system is organized around durable static records. `Task Pool`,
+`Benchmark Selection`, and `Agent Results` are independent assets that can be
+joined by stable identifiers.
 
 Runner owns the cross-module command flow. The other modules own the records
-and computations named below.
+and computations named below. The three research flows above are a design
+target, not current Runner behavior. The current
+runtime implements the following primarily static task-pool, execution,
+selection, and reporting path:
 
 ```text
 target repository + task source or prepared-candidate package
@@ -18,7 +65,7 @@ target repository + task source or prepared-candidate package
   -> Agent Results
 
 Task Pool + pre-origin Agent Results + origin + budget + Selector
-  -> RollingOrigin -> FeatureSnapshot -> SelectorInput
+  -> `RollingOrigin` -> `FeatureSnapshot` -> `SelectorInput`
   -> frozen Benchmark Selection
   -> Evaluation Cell Set -> Result Matrices -> Metrics
   -> Report
@@ -111,7 +158,7 @@ Downstream:
 ### External Result admission
 
 A user-maintained Task Pool can bring existing Agent-test evidence without
-rerunning its Generator or tests. Runner reads an immutable Result-source
+rerunning its task generator or tests. Runner reads an immutable Result-source
 manifest, validates its declared authority and availability semantics, checks
 every Agent/Task/Check/Workspace/Runtime identity against local evidence, and
 rejects conflicting executions. Accepted records receive explicit external
@@ -141,7 +188,8 @@ Steps:
 2. Selection validates and replays every expert Selection, verifies pre-origin
    feature Results and selected/future matrices, requires one ordered full Agent
    identity binding across Origins, projects every training Result back to that
-   binding, replays all Origins, Snapshot Task metadata, and Result Task/Check
+   binding, replays all `RollingOrigin` and `FeatureSnapshot` task metadata,
+   and Result Task/Check
    cache identities against the frozen pool, requires each bound Matrix cell's
    Result ID/digest, Agent/Task/Check, required identity, and outcome to match,
    including bound excluded cells, and recomputes MAE. Only genuinely unbound
@@ -317,8 +365,12 @@ Steps:
    matrix with explicit matrix roles.
 6. Compute selected-benchmark pass-rate estimates per Agent.
 7. Compute future holdout pass rates per Agent.
-8. Compute MAE as the primary prediction metric, plus pairwise gap MAE, rank
-   agreement, recommendation regret, invalid rate, and coverage.
+8. Compute pass-rate MAE and pairwise pass-rate-difference MAE as the two
+   primary static empirical objectives, plus rank agreement, recommendation
+   regret, invalid rate, and coverage. The current fitter and report summary
+   still consume only pass-rate MAE; implementation status must disclose that
+   limitation. This flow does not implement complete reliability-claim evidence or
+   degradation curves by optimization budget.
 9. Store metrics keyed by origin, selector version, cell-set digest,
    selected/future matrix digests, join policy, and denominator policy.
 
@@ -335,12 +387,18 @@ Runner entrypoint:
 
 Downstream:
 
-- Maintainers use metrics to evaluate Selector algorithms and decide what to
-  develop next.
+- Maintainers use metrics to evaluate complete evaluator candidates, of which a
+  Selector is one possible component, and decide what to develop next.
 - Reporting distinguishes evidence from claim.
 
 ## Design Consistency Check
 
+- Treats evolution of the evaluated agent as the core research context and
+  evaluator updating as optional.
+- Keeps agent optimization, optional evaluator updating, and independent
+  prospective evidence as separate information flows.
+- Does not infer reliability from method comparison or stability
+  relative to an inaccurate `b=0` baseline.
 - Supports result cache reuse and lazy Agent execution.
 - Treats paid Agent results as reusable assets.
 - Ensures selectors consume result tables, not workspaces or unsanitized Agent
