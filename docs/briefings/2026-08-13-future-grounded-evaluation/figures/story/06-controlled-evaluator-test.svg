@@ -1,0 +1,477 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="1152pt" height="648pt" viewBox="0 0 1152 648" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-08-13T16:29:13.426535</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.11.1, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 648
+L 1152 648
+L 1152 0
+L 0 0
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 299.359688 255.6
+Q 320.400342 255.6 339.540339 255.6
+" clip-path="url(#p65c5c05d14)" style="fill: none; stroke: #6b7280; stroke-width: 1.7; stroke-linecap: round"/>
+    <path d="M 334.340339 253
+L 339.540339 255.6
+L 334.340339 258.2
+z
+" clip-path="url(#p65c5c05d14)" style="fill: #6b7280; stroke: #6b7280; stroke-width: 1.7; stroke-linecap: round"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 522.559687 255.6
+Q 543.600342 255.6 562.740339 255.6
+" clip-path="url(#p65c5c05d14)" style="fill: none; stroke: #6b7280; stroke-width: 1.7; stroke-linecap: round"/>
+    <path d="M 557.540339 253
+L 562.740339 255.6
+L 557.540339 258.2
+z
+" clip-path="url(#p65c5c05d14)" style="fill: #6b7280; stroke: #6b7280; stroke-width: 1.7; stroke-linecap: round"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 299.359688 360
+Q 320.400342 360 339.540339 360
+" clip-path="url(#p65c5c05d14)" style="fill: none; stroke: #2463d4; stroke-width: 1.7; stroke-linecap: round"/>
+    <path d="M 334.340339 357.4
+L 339.540339 360
+L 334.340339 362.6
+z
+" clip-path="url(#p65c5c05d14)" style="fill: #2463d4; stroke: #2463d4; stroke-width: 1.7; stroke-linecap: round"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 522.559687 360
+Q 543.600342 360 562.740339 360
+" clip-path="url(#p65c5c05d14)" style="fill: none; stroke: #2463d4; stroke-width: 1.7; stroke-linecap: round"/>
+    <path d="M 557.540339 357.4
+L 562.740339 360
+L 557.540339 362.6
+z
+" clip-path="url(#p65c5c05d14)" style="fill: #2463d4; stroke: #2463d4; stroke-width: 1.7; stroke-linecap: round"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 702.138351 256.825071
+Q 723.050002 272.829453 746.49251 279.713697
+" clip-path="url(#p65c5c05d14)" style="fill: none; stroke: #15845b; stroke-width: 1.7; stroke-linecap: round"/>
+    <path d="M 742.235791 275.753855
+L 746.49251 279.713697
+L 740.770605 280.743166
+z
+" clip-path="url(#p65c5c05d14)" style="fill: #15845b; stroke: #15845b; stroke-width: 1.7; stroke-linecap: round"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 701.726837 358.37719
+Q 720.98127 331.909523 746.949333 315.292537
+" clip-path="url(#p65c5c05d14)" style="fill: none; stroke: #15845b; stroke-width: 1.7; stroke-linecap: round"/>
+    <path d="M 741.167939 315.905304
+L 746.949333 315.292537
+L 743.97071 320.285312
+z
+" clip-path="url(#p65c5c05d14)" style="fill: #15845b; stroke: #15845b; stroke-width: 1.7; stroke-linecap: round"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 990.56083 298.08
+Q 999.002529 298.08 1005.543571 298.08
+" clip-path="url(#p65c5c05d14)" style="fill: none; stroke: #15845b; stroke-width: 1.7; stroke-linecap: round"/>
+    <path d="M 1000.343571 295.48
+L 1005.543571 298.08
+L 1000.343571 300.68
+z
+" clip-path="url(#p65c5c05d14)" style="fill: #15845b; stroke: #15845b; stroke-width: 1.7; stroke-linecap: round"/>
+   </g>
+   <g id="line2d_1">
+    <path d="M 46.8 87.84
+L 1105.2 87.84
+" clip-path="url(#p65c5c05d14)" style="fill: none; stroke: #dde3ea; stroke-linecap: square"/>
+   </g>
+   <g id="patch_9">
+    <path d="M 92.88 581.04
+L 526.32 581.04
+Q 537.84 581.04 537.84 569.52
+L 537.84 445.68
+Q 537.84 434.16 526.32 434.16
+L 92.88 434.16
+Q 81.36 434.16 81.36 445.68
+L 81.36 569.52
+Q 81.36 581.04 92.88 581.04
+z
+" clip-path="url(#p65c5c05d14)" style="fill: #ffffff; stroke: #c9d1dc; stroke-linejoin: miter"/>
+   </g>
+   <g id="line2d_2">
+    <path d="M 122.4 549.36
+L 518.4 549.36
+" clip-path="url(#p65c5c05d14)" style="fill: none; stroke: #dde3ea; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_3">
+    <path d="M 122.4 549.36
+L 122.4 480.24
+" clip-path="url(#p65c5c05d14)" style="fill: none; stroke: #dde3ea; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_4">
+    <path d="M 122.4 537.84
+L 249.12 518.256
+L 387.72 499.5936
+L 518.4 486
+" clip-path="url(#p65c5c05d14)" style="fill: none; stroke: #d96a1d; stroke-width: 2.4; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_5">
+    <path d="M 122.4 536.9184
+L 249.12 523.0944
+L 387.72 519.6384
+L 518.4 524.4768
+" clip-path="url(#p65c5c05d14)" style="fill: none; stroke: #15845b; stroke-width: 2.4; stroke-linecap: square"/>
+   </g>
+   <g id="patch_10">
+    <path d="M 625.68 581.04
+L 1059.12 581.04
+Q 1070.64 581.04 1070.64 569.52
+L 1070.64 445.68
+Q 1070.64 434.16 1059.12 434.16
+L 625.68 434.16
+Q 614.16 434.16 614.16 445.68
+L 614.16 569.52
+Q 614.16 581.04 625.68 581.04
+z
+" clip-path="url(#p65c5c05d14)" style="fill: #ffffff; stroke: #c9d1dc; stroke-linejoin: miter"/>
+   </g>
+   <g id="line2d_6">
+    <path d="M 655.2 549.36
+L 1051.2 549.36
+" clip-path="url(#p65c5c05d14)" style="fill: none; stroke: #dde3ea; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_7">
+    <path d="M 655.2 549.36
+L 655.2 480.24
+" clip-path="url(#p65c5c05d14)" style="fill: none; stroke: #dde3ea; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_8">
+    <path d="M 655.2 537.84
+L 781.92 518.256
+L 920.52 499.5936
+L 1051.2 486
+" clip-path="url(#p65c5c05d14)" style="fill: none; stroke: #2463d4; stroke-width: 2.4; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_9">
+    <path d="M 655.2 537.6096
+L 781.92 520.3296
+L 920.52 503.0496
+L 1051.2 494.7552
+" clip-path="url(#p65c5c05d14)" style="fill: none; stroke: #15845b; stroke-width: 2.4; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_10">
+    <path d="M 46.8 596.16
+L 1105.2 596.16
+" clip-path="url(#p65c5c05d14)" style="fill: none; stroke: #dde3ea; stroke-linecap: square"/>
+   </g>
+   <g id="text_1">
+    <g id="patch_11">
+     <path d="M 34.943594 48.88
+L 58.656406 48.88
+Q 60.996406 48.88 60.996406 46.54
+L 60.996406 28.34
+Q 60.996406 26 58.656406 26
+L 34.943594 26
+Q 32.603594 26 32.603594 28.34
+L 32.603594 46.54
+Q 32.603594 48.88 34.943594 48.88
+z
+" style="fill: #eaf2ff; stroke: #2463d4; stroke-width: 1.2; stroke-linejoin: miter"/>
+    </g>
+    <text style="font-weight: 600; font-size: 13px; font-family: 'Hiragino Sans GB'; text-anchor: middle; fill: #2463d4" x="46.8" y="42.38" transform="rotate(-0 46.8 42.38)">06</text>
+   </g>
+   <g id="text_2">
+    <text style="font-weight: 600; font-size: 23px; font-family: 'Hiragino Sans GB'; text-anchor: start; fill: #172033" x="84.96" y="40.42" transform="rotate(-0 84.96 40.42)">怎样证明价值：只更换评测器</text>
+   </g>
+   <g id="text_3">
+    <text style="font-weight: 300; font-size: 12.5px; font-family: 'Hiragino Sans GB'; text-anchor: start; fill: #5b6472" x="84.96" y="66.24" transform="rotate(-0 84.96 66.24)">这张图回答：怎样用一个对照实验同时验证问题、方法和预计效果？</text>
+   </g>
+   <g id="text_4">
+    <g id="patch_12">
+     <path d="M 988.699688 46.12
+L 1107.84 46.12
+Q 1109.82 46.12 1109.82 44.14
+L 1109.82 27.86
+Q 1109.82 25.88 1107.84 25.88
+L 988.699688 25.88
+Q 986.719688 25.88 986.719688 27.86
+L 986.719688 44.14
+Q 986.719688 46.12 988.699688 46.12
+z
+" style="fill: #ffffff; stroke: #d96a1d; stroke-width: 1.4; stroke-linejoin: miter"/>
+    </g>
+    <text style="font-weight: 600; font-size: 11px; font-family: 'Hiragino Sans GB'; text-anchor: end; fill: #d96a1d" x="1105.2" y="40.18" transform="rotate(-0 1105.2 40.18)">拟议实验 + 待验证目标</text>
+   </g>
+   <g id="patch_13">
+    <path d="M 172.08 177.84
+L 979.92 177.84
+Q 991.44 177.84 991.44 166.32
+L 991.44 132.48
+Q 991.44 120.96 979.92 120.96
+L 172.08 120.96
+Q 160.56 120.96 160.56 132.48
+L 160.56 166.32
+Q 160.56 177.84 172.08 177.84
+z
+" clip-path="url(#p65c5c05d14)" style="fill: #eef1f4; stroke: #6b7280; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_14">
+    <path d="M 132.48 289.44
+L 285.12 289.44
+Q 296.64 289.44 296.64 277.92
+L 296.64 233.28
+Q 296.64 221.76 285.12 221.76
+L 132.48 221.76
+Q 120.96 221.76 120.96 233.28
+L 120.96 277.92
+Q 120.96 289.44 132.48 289.44
+z
+" clip-path="url(#p65c5c05d14)" style="fill: #eef1f4; stroke: #6b7280; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_15">
+    <path d="M 355.68 289.44
+L 508.32 289.44
+Q 519.84 289.44 519.84 277.92
+L 519.84 233.28
+Q 519.84 221.76 508.32 221.76
+L 355.68 221.76
+Q 344.16 221.76 344.16 233.28
+L 344.16 277.92
+Q 344.16 289.44 355.68 289.44
+z
+" clip-path="url(#p65c5c05d14)" style="fill: #eef1f4; stroke: #6b7280; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_16">
+    <path d="M 578.88 289.44
+L 688.32 289.44
+Q 699.84 289.44 699.84 277.92
+L 699.84 233.28
+Q 699.84 221.76 688.32 221.76
+L 578.88 221.76
+Q 567.36 221.76 567.36 233.28
+L 567.36 277.92
+Q 567.36 289.44 578.88 289.44
+z
+" clip-path="url(#p65c5c05d14)" style="fill: #eef1f4; stroke: #6b7280; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_17">
+    <path d="M 132.48 393.84
+L 285.12 393.84
+Q 296.64 393.84 296.64 382.32
+L 296.64 337.68
+Q 296.64 326.16 285.12 326.16
+L 132.48 326.16
+Q 120.96 326.16 120.96 337.68
+L 120.96 382.32
+Q 120.96 393.84 132.48 393.84
+z
+" clip-path="url(#p65c5c05d14)" style="fill: #eaf2ff; stroke: #2463d4; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_18">
+    <path d="M 355.68 393.84
+L 508.32 393.84
+Q 519.84 393.84 519.84 382.32
+L 519.84 337.68
+Q 519.84 326.16 508.32 326.16
+L 355.68 326.16
+Q 344.16 326.16 344.16 337.68
+L 344.16 382.32
+Q 344.16 393.84 355.68 393.84
+z
+" clip-path="url(#p65c5c05d14)" style="fill: #eaf2ff; stroke: #2463d4; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_19">
+    <path d="M 578.88 393.84
+L 688.32 393.84
+Q 699.84 393.84 699.84 382.32
+L 699.84 337.68
+Q 699.84 326.16 688.32 326.16
+L 578.88 326.16
+Q 567.36 326.16 567.36 337.68
+L 567.36 382.32
+Q 567.36 393.84 578.88 393.84
+z
+" clip-path="url(#p65c5c05d14)" style="fill: #eaf2ff; stroke: #2463d4; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_20">
+    <path d="M 762.48 350.64
+L 976.32 350.64
+Q 987.84 350.64 987.84 339.12
+L 987.84 254.88
+Q 987.84 243.36 976.32 243.36
+L 762.48 243.36
+Q 750.96 243.36 750.96 254.88
+L 750.96 339.12
+Q 750.96 350.64 762.48 350.64
+z
+" clip-path="url(#p65c5c05d14)" style="fill: #e7f6ef; stroke: #15845b; stroke-width: 1.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_21">
+    <path d="M 1021.68 404.64
+L 1098.72 404.64
+Q 1110.24 404.64 1110.24 393.12
+L 1110.24 204.48
+Q 1110.24 192.96 1098.72 192.96
+L 1021.68 192.96
+Q 1010.16 192.96 1010.16 204.48
+L 1010.16 393.12
+Q 1010.16 404.64 1021.68 404.64
+z
+" clip-path="url(#p65c5c05d14)" style="fill: #ffffff; stroke: #15845b; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="text_5">
+    <text style="font-weight: 600; font-size: 10.5px; font-family: 'Hiragino Sans GB'; text-anchor: start; fill: #172033" x="95.76" y="462.12" transform="rotate(-0 95.76 462.12)">固定评测：可能较早脱钩</text>
+   </g>
+   <g id="text_6">
+    <text style="font-weight: 300; font-size: 9.2px; font-family: 'Hiragino Sans GB'; text-anchor: end; fill: #d96a1d" x="516.96" y="484.896" transform="rotate(-0 516.96 484.896)">评测</text>
+   </g>
+   <g id="text_7">
+    <text style="font-weight: 300; font-size: 9.2px; font-family: 'Hiragino Sans GB'; text-anchor: end; fill: #15845b" x="516.96" y="532.5728" transform="rotate(-0 516.96 532.5728)">真实</text>
+   </g>
+   <g id="text_8">
+    <text style="font-weight: 300; font-size: 8.8px; font-family: 'Hiragino Sans GB'; text-anchor: middle; fill: #5b6472" x="320.4" y="573.84" transform="rotate(-0 320.4 573.84)">优化轮数</text>
+   </g>
+   <g id="text_9">
+    <text style="font-weight: 600; font-size: 10.5px; font-family: 'Hiragino Sans GB'; text-anchor: start; fill: #172033" x="628.56" y="462.12" transform="rotate(-0 628.56 462.12)">Barcarolle 目标：更长时间同向</text>
+   </g>
+   <g id="text_10">
+    <text style="font-weight: 300; font-size: 9.2px; font-family: 'Hiragino Sans GB'; text-anchor: end; fill: #2463d4" x="1049.76" y="484.896" transform="rotate(-0 1049.76 484.896)">评测</text>
+   </g>
+   <g id="text_11">
+    <text style="font-weight: 300; font-size: 9.2px; font-family: 'Hiragino Sans GB'; text-anchor: end; fill: #15845b" x="1049.76" y="502.8512" transform="rotate(-0 1049.76 502.8512)">真实</text>
+   </g>
+   <g id="text_12">
+    <text style="font-weight: 300; font-size: 8.8px; font-family: 'Hiragino Sans GB'; text-anchor: middle; fill: #5b6472" x="853.2" y="573.84" transform="rotate(-0 853.2 573.84)">优化轮数</text>
+   </g>
+   <g id="text_13">
+    <text style="font-weight: 300; font-size: 10.5px; font-family: 'Hiragino Sans GB'; text-anchor: start; fill: #d96a1d" x="46.8" y="626.07" transform="rotate(-0 46.8 626.07)">拟议对照实验与目标走势：曲线无实验数值，不构成结果声明</text>
+   </g>
+   <g id="text_14">
+    <text style="font-weight: 300; font-size: 10.5px; font-family: 'Hiragino Sans GB'; text-anchor: end; fill: #5b6472" x="1105.2" y="626.07" transform="rotate(-0 1105.2 626.07)">对应原始对话：第 7、8、10、11 轮</text>
+   </g>
+   <g id="text_15">
+    <text style="font-weight: 600; font-size: 12px; font-family: 'Hiragino Sans GB'; text-anchor: middle; fill: #172033" x="576" y="153.3" transform="rotate(-0 576 153.3)">同一初始 Agent  ·  同一自动优化器  ·  同样轮数与预算</text>
+   </g>
+   <g id="text_16">
+    <text style="font-weight: 600; font-size: 11px; font-family: 'Hiragino Sans GB'; text-anchor: middle; fill: #172033" x="208.8" y="259.785156" transform="rotate(-0 208.8 259.785156)">固定基准评测</text>
+   </g>
+   <g id="text_17">
+    <text style="font-weight: 600; font-size: 11px; font-family: 'Hiragino Sans GB'; text-anchor: middle; fill: #172033" x="432" y="259.769687" transform="rotate(-0 432 259.769687)">连续优化若干轮</text>
+   </g>
+   <g id="text_18">
+    <text style="font-weight: 600; font-size: 11px; font-family: 'Hiragino Sans GB'; text-anchor: middle; fill: #172033" x="633.6" y="259.736172" transform="rotate(-0 633.6 259.736172)">版本 A</text>
+   </g>
+   <g id="text_19">
+    <text style="font-weight: 600; font-size: 11.5px; font-family: 'Hiragino Sans GB'; text-anchor: middle; fill: #174a9c" x="208.8" y="364.34125" transform="rotate(-0 208.8 364.34125)">Barcarolle</text>
+   </g>
+   <g id="text_20">
+    <text style="font-weight: 600; font-size: 11px; font-family: 'Hiragino Sans GB'; text-anchor: middle; fill: #174a9c" x="432" y="364.169688" transform="rotate(-0 432 364.169688)">连续优化若干轮</text>
+   </g>
+   <g id="text_21">
+    <text style="font-weight: 600; font-size: 11px; font-family: 'Hiragino Sans GB'; text-anchor: middle; fill: #174a9c" x="633.6" y="364.136172" transform="rotate(-0 633.6 364.136172)">版本 B</text>
+   </g>
+   <g id="text_22">
+    <text style="font-weight: 600; font-size: 12px; font-family: 'Hiragino Sans GB'; text-anchor: middle; fill: #15845b" x="869.4" y="286.961812" transform="rotate(-0 869.4 286.961812)">最后一次性打开</text>
+   </g>
+   <g id="text_23">
+    <text style="font-weight: 300; font-size: 10px; font-family: 'Hiragino Sans GB'; text-anchor: middle; fill: #15845b" x="869.4" y="324.857312" transform="rotate(-0 869.4 324.857312)">此前隐藏的后来真实任务</text>
+   </g>
+   <g id="text_24">
+    <text style="font-weight: 600; font-size: 11.5px; font-family: 'Hiragino Sans GB'; text-anchor: middle; fill: #15845b" x="1060.2" y="273.972141" transform="rotate(-0 1060.2 273.972141)">比较</text>
+   </g>
+   <g id="text_25">
+    <text style="font-weight: 300; font-size: 9.2px; font-family: 'Hiragino Sans GB'; fill: #172033" transform="translate(1032.6 338.355687)">真实提升转化</text>
+    <text style="font-weight: 300; font-size: 9.2px; font-family: 'Hiragino Sans GB'; fill: #172033" transform="translate(1032.6 350.287656)">是否选对版本</text>
+    <text style="font-weight: 300; font-size: 9.2px; font-family: 'Hiragino Sans GB'; fill: #172033" transform="translate(1032.6 362.316656)">可靠指导轮数</text>
+   </g>
+   <g id="text_26">
+    <g id="patch_22">
+     <path d="M 534.2 213.4
+L 617.8 213.4
+Q 619.2 213.4 619.2 212
+L 619.2 198.4
+Q 619.2 197 617.8 197
+L 534.2 197
+Q 532.8 197 532.8 198.4
+L 532.8 212
+Q 532.8 213.4 534.2 213.4
+z
+" style="fill: #fff0e5"/>
+    </g>
+    <text style="font-weight: 600; font-size: 10px; font-family: 'Hiragino Sans GB'; text-anchor: middle; fill: #d96a1d" x="576" y="209" transform="rotate(-0 576 209)">唯一变量：评测器</text>
+   </g>
+   <g id="text_27">
+    <g id="patch_23">
+     <path d="M 66.695312 268.84
+L 91.704688 268.84
+Q 93.104687 268.84 93.104687 267.44
+L 93.104687 253.84
+Q 93.104687 252.44 91.704688 252.44
+L 66.695312 252.44
+Q 65.295312 252.44 65.295312 253.84
+L 65.295312 267.44
+Q 65.295312 268.84 66.695312 268.84
+z
+" style="fill: #eef1f4"/>
+    </g>
+    <text style="font-weight: 600; font-size: 10px; font-family: 'Hiragino Sans GB'; text-anchor: middle; fill: #6b7280" x="79.2" y="264.44" transform="rotate(-0 79.2 264.44)">A 组</text>
+   </g>
+   <g id="text_28">
+    <g id="patch_24">
+     <path d="M 66.964844 373.24
+L 91.435156 373.24
+Q 92.835156 373.24 92.835156 371.84
+L 92.835156 358.24
+Q 92.835156 356.84 91.435156 356.84
+L 66.964844 356.84
+Q 65.564844 356.84 65.564844 358.24
+L 65.564844 371.84
+Q 65.564844 373.24 66.964844 373.24
+z
+" style="fill: #eaf2ff"/>
+    </g>
+    <text style="font-weight: 600; font-size: 10px; font-family: 'Hiragino Sans GB'; text-anchor: middle; fill: #2463d4" x="79.2" y="368.84" transform="rotate(-0 79.2 368.84)">B 组</text>
+   </g>
+   <g id="text_29">
+    <g id="patch_25">
+     <path d="M 516.36 440.61
+L 635.64 440.61
+Q 637.11 440.61 637.11 439.14
+L 637.11 424.86
+Q 637.11 423.39 635.64 423.39
+L 516.36 423.39
+Q 514.89 423.39 514.89 424.86
+L 514.89 439.14
+Q 514.89 440.61 516.36 440.61
+z
+" style="fill: #fff0e5"/>
+    </g>
+    <text style="font-weight: 600; font-size: 10.5px; font-family: 'Hiragino Sans GB'; text-anchor: middle; fill: #d96a1d" x="576" y="435.99" transform="rotate(-0 576 435.99)">目标效果，不是已有结果</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p65c5c05d14">
+   <rect x="0" y="0" width="1152" height="648"/>
+  </clipPath>
+ </defs>
+</svg>

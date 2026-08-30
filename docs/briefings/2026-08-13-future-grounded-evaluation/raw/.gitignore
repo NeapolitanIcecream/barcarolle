@@ -1,0 +1,8 @@
+# Raw discussion and downloaded source artifacts are preserved locally but are
+# intentionally not committed under the repository artifact-hygiene policy.
+chatgpt-share-messages.json
+chatgpt-share-transcript.md
+extraction-report.md
+source-index.md
+source-manifest.md
+sources/

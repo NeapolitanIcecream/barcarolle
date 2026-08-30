@@ -1,0 +1,416 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="1152pt" height="648pt" viewBox="0 0 1152 648" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-08-13T16:29:12.934824</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.11.1, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 648
+L 1152 648
+L 1152 0
+L 0 0
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 208.8 280.637314
+Q 208.8 294.838471 208.8 307.13897
+" clip-path="url(#p37b2d1206b)" style="fill: none; stroke: #6b7280; stroke-width: 1.7; stroke-linecap: round"/>
+    <path d="M 211.4 301.93897
+L 208.8 307.13897
+L 206.2 301.93897
+z
+" clip-path="url(#p37b2d1206b)" style="fill: #6b7280; stroke: #6b7280; stroke-width: 1.7; stroke-linecap: round"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 208.8 377.837314
+Q 208.8 392.038471 208.8 404.33897
+" clip-path="url(#p37b2d1206b)" style="fill: none; stroke: #6b7280; stroke-width: 1.7; stroke-linecap: round"/>
+    <path d="M 211.4 399.13897
+L 208.8 404.33897
+L 206.2 399.13897
+z
+" clip-path="url(#p37b2d1206b)" style="fill: #6b7280; stroke: #6b7280; stroke-width: 1.7; stroke-linecap: round"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 576 280.637314
+Q 576 294.838471 576 307.13897
+" clip-path="url(#p37b2d1206b)" style="fill: none; stroke: #2463d4; stroke-width: 1.7; stroke-linecap: round"/>
+    <path d="M 578.6 301.93897
+L 576 307.13897
+L 573.4 301.93897
+z
+" clip-path="url(#p37b2d1206b)" style="fill: #2463d4; stroke: #2463d4; stroke-width: 1.7; stroke-linecap: round"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 576 377.837314
+Q 576 392.038471 576 404.33897
+" clip-path="url(#p37b2d1206b)" style="fill: none; stroke: #2463d4; stroke-width: 1.7; stroke-linecap: round"/>
+    <path d="M 578.6 399.13897
+L 576 404.33897
+L 573.4 399.13897
+z
+" clip-path="url(#p37b2d1206b)" style="fill: #2463d4; stroke: #2463d4; stroke-width: 1.7; stroke-linecap: round"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 943.2 288.559336
+Q 943.2 302.397873 943.2 314.335752
+" clip-path="url(#p37b2d1206b)" style="fill: none; stroke: #d96a1d; stroke-width: 1.7; stroke-linecap: round"/>
+    <path d="M 945.8 309.135752
+L 943.2 314.335752
+L 940.6 309.135752
+z
+" clip-path="url(#p37b2d1206b)" style="fill: #d96a1d; stroke: #d96a1d; stroke-width: 1.7; stroke-linecap: round"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 941.484155 387.669507
+Q 908.998829 407.160703 878.143303 425.674018
+" clip-path="url(#p37b2d1206b)" style="fill: none; stroke: #d96a1d; stroke-width: 1.7; stroke-linecap: round"/>
+    <path d="M 883.939956 425.228122
+L 878.143303 425.674018
+L 881.264578 420.769158
+z
+" clip-path="url(#p37b2d1206b)" style="fill: #d96a1d; stroke: #d96a1d; stroke-width: 1.7; stroke-linecap: round"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 944.915845 387.669507
+Q 977.401171 407.160703 1008.256697 425.674018
+" clip-path="url(#p37b2d1206b)" style="fill: none; stroke: #d96a1d; stroke-width: 1.7; stroke-linecap: round"/>
+    <path d="M 1005.135422 420.769158
+L 1008.256697 425.674018
+L 1002.460044 425.228122
+z
+" clip-path="url(#p37b2d1206b)" style="fill: #d96a1d; stroke: #d96a1d; stroke-width: 1.7; stroke-linecap: round"/>
+   </g>
+   <g id="patch_9">
+    <path d="M 367.759687 327.6
+Q 388.800342 327.6 407.381322 327.6
+" clip-path="url(#p37b2d1206b)" style="fill: none; stroke: #2463d4; stroke-width: 2.2; stroke-linecap: round"/>
+    <path d="M 402.181322 325
+L 407.381322 327.6
+L 402.181322 330.2
+z
+" clip-path="url(#p37b2d1206b)" style="fill: #2463d4; stroke: #2463d4; stroke-width: 2.2; stroke-linecap: round"/>
+   </g>
+   <g id="patch_10">
+    <path d="M 734.959687 327.6
+Q 756.000342 327.6 774.581322 327.6
+" clip-path="url(#p37b2d1206b)" style="fill: none; stroke: #d96a1d; stroke-width: 2.2; stroke-linecap: round"/>
+    <path d="M 769.381322 325
+L 774.581322 327.6
+L 769.381322 330.2
+z
+" clip-path="url(#p37b2d1206b)" style="fill: #d96a1d; stroke: #d96a1d; stroke-width: 2.2; stroke-linecap: round"/>
+   </g>
+   <g id="line2d_1">
+    <path d="M 46.8 87.84
+L 1105.2 87.84
+" clip-path="url(#p37b2d1206b)" style="fill: none; stroke: #dde3ea; stroke-linecap: square"/>
+   </g>
+   <g id="patch_11">
+    <path d="M 64.08 530.64
+L 353.52 530.64
+Q 365.04 530.64 365.04 519.12
+L 365.04 136.08
+Q 365.04 124.56 353.52 124.56
+L 64.08 124.56
+Q 52.56 124.56 52.56 136.08
+L 52.56 519.12
+Q 52.56 530.64 64.08 530.64
+z
+" clip-path="url(#p37b2d1206b)" style="fill: #eef1f4; stroke: #6b7280; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_12">
+    <path d="M 431.28 530.64
+L 720.72 530.64
+Q 732.24 530.64 732.24 519.12
+L 732.24 136.08
+Q 732.24 124.56 720.72 124.56
+L 431.28 124.56
+Q 419.76 124.56 419.76 136.08
+L 419.76 519.12
+Q 419.76 530.64 431.28 530.64
+z
+" clip-path="url(#p37b2d1206b)" style="fill: #eaf2ff; stroke: #2463d4; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_13">
+    <path d="M 798.48 530.64
+L 1087.92 530.64
+Q 1099.44 530.64 1099.44 519.12
+L 1099.44 136.08
+Q 1099.44 124.56 1087.92 124.56
+L 798.48 124.56
+Q 786.96 124.56 786.96 136.08
+L 786.96 519.12
+Q 786.96 530.64 798.48 530.64
+z
+" clip-path="url(#p37b2d1206b)" style="fill: #fff0e5; stroke: #d96a1d; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="line2d_2">
+    <path d="M 46.8 596.16
+L 1105.2 596.16
+" clip-path="url(#p37b2d1206b)" style="fill: none; stroke: #dde3ea; stroke-linecap: square"/>
+   </g>
+   <g id="text_1">
+    <g id="patch_14">
+     <path d="M 34.943594 48.88
+L 58.656406 48.88
+Q 60.996406 48.88 60.996406 46.54
+L 60.996406 28.34
+Q 60.996406 26 58.656406 26
+L 34.943594 26
+Q 32.603594 26 32.603594 28.34
+L 32.603594 46.54
+Q 32.603594 48.88 34.943594 48.88
+z
+" style="fill: #eaf2ff; stroke: #2463d4; stroke-width: 1.2; stroke-linejoin: miter"/>
+    </g>
+    <text style="font-weight: 600; font-size: 13px; font-family: 'Hiragino Sans GB'; text-anchor: middle; fill: #2463d4" x="46.8" y="42.38" transform="rotate(-0 46.8 42.38)">01</text>
+   </g>
+   <g id="text_2">
+    <text style="font-weight: 600; font-size: 23px; font-family: 'Hiragino Sans GB'; text-anchor: start; fill: #172033" x="84.96" y="40.42" transform="rotate(-0 84.96 40.42)">评测为什么从“尺子”变成“方向盘”</text>
+   </g>
+   <g id="text_3">
+    <text style="font-weight: 300; font-size: 12.5px; font-family: 'Hiragino Sans GB'; text-anchor: start; fill: #5b6472" x="84.96" y="66.24" transform="rotate(-0 84.96 66.24)">这张图回答：为什么 Agent 自动优化以后，原本可用的固定评测会变得危险？</text>
+   </g>
+   <g id="text_4">
+    <g id="patch_15">
+     <path d="M 1058.56 46.12
+L 1107.84 46.12
+Q 1109.82 46.12 1109.82 44.14
+L 1109.82 27.86
+Q 1109.82 25.88 1107.84 25.88
+L 1058.56 25.88
+Q 1056.58 25.88 1056.58 27.86
+L 1056.58 44.14
+Q 1056.58 46.12 1058.56 46.12
+z
+" style="fill: #ffffff; stroke: #d96a1d; stroke-width: 1.4; stroke-linejoin: miter"/>
+    </g>
+    <text style="font-weight: 600; font-size: 11px; font-family: 'Hiragino Sans GB'; text-anchor: end; fill: #d96a1d" x="1105.2" y="40.18" transform="rotate(-0 1105.2 40.18)">机制示意</text>
+   </g>
+   <g id="text_5">
+    <text style="font-weight: 600; font-size: 14px; font-family: 'Hiragino Sans GB'; text-anchor: start; fill: #6b7280" x="74.16" y="152.64" transform="rotate(-0 74.16 152.64)">今天</text>
+   </g>
+   <g id="text_6">
+    <text style="font-weight: 300; font-size: 11px; font-family: 'Hiragino Sans GB'; text-anchor: start; fill: #5b6472" x="74.16" y="180" transform="rotate(-0 74.16 180)">评测只是尺子</text>
+   </g>
+   <g id="text_7">
+    <text style="font-weight: 600; font-size: 14px; font-family: 'Hiragino Sans GB'; text-anchor: start; fill: #2463d4" x="441.36" y="152.64" transform="rotate(-0 441.36 152.64)">变化</text>
+   </g>
+   <g id="text_8">
+    <text style="font-weight: 300; font-size: 11px; font-family: 'Hiragino Sans GB'; text-anchor: start; fill: #5b6472" x="441.36" y="180" transform="rotate(-0 441.36 180)">评测进入优化闭环</text>
+   </g>
+   <g id="text_9">
+    <text style="font-weight: 600; font-size: 14px; font-family: 'Hiragino Sans GB'; text-anchor: start; fill: #d96a1d" x="808.56" y="152.64" transform="rotate(-0 808.56 152.64)">风险</text>
+   </g>
+   <g id="text_10">
+    <text style="font-weight: 300; font-size: 11px; font-family: 'Hiragino Sans GB'; text-anchor: start; fill: #5b6472" x="808.56" y="180" transform="rotate(-0 808.56 180)">小偏差被主动放大</text>
+   </g>
+   <g id="patch_16">
+    <path d="M 107.28 278.64
+L 310.32 278.64
+Q 321.84 278.64 321.84 267.12
+L 321.84 226.08
+Q 321.84 214.56 310.32 214.56
+L 107.28 214.56
+Q 95.76 214.56 95.76 226.08
+L 95.76 267.12
+Q 95.76 278.64 107.28 278.64
+z
+" clip-path="url(#p37b2d1206b)" style="fill: #ffffff; stroke: #c9d1dc; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_17">
+    <path d="M 107.28 375.84
+L 310.32 375.84
+Q 321.84 375.84 321.84 364.32
+L 321.84 323.28
+Q 321.84 311.76 310.32 311.76
+L 107.28 311.76
+Q 95.76 311.76 95.76 323.28
+L 95.76 364.32
+Q 95.76 375.84 107.28 375.84
+z
+" clip-path="url(#p37b2d1206b)" style="fill: #ffffff; stroke: #c9d1dc; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_18">
+    <path d="M 107.28 473.04
+L 310.32 473.04
+Q 321.84 473.04 321.84 461.52
+L 321.84 420.48
+Q 321.84 408.96 310.32 408.96
+L 107.28 408.96
+Q 95.76 408.96 95.76 420.48
+L 95.76 461.52
+Q 95.76 473.04 107.28 473.04
+z
+" clip-path="url(#p37b2d1206b)" style="fill: #ffffff; stroke: #c9d1dc; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_19">
+    <path d="M 474.48 278.64
+L 677.52 278.64
+Q 689.04 278.64 689.04 267.12
+L 689.04 226.08
+Q 689.04 214.56 677.52 214.56
+L 474.48 214.56
+Q 462.96 214.56 462.96 226.08
+L 462.96 267.12
+Q 462.96 278.64 474.48 278.64
+z
+" clip-path="url(#p37b2d1206b)" style="fill: #ffffff; stroke: #2463d4; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_20">
+    <path d="M 474.48 375.84
+L 677.52 375.84
+Q 689.04 375.84 689.04 364.32
+L 689.04 323.28
+Q 689.04 311.76 677.52 311.76
+L 474.48 311.76
+Q 462.96 311.76 462.96 323.28
+L 462.96 364.32
+Q 462.96 375.84 474.48 375.84
+z
+" clip-path="url(#p37b2d1206b)" style="fill: #ffffff; stroke: #c9d1dc; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_21">
+    <path d="M 474.48 473.04
+L 677.52 473.04
+Q 689.04 473.04 689.04 461.52
+L 689.04 420.48
+Q 689.04 408.96 677.52 408.96
+L 474.48 408.96
+Q 462.96 408.96 462.96 420.48
+L 462.96 461.52
+Q 462.96 473.04 474.48 473.04
+z
+" clip-path="url(#p37b2d1206b)" style="fill: #ffffff; stroke: #c9d1dc; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_22">
+    <path d="M 841.68 285.84
+L 1044.72 285.84
+Q 1056.24 285.84 1056.24 274.32
+L 1056.24 222.48
+Q 1056.24 210.96 1044.72 210.96
+L 841.68 210.96
+Q 830.16 210.96 830.16 222.48
+L 830.16 274.32
+Q 830.16 285.84 841.68 285.84
+z
+" clip-path="url(#p37b2d1206b)" style="fill: #ffffff; stroke: #d96a1d; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_23">
+    <path d="M 841.68 386.64
+L 1044.72 386.64
+Q 1056.24 386.64 1056.24 375.12
+L 1056.24 330.48
+Q 1056.24 318.96 1044.72 318.96
+L 841.68 318.96
+Q 830.16 318.96 830.16 330.48
+L 830.16 375.12
+Q 830.16 386.64 841.68 386.64
+z
+" clip-path="url(#p37b2d1206b)" style="fill: #ffffff; stroke: #d96a1d; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_24">
+    <path d="M 805.68 494.64
+L 943.92 494.64
+Q 955.44 494.64 955.44 483.12
+L 955.44 445.68
+Q 955.44 434.16 943.92 434.16
+L 805.68 434.16
+Q 794.16 434.16 794.16 445.68
+L 794.16 483.12
+Q 794.16 494.64 805.68 494.64
+z
+" clip-path="url(#p37b2d1206b)" style="fill: #fff0e5; stroke: #d96a1d; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_25">
+    <path d="M 971.28 494.64
+L 1091.52 494.64
+Q 1103.04 494.64 1103.04 483.12
+L 1103.04 445.68
+Q 1103.04 434.16 1091.52 434.16
+L 971.28 434.16
+Q 959.76 434.16 959.76 445.68
+L 959.76 483.12
+Q 959.76 494.64 971.28 494.64
+z
+" clip-path="url(#p37b2d1206b)" style="fill: #e7f6ef; stroke: #15845b; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="text_11">
+    <text style="font-weight: 300; font-size: 10.5px; font-family: 'Hiragino Sans GB'; text-anchor: start; fill: #d96a1d" x="46.8" y="626.07" transform="rotate(-0 46.8 626.07)">机制示意：说明风险如何产生，不表示 Barcarolle 已观察到该结果</text>
+   </g>
+   <g id="text_12">
+    <text style="font-weight: 300; font-size: 10.5px; font-family: 'Hiragino Sans GB'; text-anchor: end; fill: #5b6472" x="1105.2" y="626.07" transform="rotate(-0 1105.2 626.07)">对应原始对话：第 6、7、10、11 轮</text>
+   </g>
+   <g id="text_13">
+    <text style="font-weight: 600; font-size: 13px; font-family: 'Hiragino Sans GB'; text-anchor: middle; fill: #172033" x="208.8" y="251.552187" transform="rotate(-0 208.8 251.552187)">工程师提出改动</text>
+   </g>
+   <g id="text_14">
+    <text style="font-weight: 600; font-size: 13px; font-family: 'Hiragino Sans GB'; text-anchor: middle; fill: #172033" x="208.8" y="348.701406" transform="rotate(-0 208.8 348.701406)">少量候选版本</text>
+   </g>
+   <g id="text_15">
+    <text style="font-weight: 600; font-size: 13px; font-family: 'Hiragino Sans GB'; text-anchor: middle; fill: #172033" x="208.8" y="445.946094" transform="rotate(-0 208.8 445.946094)">固定基准评测</text>
+   </g>
+   <g id="text_16">
+    <text style="font-weight: 600; font-size: 13px; font-family: 'Hiragino Sans GB'; text-anchor: middle; fill: #174a9c" x="576" y="251.559297" transform="rotate(-0 576 251.559297)">自动改进系统</text>
+   </g>
+   <g id="text_17">
+    <text style="font-weight: 600; font-size: 13px; font-family: 'Hiragino Sans GB'; text-anchor: middle; fill: #172033" x="576" y="348.746094" transform="rotate(-0 576 348.746094)">大量新版本</text>
+   </g>
+   <g id="text_18">
+    <text style="font-weight: 600; font-size: 13px; font-family: 'Hiragino Sans GB'; text-anchor: middle; fill: #172033" x="576" y="445.978594" transform="rotate(-0 576 445.978594)">反复读取同一评测</text>
+   </g>
+   <g id="text_19">
+    <text style="font-weight: 600; font-size: 12.5px; font-family: 'Hiragino Sans GB'; text-anchor: middle; fill: #d96a1d" x="943.2" y="253.193945" transform="rotate(-0 943.2 253.193945)">真实能力  +  评测偏差</text>
+   </g>
+   <g id="text_20">
+    <text style="font-weight: 600; font-size: 12.5px; font-family: 'Hiragino Sans GB'; text-anchor: middle; fill: #d96a1d" x="943.2" y="357.538281" transform="rotate(-0 943.2 357.538281)">优化器同时搜索两者</text>
+   </g>
+   <g id="text_21">
+    <text style="font-weight: 600; font-size: 11.5px; font-family: 'Hiragino Sans GB'; text-anchor: middle; fill: #d96a1d" x="874.8" y="468.74125" transform="rotate(-0 874.8 468.74125)">评测继续涨</text>
+   </g>
+   <g id="text_22">
+    <text style="font-weight: 600; font-size: 11.2px; font-family: 'Hiragino Sans GB'; text-anchor: middle; fill: #15845b" x="1031.4" y="468.695375" transform="rotate(-0 1031.4 468.695375)">真实提升停滞</text>
+   </g>
+   <g id="text_23">
+    <g id="patch_26">
+     <path d="M 459.84 570
+L 692.16 570
+Q 693.84 570 693.84 568.32
+L 693.84 552
+Q 693.84 550.32 692.16 550.32
+L 459.84 550.32
+Q 458.16 550.32 458.16 552
+L 458.16 568.32
+Q 458.16 570 459.84 570
+z
+" style="fill: #fff0e5"/>
+    </g>
+    <text style="font-weight: 600; font-size: 12px; font-family: 'Hiragino Sans GB'; text-anchor: middle; fill: #d96a1d" x="576" y="564.72" transform="rotate(-0 576 564.72)">候选越多，越容易选中评测偏差最大的版本</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p37b2d1206b">
+   <rect x="0" y="0" width="1152" height="648"/>
+  </clipPath>
+ </defs>
+</svg>

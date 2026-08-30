@@ -1,0 +1,5 @@
+stage_order,stage_label,fixed_benchmark_layout_y,future_grounded_layout_y,status
+0,Initial evaluation,0.12,0.12,hypothetical
+1,Repeated selection,0.33,0.18,hypothetical
+2,Intensive proxy optimization,0.62,0.23,hypothetical
+3,Agent or workload shift,0.86,0.27,hypothetical
