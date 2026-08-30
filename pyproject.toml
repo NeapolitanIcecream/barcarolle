@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "barcarolle"
 version = "0.1.0"
-description = "Repo-specific benchmark compiler for predictive coding-agent evaluation."
+description = "Research toolkit for reliable evaluation of self-evolving agents."
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = []

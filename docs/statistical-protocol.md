@@ -1,11 +1,215 @@
 # Statistical Protocol
 
-Status: current offline contract, 2026-07-30. Empirical thresholds and model
-claims remain pending until a larger authorized paired history exists.
+Status: current statistical contract, 2026-08-30. Static rolling-origin details
+are implemented in part; repeated-optimization and generated-task-validity
+details are research targets until the implementation status says otherwise.
 
-This document fixes the statistical meanings used by rolling-origin evaluation.
-It does not authorize paid execution and does not turn fixture results into
-predictive evidence.
+This document fixes the statistical meanings used by reliable evaluation of
+self-evolving agents, including rolling-origin development studies,
+fixed-lineage replay, controlled repeated optimization, and prospective
+confirmation. It does not authorize paid execution and does not turn fixture
+results into predictive evidence.
+
+The active objective and method contract is
+[`research-program.md`](research-program.md). Earlier task-selection plans remain
+valid for their fixed experiments, but their pass-rate-only metric priority does
+not govern new work.
+
+## Objective Hierarchy
+
+At repository/time cutoff `t`, let `p_t(a)` be agent `a`'s pass rate on the
+predeclared future task cohort, let `delta_t(a,b) = p_t(a) - p_t(b)`, and let
+`p_hat_t(a)` and `delta_hat_t(a,b)` be predictions made without that cohort's
+outcomes.
+
+New studies have two primary losses:
+
+```text
+pass_rate_error(t,a) = abs(p_hat_t(a) - p_t(a))
+
+pass_rate_difference_error(t,a,b) =
+  abs(delta_hat_t(a,b) - delta_t(a,b))
+```
+
+The target difference must be computed from both agents on the same task and
+replicate schedule so pairing and covariance are preserved. An evaluator may
+predict `delta_hat_t(a,b)` directly or derive it as
+`p_hat_t(a) - p_hat_t(b)`; it must fix that contract in advance. If it emits
+both direct pair and marginal predictions, also report
+`delta_hat_t(a,b) - (p_hat_t(a) - p_hat_t(b))` as a coherence diagnostic.
+
+The second loss uses a predeclared agent-pair population. All-pair,
+frontier-neighbor, parent-child, and incumbent-challenger summaries answer
+different questions and may not be substituted after outcomes are opened.
+
+Rank agreement, sign accuracy, recommendation regret, top-1 regret, coverage,
+invalid rate, and cost are supporting decision diagnostics. None replaces the
+pass-rate or pass-rate-difference loss.
+
+For repeated-optimization evaluation, predeclare budgets `b` in evaluator
+queries, candidate count, optimizer rounds, feedback bits, compute, or another
+exact budget. Report `pass_rate_mae(b)` and `pass_rate_difference_mae(b)`, plus
+their within-method increase from the no-optimization baseline (`b=0`). The
+full curve is primary; worst error up to each budget, area under degradation,
+and the first crossing of a predeclared within-method degradation tolerance
+are summaries. A hack detector score is not a substitute for observed
+retention of the two prediction losses.
+
+Keep that longitudinal test separate from method selection. When giving
+pass-rate-difference MAE decision priority, name a comparator and require, at
+every predeclared evaluation budget, `pass_rate_mae_method(b) -
+pass_rate_mae_comparator(b)` to remain within a predeclared non-inferiority
+margin. Passing the within-method test from the no-optimization baseline
+(`b=0`) does not satisfy this comparator-relative constraint, or vice versa.
+
+## Evaluation And Method-Selection Stages
+
+The project mission is reliable evaluation for self-evolving agents. A method
+does not earn that claim merely by beating another method. Assess the following
+four stages in order, and preserve the result of each one. A reliability claim
+must pass Stages 1 and 2, plus Stage 3 when it covers evaluator-guided
+optimization. Stage 4 chooses among methods; it cannot compensate for a failure
+or unresolved result at an earlier applicable stage.
+
+### 1. Evidence validity
+
+Before scoring accuracy, verify that the evidence identifies the declared
+quantity. At minimum, a run must bind:
+
+- the operational behavior or elicited capability estimand defined
+  below, including the complete Agent, task, context, and runtime policy;
+- the target task source, inclusion policy, time cutoff, label-maturity rule,
+  and the independence of the prospective outcomes from Agent and evaluator
+  selection;
+- task, check, workspace, runtime, agent snapshot, result, and evaluator
+  identities, plus the complete parent-to-child lineage when optimization is
+  involved;
+- common Task and replicate cells for every Agent comparison;
+- the treatment of missing, censored, invalid, abstained, and integrity-failed
+  runs;
+- the feedback, query, candidate, compute, persistent-state, reset, fork, and
+  execution-order contracts for an adaptive study;
+- executable-check validity and an execution boundary appropriate to the
+  declared tampering threat model.
+
+An integrity violation is an integrity outcome, not an ordinary failed Task.
+Operational policy may reject it, but statistical reporting must preserve the
+invalid status and show the apparent and verified results separately when both
+exist. If any required identity, chronology, denominator, or independence
+claim is unresolved, the accuracy result is conditional or descriptive and
+does not pass this stage.
+
+### 2. Absolute error limits
+
+Before outcomes are opened, derive two absolute error thresholds from the
+deployment decision:
+
+```text
+tau_rate        = maximum acceptable pass-rate MAE
+tau_difference  = maximum acceptable pass-rate-difference MAE
+```
+
+For one deployment decision, these thresholds are fixed across optimization
+budgets. A budget-dependent decision is a separately named claim with separately
+derived thresholds, not a relaxation within one error curve. The thresholds are
+not comparator-relative margins and may not be fitted to the method landscape.
+Unless a stricter rule is predeclared for a critical stratum, the same two
+thresholds apply to the declared aggregate and to every critical stratum.
+Critical strata are chosen from deployment consequences before outcomes, for
+example repository families, Agent or harness families, parent-child
+transitions, task classes, or integrity-relevant conditions. Post-hoc worst
+slices are diagnostics, not confirmatory strata.
+
+For method `m`, budget `b`, and required aggregate or critical stratum `g`, an
+absolute-error-limit claim requires simultaneous one-sided upper confidence
+bounds `U_rate(m,b,g)` and `U_difference(m,b,g)` satisfying
+
+```text
+U_rate(m,b,g)        <= tau_rate
+U_difference(m,b,g)  <= tau_difference
+```
+
+The uncertainty procedure, family of budgets and strata, dependence unit, and
+multiplicity control must be frozen before outcomes. It must preserve paired
+Agent outcomes, shared Agents across pairs, task/dependency clusters, optimizer
+seeds, and lineages as applicable. A point estimate below a threshold is not a
+pass when its uncertainty crosses the threshold. Too few independent units,
+an unidentified dependence structure, or an empty critical stratum yields
+`unresolved`, not success. Abstention passes this stage only through a
+predeclared risk-coverage target and an unconditional fallback policy; it may
+not remove difficult strata from the target silently.
+
+### 3. Degradation under optimization
+
+For repeated evaluator-guided optimization, the absolute error limits must
+continue to hold at every predeclared budget. Separately define within-method
+degradation from the same method's no-optimization value:
+
+```text
+degradation_rate_m(b) =
+  pass_rate_mae_m(b) - pass_rate_mae_m(0)
+
+degradation_difference_m(b) =
+  pass_rate_difference_mae_m(b) - pass_rate_difference_mae_m(0)
+```
+
+Predeclare tolerated degradation and simultaneous uncertainty across all
+budgets and critical strata. A method that starts inaccurate but degrades
+little does not pass the absolute error limits. A method that remains within
+those limits but crosses its degradation tolerance may support a bounded static
+claim, not a degradation-under-optimization claim. Report the complete curves;
+a favorable endpoint cannot erase an earlier crossing.
+
+### 4. Method comparison
+
+Only after reporting every applicable earlier stage compare methods. For a
+static `b=0` study, the degradation-under-optimization stage is
+explicitly `not_applicable`, not silently passed. Use matched cohorts, common ancestors,
+paired optimizer seeds, the same budgets, and a named comparator. Giving
+pass-rate-difference MAE
+priority requires the predeclared pass-rate-MAE non-inferiority margin at every
+budget, with simultaneous uncertainty. Then compare average and
+critical-stratum pass-rate-difference MAE. A method can meet the absolute error
+limits without being better than its comparator, or beat its comparator while
+still being unacceptably inaccurate; report those conclusions separately.
+
+The two primary errors, their absolute thresholds, adaptive degradation,
+coverage, cost, and integrity remain separate fields. No weighted or
+compensatory aggregate may turn failure of one into a reliability claim.
+
+## Adaptive Allocation And Design Weighting
+
+An allocator that targets informative tasks changes the sampling design. For a
+declared finite frame, predeclare one complete estimator contract:
+
+- Horvitz-Thompson uses positive final inclusion probabilities `pi_i`,
+  inverse-inclusion weights, and a variance estimator matched to a declared
+  unequal-probability without-replacement or Poisson design;
+- Hajek uses the same `pi_i` with normalized ratio weights and is labeled with
+  its finite-sample ratio bias;
+- Hansen-Hurwitz with replacement persists each draw probability and uses
+  draw-level inverse-probability weights plus a matching variance estimator;
+- sequential without-replacement LURE persists every conditional proposal
+  `q_m(i | history)` and uses its step-specific leveled weights, not HT's
+  `1/pi_i` weights.
+
+Persist draw scheme, estimator/version, `pi_i` or the full `q_m` history as
+applicable, realized weights, and variance protocol. Do not mix their weight or
+variance formulas. A deterministically selected subset mean is a property of
+that subset; it is not an unbiased estimate of the full frame merely because
+the tasks are informative.
+
+For pass-rate-difference estimation, run both agents on each sampled task and
+design acquisition around the paired outcome `Y(a,i) - Y(b,i)`. Predicted discordance
+`P(Y(a,i) != Y(b,i))` is a natural information proposal, mixed with one-agent
+uncertainty, coverage/drift, cost, and a nonzero stratified-random exploration
+floor. The response or IRT model proposes tasks; persisted
+estimator-specific probabilities and weights protect the target mean over the
+predefined task population.
+
+Design weighting does not solve temporal or synthetic-to-real shift. A
+historical/generated frame still needs a frozen future-mixture claim and a
+temporal validation boundary.
 
 ## Time And Cohorts
 
@@ -38,12 +242,12 @@ and Feature provenance. It also proves the Result cache identity projects to
 the frozen Agent before supply reads. After validating the selection-time pool
 and replaying Origin, it verifies Task/Check cache identity and exact
 `task_count`/`task_stratum` Feature provenance before opening the later pool.
-That pool must preserve the bound repository, stable Generator behavior, source
+That pool must preserve the bound repository, stable task-generator behavior, source
 protocol, and certification configuration; cover the complete declared future
 interval; postdate the Selection; and be observed through the label-maturity
 cutoff. It may contain only the later increment or a cumulative history.
 Overlapping same-ID Task/Check records must remain unchanged. Run identity,
-observed frame, and output inventory may change without changing Generator
+observed frame, and output inventory may change without changing task-generator
 behavior.
 Reporting reloads both pools and recomputes mature and censored refs before
 supporting a prospective claim. The original Origin and Task Pool are never
@@ -69,7 +273,7 @@ Claim strength is a product of independent evidence axes, not one ladder:
 
 - supplied Task Pool bundle and cross-record consistency;
 - observed source-frame identity and authority;
-- Generator behavior and source-protocol continuity;
+- task-generator behavior and source-protocol continuity;
 - executable Check certification and hidden-oracle binding;
 - Agent/Task/Check/Workspace/Runtime Result identity;
 - Result-source and availability provenance;
@@ -120,16 +324,17 @@ reverts, and cherry-picks should be added by a concrete adapter only when its
 source data actually supplies those relations. Neither patch text, relation
 paths, nor cluster IDs enter Selector features or solver-visible task material.
 
-The two target estimands are:
+Report these two dependency views for each applicable pass-rate or
+pass-rate-difference target:
 
 1. realistic traffic, where dependency clusters may recur but uncertainty is
    blocked by an appropriate independent unit;
 2. unseen-cluster generalization, where future dependency clusters are absent
    from history.
 
-## Comparable Selector Evidence
+## Comparable Static Evaluator Evidence
 
-Aggregate comparisons accept only `future_pass_rate_mae` records that:
+Pass-rate-error comparisons accept `future_pass_rate_mae` records that:
 
 - aggregate all Agents;
 - are `complete` or `complete_with_exclusions`;
@@ -137,6 +342,15 @@ Aggregate comparisons accept only `future_pass_rate_mae` records that:
   policy;
 - include every registered Selector at every included Origin;
 - bind exactly the same future Result evidence for all Selectors at one Origin.
+
+Pass-rate-difference comparisons use `pairwise_gap_mae` computed from the same
+selected and future matrices, same Agent set, same Agent-pair weighting, and same common
+Task/replicate cells. They must satisfy the same completeness, identity,
+denominator, and future-evidence conditions. A new report may not call a
+pass-rate-difference summary an equal primary result until Reporting validates
+and recomputes that
+complete chain; the current pass-rate-only report summary remains an
+implementation gap.
 
 Learned-Selector fitting additionally requires one ordered full AgentRecord
 digest binding across all training Origins. Every Result used for the fitted
@@ -154,6 +368,13 @@ repository or source transfer requires a corresponding repository or source
 split. These are optional stronger claims, not common admission rules for
 algorithm development.
 
+Predicting an Agent pass-rate difference additionally requires both Agent
+identities to be fixed
+before outcome inspection. When the pair represents a parent-child transition,
+record lineage and agent-optimizer evidence; when it represents model or Harness
+transfer, freeze that crossed claim explicitly. Pairs sharing an Agent are
+dependent and cannot be counted as independent sample units.
+
 An Origin's future weight is the number of distinct mature Task/Check refs with
 Result cells after common benchmark-owned exclusions. Planned refs with no
 scoreable Result do not increase the weight.
@@ -165,6 +386,14 @@ For Selector `s` with Origin losses `L(s, o)` and future weights `n(o)`, report:
   `sum_o n(o) * L(s, o) / sum_o n(o)`;
 - for every canonical Selector pair `(a, b)`, paired differences using
   `L(a, o) - L(b, o)` under both weightings. Negative favors `a`.
+
+Here `(a, b)` in the last bullet denotes two evaluator/Selector candidates, not
+two tested Agents. To avoid that overloaded notation, new artifacts should call
+them `(e1, e2)`. Separately report tested-Agent
+`pass_rate_difference_error(t, agent_a,
+agent_b)` over the frozen Agent-pair population, with macro-Origin and declared
+traffic weighting. Do not confuse evaluator-to-evaluator loss contrasts with
+Agent pass-rate-difference prediction error.
 
 The pairwise table lets a report identify a predeclared fallback without adding
 fallback identity to Result or Metric records. Choosing a fallback after
@@ -224,7 +453,7 @@ Report two portfolio views separately:
 - a deep view with longer histories, measuring temporal drift, horizon
   robustness, and within-repository learnability.
 
-The first comparison fixes the importer or Generator paradigm, certification
+The first comparison fixes the importer or task-generation approach, certification
 policy, Agent panel, metric, and budget policy so repository is the primary
 varying axis. Held-out-Agent transfer is a separate crossed study. Random
 landscape, support, oracle, horizon, and dependency diagnostics are first
@@ -246,16 +475,205 @@ extension is a sequence of independently validated repository-local training
 evidence groups that produces the existing `SelectorRecord`; inference remains
 one-Task-Pool, repository-local.
 
+## Repeated-Optimization Evidence
+
+A robustness-under-repeated-optimization claim requires a fixed experiment
+tuple:
+
+- declared operational behavior or elicited capability estimand and
+  evaluation context;
+- initial Agent snapshot and full Agent identity;
+- agent-optimizer implementation and version;
+- candidate, query, token, time, and compute budgets;
+- initial evaluator artifact and its frozen Task, Check, estimator, feedback,
+  selection, and update policies;
+- what the optimizer sees: aggregate, rounded/thresholded score, per-Task
+  result, test output, trace, or another exact channel;
+- Agent snapshot, parent, mutation, persistent state, round, branch, and epoch;
+- every candidate considered, not only the evaluator winner;
+- optimization budgets and stopping rule;
+- future real-world task window and maturity rule;
+- Agent-pair population, weighting, margins, and analysis code.
+
+An **Agent snapshot** is the immutable state from which one optimization step or
+evaluation run starts. It binds the model or provider snapshot, harness and
+code revision, persistent or system prompts and skills, tools and permissions,
+retrieval material, generation and runtime policies, optimizer-visible memory,
+filesystem state, and every other persistent input. Task or user inputs and
+temporary cues are recorded as run contexts, not snapshot identity. Large or
+secret state may remain in ignored or protected
+storage, but its content digest and immutable reference must be recorded.
+
+A **parent-to-child transition** binds one parent snapshot, one proposed child,
+the exact mutation or training operation, optimizer seed, evaluator feedback
+consumed, budget used, persistent-state change, acceptance decision, and
+timestamps. Rejected candidates remain in the archive. The independent unit
+for a self-evolving process claim is a complete lineage/process run: one root
+snapshot plus its ordered transition and branch history under a frozen process
+policy. Siblings, checkpoints, and Agent pairs that share a lineage are
+dependent observations, not extra independent runs.
+
+Every study must predeclare these state contracts:
+
+- **persistence**: which conversation, memory, retrieval index, optimizer
+  state, caches, files, and external resources survive a Task, round, or epoch;
+- **reset**: the exact snapshot restored between replicates and evaluator
+  conditions, including cleanup of side effects outside the repository;
+- **fork**: all compared branches start from the same verified ancestor
+  snapshot, with only the assigned treatment allowed to differ;
+- **order**: Task, candidate, feedback, branch, and evaluator-update order is
+  frozen or randomized by a persisted schedule;
+- **resume**: an interrupted branch resumes only from its recorded snapshot
+  and order position, never from the most convenient later state.
+
+State that is intentionally carried forward is part of the Agent or optimizer
+treatment. State that leaks across branches violates the comparison rather
+than constituting harmless execution noise.
+
+Freeze the evaluator **update policy**, not one evaluator artifact forever.
+Within an epoch, the artifact and feedback contract are fixed. At a declared
+boundary, the frozen policy may construct, select, or recalibrate a new
+artifact using only eligible data. Persist every evaluator version, parent,
+training inputs, attack suite, selection outcome, and effective epoch.
+Off-schedule updates or changes chosen after viewing outer outcomes invalidate
+the confirmatory branch. Open evaluator-selection temporal validation only
+after that epoch's Agent search ends. Once validation or test outcomes influence
+evaluator generation, attack design, selection, or hyperparameters, they become
+development evidence and a new prospective test set is required.
+
+The main controlled comparison forks all evaluator conditions from the same
+initial Agent snapshot and holds the agent optimizer, search budget, task
+schedule, repository Origins, and outcome policy fixed. Compare at least a
+    static baseline, one frozen static comparator that passes the evidence-validity
+    preflight, an update-only candidate, and any adversarially updated or
+coevolving candidate. Pair optimizer seeds across branches and run enough
+independent root lineages to measure process stochasticity.
+
+Use the same hidden future cohort for all branches whenever possible. If
+calendar-time deployment makes that impossible, run conditions concurrently on
+randomized draws from one declared source frame or retain a contemporaneous
+control branch spanning every period. A raw comparison of one evaluator's
+early lineage with another evaluator's later lineage confounds evaluator effect
+with task, model-supply, and calendar-time change. A time-adjusted analysis must
+be frozen in advance and preserve the concurrent controls; a sequential
+before/after contrast alone is insufficient.
+
+Report pass-rate and pass-rate-difference loss at every predeclared
+optimization budget. Also report accepted transitions whose evaluator score
+improves while performance on future real-world tasks or the direction of an
+Agent difference worsens, but keep that diagnostic separate from the primary
+error curves. No result supports an unbounded "Goodhart-resistant" claim.
+
+Adversarial Tasks and controlled-agent attacks belong to separately labeled
+stress strata. Retain a probability sample of newly arriving real-world tasks. An
+adversarial slice may affect evaluator promotion only through a frozen rule and
+may not silently redefine the natural-work pass-rate target.
+
+## Evaluation-Context Diagnostics
+
+Evaluation awareness is a possible cause of error, not a third primary metric.
+When the threat model includes context-sensitive behavior, predeclare two or
+more run contexts and randomize them over the same Task, replicate, Agent
+snapshot, and runtime schedule. This same-snapshot contrast is valid only when
+the contexts vary task or user input and temporary cues allowed by the frozen
+agent and runtime policy. A context may include framing and interface cues,
+test or scorer visibility, feedback exposure, monitor disclosure, tool names,
+workspace layout, and statements about training, evaluation, or deployment.
+An intervention that changes persistent configuration or the generation, tool,
+or runtime policy is instead a parent-to-child version comparison.
+
+For two contexts `c1` and `c0`, retain the Agent-level context contrast
+
+```text
+context_effect_t(a; c1, c0) = p_t(a,c1) - p_t(a,c0)
+```
+
+and, for a fixed Agent pair, the difference-in-differences
+
+```text
+pairwise_context_interaction_t(a,b; c1,c0) =
+    [p_t(a,c1) - p_t(a,c0)]
+  - [p_t(b,c1) - p_t(b,c0)]
+```
+
+The second quantity detects context effects that do not cancel in an Agent
+comparison and can therefore bias pass-rate-difference prediction even when
+both Agents change behavior. Preserve common Tasks and replicates and use the
+highest supported randomization/dependence unit. Report the interaction by
+Agent family, harness, lineage relationship, and optimization budget when
+those groups were predeclared.
+
+An overt-evaluation versus deployment-like prompt contrast identifies only the
+effect of those constructed cues. It does not establish the true deployment
+gap unless the deployment context and sampling process are externally
+validated. A large or unresolved context interaction requires a
+context-specific prediction, an abstention/fallback, or a narrower claim; it
+cannot be averaged into either primary MAE or used to compensate for one.
+
 ## Deployment Unit And Estimand
 
-The product deployment unit is one target Agent and one repository. For method
-`m`, retain the direct loss
+Keep operational behavior and elicited capability as different
+estimands.
+
+- **Operational behavior** is the pass rate of one fully specified Agent
+  snapshot under the declared deployment harness, tools, permissions,
+  prompting policy, persistent state, retry, and runtime policy on future real-world
+  Tasks. This is the default primary target for Barcarolle because it predicts
+  what that deployed system will do.
+- **Elicited capability** is the performance reached by a predeclared family of
+  elicitation procedures under a fixed access and search
+  budget. The family may include prompting, sampling, demonstrations, tools,
+  scaffolds, or weight updates only when those interventions are in scope. It
+  is a separate safety or diagnostic claim.
+
+Every elicitation procedure that changes weights, persistent prompts or
+configuration, harness, tools, retrieval, generation policy, or runtime policy
+produces a new Agent snapshot with a parent link. Varying task or user prompts,
+sampling draws, or temporary cues within a frozen policy is a run-context
+condition for that snapshot instead. For an elicited capability claim, the
+protocol may attribute a child to the declared parent and elicitation budget,
+but it may not erase the changed Agent identity. Selecting the best elicitation
+on one cohort creates selection bias;
+freeze the chosen procedure using inner data and estimate its performance on a
+separate future cohort. The observed maximum over an opened search archive is
+an oracle diagnostic, not an unbiased capability estimate.
+
+Operational behavior and elicited capability forecasts need separate
+predictions, threshold decisions, and claim labels. A successful elicitation
+audit does not validate the operational forecast, and failure to elicit a
+planted or otherwise known capability is a false negative rather than evidence
+that the capability is absent. When weights or training access are unavailable,
+the capability claim is explicitly limited to the permitted black-box
+elicitation family.
+
+Agent-pair targets must use the same estimand, context, access level, and
+elicitation budget for both Agents unless the asymmetric policy is itself the
+predeclared deployment target. Do not subtract an operational pass rate for one
+agent from an elicited capability rate for another. Report any asymmetric
+elicitation success as a diagnostic because it can create a spurious Agent
+difference.
+
+The pass-rate-prediction deployment unit is one target Agent and one repository.
+The pass-rate-difference deployment unit is one predeclared Agent pair and one
+repository. For method `m`, retain the direct pass-rate loss
 
 `L_m(r, o, a) = abs(selected_rate_m(r, o, a) - future_rate(r, o, a))`
 
 before every aggregation. The paired effect is
 
 `d_m(r, o, a) = L_m(r, o, a) - L_full(r, o, a)`.
+
+For Agent pair `(a,b)`, also retain
+
+`G_m(r,o,a,b) = abs(delta_hat_m(a,b) - delta_future(a,b))`.
+
+The prediction `delta_hat_m(a,b)` may come from a direct pair model or from
+`p_m(a) - p_m(b)`. When both forms are available, also retain their coherence
+residual.
+
+The common Task/replicate design is part of the target. Do not calculate the
+two future pass rates from independently selected Task sets and call the result
+paired.
 
 The current repository-equal summary is the realized average loss or paired
 effect on the exact finite Agent-by-repository-by-Origin panel. It does not by
@@ -288,15 +706,36 @@ Keep these targets distinct:
 Do not interpret the first as the second. Under absolute loss, a point forecast
 of a random future rate, when the action is an unconstrained scalar, targets a
 conditional median. A budgeted Task Selection is a constrained subset action
-and need not attain that median. Direct realized next-H MAE remains primary; a
-variance model, reliability coefficient, or latent-rate estimate is diagnostic.
+and need not attain that median. Direct realized next-H pass-rate MAE and direct
+Agent-pair pass-rate-difference MAE are the two primary metrics. A variance
+model, reliability coefficient,
+rank statistic, or latent-rate estimate is diagnostic unless separately named
+as a secondary claim.
 
-## Primary Baseline And Landscape Diagnostics
+## Implemented Static Selection Annex
 
-For the current future-pass-rate fidelity claim, the primary baseline is every
-eligible historical Task/Check ref without Selection. Its benchmark may be
-larger and more expensive than the selected benchmark; that is the compression
-comparison.
+The remainder of this annex documents the implemented or concretely frozen
+static rolling-origin task-selection path, including exact code records such as
+`Selector`, `SelectorInput`, and `Selection`. It preserves reproducibility for
+earlier studies and supplies baselines for the broader evaluator program. It is
+not a restriction to task selection, does not give these algorithms research
+priority, and does not replace the earlier reliability stages above.
+Where a paragraph says a feature is not implemented, that narrower status
+still controls.
+
+### Baselines And Landscape Diagnostics
+
+For static task sampling or compression, the primary baseline is every
+eligible historical Task/Check ref without task selection. Its benchmark may be
+larger and more expensive than the selected benchmark. This is a required
+compression baseline, not the definition of the project.
+
+Pass-rate-difference studies compute Full, recent, random, and candidate
+predictions on the same Agent pairs. Task-generation studies additionally
+compare real-only, passive/random generation, and adversarial generation at
+matched execution budgets. Repeated-optimization studies compare static,
+update-only, and coevolving evaluator
+conditions with the same Agent optimizer and search budget.
 
 Before interpreting a candidate, report whether the Task Pool, Agent panel,
 horizon, and aggregation form an informative regime for pass-rate MAE. At
@@ -337,15 +776,27 @@ Every pairwise control comparison must use identical rows. If a lagged control
 is unavailable on early rows, report its coverage and recompute the candidate
 or baseline on that matched subset.
 
-Keep two claims separate:
+Keep method-specific claims separate:
 
-- Selection/compression evidence requires candidate MAE below full history;
-  equal-budget random locates the candidate in the sampling space.
+- Task-selection/compression evidence requires candidate pass-rate MAE below full
+  history; equal-budget random locates the candidate in the sampling space.
 - Nontrivial-prediction evidence requires candidate MAE below a trivial
   estimator admitted by the same information contract.
+- Pass-rate-difference evidence requires candidate pass-rate-difference MAE
+  below its matched Full/random baselines on the fixed Agent-pair population.
+- Repeated-optimization method comparisons require both primary errors to be
+  compared with the named baseline at every matched optimization budget.
+  Robustness evidence separately requires each method's two error curves to
+  stay within their predeclared degradation limits from that method's own
+  no-optimization baseline (`b=0`), not merely to achieve a higher final
+  evaluator score.
 
-A strong predictive nomination requires both. Failure of the second claim does
-not erase a separately labeled candidate-versus-full Selection result.
+Within the task-selection pass-rate lane, a strong nomination requires the first
+two claims. Failure of nontrivial prediction does not erase a separately
+labeled candidate-versus-full compression result. A complete evaluator
+nomination additionally requires the fixed pass-rate-difference claim;
+repeated-optimization nomination additionally requires the error curves by
+optimization budget.
 
 When `MAE_full > MAE_oracle`, report
 
@@ -355,9 +806,11 @@ When `MAE_trivial > MAE_oracle`, also report
 
 `captured_headroom = (MAE_trivial - MAE_candidate) / (MAE_trivial - MAE_oracle)`.
 
-Keep direct MAE primary and random percentile separate. Do not report either
-ratio when its denominator is nonpositive or when its rows differ in Task,
-Check, Agent, Origin, denominator, weighting, budget, or oracle evidence.
+Keep direct pass-rate and pass-rate-difference MAE as separate primary metrics,
+and keep random percentiles separate. Do
+not report either ratio when its denominator is nonpositive or when its rows
+differ in Task, Check, Agent/pair, Origin, denominator, weighting, budget, or
+oracle evidence.
 
 A regime identity includes Task Pool, Agent panel, Selection unit, information
 contract, horizon frame, denominator, Origin construction, and aggregation.
@@ -402,12 +855,18 @@ reconstruction of the complete historical benchmark separately from
 later-Origin future MAE. Accurate historical score reconstruction cannot by
 itself clear the temporal promotion gate.
 
+When the IRT or outcome model drives adaptive allocation, retain positive
+sampling probability and design weighting as specified above. Difficulty and
+discrimination may vary by time, Agent lineage, model family, harness, and
+task generator; differential-item-functioning or comparable residual checks are
+required before interpreting them as invariant Task properties.
+
 The earlier `0.02` macro-Origin rule remains a legacy study-specific gate. New
 algorithm work must freeze its deployment-derived useful margin and highest
 valid dependence unit before outcomes. Random-space position, support, null
 controls, rank agreement, and recommendation regret remain separately labeled
-diagnostics. Changing the primary metric, dependence unit, or practical margin
-after outcomes open is exploratory.
+diagnostics. Changing a primary metric, Agent-pair population, dependence
+unit, or practical margin after outcomes open is exploratory.
 
 Every temporal null must state what it destroys and preserves. A joint-response
 circular shift preserves response prevalence, Agent dependence, and almost all
@@ -427,7 +886,7 @@ dependency-deduplicated view without selecting the most favorable result.
 Changing sign across those views is a robustness failure even if one point
 estimate is favorable.
 
-## Shrinkage Safe Switch
+### Shrinkage Safe Switch
 
 ALG-001 uses the same complete paired Origin rows. For candidate `s`, fallback
 `f`, and `n` prior Origins, define improvement `d_o = L(f,o) - L(s,o)` so
@@ -450,7 +909,7 @@ and hindsight-oracle diagnostics.
 `future_coverage` and `future_invalid_rate` remain holdout-evidence diagnostics.
 They are not Selector prediction losses.
 
-## Drift-Aware EWMA Guard
+### Drift-Aware EWMA Guard
 
 ALG-004 uses the same complete paired MAE rows and requires their exact training
 `RollingOriginRecord` set plus an explicit deployment Origin. All records must
@@ -476,7 +935,7 @@ choice, and raw mean choice. Reject the method if its paired outer-origin MAE
 does not improve or if the selected half-life is unstable across adjacent
 training windows.
 
-## Stratified Forecast And Weighting
+### Stratified Forecast And Weighting
 
 ALG-002 operates on Task/Check refs because that is the Selection and primary
 MAE denominator. At an Origin, let `c_s` be the count for stratum `s` among the
@@ -508,7 +967,7 @@ required comparison set is random, recency, coverage, and unweighted
 stratified selection. No current synthetic test or implementation status is an
 empirical accuracy claim.
 
-## Rank-Mixture Simplex Choice
+### Rank-Mixture Simplex Choice
 
 ALG-003 predeclares the ten coverage/random/recency weight triples whose
 components are nonnegative thirds summing to one. This grid includes the three
@@ -533,7 +992,7 @@ method if gains disappear out of sample or if seed-bank variation dominates
 the paired improvement. The grid and four-Origin gate are predeclared starting
 points, not empirically calibrated defaults.
 
-## Stochastic Selectors
+### Stochastic Selectors
 
 Random-seed variants form a seed bank only when Selector family, version,
 training sources, allowed feature classes, and every non-seed parameter are
@@ -549,7 +1008,7 @@ exact distribution when the outcome structure permits it; otherwise predeclare
 enough seeds or simulation draws for the desired tail resolution and report
 Monte Carlo uncertainty.
 
-## Uncertainty
+### Uncertainty
 
 The current offline summary treats each non-overlapping rolling Origin future
 window as one time block. With fewer than eight complete blocks, report
@@ -569,7 +1028,21 @@ This interval describes variation across the included Origin blocks. It is not
 cluster-robust when dependency clusters cross blocks, and it does not quantify
 run-level Agent variation without explicit replicate evidence.
 
-## Replicates And Nested Fitting
+This implemented two-sided static interval is not automatically the
+simultaneous one-sided upper-bound procedure required by the absolute-error-limit
+layer. Until a study freezes and validates the relevant multiplicity,
+critical-stratum, and dependence treatment, this annex cannot clear that layer
+by reinterpreting its percentile interval.
+
+Pass-rate-difference uncertainty preserves the paired Task outcomes and
+resamples at the
+highest supported dependence unit. Agent pairs that share an Agent and Origins
+that share Task/dependency blocks are not independent observations. Adaptive
+optimization comparisons additionally preserve agent-optimizer seed, agent lineage,
+and evaluator condition pairing; a seed-level interval with too few independent
+search runs is reported as unresolved rather than replaced by Task-level power.
+
+### Replicates And Nested Fitting
 
 The next paid paired history should randomize Agent-configuration order within
 Task and repeat a predeclared stratified 20–30 percent of Tasks two or three
@@ -639,12 +1112,30 @@ unconstrained Pareto baseline are predeclared.
 
 ## Current Claim Boundary
 
-The repository can execute and validate the cohort, censoring, pairing, and
-aggregate-summary contracts offline. It cannot yet support a claim that one
-Selector predicts better, that a reasoning-effort effect is stable, or that the
-bootstrap interval is calibrated for the target repository. Those require a
-larger authorized real-task history with enough independent blocks and explicit
-replicates.
+The repository can execute and validate static cohort, censoring, common-task
+pairing, and pass-rate/pass-rate-difference metric construction offline. Its
+evidence-backed summary, fitting, and promotion path remains pass-rate-MAE
+centric. It has no implemented records for agent version history or evaluator
+feedback, error curves by optimization budget, validated task generator,
+adversarial stress tests of evaluators and metrics, or agent–evaluator
+coevolution path.
+
+No deployment-derived `tau_rate` and `tau_difference`, simultaneous
+critical-stratum upper-bound procedure, or evidence-validity stage over complete
+self-evolving lineages has been frozen and validated. Current results therefore
+cannot pass the absolute-error-limit or degradation-under-optimization stages
+by default.
+
+Existing outcome-open studies may support narrow development comparisons among
+Selectors. The repository cannot yet support a prospective production
+evaluator, pass-rate-difference-optimized method, repeated-optimization
+robustness claim, resistance to Goodhart effects, or calibrated
+target-repository interval. Those require complete
+reporting of both primary metrics, enough independent blocks and replicates,
+predeclared optimization protocols, and new independent temporal test sets.
+
+The paragraphs below preserve the claim boundaries of earlier dated studies.
+They are historical evidence, not the active method roadmap.
 
 The 2026-07-27 follow-ups do not relax this boundary. The source-observed SymPy
 view remains fully censored. A separate `label_at_task_arrival`
